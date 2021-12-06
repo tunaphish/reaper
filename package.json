@@ -1,10 +1,9 @@
 {
-  "name": "sample-phaser3-typescript-project",
-  "version": "1.0.1",
-  "description": "A sample project using Phaser 3 and TypeScript",
+  "name": "reaper",
+  "version": "0.0.1",
+  "description": "A game about nothing",
   "main": "src/main.ts",
-  "author": "Joe Bustamante",
-  "license": "MIT",
+  "author": "Tuan Pham",
   "private": false,
   "scripts": {
     "build": "yarn build:dev",

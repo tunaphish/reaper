@@ -1,5 +1,5 @@
-import { MainMenuScene } from './main-menu-scene';
-import { BootScene } from './boot-scene';
-import { GameScene } from './game-scene';
+import { MainMenuScene } from './main-menu';
+import { BootScene } from './boot';
+import { GameScene } from './game';
 
 export default [BootScene, MainMenuScene, GameScene];

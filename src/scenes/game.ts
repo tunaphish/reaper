@@ -1,4 +1,4 @@
-import Player from '../sprites/player-sprite';
+import Player from '../sprites/player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

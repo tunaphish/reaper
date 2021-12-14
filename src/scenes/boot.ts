@@ -70,9 +70,11 @@ export class BootScene extends Phaser.Scene {
    * is currently active, so they can be accessed anywhere.
    */
   private loadAssets() {
-    // Load sample assets
-
-    // Source: Open Game Art
     this.load.image('man', 'assets/sprites/character.png');
+
+    this.load.image('building', 'assets/tilesets/iso-64x64-building.png');
+    this.load.image('outside', 'assets/tilesets/iso-64x64-outside.png');
+
+    this.load.tilemapTiledJSON('testTileMap', 'assets/tilemaps/isorpg.json');
   }
 }

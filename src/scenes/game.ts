@@ -9,12 +9,23 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class GameScene extends Phaser.Scene {
   private pointer: Phaser.Input.Pointer;
   private player: Player;
+  private map: Phaser.Tilemaps.Tilemap;
 
   constructor() {
     super(sceneConfig);
   }
 
   public create(): void {
+    this.map = this.add.tilemap('testTileMap');
+    const outside = this.map.addTilesetImage('iso-64x64-outside', 'outside');
+    const building = this.map.addTilesetImage('iso-64x64-building', 'building');
+
+    this.map.createLayer('Tile Layer 1', [outside, building]);
+    this.map.createLayer('Tile Layer 2', [outside, building]);
+    this.map.createLayer('Tile Layer 3', [outside, building]);
+    this.map.createLayer('Tile Layer 4', [outside, building]);
+    this.map.createLayer('Tile Layer 5', [outside, building]);
+
     this.player = new Player(this);
     this.pointer = this.input.activePointer;
     this.pointer.motionFactor = 0.1;

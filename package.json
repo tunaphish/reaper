@@ -7,7 +7,6 @@
   "private": false,
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server",
-    "build": "yarn build:dev",
     "build:dev": "NODE_ENV=development webpack",
     "build:prod": "NODE_ENV=production webpack",
     "dev": "NODE_ENV=development webpack-dev-server",

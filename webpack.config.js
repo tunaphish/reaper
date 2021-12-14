@@ -34,6 +34,7 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'dist'),
     writeToDisk: true,
     open: true,
+    liveReload: false,
   },
 
   plugins: [

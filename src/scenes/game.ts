@@ -29,6 +29,8 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this);
     this.pointer = this.input.activePointer;
     this.pointer.motionFactor = 0.1;
+
+    this.cameras.main.startFollow(this.player);
   }
 
   public update(): void {

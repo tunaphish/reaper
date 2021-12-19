@@ -1,0 +1,4976 @@
+{
+	"textures": [
+		{
+			"image": "shizuka.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 512,
+				"h": 480
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "shizuka-0.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-2.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-3.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-4.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-5.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-8.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-9.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-10.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-11.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-12.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-13.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-14.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-15.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-16.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-17.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-18.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-19.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-20.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-21.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-22.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-23.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-24.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-25.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-26.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-27.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-28.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-29.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-30.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-31.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 32,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-32.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-33.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-34.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-35.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-36.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-37.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-38.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-39.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-40.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-41.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-42.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-43.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-44.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-45.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-46.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-47.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 64,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-48.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-49.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-50.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-51.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-52.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-53.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-54.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-55.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-56.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-57.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-58.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-59.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-60.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-61.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-62.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-63.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 96,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-64.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-65.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-66.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-67.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-68.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-69.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-70.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-71.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-72.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-73.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-74.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-75.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-76.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-77.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-78.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-79.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 128,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-80.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-81.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-82.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-83.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-84.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-85.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-86.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-87.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-88.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-89.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-90.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-91.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-92.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-93.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-94.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-95.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 160,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-96.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-97.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-98.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-99.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-100.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-101.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-102.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-103.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-104.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-105.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-106.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-107.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-108.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-109.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-110.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-111.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 192,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-112.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-113.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-114.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-115.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-116.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-117.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-118.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-119.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-120.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-121.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-122.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-123.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-124.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-125.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-126.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-127.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 224,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-128.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-129.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-130.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-131.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-132.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-133.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-134.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-135.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-136.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-137.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-138.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-139.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-140.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-141.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-142.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-143.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 256,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-144.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-145.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-146.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-147.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-148.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-149.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-150.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-151.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-152.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-153.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-154.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-155.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-156.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-157.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-158.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-159.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 288,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-160.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-161.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-162.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-163.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-164.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-165.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-166.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-167.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-168.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-169.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-170.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-171.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-172.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-173.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-174.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-175.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 320,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-176.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-177.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-178.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-179.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-180.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-181.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-182.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-183.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-184.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-185.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-186.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-187.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-188.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-189.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-190.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-191.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 352,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-192.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-193.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-194.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-195.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-196.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-197.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-198.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-199.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-200.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-201.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-202.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-203.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-204.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-205.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-206.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-207.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 384,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-208.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-209.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-210.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-211.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-212.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-213.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-214.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-215.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-216.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-217.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-218.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-219.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-220.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 384,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-221.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 416,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-222.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 448,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-223.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 480,
+						"y": 416,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-224.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-225.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 32,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-226.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 64,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-227.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 96,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-228.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 128,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-229.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 160,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-230.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 192,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-231.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 224,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-232.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 256,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-233.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 288,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-234.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 320,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "shizuka-235.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 352,
+						"y": 448,
+						"w": 32,
+						"h": 32
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:0381714fbb8eba0fd65ff2f3ffd2a4eb:6023365569fabc8e127446cb46df4f75:06ebd3098f0c097d9567bd67c15f9ce4$"
+	}
+}

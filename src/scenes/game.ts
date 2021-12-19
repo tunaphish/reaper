@@ -34,18 +34,19 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(): void {
+
     if (this.pointer.isDown) {
-      console.log('distance' + this.pointer.distance);
-      console.log('velocity' + this.pointer.velocity.x + ' and ' + this.pointer.velocity.y);
-      this.player.move(this.pointer.velocity);
+
+      this.player.move(this.pointer.velocity, this.radiansToDegrees(this.pointer.getAngle()));
     }
 
     if (!this.pointer.isDown) {
-      this.player.move(new Phaser.Math.Vector2(0, 0));
+      let downwardDegrees: number = 90;
+      this.player.move(new Phaser.Math.Vector2(0, 0), downwardDegrees);
     }
   }
 
-  private pointToRadians(firstPointX: number, firstPointY: number, secondPointX: number, secondPointY: number): number {
-    return Math.atan2(secondPointY - firstPointY, secondPointX - firstPointX);
+  private radiansToDegrees(radians: number): number {
+    return Math.floor(radians * (180 / Math.PI));
   }
 }

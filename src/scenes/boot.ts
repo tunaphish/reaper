@@ -78,5 +78,9 @@ export class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('testTileMap', 'assets/tilemaps/isorpg.json');
 
     this.load.aseprite('shizuka', 'assets/sprites/shizuka.png', 'assets/sprites/shizuka.json')
+
+    this.load.image('crosshair', 'assets/ui/crosshair.png');
+    this.load.image('pointer', 'assets/ui/pointer.png');
+
   }
 }

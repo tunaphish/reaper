@@ -7,7 +7,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export class GameScene extends Phaser.Scene {
-  static DEAD_ZONE: number = 20;
+  static DEAD_ZONE = 20;
   private pointer: Phaser.Input.Pointer;
   private player: Player;
   private map: Phaser.Tilemaps.Tilemap;
@@ -31,8 +31,8 @@ export class GameScene extends Phaser.Scene {
     this.map.createLayer('Tile Layer 5', [outside, building]);
 
     this.player = new Player(this);
-    this.crosshairUi = this.add.image(0,0,'crosshair').setScale(.1).setScrollFactor(0);
-    this.pointerUi = this.add.image(0,0,'pointer').setScale(.03).setScrollFactor(0);
+    this.crosshairUi = this.add.image(0, 0, 'crosshair').setScale(0.1).setScrollFactor(0);
+    this.pointerUi = this.add.image(0, 0, 'pointer').setScale(0.03).setScrollFactor(0);
 
     this.pointer = this.input.activePointer;
 
@@ -40,24 +40,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(): void {
-
-
     if (this.pointer.isDown && this.pointer.getDistance() > GameScene.DEAD_ZONE) {
       this.crosshairUi.setVisible(true);
       this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
-      this.pointerUi.setVisible(true);      
+      this.pointerUi.setVisible(true);
       this.pointerUi.setPosition(this.pointer.x, this.pointer.y);
       this.pointerUi.setRotation(this.pointer.getAngle() + 2.5);
-      this.player.move(this.pointer.velocity, this.radiansToDegrees(this.pointer.getAngle()));
-      
+      this.player.move(this.pointer.velocity, radiansToDegrees(this.pointer.getAngle()));
     } else {
       this.player.idle();
       this.crosshairUi.setVisible(false);
       this.pointerUi.setVisible(false);
     }
   }
+}
 
-  private radiansToDegrees(radians: number): number {
-    return Math.floor(radians * (180 / Math.PI));
-  }
+function radiansToDegrees(radians: number): number {
+  return Math.floor(radians * (180 / Math.PI));
 }

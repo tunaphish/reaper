@@ -1,8 +1,8 @@
 import { getGameWidth, getGameHeight } from '../helpers';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private speed: number = 200;
-  private direction: string = 'down-neutral';
+  private speed = 300;
+  private direction = 'down-neutral';
 
   constructor(scene: Phaser.Scene) {
     super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');
@@ -21,25 +21,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
 
     this.changeAnimationDirection(degrees);
-    this.anims.play({key: 'run-' + this.direction, repeat: -1}, true);
+    this.anims.play({ key: 'run-' + this.direction, repeat: -1 }, true);
   }
 
   public idle(): void {
-      this.setVelocity(0,0);
-      this.anims.play({key: 'idle-' + this.direction, repeat: -1}, true);
+    this.setVelocity(0, 0);
+    this.anims.play({ key: 'idle-' + this.direction, repeat: -1 }, true);
   }
 
   private changeAnimationDirection(degrees: number) {
-    let absoluteDegrees = Math.abs(degrees);
-    let flipX: boolean = absoluteDegrees > 90;
-    let horizontalDirection: string = absoluteDegrees < 112 && absoluteDegrees > 67 ? 'neutral' : 'right';
+    const absoluteDegrees = Math.abs(degrees);
+    const flipX: boolean = absoluteDegrees > 90;
+    const horizontalDirection: string = absoluteDegrees < 112 && absoluteDegrees > 67 ? 'neutral' : 'right';
     let verticalDirection: string = degrees < 0 ? 'up' : 'down';
     if (absoluteDegrees < 22 || absoluteDegrees > 157) {
-      verticalDirection = 'neutral'
-    } 
+      verticalDirection = 'neutral';
+    }
 
     this.direction = verticalDirection + '-' + horizontalDirection;
     this.setFlipX(flipX);
   }
-
 }

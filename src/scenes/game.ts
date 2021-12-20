@@ -36,13 +36,11 @@ export class GameScene extends Phaser.Scene {
   public update(): void {
 
     if (this.pointer.isDown) {
-
       this.player.move(this.pointer.velocity, this.radiansToDegrees(this.pointer.getAngle()));
     }
 
     if (!this.pointer.isDown) {
-      let downwardDegrees: number = 90;
-      this.player.move(new Phaser.Math.Vector2(0, 0), downwardDegrees);
+      this.player.idle();
     }
   }
 

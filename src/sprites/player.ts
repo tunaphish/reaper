@@ -1,13 +1,14 @@
 import { getGameWidth, getGameHeight } from '../helpers';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  public speed = 200;
+  private speed: number = 200;
+  private direction: string = 'down-neutral';
 
   constructor(scene: Phaser.Scene) {
-    super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'man');
+    super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');
 
     this.scene.physics.world.enable(this);
-    this.setCollideWorldBounds(true);
+    //this.setCollideWorldBounds(true);
 
     this.scene.add.existing(this);
 
@@ -18,9 +19,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   public move(velocity: Phaser.Math.Vector2, degrees: number): void {
     const normalizedVelocity = velocity.normalize();
     this.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
-    console.log(degrees);
 
     this.changeAnimationDirection(degrees);
+    this.anims.play({key: 'run-' + this.direction, repeat: -1}, true);
+  }
+
+  public idle(): void {
+      this.setVelocity(0,0);
+      this.anims.play({key: 'idle-' + this.direction, repeat: -1}, true);
   }
 
   private changeAnimationDirection(degrees: number) {
@@ -32,8 +38,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       verticalDirection = 'neutral'
     } 
 
+    this.direction = verticalDirection + '-' + horizontalDirection;
     this.setFlipX(flipX);
-    this.anims.play({key: 'run-' + verticalDirection + '-' + horizontalDirection, repeat: -1}, true);
   }
 
 }

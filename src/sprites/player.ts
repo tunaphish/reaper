@@ -16,7 +16,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     idleState: new IdleState(),
     runState: new RunState(),
     dashState: new DashState(),
-  }
+  };
 
   constructor(scene: Phaser.Scene) {
     super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');
@@ -49,4 +49,3 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setFlipX(flipX);
   }
 }
-

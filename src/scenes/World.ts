@@ -40,7 +40,7 @@ export class World extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
   }
 
-  public update(): void {
+  public update(time: number, delta: number): void {
     // if (this.pointer.isDown && this.pointer.getDistance() > World.DEAD_ZONE) {
     //   this.crosshairUi.setVisible(true);
     //   this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
@@ -52,6 +52,6 @@ export class World extends Phaser.Scene {
     //   this.pointerUi.setVisible(false);
     // }
 
-    this.player.update();
+    this.player.update(time, delta);
   }
 }

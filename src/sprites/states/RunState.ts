@@ -6,7 +6,7 @@ export default class RunState implements State {
         console.log('entering run state');
     }
 
-    update(player: Player) {
+    update(time: number, delta: number, player: Player) {
         const pointer = player.scene.input.activePointer;
 
         if (!pointer.isDown) {

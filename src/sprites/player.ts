@@ -1,4 +1,5 @@
 import { getGameWidth, getGameHeight } from '../helpers';
+import DashState from './states/DashState';
 import IdleState from './states/IdleState';
 import RunState from './states/RunState';
 import State from './states/State';
@@ -6,11 +7,15 @@ import State from './states/State';
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   static SPEED = 300;
   static DEAD_ZONE = 20;
+  static SWIPE_DURATION_THRESHOLD = 500;
+  static SWIPE_DISTANCE_THRESHOLD = 100;
+
   direction = 'down-neutral';
   behaviorState: State;
   possibleBehaviorStates = {
     idleState: new IdleState(),
     runState: new RunState(),
+    dashState: new DashState(),
   }
 
   constructor(scene: Phaser.Scene) {
@@ -21,8 +26,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.behaviorState = this.possibleBehaviorStates.idleState;
   }
 
-  update(): void {
-    this.behaviorState.update(this);
+  update(time: number, delta: number): void {
+    this.behaviorState.update(time, delta, this);
   }
 
   transition(newState: State) {

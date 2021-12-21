@@ -16,6 +16,8 @@ export class RunState implements State {
       return;
     }
 
+    //formula is wrong
+    console.log(pointer.velocity.x + '-' + pointer.velocity.y);
     const acceleration: Phaser.Math.Vector2 = pointer.velocity.normalize().scale(RunState.MAX_ACCELERATION);
     let newVelocity: Phaser.Math.Vector2 = player.body.velocity.add(acceleration);
     const maxVelocity: Phaser.Math.Vector2 = newVelocity.normalize().scale(Player.SPEED);
@@ -23,6 +25,7 @@ export class RunState implements State {
     newVelocity = newVelocity.length < maxVelocity.length ? newVelocity : maxVelocity;
     
     player.setVelocity(newVelocity.x, newVelocity.y);
+
     player.changeDirection(player.body.velocity.angle());
 
     player.anims.play({ key: 'run-' + player.direction, repeat: -1 }, true);

@@ -12,12 +12,12 @@ export class RunState implements State {
     const pointer = player.scene.input.activePointer;
 
     if (!pointer.isDown) {
+      //Transition to Skid State instead
       player.transition(player.possibleBehaviorStates.idleState);
       return;
     }
 
-    //formula is wrong
-    console.log(pointer.velocity.x + '-' + pointer.velocity.y);
+    //Implement Deadzone 
     const acceleration: Phaser.Math.Vector2 = pointer.velocity.normalize().scale(RunState.MAX_ACCELERATION);
     let newVelocity: Phaser.Math.Vector2 = player.body.velocity.add(acceleration);
     const maxVelocity: Phaser.Math.Vector2 = newVelocity.normalize().scale(Player.SPEED);
@@ -26,8 +26,8 @@ export class RunState implements State {
     
     player.setVelocity(newVelocity.x, newVelocity.y);
 
+    //Update animation based on different information (angle is different?)
     player.changeDirection(player.body.velocity.angle());
-
     player.anims.play({ key: 'run-' + player.direction, repeat: -1 }, true);
   }
 }

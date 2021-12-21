@@ -38,7 +38,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   changeDirection(radians: number): void {
+    console.log(radians);
     const degrees = Math.floor(radians * (180 / Math.PI));
+    console.log(degrees);
+    
     const absoluteDegrees = Math.abs(degrees);
     const flipX: boolean = absoluteDegrees > 90;
     const horizontalDirection: string = absoluteDegrees < 112 && absoluteDegrees > 67 ? 'neutral' : 'right';

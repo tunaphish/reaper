@@ -30,7 +30,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.behaviorState.update(time, delta, this);
   }
 
-  transition(newState: State) {
+  transition(newState: State): void {
     this.behaviorState = newState;
     this.behaviorState.enter(this);
   }

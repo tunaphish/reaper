@@ -9,7 +9,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 /**
  * The initial scene that loads all necessary assets to the game and displays a loading bar.
  */
-export class BootScene extends Phaser.Scene {
+export class Boot extends Phaser.Scene {
   constructor() {
     super(sceneConfig);
   }

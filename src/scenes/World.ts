@@ -1,4 +1,4 @@
-import Player from '../sprites/player';
+import Player from '../sprites/Player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -6,8 +6,12 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Game',
 };
 
-export class GameScene extends Phaser.Scene {
+export class World extends Phaser.Scene {
   static DEAD_ZONE = 20;
+
+  static SWIPE_DURATION_THRESHOLD = 500;
+  static SWIPE_DISTANCE_THRESHOLD = 200;
+
   private pointer: Phaser.Input.Pointer;
   private player: Player;
   private map: Phaser.Tilemaps.Tilemap;
@@ -40,13 +44,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(): void {
-    if (this.pointer.isDown && this.pointer.getDistance() > GameScene.DEAD_ZONE) {
+    if (this.pointer.isDown && this.pointer.getDistance() > World.DEAD_ZONE) {
       this.crosshairUi.setVisible(true);
       this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
       this.pointerUi.setVisible(true);
       this.pointerUi.setPosition(this.pointer.x, this.pointer.y);
       this.pointerUi.setRotation(this.pointer.getAngle() + 2.5);
-      this.player.move(this.pointer.velocity, radiansToDegrees(this.pointer.getAngle()));
+      this.player.update(this.pointer.velocity, radiansToDegrees(this.pointer.getAngle()));
     } else {
       this.player.idle();
       this.crosshairUi.setVisible(false);

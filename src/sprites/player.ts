@@ -11,12 +11,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     //this.setCollideWorldBounds(true);
 
     this.scene.add.existing(this);
-
-    const shizukaAnimationKeys = this.scene.anims.createFromAseprite('shizuka'); //.map(anim => anim.key);
-    console.log(shizukaAnimationKeys);
+    
+    this.scene.anims.createFromAseprite('shizuka');
   }
 
-  public move(velocity: Phaser.Math.Vector2, degrees: number): void {
+  public update(velocity: Phaser.Math.Vector2, degrees: number): void {
     const normalizedVelocity = velocity.normalize();
     this.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
 

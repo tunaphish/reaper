@@ -1,8 +1,8 @@
 import { getGameWidth, getGameHeight } from '../helpers';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  private speed = 300;
-  private direction = 'down-neutral';
+  speed = 300;
+  direction = 'down-neutral';
 
   constructor(scene: Phaser.Scene) {
     super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');

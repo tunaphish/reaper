@@ -1,5 +1,5 @@
-import { MainMenu } from './MainMenu';
-import { Boot } from './Boot';
-import { Game } from './Game';
+import { MainMenuScene } from './main-menu';
+import { BootScene } from './boot';
+import { GameScene } from './game';
 
-export default [Boot, MainMenu, Game];
+export default [BootScene, MainMenuScene, GameScene];

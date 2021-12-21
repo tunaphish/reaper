@@ -1,4 +1,4 @@
-import Player from '../sprites/Player';
+import Player from '../sprites/player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -6,7 +6,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Game',
 };
 
-export class Game extends Phaser.Scene {
+export class GameScene extends Phaser.Scene {
   static DEAD_ZONE = 20;
   private pointer: Phaser.Input.Pointer;
   private player: Player;
@@ -40,7 +40,7 @@ export class Game extends Phaser.Scene {
   }
 
   public update(): void {
-    if (this.pointer.isDown && this.pointer.getDistance() > Game.DEAD_ZONE) {
+    if (this.pointer.isDown && this.pointer.getDistance() > GameScene.DEAD_ZONE) {
       this.crosshairUi.setVisible(true);
       this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
       this.pointerUi.setVisible(true);

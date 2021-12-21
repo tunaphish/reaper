@@ -1,39 +1,36 @@
 import { getGameWidth, getGameHeight } from '../helpers';
+import IdleState from './states/IdleState';
+import RunState from './states/RunState';
+import State from './states/State';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  speed = 300;
-  direction = 'down-neutral';
+  static SPEED = 300;
   static DEAD_ZONE = 20;
+  direction = 'down-neutral';
+  behaviorState: State;
+  possibleBehaviorStates = {
+    idleState: new IdleState(),
+    runState: new RunState(),
+  }
 
   constructor(scene: Phaser.Scene) {
     super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');
-
     this.scene.physics.world.enable(this);
-    //this.setCollideWorldBounds(true);
-
     this.scene.add.existing(this);
-    
     this.scene.anims.createFromAseprite('shizuka');
+    this.behaviorState = this.possibleBehaviorStates.idleState;
   }
 
-  public update(): void {
-    const pointer = this.scene.input.activePointer;
-
-    if (pointer.isDown) {
-      const velocity = pointer.velocity;
-      const normalizedVelocity = velocity.normalize();
-      this.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
-  
-      this.changeDirection(pointer.angle);
-      this.anims.play({ key: 'run-' + this.direction, repeat: -1 }, true);
-    }
-    else {
-      this.setVelocity(0, 0);
-      this.anims.play({ key: 'idle-' + this.direction, repeat: -1 }, true);
-    }
+  update(): void {
+    this.behaviorState.update(this);
   }
 
-  private changeDirection(radians: number) {
+  transition(newState: State) {
+    this.behaviorState = newState;
+    this.behaviorState.enter(this);
+  }
+
+  changeDirection(radians: number): void {
     const degrees = Math.floor(radians * (180 / Math.PI));
     const absoluteDegrees = Math.abs(degrees);
     const flipX: boolean = absoluteDegrees > 90;

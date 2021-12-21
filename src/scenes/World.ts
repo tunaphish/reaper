@@ -41,16 +41,16 @@ export class World extends Phaser.Scene {
   }
 
   public update(): void {
-    if (this.pointer.isDown && this.pointer.getDistance() > World.DEAD_ZONE) {
-      this.crosshairUi.setVisible(true);
-      this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
-      this.pointerUi.setVisible(true);
-      this.pointerUi.setPosition(this.pointer.x, this.pointer.y);
-      this.pointerUi.setRotation(this.pointer.getAngle() + 2.5);
-    } else {
-      this.crosshairUi.setVisible(false);
-      this.pointerUi.setVisible(false);
-    }
+    // if (this.pointer.isDown && this.pointer.getDistance() > World.DEAD_ZONE) {
+    //   this.crosshairUi.setVisible(true);
+    //   this.crosshairUi.setPosition(this.pointer.downX, this.pointer.downY);
+    //   this.pointerUi.setVisible(true);
+    //   this.pointerUi.setPosition(this.pointer.x, this.pointer.y);
+    //   this.pointerUi.setRotation(this.pointer.getAngle() + 2.5);
+    // } else {
+    //   this.crosshairUi.setVisible(false);
+    //   this.pointerUi.setVisible(false);
+    // }
 
     this.player.update();
   }

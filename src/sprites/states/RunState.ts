@@ -1,7 +1,7 @@
 import Player from '../Player';
 import State from './State';
 
-export default class RunState implements State {
+export class RunState implements State {
   static MAX_ACCELERATION = 30;
 
   enter(player: Player) {
@@ -21,11 +21,10 @@ export default class RunState implements State {
     const maxVelocity: Phaser.Math.Vector2 = newVelocity.normalize().scale(Player.SPEED);
 
     newVelocity = newVelocity.length < maxVelocity.length ? newVelocity : maxVelocity;
-
-    console.log(newVelocity.x + '-' + newVelocity.y);
+    
     player.setVelocity(newVelocity.x, newVelocity.y);
+    player.changeDirection(player.body.velocity.angle());
 
-    player.changeDirection(pointer.angle);
     player.anims.play({ key: 'run-' + player.direction, repeat: -1 }, true);
   }
 }

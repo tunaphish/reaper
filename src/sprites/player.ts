@@ -1,7 +1,5 @@
 import { getGameWidth, getGameHeight } from '../helpers';
-import DashState from './states/DashState';
-import IdleState from './states/IdleState';
-import RunState from './states/RunState';
+import * as States from './states';
 import State from './states/State';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -13,9 +11,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   direction = 'down-neutral';
   behaviorState: State;
   possibleBehaviorStates = {
-    idleState: new IdleState(),
-    runState: new RunState(),
-    dashState: new DashState(),
+    idleState: new States.IdleState(),
+    runState: new  States.RunState(),
   };
 
   constructor(scene: Phaser.Scene) {
@@ -24,10 +21,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.scene.anims.createFromAseprite('shizuka');
     this.behaviorState = this.possibleBehaviorStates.idleState;
+    this.setDamping(true)    
+    this.setDrag(.05);
+    this.setDebug(true,true, 0xFFFFFF);
   }
+    
 
   update(time: number, delta: number): void {
     this.behaviorState.update(time, delta, this);
+    
   }
 
   transition(newState: State): void {

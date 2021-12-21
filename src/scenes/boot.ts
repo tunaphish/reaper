@@ -64,23 +64,13 @@ export class Boot extends Phaser.Scene {
     this.loadAssets();
   }
 
-  /**
-   * All assets that need to be loaded by the game (sprites, images, animations, tiles, music, etc)
-   * should be added to this method. Once loaded in, the loader will keep track of them, indepedent of which scene
-   * is currently active, so they can be accessed anywhere.
-   */
   private loadAssets() {
     this.load.image('man', 'assets/sprites/character.png');
-
     this.load.image('building', 'assets/tilesets/iso-64x64-building.png');
     this.load.image('outside', 'assets/tilesets/iso-64x64-outside.png');
-
     this.load.tilemapTiledJSON('testTileMap', 'assets/tilemaps/isorpg.json');
-
     this.load.aseprite('shizuka', 'assets/sprites/shizuka.png', 'assets/sprites/shizuka.json')
-
     this.load.image('crosshair', 'assets/ui/crosshair.png');
     this.load.image('pointer', 'assets/ui/pointer.png');
-
   }
 }

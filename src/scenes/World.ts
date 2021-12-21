@@ -9,9 +9,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class World extends Phaser.Scene {
   static DEAD_ZONE = 20;
 
-  static SWIPE_DURATION_THRESHOLD = 500;
-  static SWIPE_DISTANCE_THRESHOLD = 200;
-
   private pointer: Phaser.Input.Pointer;
   private player: Player;
   private map: Phaser.Tilemaps.Tilemap;
@@ -50,15 +47,11 @@ export class World extends Phaser.Scene {
       this.pointerUi.setVisible(true);
       this.pointerUi.setPosition(this.pointer.x, this.pointer.y);
       this.pointerUi.setRotation(this.pointer.getAngle() + 2.5);
-      this.player.update(this.pointer.velocity, radiansToDegrees(this.pointer.getAngle()));
     } else {
-      this.player.idle();
       this.crosshairUi.setVisible(false);
       this.pointerUi.setVisible(false);
     }
-  }
-}
 
-function radiansToDegrees(radians: number): number {
-  return Math.floor(radians * (180 / Math.PI));
+    this.player.update();
+  }
 }

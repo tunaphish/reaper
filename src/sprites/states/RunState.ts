@@ -12,7 +12,6 @@ export class RunState implements State {
     const pointer = player.scene.input.activePointer;
 
     if (!pointer.isDown) {
-      //Transition to Skid State instead
       player.transition(player.possibleBehaviorStates.idleState);
       return;
     }

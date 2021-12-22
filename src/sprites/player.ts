@@ -29,7 +29,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(time: number, delta: number): void {
     this.behaviorState.update(time, delta, this);
-    
   }
 
   transition(newState: State): void {
@@ -38,19 +37,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   changeDirection(radians: number): void {
-    console.log(radians);
     const degrees = Math.floor(radians * (180 / Math.PI));
-    console.log(degrees);
-    
-    const absoluteDegrees = Math.abs(degrees);
-    const flipX: boolean = absoluteDegrees > 90;
-    const horizontalDirection: string = absoluteDegrees < 112 && absoluteDegrees > 67 ? 'neutral' : 'right';
-    let verticalDirection: string = degrees < 0 ? 'up' : 'down';
-    if (absoluteDegrees < 22 || absoluteDegrees > 157) {
-      verticalDirection = 'neutral';
+    const verticalDirection = this.getVerticalDirection(degrees);
+    const horizontalDirection = this.getHorizontalDirection(degrees);    
+    this.direction = verticalDirection + '-' + horizontalDirection;
+    this.setFlipX(degrees > 90 && degrees < 270);
+  }
+
+  getVerticalDirection(degrees: number): string {
+    if (degrees > 22 && degrees < 157) {
+      return 'down'
+    } else if (degrees > 202 && degrees < 337) {
+      return 'up'
     }
 
-    this.direction = verticalDirection + '-' + horizontalDirection;
-    this.setFlipX(flipX);
+    return 'neutral'
+  }
+
+  getHorizontalDirection(degrees: number): string {
+    if ((degrees > 67 && degrees < 112) || (degrees > 247 && degrees < 292)) {
+      return 'neutral'
+    }
+    return 'right';
   }
 }

@@ -26,7 +26,6 @@ export class RunState implements State {
     
     player.setVelocity(newVelocity.x, newVelocity.y);
 
-    //Update animation based on different information (angle is different?)
     player.changeDirection(player.body.velocity.angle());
     player.anims.play({ key: 'run-' + player.direction, repeat: -1 }, true);
   }

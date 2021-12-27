@@ -12,7 +12,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   behaviorState: State;
   possibleBehaviorStates = {
     idleState: new States.IdleState(),
-    runState: new  States.RunState(),
+    runState: new States.RunState(),
   };
 
   constructor(scene: Phaser.Scene) {
@@ -21,11 +21,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.scene.anims.createFromAseprite('shizuka');
     this.behaviorState = this.possibleBehaviorStates.idleState;
-    this.setDamping(true)    
-    this.setDrag(.05);
-    this.setDebug(true,true, 0xFFFFFF);
+    this.setDamping(true);
+    this.setDrag(0.05);
+    this.setDebug(true, true, 0xffffff);
   }
-    
 
   update(time: number, delta: number): void {
     this.behaviorState.update(time, delta, this);
@@ -39,24 +38,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   changeDirection(radians: number): void {
     const degrees = Math.floor(radians * (180 / Math.PI));
     const verticalDirection = this.getVerticalDirection(degrees);
-    const horizontalDirection = this.getHorizontalDirection(degrees);    
+    const horizontalDirection = this.getHorizontalDirection(degrees);
     this.direction = verticalDirection + '-' + horizontalDirection;
     this.setFlipX(degrees > 90 && degrees < 270);
   }
 
   getVerticalDirection(degrees: number): string {
     if (degrees > 22 && degrees < 157) {
-      return 'down'
+      return 'down';
     } else if (degrees > 202 && degrees < 337) {
-      return 'up'
+      return 'up';
     }
 
-    return 'neutral'
+    return 'neutral';
   }
 
   getHorizontalDirection(degrees: number): string {
     if ((degrees > 67 && degrees < 112) || (degrees > 247 && degrees < 292)) {
-      return 'neutral'
+      return 'neutral';
     }
     return 'right';
   }

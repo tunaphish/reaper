@@ -15,8 +15,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     runState: new States.RunState(),
   };
 
-  constructor(scene: Phaser.Scene) {
-    super(scene, getGameWidth(scene) / 2, getGameHeight(scene) / 2, 'shizuka');
+  constructor(scene: Phaser.Scene, x: number, y: number) {
+    super(scene, x, y, 'shizuka');
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
     this.scene.anims.createFromAseprite('shizuka');

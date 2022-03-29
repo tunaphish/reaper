@@ -15,18 +15,19 @@ export class World extends Phaser.Scene {
   }
 
   public create(): void {
-    this.map = this.add.tilemap('testTileMap');
-    const outside = this.map.addTilesetImage('iso-64x64-outside', 'outside');
-    const building = this.map.addTilesetImage('iso-64x64-building', 'building');
+    const map = this.make.tilemap({ key: 'map' });
+    const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
+    const belowLayer = map.createLayer('Below Player', tileset, 0, 0);
+    const worldLayer = map.createLayer('World', tileset, 0, 0);
+    const aboveLayer = map.createLayer('Above Player', tileset, 0, 0);
 
-    this.map.createLayer('Tile Layer 1', [outside, building]);
-    this.map.createLayer('Tile Layer 2', [outside, building]);
-    this.map.createLayer('Tile Layer 3', [outside, building]);
-    this.map.createLayer('Tile Layer 4', [outside, building]);
-    this.map.createLayer('Tile Layer 5', [outside, building]);
+    worldLayer.setCollisionByProperty({ collides: true });
+    aboveLayer.setDepth(10);
+    const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
 
-    this.player = new Player(this);
+    this.player = new Player(this, spawnPoint.x, spawnPoint.y);
 
+    this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
   }
 

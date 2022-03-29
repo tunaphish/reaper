@@ -65,11 +65,13 @@ export class Boot extends Phaser.Scene {
   }
 
   private loadAssets() {
-    this.load.image('man', 'assets/sprites/character.png');
-    this.load.image('building', 'assets/tilesets/iso-64x64-building.png');
-    this.load.image('outside', 'assets/tilesets/iso-64x64-outside.png');
-    this.load.tilemapTiledJSON('testTileMap', 'assets/tilemaps/isorpg.json');
+    this.load.image('tiles', '../assets/tilesets/tuxmon-sample-32px-extruded.png');
+    this.load.tilemapTiledJSON('map', '../assets/tilemaps/tuxemon-town.json');
+
     this.load.aseprite('shizuka', 'assets/sprites/shizuka.png', 'assets/sprites/shizuka.json');
+
+    this.load.image('slime', 'assets/sprites/slime.png');
+
     this.load.image('crosshair', 'assets/ui/crosshair.png');
     this.load.image('pointer', 'assets/ui/pointer.png');
   }

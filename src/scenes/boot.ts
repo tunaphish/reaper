@@ -58,7 +58,7 @@ export class Boot extends Phaser.Scene {
       progressBar.destroy();
       progressBarContainer.destroy();
 
-      this.scene.start('Game');
+      this.scene.start('Dialogue');
     });
 
     this.loadAssets();
@@ -69,6 +69,8 @@ export class Boot extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', '../assets/tilemaps/tuxemon-town.json');
 
     this.load.aseprite('shizuka', 'assets/sprites/shizuka.png', 'assets/sprites/shizuka.json');
+
+    this.load.image('rise', 'assets/characters/rise.png');
 
     this.load.image('slime', 'assets/sprites/slime.png');
 

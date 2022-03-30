@@ -4,8 +4,8 @@ import Scenes from './scenes';
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',
   type: Phaser.AUTO,
-  width: 270,
-  height: 480,
+  width: 450,
+  height: 800,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

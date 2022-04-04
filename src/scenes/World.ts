@@ -8,7 +8,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class World extends Phaser.Scene {
   private player: Player;
-  private map: Phaser.Tilemaps.Tilemap;
 
   constructor() {
     super(sceneConfig);

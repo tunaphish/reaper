@@ -76,5 +76,7 @@ export class Boot extends Phaser.Scene {
 
     this.load.image('crosshair', 'assets/ui/crosshair.png');
     this.load.image('pointer', 'assets/ui/pointer.png');
+
+    this.load.audio('dialogue-advance', 'assets/sounds/dialogue-advance.wav');
   }
 }

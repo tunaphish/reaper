@@ -8,11 +8,14 @@ const DIALOGUE_NAME = 'Rise Kujikawa';
 const DIALOGUE_TEXT_ARRAY = [
   'Hi, I am an arbitrarilly long string meant to showcase the wordwrap feature in text.',
   'I love you senpai',
+  'Random dialogue to test sound',
+  'Hello, how are you?',
 ];
 
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex = 0;
   private dialogueText: HTMLDivElement;
+  private dialogueAdvanceSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
@@ -51,6 +54,8 @@ export class Dialogue extends Phaser.Scene {
     dialogueBox.appendChild(this.dialogueText);
 
     dialogueBox.addEventListener('click', this.advanceDialogue.bind(this));
+
+    this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
   }
 
   advanceDialogue() {
@@ -59,6 +64,7 @@ export class Dialogue extends Phaser.Scene {
       console.log('close dialogue screen');
       return;
     }
+    this.dialogueAdvanceSound.play();
     this.dialogueText.innerText = DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex];
   }
 }

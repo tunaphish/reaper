@@ -14,64 +14,42 @@ const DIALOGUE_TEXT_ARRAY = [
 
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex = 0;
-  private dialogueText: Phaser.GameObjects.Text;
+  private dialogue: HTMLParagraphElement;
 
   constructor() {
     super(sceneConfig);
   }
 
   create(): void {
-    console.log('hi I am create');
+    const overlay = document.querySelector('#game > div');
 
-    const dialogueBoxHeight = 200;
-    const padding = 10;
-    const borderWidth = 3;
-    this.add
-      .rectangle(
-        0 + padding - borderWidth,
-        getGameHeight(this) - dialogueBoxHeight + padding - borderWidth,
-        getGameWidth(this) - padding * 2 + borderWidth * 2,
-        dialogueBoxHeight - padding * 2 + borderWidth * 2,
-        0xffffff,
-      )
-      .setDisplayOrigin(0, 0);
+    const container = document.createElement('div');
+    container.id = 'dialogue-container';
+    overlay.appendChild(container);
 
-    const dialogueBox = this.add
-      .rectangle(
-        0 + padding,
-        getGameHeight(this) - dialogueBoxHeight + padding,
-        getGameWidth(this) - padding * 2,
-        dialogueBoxHeight - padding * 2,
-        0x000000,
-      )
-      .setDisplayOrigin(0, 0)
-      .setInteractive()
-      .on('pointerup', this.advanceDialogue);
+    const dialogueBox = document.createElement('div');
+    dialogueBox.id = 'dialogue-box';
+    container.appendChild(dialogueBox);
 
-    const portrait = this.add.image(25, 450, 'rise').setDisplayOrigin(0).setScale(0.66).setDepth(-1);
+    const dialogueNameElement = document.createElement('p');
+    dialogueNameElement.id = 'dialogue-name';
+    dialogueNameElement.textContent = DIALOGUE_NAME;
+    dialogueBox.appendChild(dialogueNameElement);
 
-    const nameTextStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-      fontFamily: 'rainyhearts',
-      fontSize: '22px',
-    };
-    const nameText = this.add.text(15, 615, DIALOGUE_NAME, nameTextStyle);
+    this.dialogue = document.createElement('p');
+    this.dialogue.id = 'dialogue';
+    this.dialogue.textContent = DIALOGUE_TEXT_ARRAY[0];
+    dialogueBox.appendChild(this.dialogue);
 
-    const dialogueTextStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-      fontFamily: 'rainyhearts',
-      fontSize: '26px',
-      wordWrap: {
-        width: 400,
-      },
-    };
-    this.dialogueText = this.add.text(30, 650, DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex], dialogueTextStyle);
+    dialogueBox.addEventListener('click', this.advanceDialogue.bind(this));
   }
 
-  advanceDialogue(): void {
+  advanceDialogue() {
+    this.dialogueTextIndex++;
     if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
-      console.log('dialoge ended');
+      console.log('close dialogue screen');
       return;
     }
-    this.dialogueTextIndex++;
-    this.dialogueText.setText(DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex]);
+    this.dialogue.innerText = DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex];
   }
 }

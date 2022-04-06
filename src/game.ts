@@ -19,6 +19,10 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   parent: 'game',
   backgroundColor: '#dedede',
+  dom: {
+    createContainer: true,
+    pointerEvents: 'auto',
+  },
 };
 
 export const game = new Phaser.Game(gameConfig);

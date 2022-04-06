@@ -1,5 +1,3 @@
-import { getGameWidth, getGameHeight } from '../helpers';
-
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -14,7 +12,7 @@ const DIALOGUE_TEXT_ARRAY = [
 
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex = 0;
-  private dialogue: HTMLParagraphElement;
+  private dialogueText: HTMLDivElement;
 
   constructor() {
     super(sceneConfig);
@@ -31,15 +29,26 @@ export class Dialogue extends Phaser.Scene {
     dialogueBox.id = 'dialogue-box';
     container.appendChild(dialogueBox);
 
-    const dialogueNameElement = document.createElement('p');
+    const dialogueBackground = document.createElement('div');
+    dialogueBackground.id = 'dialogue-background';
+    dialogueBox.appendChild(dialogueBackground);
+
+    const dialoguePortrait = document.createElement('div');
+    dialoguePortrait.id = 'dialogue-portrait';
+    dialogueBox.appendChild(dialoguePortrait);
+    const dialogueImage = document.createElement('img');
+    dialogueImage.src = '/assets/characters/rise.png';
+    dialoguePortrait.appendChild(dialogueImage);
+
+    const dialogueNameElement = document.createElement('div');
     dialogueNameElement.id = 'dialogue-name';
     dialogueNameElement.textContent = DIALOGUE_NAME;
     dialogueBox.appendChild(dialogueNameElement);
 
-    this.dialogue = document.createElement('p');
-    this.dialogue.id = 'dialogue';
-    this.dialogue.textContent = DIALOGUE_TEXT_ARRAY[0];
-    dialogueBox.appendChild(this.dialogue);
+    this.dialogueText = document.createElement('div');
+    this.dialogueText.id = 'dialogue-text';
+    this.dialogueText.textContent = DIALOGUE_TEXT_ARRAY[0];
+    dialogueBox.appendChild(this.dialogueText);
 
     dialogueBox.addEventListener('click', this.advanceDialogue.bind(this));
   }
@@ -50,6 +59,6 @@ export class Dialogue extends Phaser.Scene {
       console.log('close dialogue screen');
       return;
     }
-    this.dialogue.innerText = DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex];
+    this.dialogueText.innerText = DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex];
   }
 }

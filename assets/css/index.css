@@ -15,6 +15,11 @@ html, body {
   height: 100%;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
 canvas {
   padding: 0;
   overflow: hidden;
@@ -31,27 +36,61 @@ canvas {
   align-items: flex-end;
 }
 
-#dialogue-box {
-  background-color: black;
+#dialogue-box {  
   color: white;
-  font-family: 'rainyhearts';
-
   flex: 1;
+  font-family: 'rainyhearts';
+  height: 33%;
+    
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
 
-  border: 5px solid beige; 
-  margin: 5px;
+#dialogue-name {
+  background-color: black;
   padding: 5px;
-
-  height: 30%;
+  margin: 2px;
+  border: medium solid white;
+  border-radius: 5px;
+  
+  grid-column-start: 3;
+  grid-column-end: -1;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  
+  justify-self: end;
+  align-self: end;
+  
+  font-size: 18px;
 }
 
-#dialogue-name{
+#dialogue-background {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  
+  background-color: black;
+}
+
+#dialogue-portrait {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: -1;
+  
+  align-self: end;
+}
+
+#dialogue-text {
+  grid-column-start: 2;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  
   font-size: 20px;
-}
-
-#dialogue {
-  font-size: 24px;
-  margin-left: 15px;
+  margin: 10px;
 }
 
 

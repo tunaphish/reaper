@@ -4,6 +4,7 @@
     "sourceMap": true,
     "jsx": "react",
     "jsxFactory": "createElement",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
     "**/*.ts"

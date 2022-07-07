@@ -1,4 +1,5 @@
-import { createElement } from "../jsxFactory";
+import { createElement } from "../../jsxFactory";
+import  styles from "./dialogue.module.css";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -27,16 +28,16 @@ export class Dialogue extends Phaser.Scene {
 
   create(): void {
     this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
-
-    this.dialogueTextElement = <div id="dialogue-text">{DIALOGUE_TEXT_ARRAY[0]}</div>
+    console.log(styles);
+    this.dialogueTextElement = <div className={styles.dialogueText}>{DIALOGUE_TEXT_ARRAY[0]}</div>
     let dialogueUi = (
-      <div id="dialogue-container">
-        <div id="dialogue-box">
-          <div id="dialogue-background"/>
-          <div id="dialogue-portrait">
+      <div className={styles.dialogueContainer}>
+        <div className={styles.dialogueBox}>
+          <div className={styles.dialogueBackground}/>
+          <div className={styles.dialoguePortrait}>
             <img src={"/assets/characters/rise.png"}></img>
           </div>
-          <div id="dialogue-name">{DIALOGUE_NAME}</div>
+          <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
           {this.dialogueTextElement}
         </div>
       </div>

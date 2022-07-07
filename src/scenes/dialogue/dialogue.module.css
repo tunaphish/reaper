@@ -1,0 +1,62 @@
+.dialogueContainer {
+  display: flex;
+  height: 100%;
+  align-items: flex-end;
+}
+
+.dialogueBox {  
+  color: white;
+  flex: 1;
+  font-family: 'rainyhearts';
+  height: 33%;
+    
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.dialogueName {
+  background-color: black;
+  padding: 5px;
+  margin: 2px;
+  border: medium solid white;
+  border-radius: 5px;
+  
+  grid-column-start: 3;
+  grid-column-end: -1;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  
+  justify-self: end;
+  align-self: end;
+  
+  font-size: 18px;
+}
+
+.dialogueBackground {
+  grid-column-start: 1;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  
+  background-color: black;
+}
+
+.dialoguePortrait {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: -1;
+  
+  align-self: end;
+}
+
+.dialogueText {
+  grid-column-start: 2;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  
+  font-size: 20px;
+  margin: 10px;
+}

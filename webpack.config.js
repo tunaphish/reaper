@@ -16,6 +16,11 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css/,
+        use: ['style-loader', 'css-loader'],
+        include: __dirname + '/src'
+      }
     ],
   },
 
@@ -24,15 +29,15 @@ module.exports = {
   },
 
   output: {
-    filename: 'app.bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].bundle.js',
   },
 
   mode: process.env.NODE_ENV == 'production' ? 'production' : 'development',
 
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    writeToDisk: true,
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+    },
     open: true,
     liveReload: false,
   },
@@ -54,16 +59,4 @@ module.exports = {
     }),
   ],
 
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          filename: '[name].app.bundle.js',
-        },
-      },
-    },
-  },
 };

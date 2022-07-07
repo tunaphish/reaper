@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "sourceMap": true
+    "sourceMap": true,
+    "jsx": "react",
+    "jsxFactory": "createElement",
   },
   "include": [
     "**/*.ts"
-  ],
+, "src/scenes/Dialogue.tsx"  ],
 }

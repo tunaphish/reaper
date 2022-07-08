@@ -1,5 +1,5 @@
 import { MainMenu } from './main-menu/MainMenu';
-import { Boot } from './Boot';
+import { Boot } from './boot/Boot';
 import { World } from './World';
 import { Dialogue } from './dialogue/Dialogue';
 

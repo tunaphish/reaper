@@ -7,6 +7,7 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
-    "**/*.ts"
-, "src/scenes/Dialogue.tsx", "src/scenes/Boot.tsx", "src/scenes/main-menu/MainMenu.tsx"  ],
+    "**/*.ts",
+    "**/*.tsx"
+  ],
 }

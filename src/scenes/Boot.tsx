@@ -58,7 +58,7 @@ export class Boot extends Phaser.Scene {
       progressBar.destroy();
       progressBarContainer.destroy();
 
-      this.scene.start('World');
+      this.scene.start('MainMenu');
     });
 
     this.loadAssets();
@@ -77,6 +77,7 @@ export class Boot extends Phaser.Scene {
     this.load.image('crosshair', 'assets/ui/crosshair.png');
     this.load.image('pointer', 'assets/ui/pointer.png');
 
+    this.load.audio('choice-select', 'assets/sounds/choice-select.wav');
     this.load.audio('dialogue-advance', 'assets/sounds/dialogue-advance.wav');
   }
 }

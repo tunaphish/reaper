@@ -8,5 +8,5 @@
   },
   "include": [
     "**/*.ts"
-, "src/scenes/Dialogue.tsx", "src/scenes/Boot.tsx"  ],
+, "src/scenes/Dialogue.tsx", "src/scenes/Boot.tsx", "src/scenes/main-menu/MainMenu.tsx"  ],
 }

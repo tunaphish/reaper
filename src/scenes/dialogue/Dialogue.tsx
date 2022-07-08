@@ -17,9 +17,10 @@ const DIALOGUE_TEXT_ARRAY = [
 
 
 export class Dialogue extends Phaser.Scene {
-  private dialogueTextIndex = 0;
+  private dialogueTextIndex;
   private dialogueTextElement;
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
+  private overlay;
 
   constructor() {
     super(sceneConfig);
@@ -28,6 +29,8 @@ export class Dialogue extends Phaser.Scene {
 
   create(): void {
     this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
+    this.dialogueAdvanceSound.play();
+    this.dialogueTextIndex = 0;
 
     this.dialogueTextElement = <div className={styles.dialogueText}>{DIALOGUE_TEXT_ARRAY[0]}</div>
     let dialogueUi = (
@@ -42,8 +45,8 @@ export class Dialogue extends Phaser.Scene {
         </div>
       </div>
     )
-    const overlay = document.querySelector('#game > div');
-    overlay.appendChild(dialogueUi);
+    this.overlay = document.querySelector('#game > div');
+    this.overlay.appendChild(dialogueUi);
 
     dialogueUi.addEventListener('click', this.advanceDialogue.bind(this));
   }
@@ -51,7 +54,10 @@ export class Dialogue extends Phaser.Scene {
   advanceDialogue() {
     this.dialogueTextIndex++;
     if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
-      console.log('close dialogue screen');
+      //cleanup 
+      this.overlay.replaceChildren();
+      this.scene.stop();
+      this.scene.run('World');
       return;
     }
     this.dialogueAdvanceSound.play();

@@ -26,6 +26,13 @@ export class World extends Phaser.Scene {
 
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
+
+    // event start dialogue 
+    this.input.keyboard.on('keydown-W', function startDialogueScene() {
+      console.log('sleepy boi');
+      this.scene.pause();
+      this.scene.run('Dialogue');
+    }, this);
   }
 
   public update(time: number, delta: number): void {

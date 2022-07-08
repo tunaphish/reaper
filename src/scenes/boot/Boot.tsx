@@ -46,10 +46,15 @@ export class Boot extends Phaser.Scene {
 
     this.load.image('slime', 'assets/sprites/slime.png');
 
+    this.load.image('main-menu', 'assets/backgrounds/main-menu.png');
+
     this.load.image('crosshair', 'assets/ui/crosshair.png');
     this.load.image('pointer', 'assets/ui/pointer.png');
 
+    this.load.audio('choice-hover', 'assets/sounds/choice-hover.wav');
     this.load.audio('choice-select', 'assets/sounds/choice-select.wav');
     this.load.audio('dialogue-advance', 'assets/sounds/dialogue-advance.wav');
+
+    this.load.audio('main-menu-music', 'assets/music/corner-of-memories.mp3');
   }
 }

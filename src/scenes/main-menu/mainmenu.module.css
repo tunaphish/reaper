@@ -1,0 +1,12 @@
+.mainMenuButton {
+  font-family: 'rainyhearts';
+  font-size: 32px;
+  letter-spacing: 5px;
+  color: white;
+  text-align: center;
+  margin: 10px;
+}
+
+.mainMenuButton:hover {
+  color: yellow;
+}

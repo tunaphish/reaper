@@ -3,6 +3,11 @@
   src: url('../fonts/rainyhearts.ttf');
 }
 
+@font-face {
+  font-family: winkle;
+  src: url('../fonts/winkle.ttf');
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }

@@ -1,5 +1,6 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./mainmenu.module.css";
+import UiOverlay from "../../ui/UiOverlay";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -31,12 +32,11 @@ export class MainMenu extends Phaser.Scene {
       </div>
     )
 
-    this.overlay = document.querySelector('#game > div');
-    this.overlay.appendChild(menuItems);
+    this.overlay = new UiOverlay(menuItems);
 
     //put on overlay 
     startGameButton.addEventListener('click', () => {
-      this.overlay.replaceChildren();
+      this.overlay.clearUi();
       this.choiceSelectSound.play();
       this.scene.start('World');
       console.log('lettuce start the game');

@@ -1,5 +1,6 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./dialogue.module.css";
+import UiOverlay from "../../ui/UiOverlay";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -7,16 +8,13 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Boot',
 };
 
-/**
- * The initial scene that loads all necessary assets to the game and displays a loading bar.
- */
 export class Boot extends Phaser.Scene {
   constructor() {
     super(sceneConfig);
   }
 
   public preload(): void {
-    const percentText = <div>0% Loaded</div>
+    const percentText = <div>0%</div>
     const assetText = <div></div>
     const container = (
       <div>
@@ -25,14 +23,13 @@ export class Boot extends Phaser.Scene {
       </div>
     )
 
-    const overlay = document.querySelector('#game > div');
-    overlay.appendChild(container);
+    const overlay = new UiOverlay(container);
 
     this.load.on('progress', (value) => percentText.innerText = `${value * 100}%`);
     this.load.on('fileprogress', (file) => assetText.innerText = file.key);
 
     this.load.on('complete', () => {
-      container.replaceChildren();
+      overlay.clearUi();
       this.scene.start('MainMenu');
     });
 

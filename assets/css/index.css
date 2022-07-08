@@ -29,3 +29,7 @@ canvas {
   display: flex;
   align-items: flex-end;
 }
+
+#game > div > * {
+  pointer-events: auto;
+}

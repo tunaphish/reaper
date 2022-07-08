@@ -58,7 +58,7 @@ export class Boot extends Phaser.Scene {
       progressBar.destroy();
       progressBarContainer.destroy();
 
-      this.scene.start('Dialogue');
+      this.scene.start('World');
     });
 
     this.loadAssets();

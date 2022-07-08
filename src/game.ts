@@ -21,7 +21,6 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#dedede',
   dom: {
     createContainer: true,
-    pointerEvents: 'auto',
   },
 };
 

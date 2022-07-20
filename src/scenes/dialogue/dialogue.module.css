@@ -5,9 +5,7 @@
 }
 
 .dialogueBox {  
-  color: white;
   flex: 1;
-  font-family: 'rainyhearts';
   height: 33%;
     
   display: grid;

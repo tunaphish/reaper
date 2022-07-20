@@ -1,3 +1,7 @@
+import { createElement } from "../../ui/jsxFactory";
+import  styles from "./world.module.css";
+import UiOverlay from "../../ui/UiOverlay";
+
 import Player from '../../sprites/Player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -8,6 +12,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class World extends Phaser.Scene {
   private player: Player;
+  private overlay: UiOverlay;
 
   constructor() {
     super(sceneConfig);
@@ -28,11 +33,22 @@ export class World extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
 
     // event start dialogue 
-    this.input.keyboard.on('keydown-W', function startDialogueScene() {
-      console.log('sleepy boi');
+    // this.input.keyboard.on('keydown-W', function startDialogueScene() {
+    //   this.scene.pause();
+    //   this.scene.run('Dialogue');
+    // }, this);
+    
+
+    const pauseButton = <div>click me</div>
+    const container = <div>{pauseButton}</div>;
+    this.overlay = new UiOverlay(container);
+
+    pauseButton.addEventListener('click', () => {
+      this.overlay.clearUi();
       this.scene.pause();
-      this.scene.run('Dialogue');
-    }, this);
+      this.scene.run('PauseMenu');
+    })
+
   }
 
   public update(time: number, delta: number): void {

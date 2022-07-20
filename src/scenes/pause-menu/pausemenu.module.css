@@ -1,10 +1,10 @@
-.mainMenuButton {
+.pauseMenuButton {
   font-size: 32px;
   letter-spacing: 5px;
   text-align: center;
   margin: 10px;
 }
 
-.mainMenuButton:hover {
+.pauseMenuButton:hover {
   color: yellow;
 }

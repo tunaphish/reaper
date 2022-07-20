@@ -1,5 +1,4 @@
 import { createElement } from "../../ui/jsxFactory";
-import  styles from "./dialogue.module.css";
 import UiOverlay from "../../ui/UiOverlay";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -30,7 +29,7 @@ export class Boot extends Phaser.Scene {
 
     this.load.on('complete', () => {
       overlay.clearUi();
-      this.scene.start('MainMenu');
+      this.scene.start('World');
     });
 
     this.loadAssets();

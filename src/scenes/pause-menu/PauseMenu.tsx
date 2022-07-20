@@ -1,6 +1,5 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./pausemenu.module.css";
-import UiOverlay from "../../ui/UiOverlay";
 import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -13,7 +12,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
  * The initial scene that starts, shows the splash screens, and loads the necessary assets.
  */
 export class PauseMenu extends Phaser.Scene {
-  private overlay;
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
   private choiceHoverSound: Phaser.Sound.BaseSound;
@@ -36,18 +34,16 @@ export class PauseMenu extends Phaser.Scene {
       </div>
     )
 
-    this.overlay = new UiOverlay(menuItems);
+    this.ui.create(menuItems, this);
 
     continueButton.addEventListener('click', () => {
-      this.overlay.clearUi();
       this.choiceSelectSound.play();
-      this.scene.run('World');
+      this.scene.start('World');
     })
 
     exitButton.addEventListener('click', () => {
-      this.overlay.clearUi();
       this.choiceSelectSound.play();
-      this.sys.game.destroy(true);   
+      // todo: close all scenes
     })
 
     continueButton.addEventListener('mouseover', () => {

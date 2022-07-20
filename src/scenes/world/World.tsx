@@ -1,6 +1,5 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./world.module.css";
-
 import Player from '../../sprites/Player';
 import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
@@ -44,7 +43,6 @@ export class World extends Phaser.Scene {
     this.ui.create(container, this);
 
     pauseButton.addEventListener('click', () => {
-      this.ui.clearUi();
       this.scene.pause();
       this.scene.run('PauseMenu');
     })

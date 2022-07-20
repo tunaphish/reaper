@@ -19,6 +19,9 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
     eventEmitter.on('destroy', this.destroy, this);
   }
 
+  // on pause display none; 
+  // on resume display: normal;
+
   //  Called when a Scene shuts down, it may then come back again later
   // (which will invoke the 'start' event) but should be considered dormant.
   shutdown() { 
@@ -30,7 +33,7 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
     this.shutdown();
   }
 
-  clearUi() {
+  private clearUi() {
     this.container.replaceChildren();
   }
 }

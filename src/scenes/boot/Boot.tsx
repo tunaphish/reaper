@@ -1,5 +1,5 @@
 import { createElement } from "../../ui/jsxFactory";
-import UiOverlay from "../../ui/UiOverlay";
+import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -8,6 +8,8 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export class Boot extends Phaser.Scene {
+  ui: UiOverlayPlugin;
+
   constructor() {
     super(sceneConfig);
   }
@@ -22,14 +24,13 @@ export class Boot extends Phaser.Scene {
       </div>
     )
 
-    const overlay = new UiOverlay(container);
+    this.ui.create(container, this);
 
     this.load.on('progress', (value) => percentText.innerText = `${value * 100}%`);
     this.load.on('fileprogress', (file) => assetText.innerText = file.key);
 
     this.load.on('complete', () => {
-      overlay.clearUi();
-      this.scene.start('MainMenu');
+      this.scene.start('PauseMenu');
     });
 
     this.loadAssets();

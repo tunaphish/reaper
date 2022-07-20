@@ -1,6 +1,6 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./dialogue.module.css";
-import UiOverlay from "../../ui/UiOverlay";
+import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -21,7 +21,8 @@ export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex;
   private dialogueTextElement;
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
-  private overlay;
+
+  private ui: UiOverlayPlugin;
 
   constructor() {
     super(sceneConfig);
@@ -46,7 +47,8 @@ export class Dialogue extends Phaser.Scene {
         </div>
       </div>
     )
-    this.overlay = new UiOverlay(dialogueUi);
+
+    this.ui.create(dialogueUi, this);
 
     dialogueUi.addEventListener('click', this.advanceDialogue.bind(this));
   }
@@ -54,9 +56,7 @@ export class Dialogue extends Phaser.Scene {
   advanceDialogue() {
     this.dialogueTextIndex++;
     if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
-      this.overlay.clearUi();
-      this.scene.stop();
-      this.scene.run('World');
+      this.scene.start('World');
       return;
     }
     this.dialogueAdvanceSound.play();

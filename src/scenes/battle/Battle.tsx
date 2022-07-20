@@ -1,5 +1,5 @@
 import { createElement } from "../../ui/jsxFactory";
-import UiOverlay from "../../ui/UiOverlay";
+import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 import styles from './battle.module.css';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -10,7 +10,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 
 export class Battle extends Phaser.Scene {
-  private overlay;
+  private ui: UiOverlayPlugin;
 
 
   constructor() {
@@ -32,13 +32,10 @@ export class Battle extends Phaser.Scene {
       </div>  
     )
     
-    this.overlay = new UiOverlay(battleBar)
-    
+    this.ui.create(battleBar, this);
 
     runButton.addEventListener('click', () => {
-      this.overlay.clearUi();
-      this.scene.stop();
-      this.scene.run('World');
+      this.scene.start('World');
     });
   }
 }

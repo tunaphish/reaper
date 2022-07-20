@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
+import UiOverlayPlugin from './ui/UiOverlayPlugin';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',
@@ -21,6 +22,11 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#000000',
   dom: {
     createContainer: true,
+  },
+  plugins: {
+    global: [
+        { key: 'ui-overlay', plugin: UiOverlayPlugin, start: false, mapping: 'ui' }
+    ]
   },
 };
 

@@ -1,8 +1,8 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./world.module.css";
-import UiOverlay from "../../ui/UiOverlay";
 
 import Player from '../../sprites/Player';
+import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -12,7 +12,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class World extends Phaser.Scene {
   private player: Player;
-  private overlay: UiOverlay;
+  ui: UiOverlayPlugin;
 
   constructor() {
     super(sceneConfig);
@@ -41,10 +41,10 @@ export class World extends Phaser.Scene {
 
     const pauseButton = <div>click me</div>
     const container = <div>{pauseButton}</div>;
-    this.overlay = new UiOverlay(container);
+    this.ui.create(container, this);
 
     pauseButton.addEventListener('click', () => {
-      this.overlay.clearUi();
+      this.ui.clearUi();
       this.scene.pause();
       this.scene.run('PauseMenu');
     })

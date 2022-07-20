@@ -1,6 +1,6 @@
 import { createElement } from "../../ui/jsxFactory";
 import  styles from "./mainmenu.module.css";
-import UiOverlay from "../../ui/UiOverlay";
+import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -12,7 +12,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
  * The initial scene that starts, shows the splash screens, and loads the necessary assets.
  */
 export class MainMenu extends Phaser.Scene {
-  private overlay;
+  private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
   private choiceHoverSound: Phaser.Sound.BaseSound;
   private menuMusic: Phaser.Sound.BaseSound;
@@ -38,10 +38,9 @@ export class MainMenu extends Phaser.Scene {
       </div>
     )
 
-    this.overlay = new UiOverlay(menuItems);
+    this.ui.create(menuItems, this);
 
     startGameButton.addEventListener('click', () => {
-      this.overlay.clearUi();
       this.menuMusic.stop();
       this.choiceSelectSound.play();
       this.scene.start('World');

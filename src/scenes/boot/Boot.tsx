@@ -29,7 +29,7 @@ export class Boot extends Phaser.Scene {
 
     this.load.on('complete', () => {
       overlay.clearUi();
-      this.scene.start('World');
+      this.scene.start('MainMenu');
     });
 
     this.loadAssets();

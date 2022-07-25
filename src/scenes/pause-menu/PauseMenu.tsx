@@ -38,7 +38,8 @@ export class PauseMenu extends Phaser.Scene {
 
     continueButton.addEventListener('click', () => {
       this.choiceSelectSound.play();
-      this.scene.start('World');
+      this.scene.stop();
+      this.scene.resume('World');
     })
 
     exitButton.addEventListener('click', () => {

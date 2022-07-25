@@ -1,8 +1,7 @@
-// could be singleton?
-// factory method clears container first...
+// Plugin is a singleton (when applied globally?)
 export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   private container: Element; 
-
+  private uiMap: Map<String, Element> = new Map();
   /**
    *
    */
@@ -13,27 +12,50 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   create(child, scene: Phaser.Scene) {
     this.container = document.querySelector('#game > div');
     this.container.appendChild(child);
+    
+    this.uiMap.set(scene.scene.key, child);
 
     var eventEmitter = scene.events;
+    eventEmitter.on('pause', this.pause, this);
+    eventEmitter.on('resume', this.resume, this);
     eventEmitter.on('shutdown', this.shutdown, this);
-    eventEmitter.on('destroy', this.destroy, this);
+    eventEmitter.on('destroy', this.destroyScene, this );
   }
 
-  // on pause display none; 
-  // on resume display: normal;
-
-  //  Called when a Scene shuts down, it may then come back again later
-  // (which will invoke the 'start' event) but should be considered dormant.
-  shutdown() { 
-    this.clearUi();
+  pause(system: Phaser.Scenes.Systems) {
+    console.log('pause: ' + system.scenePlugin.key);
+    const element = this.uiMap.get(system.scenePlugin.key);
+    if (element) {
+      element['style'].display = 'none'
+    }
   }
 
-  // called when a Scene is destroyed by the Scene Manager
-  destroy() {
-    this.shutdown();
+  resume(system: Phaser.Scenes.Systems) {
+    console.log('resume: ' + system.scenePlugin.key);
+    const element = this.uiMap.get(system.scenePlugin.key);
+    if (element) {
+      element['style'].display = 'block'
+    }
   }
 
-  private clearUi() {
-    this.container.replaceChildren();
+  shutdown(system: Phaser.Scenes.Systems) {
+    console.log('shutdown: ' + system.scenePlugin.key);
+    this.clearUi(system.scenePlugin.key);
+  }
+
+  destroyScene(system: Phaser.Scenes.Systems) {
+    console.log('destroy: ' + system.scenePlugin.key);
+    this.clearUi(system.scenePlugin.key);
+  }
+
+  private clearUi(key: string) {
+    const element = this.uiMap.get(key);
+    if (!element) return;
+    try {
+      this.container.removeChild(element);
+    } catch (error){
+      console.log(error)
+    }
+    this.uiMap.delete(key);
   }
 }

@@ -1,6 +1,6 @@
-import { createElement } from "../../ui/jsxFactory";
-import  styles from "./dialogue.module.css";
-import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
+import { createElement } from '../../ui/jsxFactory';
+import styles from './dialogue.module.css';
+import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -16,7 +16,6 @@ const DIALOGUE_TEXT_ARRAY = [
   'Hello, how are you?',
 ];
 
-
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex;
   private dialogueTextElement;
@@ -26,7 +25,6 @@ export class Dialogue extends Phaser.Scene {
 
   constructor() {
     super(sceneConfig);
-
   }
 
   create(): void {
@@ -34,19 +32,19 @@ export class Dialogue extends Phaser.Scene {
     this.dialogueAdvanceSound.play();
     this.dialogueTextIndex = 0;
 
-    this.dialogueTextElement = <div className={styles.dialogueText}>{DIALOGUE_TEXT_ARRAY[0]}</div>
-    let dialogueUi = (
+    this.dialogueTextElement = <div className={styles.dialogueText}>{DIALOGUE_TEXT_ARRAY[0]}</div>;
+    const dialogueUi = (
       <div className={styles.dialogueContainer}>
         <div className={styles.dialogueBox}>
-          <div className={styles.dialogueBackground}/>
+          <div className={styles.dialogueBackground} />
           <div className={styles.dialoguePortrait}>
-            <img src={"/assets/characters/rise.png"}></img>
+            <img src={'/assets/characters/rise.png'}></img>
           </div>
           <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
           {this.dialogueTextElement}
         </div>
       </div>
-    )
+    );
 
     this.ui.create(dialogueUi, this);
 

@@ -1,5 +1,5 @@
-import { createElement } from "../../ui/jsxFactory";
-import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
+import { createElement } from '../../ui/jsxFactory';
+import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,22 +15,22 @@ export class Boot extends Phaser.Scene {
   }
 
   public preload(): void {
-    const percentText = <div>0%</div>
-    const assetText = <div></div>
+    const percentText = <div>0%</div>;
+    const assetText = <div></div>;
     const container = (
       <div>
         {percentText}
         {assetText}
       </div>
-    )
+    );
 
     this.ui.create(container, this);
 
-    this.load.on('progress', (value) => percentText.innerText = `${value * 100}%`);
-    this.load.on('fileprogress', (file) => assetText.innerText = file.key);
+    this.load.on('progress', (value) => (percentText.innerText = `${value * 100}%`));
+    this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
 
     this.load.on('complete', () => {
-      this.scene.start('MainMenu');
+      this.scene.start('Dialogue');
     });
 
     this.loadAssets();

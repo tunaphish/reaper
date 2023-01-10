@@ -1,7 +1,7 @@
-import { createElement } from "../../ui/jsxFactory";
-import  styles from "./world.module.css";
+import { createElement } from '../../ui/jsxFactory';
+import styles from './world.module.css';
 import Player from '../../sprites/Player';
-import UiOverlayPlugin from "../../ui/UiOverlayPlugin";
+import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -31,22 +31,20 @@ export class World extends Phaser.Scene {
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
 
-    // event start dialogue 
+    // event start dialogue
     // this.input.keyboard.on('keydown-W', function startDialogueScene() {
     //   this.scene.pause();
     //   this.scene.run('Dialogue');
     // }, this);
-    
 
-    const pauseButton = <div>click me</div>
+    const pauseButton = <div>click me</div>;
     const container = <div>{pauseButton}</div>;
     this.ui.create(container, this);
 
     pauseButton.addEventListener('click', () => {
       this.scene.pause();
       this.scene.run('PauseMenu');
-    })
-
+    });
   }
 
   public update(time: number, delta: number): void {

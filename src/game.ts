@@ -24,9 +24,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     createContainer: true,
   },
   plugins: {
-    global: [
-        { key: 'ui-overlay', plugin: UiOverlayPlugin, start: false, mapping: 'ui' }
-    ]
+    global: [{ key: 'ui-overlay', plugin: UiOverlayPlugin, start: false, mapping: 'ui' }],
   },
 };
 

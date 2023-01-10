@@ -1,7 +1,7 @@
 // Plugin is a singleton (when applied globally?)
 export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
-  private container: Element; 
-  private uiMap: Map<String, Element> = new Map();
+  private container: Element;
+  private uiMap: Map<string, Element> = new Map();
   /**
    *
    */
@@ -12,21 +12,21 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   create(child, scene: Phaser.Scene) {
     this.container = document.querySelector('#game > div');
     this.container.appendChild(child);
-    
+
     this.uiMap.set(scene.scene.key, child);
 
-    var eventEmitter = scene.events;
+    const eventEmitter = scene.events;
     eventEmitter.on('pause', this.pause, this);
     eventEmitter.on('resume', this.resume, this);
     eventEmitter.on('shutdown', this.shutdown, this);
-    eventEmitter.on('destroy', this.destroyScene, this );
+    eventEmitter.on('destroy', this.destroyScene, this);
   }
 
   pause(system: Phaser.Scenes.Systems) {
     console.log('pause: ' + system.scenePlugin.key);
     const element = this.uiMap.get(system.scenePlugin.key);
     if (element) {
-      element['style'].display = 'none'
+      element['style'].display = 'none';
     }
   }
 
@@ -34,7 +34,7 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
     console.log('resume: ' + system.scenePlugin.key);
     const element = this.uiMap.get(system.scenePlugin.key);
     if (element) {
-      element['style'].display = 'block'
+      element['style'].display = 'block';
     }
   }
 
@@ -53,8 +53,8 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
     if (!element) return;
     try {
       this.container.removeChild(element);
-    } catch (error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
     this.uiMap.delete(key);
   }

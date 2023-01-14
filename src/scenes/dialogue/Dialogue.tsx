@@ -51,7 +51,7 @@ export class Dialogue extends Phaser.Scene {
     dialogueUi.addEventListener('click', this.advanceDialogue.bind(this));
   }
 
-  advanceDialogue() {
+  advanceDialogue(): void {
     this.dialogueTextIndex++;
     if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
       this.scene.start('World');

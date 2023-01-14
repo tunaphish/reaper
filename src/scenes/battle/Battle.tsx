@@ -1,3 +1,4 @@
+import { Scene } from 'phaser';
 import { createElement } from '../../ui/jsxFactory';
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 import styles from './battle.module.css';
@@ -8,6 +9,33 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Battle',
 };
 
+class MenuButton {
+
+  ui: Element;
+  /**
+   * Returns Dom Element with Sound
+   */
+  constructor(scene: Scene, element: Element) {
+    const selectSound = scene.sound.add('choice-select');
+    const hoverSound = scene.sound.add('choice-hover');
+
+    element.addEventListener('click', () => {
+      selectSound.play();
+      console.log('lettuce start the settings');
+    });
+
+    element.addEventListener('mouseover', () => {
+      hoverSound.play();
+    });
+
+    element.addEventListener('mouseover', () => {
+      hoverSound.play();
+    });
+
+    this.ui = element;
+  }
+}
+
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
 
@@ -16,23 +44,22 @@ export class Battle extends Phaser.Scene {
   }
 
   public create(): void {
-    const runButton = <div>Run</div>;
+    const attackButton: Element = new MenuButton(this, <div>Attack</div>).ui;
+    const magicButton: Element = new MenuButton(this, <div>Magic</div>).ui;
+    const itemButton: Element = new MenuButton(this, <div>Item</div>).ui;
+    const runButton: Element = new MenuButton(this, <div>Run</div>).ui;
 
-    const battleBar = (
+    const battleBar: Element = (
       <div className={styles.container}>
         <div className={styles.battleBar}>
-          <div>Fight</div>
-          <div>Talk</div>
-          <div>Item</div>
+          {attackButton}
+          {magicButton}
+          {itemButton}
           {runButton}
         </div>
       </div>
     );
 
     this.ui.create(battleBar, this);
-
-    runButton.addEventListener('click', () => {
-      this.scene.start('World');
-    });
   }
 }

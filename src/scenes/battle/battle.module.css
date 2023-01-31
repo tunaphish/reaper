@@ -1,17 +1,88 @@
 .container {
   display: flex;
   height: 100%;
-  align-items: flex-end;
+  flex-direction: column;
 }
 
-.battleBar {
+.sceneContainer {
+  flex: 4;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.parallax {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png), 
+    url('/assets/characters/eji.png'), 
+    url('/assets/backgrounds/pikrepo.jpg');
+
+  flex: 4;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.animeText {
+  font-family: verdana;
+  font-weight: bold;
+  font-size: 24px;
+
+  padding-bottom: 10px;
+
+  -webkit-text-stroke: 2px black;
+  -webkit-text-fill-color: yellow;
+}
+
+.menu {
+  flex: 1;
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+}
+
+.battleOptions {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.menuRow {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.menuButton {
+  flex: 1;
+  text-align: center;
+
+  font-size: large;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.partyBar {
   display: flex;
   flex: 1;
 }
 
-.battleBar > div {
-  flex: 1 ;
-  text-align: center;
+.characterCell {
+  flex: 1;
   border: 1px solid white;
-  padding: 30px 0 30px 0;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+

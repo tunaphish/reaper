@@ -15,16 +15,26 @@ export class Battle extends Phaser.Scene {
   private lineIndex;
   private script: string[];
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
+  private music: Phaser.Sound.BaseSound;
 
   private animeText: any;
   private parallax: any;
+
+  private actorMessage: any;
+  private actorName: any;
+  private actorDialogue: any;
 
   constructor() {
     super(sceneConfig);
   }
 
   public init(data): void {
-    if (!data.scriptFileKey) return;
+    if (!data.scriptFileKey) {
+      data = {
+        scriptFileKey: 'final-battle',
+        scriptKey: 'start',
+      }
+    }
     const scriptFile = this.cache.text.get(data.scriptFileKey);
     const parsedYaml = load(scriptFile);
     this.script = parsedYaml[data.scriptKey];
@@ -34,14 +44,23 @@ export class Battle extends Phaser.Scene {
 
   public create(): void {
     this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
-    this.animeText = <p className={styles.animeText}>any</p>
+    this.animeText = <p className={styles.animeText}></p>
     this.parallax = (
       <div className={styles.parallax} id="parallax">
         {this.animeText}
       </div>
     );
 
-    const dialogAdvancer: Element = <div>Advance Dialogue</div>;
+    this.actorName = <div></div>
+    this.actorDialogue = <p className={styles.actorDialogue}></p>
+    const actorMessage: Element = (
+      <div className={styles.actorMessage}>
+        {this.actorName}
+        {this.actorDialogue}
+      </div>
+    )
+
+    const menu: Element = <div className={styles.menu}>{actorMessage}</div>;
 
     const partyBar: Element = (
       <div className={styles.partyBar}>
@@ -66,7 +85,7 @@ export class Battle extends Phaser.Scene {
     const container: Element = (
       <div className={styles.container}>
         {this.parallax}
-        <div className={styles.menu}>{dialogAdvancer}</div>
+        {menu}
         {partyBar}
       </div>
     );
@@ -85,7 +104,7 @@ export class Battle extends Phaser.Scene {
       this.parallax.style.backgroundPosition = x;
     });
 
-    dialogAdvancer.addEventListener('click', () => {
+    menu.addEventListener('click', () => {
       this.advanceLine();
     })
 
@@ -93,10 +112,15 @@ export class Battle extends Phaser.Scene {
   }
 
   advanceLine(): void {
-    // if animation is playing then jump to the end
-
     this.lineIndex++;
-    if (this.lineIndex >= this.script.length) return;
+    if (this.lineIndex >= this.script.length) {
+      this.music.stop();
+      this.scene.start('DialogueList');
+    }
+
+    this.actorDialogue.classList.remove(styles.typeAnimation);
+    this.animeText.classList.remove(styles.typeAnimation);
+
     const line = this.script[this.lineIndex];
     const [keys, value] = line.split('|');
     const [action, actor] = keys.split(' ');
@@ -105,25 +129,36 @@ export class Battle extends Phaser.Scene {
       case 'show':
         this.advanceLine();
         break;
-      case 'says':
+      case 'says': 
+        this.dialogueAdvanceSound.play();
+        this.actorName.innerText = actor;
+        this.actorDialogue.innerText = value;
+        //work around to trigger CSS animation
+        // this.actorDialogue.classList.remove(styles.typeAnimation);
+        // this.actorDialogue.offsetWidth;
+        // this.actorDialogue.classList.add(styles.typeAnimation);
+        break;
+      case 'display':
         this.dialogueAdvanceSound.play();
         this.animeText.innerText = value;
         //work around to trigger CSS animation
-        this.animeText.classList.remove(styles.typeAnimation);
-        this.animeText.offsetWidth;
-        this.animeText.classList.add(styles.typeAnimation);
-        console.log(this.animeText.classList);
+        // this.animeText.classList.remove(styles.typeAnimation);
+        // this.animeText.offsetWidth;
+        // this.animeText.classList.add(styles.typeAnimation);
         break;
       case 'play':
         this.playSong(actor);
         this.advanceLine();
         break;
+      case 'choose':
+        //new script 
       default:
         this.advanceLine();
     }
   }
 
   playSong(songKey) {
-    this.sound.add(songKey, { loop: true }).play();
+    this.music = this.sound.add(songKey, { loop: true })
+    this.music.play();
   }
 }

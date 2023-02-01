@@ -1,12 +1,14 @@
 start:
   - show street_morning | WITH FADE CONTINUE
-  - show sei | normal AT CENTER WITH FADE
-  - says sei | What was the point? 
-  - says sei | Did it change anything? 
-  - says sei | Did it change the world?
-  - says sei | Everyone's still dead, they are still reapt. 
-  - play knight
+  - enter sei | normal AT CENTER WITH FADE
+  - says eji | We saved those souls... Without reaping them
+  - display | What was the point? 
+  - display | Did it change anything? 
+  - display | Did it change the world?
+  - display | Everyone's still dead
+  - play knight 
   - says eji | It changed me.  
+  - display | Then there's nothing else to say
 
 end: 
   - show street_morning | WITH FADE CONTINUE

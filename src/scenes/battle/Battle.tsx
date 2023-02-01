@@ -131,7 +131,7 @@ export class Battle extends Phaser.Scene {
 
     const line = this.script[this.lineIndex];
     const [keys, value] = line.split('|');
-    const [action, actor] = keys.split(' ');
+    const [action, actor, adjective] = keys.split(' ');
 
     switch (action) {
       case 'show':
@@ -140,7 +140,9 @@ export class Battle extends Phaser.Scene {
         this.advanceLine();
         break;
       case 'enter':
-        this.middleground = `url("/assets/characters/${actor}.png")`;
+        console.log(adjective)
+        const emotion = adjective ? `-${adjective}` : '';
+        this.middleground = `url("/assets/characters/${actor}${emotion}.png")`;
         this.updateParallax();
         this.advanceLine();
         break;
@@ -157,10 +159,6 @@ export class Battle extends Phaser.Scene {
         this.dialogueAdvanceSound.play();
         this.actorName.innerText = '';
         this.actorDialogue.innerText = value;
-        //work around to trigger CSS animation
-        // this.actorDialogue.classList.remove(styles.typeAnimation);
-        // this.actorDialogue.offsetWidth;
-        // this.actorDialogue.classList.add(styles.typeAnimation);
         break;
       case 'display':
         this.dialogueAdvanceSound.play();

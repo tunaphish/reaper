@@ -7,6 +7,7 @@ start:
   - display | Did it change the world?
   - display | Everyone's still dead
   - play knight 
+  - enter eji angry
   - says eji | It changed me.  
   - announce | > ... the wind is howling
 

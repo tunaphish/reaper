@@ -1,0 +1,10 @@
+.scriptButton {
+  font-size: 32px;
+  letter-spacing: 5px;
+  text-align: center;
+  margin: 10px;
+}
+
+.scriptButton:hover {
+  color: yellow;
+}

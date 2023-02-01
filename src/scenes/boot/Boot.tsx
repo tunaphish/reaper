@@ -56,5 +56,8 @@ export class Boot extends Phaser.Scene {
     this.load.audio('dialogue-advance', 'assets/sounds/dialogue-advance.wav');
 
     this.load.audio('main-menu-music', 'assets/music/corner-of-memories.mp3');
+
+    this.load.text('final-battle', '/assets/scripts/final-battle.yaml');
+    this.load.text('temp-scripts', '/assets/scripts/temp-scripts.yaml');
   }
 }

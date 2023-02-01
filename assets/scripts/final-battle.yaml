@@ -1,0 +1,18 @@
+start:
+  - show supermarket 
+  - enter eji
+  - says eji | We saved those souls... Without reaping them
+  - display | What was the point? 
+  - display | Did it change anything? 
+  - display | Did it change the world?
+  - display | Everyone's still dead
+  - play knight 
+  - enter eji angry
+  - says eji | It changed me.  
+  - announce | > ... the wind is howling
+
+end: 
+  - show supermarket 
+  - show sei | normal AT CENTER WITH FADE
+  - says sei | AIGHT WHAT'S THIS ALL ABOUT NOW HUH?
+  - says sei | A TEST??? THIS IS WHAST THIS IS?

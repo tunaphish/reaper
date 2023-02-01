@@ -24,6 +24,10 @@ export class Battle extends Phaser.Scene {
   private actorName: any;
   private actorDialogue: any;
 
+  private foreground: string = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png)';
+  private middleground: string = 'url("/assets/characters/eji.png")';
+  private background: string = 'url("/assets/backgrounds/pikrepo.jpg")'
+
   constructor() {
     super(sceneConfig);
   }
@@ -36,10 +40,10 @@ export class Battle extends Phaser.Scene {
       }
     }
     const scriptFile = this.cache.text.get(data.scriptFileKey);
+  
     const parsedYaml = load(scriptFile);
     this.script = parsedYaml[data.scriptKey];
     this.lineIndex = -1;
-    console.log(this.script);
   }
 
   public create(): void {
@@ -104,6 +108,9 @@ export class Battle extends Phaser.Scene {
       this.parallax.style.backgroundPosition = x;
     });
 
+    this.updateParallax();
+ 
+
     menu.addEventListener('click', () => {
       this.advanceLine();
     })
@@ -127,6 +134,11 @@ export class Battle extends Phaser.Scene {
 
     switch (action) {
       case 'show':
+        const background = `url("/assets/backgrounds/${actor}.jpg")`;
+        console.log(background)
+        this.background = background;
+        console.log(this.background)
+        this.updateParallax();
         this.advanceLine();
         break;
       case 'says': 
@@ -157,8 +169,15 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  playSong(songKey) {
+  playSong(songKey): void {
     this.music = this.sound.add(songKey, { loop: true })
     this.music.play();
+  }
+
+  updateParallax(): void {
+    const newBackgroundImage = `${this.foreground}, ${this.middleground}, ${this.background}`;
+    console.log(this.parallax.style.backgroundImage);
+    this.parallax.style.backgroundImage = newBackgroundImage;
+    console.log(this.parallax.style.backgroundImage);
   }
 }

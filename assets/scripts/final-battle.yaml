@@ -1,6 +1,6 @@
 start:
-  - show street_morning | WITH FADE CONTINUE
-  - enter sei | normal AT CENTER WITH FADE
+  - show supermarket 
+  - enter sei
   - says eji | We saved those souls... Without reaping them
   - display | What was the point? 
   - display | Did it change anything? 
@@ -11,7 +11,7 @@ start:
   - display | Then there's nothing else to say
 
 end: 
-  - show street_morning | WITH FADE CONTINUE
+  - show supermarket 
   - show sei | normal AT CENTER WITH FADE
   - says sei | AIGHT WHAT'S THIS ALL ABOUT NOW HUH?
   - says sei | A TEST??? THIS IS WHAST THIS IS?

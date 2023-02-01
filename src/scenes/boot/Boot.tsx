@@ -43,6 +43,7 @@ export class Boot extends Phaser.Scene {
     this.load.aseprite('shizuka', 'assets/sprites/shizuka.png', 'assets/sprites/shizuka.json');
 
     this.load.image('rise', 'assets/characters/rise.png');
+    this.load.image('eji', 'assets/characters/eji.png');
 
     this.load.image('slime', 'assets/sprites/slime.png');
 

@@ -123,6 +123,7 @@ export class Battle extends Phaser.Scene {
     if (this.lineIndex >= this.script.length) {
       this.music.stop();
       this.scene.start('DialogueList');
+      return;
     }
 
     this.actorDialogue.classList.remove(styles.typeAnimation);
@@ -134,10 +135,12 @@ export class Battle extends Phaser.Scene {
 
     switch (action) {
       case 'show':
-        const background = `url("/assets/backgrounds/${actor}.jpg")`;
-        console.log(background)
-        this.background = background;
-        console.log(this.background)
+        this.background = `url("/assets/backgrounds/${actor}.jpg")`;;
+        this.updateParallax();
+        this.advanceLine();
+        break;
+      case 'enter':
+        this.middleground = `url("/assets/characters/${actor}.png")`;
         this.updateParallax();
         this.advanceLine();
         break;
@@ -176,8 +179,6 @@ export class Battle extends Phaser.Scene {
 
   updateParallax(): void {
     const newBackgroundImage = `${this.foreground}, ${this.middleground}, ${this.background}`;
-    console.log(this.parallax.style.backgroundImage);
     this.parallax.style.backgroundImage = newBackgroundImage;
-    console.log(this.parallax.style.backgroundImage);
   }
 }

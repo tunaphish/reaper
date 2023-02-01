@@ -1,6 +1,6 @@
 start:
   - show supermarket 
-  - enter sei
+  - enter eji
   - says eji | We saved those souls... Without reaping them
   - display | What was the point? 
   - display | Did it change anything? 
@@ -8,7 +8,6 @@ start:
   - display | Everyone's still dead
   - play knight 
   - says eji | It changed me.  
-  - display | Then there's nothing else to say
 
 end: 
   - show supermarket 

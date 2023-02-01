@@ -38,7 +38,7 @@ export class Dialogue extends Phaser.Scene {
         <div className={styles.dialogueBox}>
           <div className={styles.dialogueBackground} />
           <div className={styles.dialoguePortrait}>
-            <img src={'/assets/characters/rise.png'}></img>
+            <img src={'/reaper/assets/characters/rise.png'}></img>
           </div>
           <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
           {this.dialogueTextElement}

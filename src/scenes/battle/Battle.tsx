@@ -25,8 +25,8 @@ export class Battle extends Phaser.Scene {
   private actorDialogue: any;
 
   private foreground: string = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png)';
-  private middleground: string = 'url("/assets/characters/eji.png")';
-  private background: string = 'url("/assets/backgrounds/pikrepo.jpg")'
+  private middleground: string = 'url("/reaper/assets/characters/eji.png")';
+  private background: string = 'url("/reaper/assets/backgrounds/pikrepo.jpg")'
 
   constructor() {
     super(sceneConfig);
@@ -135,14 +135,14 @@ export class Battle extends Phaser.Scene {
 
     switch (action) {
       case 'show':
-        this.background = `url("/assets/backgrounds/${actor}.jpg")`;;
+        this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;;
         this.updateParallax();
         this.advanceLine();
         break;
       case 'enter':
         console.log(adjective)
         const emotion = adjective ? `-${adjective}` : '';
-        this.middleground = `url("/assets/characters/${actor}${emotion}.png")`;
+        this.middleground = `url("/reaper/assets/characters/${actor}${emotion}.png")`;
         this.updateParallax();
         this.advanceLine();
         break;

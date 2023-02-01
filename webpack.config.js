@@ -49,7 +49,8 @@ module.exports = {
           from: 'index.html',
         },
         {
-          from: 'assets/**/*',
+          from: 'assets',
+          to: process.env.NODE_ENV == 'production' ? 'assets' : 'reaper/assets'
         },
       ],
     }),

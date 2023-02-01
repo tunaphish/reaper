@@ -1,3 +1,4 @@
+import { Scene } from "phaser";
 class MenuButton {
   ui: Element;
   /**

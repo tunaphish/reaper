@@ -2,7 +2,6 @@
   "name": "reaper",
   "version": "0.0.1",
   "description": "A game about nothing",
-  "main": "src/main.ts",
   "author": "Tuan Pham",
   "homepage": "http://tunaphish.github.io/reaper",
   "private": false,

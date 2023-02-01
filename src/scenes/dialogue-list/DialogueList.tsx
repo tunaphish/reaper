@@ -31,23 +31,23 @@ export class DialogueList extends Phaser.Scene {
 
     //append script list
     //then attach event listenrs
-    this.cache.text.entries.each((scriptKey) => {
+    this.cache.text.entries.each((scriptFileKey) => {
 
-      const scriptHeader: Element = <h1>{scriptKey}</h1>;
+      const scriptHeader: Element = <h1>{scriptFileKey}</h1>;
       menuItems.appendChild(scriptHeader);
 
-      const data = this.cache.text.entries.get(scriptKey);
+      const data = this.cache.text.entries.get(scriptFileKey);
       const parsedData = load(data);
-      const sceneKeys = Object.keys(parsedData);
+      const scriptKeys = Object.keys(parsedData);
 
-      sceneKeys.forEach((sceneKey) => {
-        const sceneListItem: Element = <div className={styles.scriptButton}>- {sceneKey}</div>;
+      scriptKeys.forEach((scriptKey) => {
+        const sceneListItem: Element = <div className={styles.scriptButton}>- {scriptKey}</div>;
         scriptHeader.appendChild(sceneListItem);
 
         sceneListItem.addEventListener('click', () => {
           this.choiceSelectSound.play();
           console.log('lettuce start the settings');
-          this.scene.start('Battle', { scriptKey, sceneKey });
+          this.scene.start('Battle', { scriptFileKey, scriptKey });
         });
 
         sceneListItem.addEventListener('mouseover', () => {

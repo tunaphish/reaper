@@ -32,13 +32,26 @@
 .animeText {
   font-family: verdana;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
 
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 
   -webkit-text-stroke: 2px black;
   -webkit-text-fill-color: yellow;
+
 }
+
+.typeAnimation {
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+  animation: type 4s steps(60, end); 
+}
+
+@keyframes type { 
+  from { width: 0; } 
+} 
 
 .menu {
   flex: 1;

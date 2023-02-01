@@ -153,6 +153,15 @@ export class Battle extends Phaser.Scene {
         // this.actorDialogue.offsetWidth;
         // this.actorDialogue.classList.add(styles.typeAnimation);
         break;
+      case 'announce': 
+        this.dialogueAdvanceSound.play();
+        this.actorName.innerText = '';
+        this.actorDialogue.innerText = value;
+        //work around to trigger CSS animation
+        // this.actorDialogue.classList.remove(styles.typeAnimation);
+        // this.actorDialogue.offsetWidth;
+        // this.actorDialogue.classList.add(styles.typeAnimation);
+        break;
       case 'display':
         this.dialogueAdvanceSound.play();
         this.animeText.innerText = value;

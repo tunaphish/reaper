@@ -8,6 +8,7 @@ start:
   - display | Everyone's still dead
   - play knight 
   - says eji | It changed me.  
+  - announce | > ... the wind is howling
 
 end: 
   - show supermarket 

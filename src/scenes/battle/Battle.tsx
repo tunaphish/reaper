@@ -93,6 +93,8 @@ export class Battle extends Phaser.Scene {
   }
 
   advanceLine(): void {
+    // if animation is playing then jump to the end
+
     this.lineIndex++;
     if (this.lineIndex >= this.script.length) return;
     const line = this.script[this.lineIndex];
@@ -112,8 +114,16 @@ export class Battle extends Phaser.Scene {
         this.animeText.classList.add(styles.typeAnimation);
         console.log(this.animeText.classList);
         break;
+      case 'play':
+        this.playSong(actor);
+        this.advanceLine();
+        break;
+      default:
+        this.advanceLine();
     }
   }
 
-
+  playSong(songKey) {
+    this.sound.add(songKey, { loop: true }).play();
+  }
 }

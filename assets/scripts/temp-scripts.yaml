@@ -1,44 +1,44 @@
 temporary_beauty: 
-  - show street_morning: WITH FADE CONTINUE
-  - show estelle: normal AT CENTER WITH FADE
-  - estelle says: What's more human then the desire for beauty?
-  - sei says: It's a pointless distraction
-  - estelle says: Distraction? Distraction from what exactly?
-  - sei says: The beauty is temporary. It doesn't last. Why put in the effort.
-  - estelle says: Everything is temporary. 
-  - estelle says: Temporary? Everything is temporary. Flowers go through the cycle of life. They gestate in the fall and winter so they may bloom beautifully in the spring and die in the summer.
-  - estelle says: The beauty is in the fact that it's temporary.
+  - show street_morning | WITH FADE CONTINUE
+  - show estelle | normal AT CENTER WITH FADE
+  - says estelle  | What's more human then the desire for beauty?
+  - says sei | It's a pointless distraction
+  - says estelle | Distraction? Distraction from what exactly?
+  - says sei | The beauty is temporary. It doesn't last. Why put in the effort.
+  - says estelle | Everything is temporary. 
+  - says estelle | Temporary? Everything is temporary. Flowers go through the cycle of life. They gestate in the fall and winter so they may bloom beautifully in the spring and die in the summer.
+  - says estelle | The beauty is in the fact that it's temporary.
 
 sei_fun:
-  - show street_morning: WITH FADE CONTINUE
-  - show estelle: normal AT CENTER WITH FADE
-  - estelle says: I’m sure your pretty face has also gotten you your fair share of fun. 
-  - sei says: Everything I have earned, I have worked for
-  - estelle says: Whatever you say...
+  - show street_morning | WITH FADE CONTINUE
+  - show estelle | normal AT CENTER WITH FADE
+  - says estelle | I am sure your pretty face has also gotten you your fair share of fun. 
+  - says sei | Everything I have earned, I have worked for
+  - says estelle | Whatever you say...
 
 
 rock_taunt:
-  - show street_morning: WITH FADE CONTINUE
-  - show rock: normal AT CENTER WITH FADE
-  - rock says: Block this you fuckin pussy.
-  - sei says: Eji don't listen to him. It's easier to dodge.
-  - sei says: Don't fall for his taunts, It will only embolden him.
-  - eji says: THEN I WON'T FAIL TO BLOCK HIM. 
-  - rock says: Put on your headphones. Turn this shit up. You are going to be here a while. 
+  - show street_morning | WITH FADE CONTINUE
+  - show rock | normal AT CENTER WITH FADE
+  - says rock | Block this you fuckin pussy.
+  - says sei | Eji don't listen to him. It's easier to dodge.
+  - says sei | Don't fall for his taunts, It will only embolden him.
+  - says eji | THEN I WON'T FAIL TO BLOCK HIM. 
+  - says rock | Put on your headphones. Turn this shit up. You are going to be here a while. 
 
 evil_look: 
-  - show street_morning: WITH FADE CONTINUE
-  - show ava: normal AT CENTER WITH FADE
-  - ava says: That's an evil look on your face
-  - eji says: ah...
-  - ava says: I like it
+  - show street_morning | WITH FADE CONTINUE
+  - show ava | normal AT CENTER WITH FADE
+  - says ava | That's an evil look on your face
+  - says eji | ah...
+  - says ava | I like it
 
 important_control:
-  - show street_morning: WITH FADE CONTINUE
-  - show ava: normal AT CENTER WITH FADE
-  - ava says: Everything is under your control 
-  - eji says: What are you talking about?
-  - eji says: NOTHING is under my control
-  - eji says: I couldn't save Keshi, I couldn't get through to Sei
-  - eji says: nothing...
-  - ava says: Everything important is under your control
+  - show street_morning | WITH FADE CONTINUE
+  - show ava | normal AT CENTER WITH FADE
+  - says ava | Everything is under your control 
+  - says eji | What are you talking about?
+  - says eji | NOTHING is under my control
+  - says eji | I couldn't save Keshi, I couldn't get through to Sei
+  - says eji | nothing...
+  - says ava | Everything important is under your control

@@ -38,12 +38,12 @@
 
   -webkit-text-stroke: 2px black;
   -webkit-text-fill-color: yellow;
-
 }
 
 .typeAnimation {
   white-space: nowrap;
   overflow: hidden;
+  
   width: 100%;
   text-align: center;
   animation: type 4s steps(60, end); 

@@ -13,6 +13,8 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private lineIndex;
+
+  private scripts: any;
   private script: string[];
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
   private music: Phaser.Sound.BaseSound;
@@ -20,9 +22,13 @@ export class Battle extends Phaser.Scene {
   private animeText: any;
   private parallax: any;
 
+  private menu: Element
+
   private actorMessage: any;
   private actorName: any;
   private actorDialogue: any;
+
+  private choices: any;
 
   private foreground: string = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png)';
   private middleground: string = 'url("/reaper/assets/characters/eji.png")';
@@ -43,8 +49,8 @@ export class Battle extends Phaser.Scene {
     }
     const scriptFile = this.cache.text.get(data.scriptFileKey);
   
-    const parsedYaml = load(scriptFile);
-    this.script = parsedYaml[data.scriptKey];
+    this.scripts = load(scriptFile);
+    this.script = this.scripts[data.scriptKey];
     this.lineIndex = -1;
   }
 
@@ -59,14 +65,16 @@ export class Battle extends Phaser.Scene {
 
     this.actorName = <div></div>
     this.actorDialogue = <p className={styles.actorDialogue}></p>
-    const actorMessage: Element = (
+    this.actorMessage = (
       <div className={styles.actorMessage}>
         {this.actorName}
         {this.actorDialogue}
       </div>
     )
 
-    const menu: Element = <div className={styles.menu}>{actorMessage}</div>;
+    this.choices = <div></div>;
+
+    this.menu = <div className={styles.menu}></div>;
 
     const partyBar: Element = (
       <div className={styles.partyBar}>
@@ -83,7 +91,7 @@ export class Battle extends Phaser.Scene {
         <div className={styles.characterCell}>
           Girl
           <div>❤️ 100/100</div>
-          <div>☀️ 100/100</div>
+          <div>☀️ 100/200</div>
         </div>
       </div>
     );
@@ -91,7 +99,7 @@ export class Battle extends Phaser.Scene {
     const container: Element = (
       <div className={styles.container}>
         {this.parallax}
-        {menu}
+        {this.menu}
         {partyBar}
       </div>
     );
@@ -119,9 +127,7 @@ export class Battle extends Phaser.Scene {
     })
 
     this.updateParallax();
- 
-
-    menu.addEventListener('click', () => {
+    this.actorMessage.addEventListener('click', () => {
       this.advanceLine();
     })
 
@@ -130,25 +136,21 @@ export class Battle extends Phaser.Scene {
 
   advanceLine(): void {
     if (this.isAnimatingText) {
-      console.log('stopping animations');
-      this.animeText.classList.remove(styles.typeAnimation);
-      this.actorDialogue.classList.remove(styles.typeAnimation);
+      this.animeText.classList?.remove(styles.typeAnimation);
+      this.actorDialogue.classList?.remove(styles.typeAnimation);
       this.isAnimatingText = false;
       return;
     }
 
     this.lineIndex++;
     if (this.lineIndex >= this.script.length) {
-      this.music.stop();
+      this.music?.stop();
       this.scene.start('DialogueList');
       return;
     }
 
-    this.actorDialogue.classList.remove(styles.typeAnimation);
-    this.animeText.classList.remove(styles.typeAnimation);
-
     const line = this.script[this.lineIndex];
-    const [keys, value] = line.split('|');
+    const [keys, value] = line.split(' | ');
     const [action, actor, adjective] = keys.split(' ');
 
     switch (action) {
@@ -158,13 +160,13 @@ export class Battle extends Phaser.Scene {
         this.advanceLine();
         break;
       case 'enter':
-        console.log(adjective)
         const emotion = adjective ? `-${adjective}` : '';
         this.middleground = `url("/reaper/assets/characters/${actor}${emotion}.png")`;
         this.updateParallax();
         this.advanceLine();
         break;
       case 'says': 
+        this.menu.replaceChildren(this.actorMessage);
         this.dialogueAdvanceSound.play();
         this.actorName.innerText = actor;
         this.actorDialogue.innerText = value;
@@ -178,6 +180,11 @@ export class Battle extends Phaser.Scene {
         this.dialogueAdvanceSound.play();
         this.actorName.innerText = '';
         this.actorDialogue.innerText = value;
+        //work around to trigger CSS animation
+        this.isAnimatingText = true;
+        this.actorDialogue.classList.remove(styles.typeAnimation);
+        this.actorDialogue.offsetWidth;
+        this.actorDialogue.classList.add(styles.typeAnimation);
         break;
       case 'display':
         this.dialogueAdvanceSound.play();
@@ -193,7 +200,26 @@ export class Battle extends Phaser.Scene {
         this.advanceLine();
         break;
       case 'choose':
-        //new script 
+        this.menu.replaceChildren(this.choices);
+        let options = value.split(' ~ ').map(pairs => {
+          const [newScriptKey, displayText] = pairs.split(' * ');
+          return { newScriptKey, displayText };
+        });
+        options.forEach((option) => {
+          const optionDiv = <div className={styles.optionDiv}>{option.displayText}</div>;
+          this.choices.appendChild(optionDiv);
+          optionDiv.addEventListener('click', () => {
+            this.dialogueAdvanceSound.play();
+            this.script = this.scripts[option.newScriptKey];
+            this.lineIndex = -1;
+            this.actorDialogue.innerText = ''
+            this.actorName.innerText = ''
+            this.menu.replaceChildren(this.actorMessage);
+            this.advanceLine();
+          });
+        });
+        
+        break;
       default:
         this.advanceLine();
     }

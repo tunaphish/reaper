@@ -125,3 +125,11 @@
 @keyframes blink-animation {
   50% { opacity: 1; }
 }
+
+.optionDiv {
+  padding: 10px;
+}
+
+.optionDiv:hover {
+  color: yellow;
+}

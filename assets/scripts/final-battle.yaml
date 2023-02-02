@@ -3,16 +3,19 @@ start:
   - enter eji
   - says eji | We saved those souls... Without reaping them
   - display | What was the point? 
-  - display | Did it change anything? 
-  - display | Did it change the world?
   - display | Everyone's still dead
+  - display | Did it change the world?
+  - display | Or did it just feel good
+  - display | Did it change anything? Huh Eji?
+  - choose | fight * Fight On ~ giveup * Give Up
+
+fight: 
   - play knight 
   - enter eji angry
   - says eji | It changed me.  
   - announce | > ... the wind is howling
+  - display | So be it
 
-end: 
-  - show supermarket 
-  - show sei | normal AT CENTER WITH FADE
-  - says sei | AIGHT WHAT'S THIS ALL ABOUT NOW HUH?
-  - says sei | A TEST??? THIS IS WHAST THIS IS?
+giveup: 
+  - display | Glad you could see reason
+  - display | This is for the best 

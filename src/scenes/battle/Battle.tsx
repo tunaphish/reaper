@@ -74,7 +74,7 @@ export class Battle extends Phaser.Scene {
 
     this.choices = <div></div>;
 
-    this.menu = <div className={styles.menu}></div>;
+    this.menu = <div className={styles.menu}>{this.actorMessage}</div>;
 
     const partyBar: Element = (
       <div className={styles.partyBar}>
@@ -89,7 +89,7 @@ export class Battle extends Phaser.Scene {
           <div>☀️ 100/100</div>
         </div>
         <div className={styles.characterCell}>
-          Girl
+          Elise
           <div>❤️ 100/100</div>
           <div>☀️ 100/200</div>
         </div>

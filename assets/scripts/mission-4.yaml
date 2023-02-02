@@ -1,0 +1,36 @@
+briefing: 
+- announce | note to self* add ability for dialogue trees
+- announce | might change code for choose to jump to specific line instead of new script...
+- enter keshi 
+- show supermarket
+- play apathy
+- display | Sei's not coming to the briefing. 
+- display | It's me and you today.
+- choose | desire_cycle * Desires ~ fathers * Fathers ~ move_on * Move On
+
+desire_cycle:
+- enter keshi 
+- show supermarket
+- display | Is this all an endless cycle
+- display | Does it even have a point? 
+- display | When you finish getting what you want
+- display | It's time to want something else or it's time to move on
+
+fathers:
+- enter keshi 
+- show supermarket
+- display | My father wasn't around as a kid. 
+- display | How about you?
+- says eji | He was... Until he wasn't
+- display | ... fill out here ...  
+- display | How can we hope to know ourselves. 
+- display | If we don't know our fathers.
+
+move_on: 
+- enter keshi 
+- show supermarket
+- display | When the time comes Eji
+- display | Will you be there?
+- says eji | Yeah of course. What's this about?
+- display | …
+- display | Just an moody from the rain I guess

@@ -30,7 +30,7 @@ export class Boot extends Phaser.Scene {
     this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
 
     this.load.on('complete', () => {
-      this.scene.start('Battle');
+      this.scene.start('DialogueList');
     });
 
     this.loadAssets();
@@ -58,8 +58,12 @@ export class Boot extends Phaser.Scene {
 
     this.load.audio('main-menu-music', '/reaper/assets/music/corner-of-memories.mp3');
     this.load.audio('knight', '/reaper/assets/music/knight.mp3');
+    this.load.audio('palace', '/reaper/assets/music/palace.mp3');
+    this.load.audio('apathy', '/reaper/assets/music/apathy.mp3');
 
-    this.load.text('final-battle', '/reaper/assets/scripts/final-battle.yaml');
-    this.load.text('temp-scripts', '/reaper/assets/scripts/temp-scripts.yaml');
+    this.load.text('mission-4', '/reaper/assets/scripts/mission-4.yaml');
+    this.load.text('mission-6', '/reaper/assets/scripts/mission-6.yaml');
+    this.load.text('mission-7', '/reaper/assets/scripts/mission-7.yaml');
+    this.load.text('random-scripts', '/reaper/assets/scripts/random-scripts.yaml');
   }
 }

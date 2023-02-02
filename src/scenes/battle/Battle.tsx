@@ -28,6 +28,8 @@ export class Battle extends Phaser.Scene {
   private middleground: string = 'url("/reaper/assets/characters/eji.png")';
   private background: string = 'url("/reaper/assets/backgrounds/pikrepo.jpg")'
 
+  private isAnimatingText: boolean = false;
+
   constructor() {
     super(sceneConfig);
   }
@@ -108,6 +110,14 @@ export class Battle extends Phaser.Scene {
       this.parallax.style.backgroundPosition = x;
     });
 
+    this.actorDialogue.addEventListener('animationend', () => {
+      this.isAnimatingText = false;
+    });
+
+    this.animeText.addEventListener('animationend', () => {
+      this.isAnimatingText = false;
+    })
+
     this.updateParallax();
  
 
@@ -119,6 +129,14 @@ export class Battle extends Phaser.Scene {
   }
 
   advanceLine(): void {
+    if (this.isAnimatingText) {
+      console.log('stopping animations');
+      this.animeText.classList.remove(styles.typeAnimation);
+      this.actorDialogue.classList.remove(styles.typeAnimation);
+      this.isAnimatingText = false;
+      return;
+    }
+
     this.lineIndex++;
     if (this.lineIndex >= this.script.length) {
       this.music.stop();
@@ -151,9 +169,10 @@ export class Battle extends Phaser.Scene {
         this.actorName.innerText = actor;
         this.actorDialogue.innerText = value;
         //work around to trigger CSS animation
-        // this.actorDialogue.classList.remove(styles.typeAnimation);
-        // this.actorDialogue.offsetWidth;
-        // this.actorDialogue.classList.add(styles.typeAnimation);
+        this.isAnimatingText = true;
+        this.actorDialogue.classList.remove(styles.typeAnimation);
+        this.actorDialogue.offsetWidth;
+        this.actorDialogue.classList.add(styles.typeAnimation);
         break;
       case 'announce': 
         this.dialogueAdvanceSound.play();
@@ -164,9 +183,10 @@ export class Battle extends Phaser.Scene {
         this.dialogueAdvanceSound.play();
         this.animeText.innerText = value;
         //work around to trigger CSS animation
-        // this.animeText.classList.remove(styles.typeAnimation);
-        // this.animeText.offsetWidth;
-        // this.animeText.classList.add(styles.typeAnimation);
+        this.isAnimatingText = true;
+        this.animeText.classList.remove(styles.typeAnimation);
+        this.animeText.offsetWidth;
+        this.animeText.classList.add(styles.typeAnimation);
         break;
       case 'play':
         this.playSong(actor);

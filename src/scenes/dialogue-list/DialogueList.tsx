@@ -26,15 +26,15 @@ export class DialogueList extends Phaser.Scene {
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceHoverSound = this.sound.add('choice-hover');
 
-    const menuItems: Element = <div></div>;
-    this.ui.create(menuItems, this);
+    const container: any = <div className={styles.container}></div>;
+    this.ui.create(container, this);
 
     //append script list
     //then attach event listenrs
     this.cache.text.entries.each((scriptFileKey) => {
 
       const scriptHeader: Element = <h1>{scriptFileKey}</h1>;
-      menuItems.appendChild(scriptHeader);
+      container.appendChild(scriptHeader);
 
       const data = this.cache.text.entries.get(scriptFileKey);
       const parsedData = load(data);
@@ -54,6 +54,8 @@ export class DialogueList extends Phaser.Scene {
           this.choiceHoverSound.play();
         });
       });
+
+      container.style.height = '100%';
     });
   }
 }

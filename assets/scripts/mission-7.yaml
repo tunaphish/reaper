@@ -47,8 +47,7 @@ fight:
 - enter sei angry
 - says eji | It changed me.  
 - announce | > ... the wind is howling
-- display | So be it
+- display | I see
 
 giveup: 
-- display | Glad you could see reason
-- display | This is for the best 
+- display | Glad you found reason again

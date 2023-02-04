@@ -1,35 +1,47 @@
 temporary_beauty: 
-  - show supermarket
-  - enter estelle 
-  - play palace
-  - display | What's more human...
-  - display | than the desire for beauty?
-  - says sei | It's a pointless distraction
-  - display | Distraction? 
-  - display | Distraction from what exactly?
-  - says sei | The beauty is temporary. It doesn't last. Why put in the effort.
-  - display | Temporary? Everything is temporary. 
-  - display | Flowers go through the cycle of life. 
-  - display | They gestate in the winter 
-  - display | so they may bloom in the spring ...
-  - display | and die in the summer.
-  - display | The beauty is in the fact that it's temporary.
+- show supermarket
+- enter estelle 
+- play palace
+- display | What's more human...
+- display | than the desire for beauty?
+- says sei | It's a pointless distraction
+- display | Distraction? 
+- display | Distraction from what exactly?
+- says sei | The beauty is temporary. It doesn't last. Why put in the effort.
+- display | Temporary? Everything is temporary. 
+- display | Flowers go through the cycle of life. 
+- display | They gestate in the winter 
+- display | so they may bloom in the spring ...
+- display | and die in the summer.
+- display | The beauty is in the fact that it's temporary.
 
 sei_fun:
-  - show supermarket
-  - enter estelle 
-  - play palace
-  - display | I am sure your pretty face 
-  - display | has also gotten you your fair share of fun. 
-  - says sei | Everything I have, I have worked for
-  - display | Whatever you say...
+- show supermarket
+- enter estelle 
+- play palace
+- display | I am sure your pretty face 
+- display | has also gotten you your fair share of fun. 
+- says sei | Everything I have, I have worked for
+- display | Whatever you say...
 
 important_control:
-  - show supermarket
-  - enter ava
-  - display | Everything is under your control 
-  - says eji | What are you talking about?
-  - says eji | NOTHING is under my control
-  - says eji | I couldn't save Keshi, I couldn't get through to Sei
-  - says eji | nothing...
-  - display | Everything important is under your control
+- show supermarket
+- enter ava
+- display | Everything is under your control 
+- says eji | What are you talking about?
+- says eji | NOTHING is under my control
+- says eji | I couldn't save Keshi, I couldn't get through to Sei
+- says eji | nothing...
+- display | Everything important is under your control
+
+animal_souls:
+- show supermarket
+- enter sei
+- play heartbeats
+- announce | too harsh tone... tone this down a bit
+- display | Think about the way we fight 
+- display | We think. We reason. We decide.
+- display | That's what seperates us from animals.
+- display | Acting on base emotions.
+- display | Lost souls have no reason.
+- display | They are nothing but animals.

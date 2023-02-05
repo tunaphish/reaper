@@ -165,7 +165,7 @@
   content: " ";
   width: 100%;
   height: 100%;
-  background-image: url("/reaper/assets/textures/static.png");
+  background-image: 'url("/reaper/assets/textures/static.png")';
   -moz-animation: noise 200ms infinite linear;
   -o-animation: noise 200ms infinite linear;
   -webkit-animation: noise 200ms infinite linear;

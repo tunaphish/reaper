@@ -39,21 +39,25 @@ export class DialogueList extends Phaser.Scene {
       const data = this.cache.text.entries.get(scriptFileKey);
       const parsedData = load(data);
       const scriptKeys = Object.keys(parsedData);
+      const filter = ['briefing', 'seis_age', 'temporary_beauty', 'animal_souls', 'start'];
+      scriptKeys
+        .filter((scriptKey) => {
+          return filter.includes(scriptKey);
+        })
+        .forEach((scriptKey) => {
+          const sceneListItem: Element = <div className={styles.scriptButton}>- {scriptKey}</div>;
+          scriptHeader.appendChild(sceneListItem);
 
-      scriptKeys.forEach((scriptKey) => {
-        const sceneListItem: Element = <div className={styles.scriptButton}>- {scriptKey}</div>;
-        scriptHeader.appendChild(sceneListItem);
+          sceneListItem.addEventListener('click', () => {
+            this.choiceSelectSound.play();
+            console.log('lettuce start the settings');
+            this.scene.start('Battle', { scriptFileKey, scriptKey });
+          });
 
-        sceneListItem.addEventListener('click', () => {
-          this.choiceSelectSound.play();
-          console.log('lettuce start the settings');
-          this.scene.start('Battle', { scriptFileKey, scriptKey });
+          sceneListItem.addEventListener('mouseover', () => {
+            this.choiceHoverSound.play();
+          });
         });
-
-        sceneListItem.addEventListener('mouseover', () => {
-          this.choiceHoverSound.play();
-        });
-      });
 
       container.style.height = '100%';
     });

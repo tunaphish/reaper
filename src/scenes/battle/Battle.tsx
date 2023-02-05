@@ -121,9 +121,6 @@ export class Battle extends Phaser.Scene {
       const _depth2 = `${50 - (_mouseX - _w) * 0.03}% ${50 - (_mouseY - _h) * 0.03}%`; // portrait
       const _depth3 = `${50 - (_mouseX - _w) * 0.06}% ${50 - (_mouseY - _h) * 0.06}%`; // foreground
 
-      console.log(_mouseY)
-      console.log(_depth1);
-
       const x = `${_depth3}, ${_depth2}, ${_depth1}`;
       this.parallax.style.backgroundPosition = x;
     });

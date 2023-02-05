@@ -1,7 +1,6 @@
 import { load } from 'js-yaml';
 import { createElement } from '../../ui/jsxFactory';
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
-import { MenuButton } from '../../util/MenuButton';
 import styles from './battle.module.css';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -43,7 +42,7 @@ export class Battle extends Phaser.Scene {
   public init(data): void {
     if (!data.scriptFileKey) {
       data = {
-        scriptFileKey: 'final-battle',
+        scriptFileKey: 'mission-7',
         scriptKey: 'start',
       }
     }
@@ -59,9 +58,16 @@ export class Battle extends Phaser.Scene {
     this.animeText = <p className={styles.animeText}></p>
     this.parallax = (
       <div className={styles.parallax} id="parallax">
-        {this.animeText}
+          <div className={styles.tvContainer}>
+          <div className={styles.staticEffect}>
+            <div className={styles.oldTvContent}>
+              {this.animeText}
+            </div>
+          </div>
+        </div>
       </div>
     );
+
 
     this.actorName = <div></div>
     this.actorDialogue = <p className={styles.actorDialogue}></p>

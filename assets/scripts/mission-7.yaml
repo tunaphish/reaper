@@ -33,7 +33,7 @@ move_on:
 
 start:
 - show supermarket 
-- enter sei
+- enter eji
 - says eji | We saved those souls... Without reaping them
 - display | What was the point? 
 - display | Everyone's still dead
@@ -44,7 +44,7 @@ start:
 
 fight: 
 - play knight 
-- enter sei angry
+- enter eji angry
 - says eji | It changed me.  
 - announce | > ... the wind is howling
 - display | I see

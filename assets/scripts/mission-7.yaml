@@ -32,7 +32,7 @@ move_on:
 - announce | Next scene is moving to a snowfield in silence
 
 start:
-- show supermarket 
+- show pikrepo 
 - enter eji
 - says eji | We saved those souls... Without reaping them
 - display | What was the point? 

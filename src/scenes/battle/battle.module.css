@@ -18,7 +18,7 @@
   height: 100%;
 
   background-repeat: no-repeat;
-  background-size: cover;
+  /* background-size: cover; */
   flex: 4;
 
   display: flex;

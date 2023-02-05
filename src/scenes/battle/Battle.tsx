@@ -181,7 +181,8 @@ export class Battle extends Phaser.Scene {
 
     switch (action) {
       case 'show':
-        this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;;
+        this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;
+        this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
         this.updateParallax();
         this.advanceLine();
         break;

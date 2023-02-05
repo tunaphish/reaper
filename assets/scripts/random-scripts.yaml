@@ -1,5 +1,5 @@
 temporary_beauty: 
-- show supermarket
+- show pikrepo
 - enter estelle 
 - play palace
 - display | What's more human...
@@ -16,7 +16,7 @@ temporary_beauty:
 - display | The beauty is in the fact that it's temporary.
 
 sei_fun:
-- show supermarket
+- show pikrepo
 - enter estelle 
 - play palace
 - display | I am sure your pretty face 
@@ -25,7 +25,7 @@ sei_fun:
 - display | Whatever you say...
 
 important_control:
-- show supermarket
+- show pikrepo
 - enter ava
 - display | Everything is under your control 
 - says eji | What are you talking about?
@@ -35,7 +35,7 @@ important_control:
 - display | Everything important is under your control
 
 animal_souls:
-- show supermarket
+- show pikrepo
 - enter sei
 - play heartbeats
 - announce | too harsh tone... tone this down a bit

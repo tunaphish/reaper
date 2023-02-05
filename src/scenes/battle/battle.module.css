@@ -45,7 +45,7 @@
   overflow: hidden;
   
   width: 100%;
-  animation: type 3s steps(60, end); 
+  animation: type 2s steps(60, end); 
 }
 
 @keyframes type { 
@@ -212,7 +212,7 @@
 
 @keyframes crt-image {
   0% {
-      transform: translateY(-.5px);
+      transform: translateY(-1px);
   }
 
   100% {

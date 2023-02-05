@@ -1,5 +1,5 @@
 briefing: 
-- show supermarket
+- show pikrepo
 - enter Elise 
 - play apathy
 - display | So what did you know about Sei
@@ -15,7 +15,7 @@ briefing:
 - display | HAVE FUN
 
 seis_age: 
-- show supermarket
+- show pikrepo
 - enter ava
 - play apathy
 - display | To be honest
@@ -29,7 +29,7 @@ seis_age:
 - display | The one who will help us pass on. 
 
 post_mock_fight: 
-- show supermarket
+- show pikrepo
 - enter elise
 - play twilight
 - announce | In second arc, prior to the final mission, you stage a mock battle between you and Elise to train against the fight with Sei. 
@@ -65,7 +65,7 @@ post_mock_fight:
 - announce | After leaving this fight you find fresh cigarette butts on the ground
 
 kindness:
-- show supermarket
+- show pikrepo
 - enter elise
 - play soundlessly
 - display | I know there is kindness in the world

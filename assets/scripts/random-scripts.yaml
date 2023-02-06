@@ -45,3 +45,18 @@ animal_souls:
 - display | Acting on base emotions.
 - display | Lost souls have no reason.
 - display | They are nothing but animals.
+
+was_keshi_lost:
+- show pikrepo
+- show elise
+- display | Something's been bothering me for a while
+- says eji | What is it?
+- display | When we fought Keshi
+- display | Was he really a lost soul?
+- says eji | Of course he was
+- says eji | He wouldn't have attack us otherwise
+- display | But it's the way he attacked us
+- display | Do you remember the feints he used
+- display | Can you do that without reason?
+- says eji | That ... 
+- announce | fill out more

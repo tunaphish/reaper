@@ -35,6 +35,15 @@ export class Battle extends Phaser.Scene {
 
   private isAnimatingText: boolean = false;
 
+
+
+  private isBattle: boolean = false;
+  private lastCalculation = 0;
+  private enemy: any;
+  private enemyHealth: any;
+  private enemyStamina: any;
+
+
   constructor() {
     super(sceneConfig);
   }
@@ -51,16 +60,32 @@ export class Battle extends Phaser.Scene {
     this.scripts = load(scriptFile);
     this.script = this.scripts[data.scriptKey];
     this.lineIndex = -1;
+
+    // load enemy
+    this.enemy =  {
+      maxHealth: 100,
+      health: 100,
+      maxStamina: 200,
+      stamina: 0,
+    }
   }
 
   public create(): void {
     this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
-    this.animeText = <p className={styles.animeText}></p>
+
+    this.enemyHealth = <div>❤️ {this.enemy.health}/{this.enemy.maxHealth}</div>;
+    this.enemyStamina = <div>☀️ {this.enemy.stamina}/{this.enemy.maxStamina}</div>;
+    this.animeText = <p className={styles.animeText}>Test Text</p>
+    
     this.parallax = (
       <div className={styles.parallax} id="parallax">
           <div className={styles.tvContainer}>
           <div className={styles.staticEffect}>
             <div className={styles.oldTvContent}>
+              <div className={styles.enemyUi}>
+                  { this.enemyHealth }
+                  { this.enemyStamina }
+              </div>
               {this.animeText}
             </div>
           </div>
@@ -77,10 +102,28 @@ export class Battle extends Phaser.Scene {
         {this.actorDialogue}
       </div>
     )
-
     this.choices = <div></div>;
 
-    this.menu = <div className={styles.menu}>{this.actorMessage}</div>;
+    const attackButton: Element = <div className={styles.menuButton}>Attack</div>;
+    const magicButton: Element = <div className={styles.menuButton}>Magic</div>;
+    const itemButton: Element = <div className={styles.menuButton}>Item</div>;
+    const runButton: Element = <div className={styles.menuButton}>Run</div>;
+
+    const battleMenu = (
+      <div className={styles.battleOptions}>
+        <div className={styles.menuRow}>
+          {attackButton}
+          {magicButton}
+        </div>
+        <div className={styles.menuRow}>
+          {itemButton}
+          {runButton}
+        </div>
+      </div>
+    );
+
+
+    this.menu = <div className={styles.menu}>{battleMenu}</div>;
 
     const partyBar: Element = (
       <div className={styles.partyBar}>
@@ -140,8 +183,14 @@ export class Battle extends Phaser.Scene {
     
         this.parallax.style.backgroundPosition = x;
       });
-
     }
+
+    // battle event listners
+    attackButton.addEventListener('click', () => {
+      // decrement stamina
+      this.enemy.health -= 25;
+      this.enemyHealth.innerText = `❤️ ${this.enemy.health}/${this.enemy.maxHealth}`;
+    })
 
 
     this.actorDialogue.addEventListener('animationend', () => {
@@ -153,11 +202,33 @@ export class Battle extends Phaser.Scene {
     })
 
     this.updateParallax();
-    this.actorMessage.addEventListener('click', () => {
-      this.advanceLine();
-    })
+    // this.actorMessage.addEventListener('click', () => {
+    //   this.advanceLine();
+    // })
 
-    this.advanceLine();
+    //this.advanceLine();
+    this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
+  }
+
+  update(time, delta): void {
+    // check if battle is over
+    // all hero health is gone
+    // all enemy health is gone
+    if (this.enemy.health < 0) {
+      console.log('weiner');
+    }
+
+    this.lastCalculation += delta;
+    
+    if (this.lastCalculation > 2000) {
+      this.lastCalculation = 0;
+      console.log('we calculating')
+
+      // update health
+      // update stamina
+      this.enemy.stamina = Math.min(this.enemy.maxStamina, this.enemy.stamina + 25);
+      this.enemyStamina.innerText = `☀️ ${this.enemy.stamina}/${this.enemy.maxStamina}`;
+    }
   }
 
   advanceLine(): void {

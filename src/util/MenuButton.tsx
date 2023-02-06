@@ -21,20 +21,3 @@ class MenuButton {
 }
 
 export { MenuButton };
-
-    // const attackButton: Element = new MenuButton(this, <div className={styles.menuButton}>Attack</div>).ui;
-    // const magicButton: Element = new MenuButton(this, <div className={styles.menuButton}>Magic</div>).ui;
-    // const itemButton: Element = new MenuButton(this, <div className={styles.menuButton}>Item</div>).ui;
-    // const runButton: Element = new MenuButton(this, <div className={styles.menuButton}>Run</div>).ui;
-    // const battleOptions: Element = (
-    //   <div className="battleOptions">
-    //     <div className={styles.menuRow}>
-    //       {attackButton}
-    //       {magicButton}
-    //     </div>
-    //     <div className={styles.menuRow}>
-    //       {itemButton}
-    //       {runButton}
-    //     </div>
-    //   </div>
-    // );

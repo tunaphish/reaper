@@ -2,6 +2,7 @@ import { load } from 'js-yaml';
 import { createElement } from '../../ui/jsxFactory';
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 import styles from './battle.module.css';
+import { Enemy, Eji } from '../../entities/enemy';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -36,10 +37,10 @@ export class Battle extends Phaser.Scene {
   private isAnimatingText: boolean = false;
 
 
-
+  // new things related to battle
   private isBattle: boolean = false;
   private lastCalculation = 0;
-  private enemy: any;
+  private enemy: Enemy;
   private enemyHealth: any;
   private enemyStamina: any;
 
@@ -62,12 +63,7 @@ export class Battle extends Phaser.Scene {
     this.lineIndex = -1;
 
     // load enemy
-    this.enemy =  {
-      maxHealth: 100,
-      health: 100,
-      maxStamina: 200,
-      stamina: 0,
-    }
+    this.enemy = Eji;
   }
 
   public create(): void {
@@ -228,7 +224,32 @@ export class Battle extends Phaser.Scene {
       // update stamina
       this.enemy.stamina = Math.min(this.enemy.maxStamina, this.enemy.stamina + 25);
       this.enemyStamina.innerText = `☀️ ${this.enemy.stamina}/${this.enemy.maxStamina}`;
+      this.selectAction(this.enemy);
     }
+  }
+
+  selectAction(enemy: Enemy): void {
+    const filteredBehaviors = enemy.behaviors.filter(behavior => {
+      if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
+      if (enemy.stamina < behavior.action.staminaCost) return false;
+      return true;
+    });
+
+    const summedWeights = filteredBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
+    const getRandomInt = (max: number) => Math.floor(Math.random() * max);
+    const randomInt = getRandomInt(summedWeights);
+
+    let runningSum = 0;
+    const selectedBehavior = filteredBehaviors.find(behavior => {
+      runningSum += behavior.weight;
+      return runningSum > randomInt;
+    })
+    if (!selectedBehavior) return;
+
+    //side effects
+    this.enemy.stamina -= selectedBehavior.action.staminaCost;
+    selectedBehavior.action.executeAbility();
+    console.table(this.enemy);
   }
 
   advanceLine(): void {
@@ -333,3 +354,6 @@ export class Battle extends Phaser.Scene {
     this.parallax.style.backgroundImage = newBackgroundImage;
   }
 }
+
+// update display
+// just console log enemy and party status

@@ -1,6 +1,6 @@
 
 import { Emotion, Anger } from "./emotion";
-import { Action, Slash, Block, Idle } from './action';
+import { Action, Slash, Block, Idle, HealSelf } from './action';
 
 
 interface Behavior  {
@@ -9,6 +9,7 @@ interface Behavior  {
 }
 
 export interface Enemy {
+  name: string,
   health: number;
   maxHealth: number;
   // stackedDamage: number;
@@ -19,7 +20,8 @@ export interface Enemy {
   // imageUrl: String;
 }
 
-export const Eji: Enemy = {
+export const Sei: Enemy = {
+  name: 'Sei',
   health: 100,
   maxHealth: 100,
   stamina: 0,
@@ -27,6 +29,7 @@ export const Eji: Enemy = {
   behaviors: [
     { action: Slash, weight: 100 }, 
     { action: Block, weight: 100 },
+    { action: HealSelf, weight: 50 },
     { action: Idle, weight: 200 },
   ],
   emotionalState: new Map(),

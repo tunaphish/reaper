@@ -23,7 +23,6 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   pause(system: Phaser.Scenes.Systems) {
-    console.log('pause: ' + system.scenePlugin.key);
     const element = this.uiMap.get(system.scenePlugin.key);
     if (element) {
       element['style'].display = 'none';
@@ -31,7 +30,6 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   resume(system: Phaser.Scenes.Systems) {
-    console.log('resume: ' + system.scenePlugin.key);
     const element = this.uiMap.get(system.scenePlugin.key);
     if (element) {
       element['style'].display = 'block';
@@ -39,12 +37,10 @@ export default class UiOverlayPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   shutdown(system: Phaser.Scenes.Systems) {
-    console.log('shutdown: ' + system.scenePlugin.key);
     this.clearUi(system.scenePlugin.key);
   }
 
   destroyScene(system: Phaser.Scenes.Systems) {
-    console.log('destroy: ' + system.scenePlugin.key);
     this.clearUi(system.scenePlugin.key);
   }
 

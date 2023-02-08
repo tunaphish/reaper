@@ -1,7 +1,7 @@
 import { createElement } from '../../ui/jsxFactory';
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 import styles from './battle.module.css';
-import { Enemy, healieBoi } from '../../entities/enemy';
+import { Behavior, Enemy, healieBoi } from '../../entities/enemy';
 import { DefaultParty, Party } from '../../entities/party';
 import { getRandomInt } from '../../util/random';
 import { Action, ActionTags } from '../../entities/action';
@@ -19,7 +19,7 @@ export class Battle extends Phaser.Scene {
 
 
   private lastCalculation = 0;
-  private enemy: Enemy;
+  private enemies: Enemy[];
   private enemyHealth: any;
   private enemyStamina: any;
   private party: Party;
@@ -30,13 +30,14 @@ export class Battle extends Phaser.Scene {
 
   public init(data): void {
     // load enemy
-    this.enemy = healieBoi;
+    this.enemies = [healieBoi];
     this.party = DefaultParty;
   }
 
   public create(): void {
-    this.enemyHealth = <div>❤️ {this.enemy.health}/{this.enemy.maxHealth}</div>;
-    this.enemyStamina = <div>☀️ {this.enemy.stamina}/{this.enemy.maxStamina}</div>;
+    const enemy = this.enemies[0];
+    this.enemyHealth = <div>❤️ {enemy.health}/{enemy.maxHealth}</div>;
+    this.enemyStamina = <div>☀️ {enemy.stamina}/{enemy.maxStamina}</div>;
     this.animeText = <p className={styles.animeText}>Test Text</p>
     
     const parallax = (
@@ -106,6 +107,8 @@ export class Battle extends Phaser.Scene {
     );
 
     this.ui.create(container, this);
+
+    parallax.addEventListener('click', () => this.updateEnemies());
   }
 
   update(time, delta): void {
@@ -113,31 +116,34 @@ export class Battle extends Phaser.Scene {
     // all hero health is gone
     // all enemy health is gone
     // battle checks
-    if (this.enemy.health < 0) {
-      console.log('weiner');
-    }
-
+  
     this.lastCalculation += delta;
     
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
-
-      // update health
-      // update stamina
-      this.enemy.stamina = Math.min(this.enemy.maxStamina, this.enemy.stamina + 25);
-      //Select Action
-      const selectedAction = this.selectAction(this.enemy, this.party);
-      this.updateDisplay();
-      //side effects
-      this.enemy.stamina -= selectedAction.staminaCost;
-      selectedAction.execute(this.enemy, this.party);
+      //this.updateEnemies();
     }
   }
 
-  selectAction(enemy: Enemy, party: Party): Action {
+  updateEnemies() {
+    // Update Stats
+    const enemy = this.enemies[0]
+    enemy.stamina = Math.min(enemy.maxStamina, enemy.stamina + 25);
+    
+    //Select Behavior
+    const selectedBehavior = this.selectBehavior(this.enemies, this.party);
+    const target = selectedBehavior.targetPriority.selectTarget(this.enemies, this.party);
+    //Side Effects
+    enemy.stamina -= selectedBehavior.action.staminaCost;
+    selectedBehavior.action.execute(this.enemies, this.party, target);
+    this.updateDisplay(selectedBehavior, target);
+  }
+
+  selectBehavior(enemies: Enemy[], party: Party): Behavior {
     // Baseline Behavior Filter
+    const enemy = enemies[0];
     const filteredBehaviors = enemy.behaviors.filter(behavior => {
-      if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
+      //if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
       if (enemy.stamina < behavior.action.staminaCost) return false;
       if (enemy.health === enemy.maxHealth && behavior.action.tags.has(ActionTags.HEAL)) return false;
       return true;
@@ -146,14 +152,12 @@ export class Battle extends Phaser.Scene {
     // Apply Traits
     let modifiedBehaviors = filteredBehaviors;
     enemy.traits.forEach(trait => {
-      modifiedBehaviors = trait.onUpdate(enemy, party, modifiedBehaviors);
+      modifiedBehaviors = trait.onUpdate(enemies, party, modifiedBehaviors);
     })
-    console.table(modifiedBehaviors);
-
 
     // Apply Emotions
 
-    // Randomly Select Action Based on Weight
+    // Randomly Select Behavior Based on Weight
     const summedWeights = modifiedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
@@ -161,11 +165,14 @@ export class Battle extends Phaser.Scene {
       runningSum += behavior.weight;
       return runningSum > randomInt;
     })
-    return selectedBehavior.action;
+    return selectedBehavior;
   }
 
-  updateDisplay(): void {
-    console.log(`${this.enemy.name}: ❤️ ${this.enemy.health} / ${this.enemy.maxHealth} |  ☀️ ${this.enemy.stamina} / ${this.enemy.maxStamina}`)
+  updateDisplay(selectedBehavior: Behavior, target): void {
+    console.log('~');
+    const enemy = this.enemies[0];
+    console.log(`${enemy.name} used ${selectedBehavior.action.name} on ${target.name}`)
+    console.log(`${enemy.name}: ❤️ ${enemy.health} / ${enemy.maxHealth} |  ☀️ ${enemy.stamina} / ${enemy.maxStamina}`)
     this.party.members.forEach(member => {
       console.log(`${member.name}: ❤️ ${member.health} / ${member.maxHealth} |  ☀️ ${member.stamina} / ${member.maxStamina}`)
     })

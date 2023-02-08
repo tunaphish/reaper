@@ -44,12 +44,10 @@ export class MainMenu extends Phaser.Scene {
       this.menuMusic.stop();
       this.choiceSelectSound.play();
       this.scene.start('World');
-      console.log('lettuce start the game');
     });
 
     settingsButton.addEventListener('click', () => {
       this.choiceSelectSound.play();
-      console.log('lettuce start the settings');
     });
 
     startGameButton.addEventListener('mouseover', () => {

@@ -50,7 +50,6 @@ export class DialogueList extends Phaser.Scene {
 
           sceneListItem.addEventListener('click', () => {
             this.choiceSelectSound.play();
-            console.log('lettuce start the settings');
             this.scene.start('BattleDialogue', { scriptFileKey, scriptKey });
           });
 

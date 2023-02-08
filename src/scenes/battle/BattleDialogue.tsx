@@ -126,7 +126,6 @@ export class BattleDialogue extends Phaser.Scene {
 
     // parallax effect using accelerometer
     if (window.DeviceMotionEvent !== undefined) {
-      console.log("accelerometer found");
       window.addEventListener('deviceorientation', (e) => {
         const gamma = Math.min(30, Math.max(-30, e.gamma));
         const beta = Math.min(120, Math.max(60, e.beta));

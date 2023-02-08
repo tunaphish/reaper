@@ -1,10 +1,12 @@
 import { Emotion, Anger } from "./emotion";
-import { Action, slash, idle, healSelf } from './action';
+import { Action, slash, idle, heal } from './action';
 import { Trait, selfPreservation } from "./trait";
+import { TargetPriority, self, randomEnemy, randomParty } from "./targetPriority";
 
 export interface Behavior {
   action: Action;
   weight: number;
+  targetPriority: TargetPriority;
 }
 
 export interface Enemy {
@@ -27,9 +29,9 @@ export const healieBoi: Enemy = {
   stamina: 0,
   maxStamina: 200,
   behaviors: [
-    { action: slash, weight: 100 }, 
-    { action: healSelf, weight: 25 },
-    { action: idle, weight: 200 },
+    { action: slash, weight: 100, targetPriority: randomParty }, 
+    { action: heal, weight: 25, targetPriority: randomEnemy },
+    { action: idle, weight: 200, targetPriority: self },
   ],
   emotionalState: new Map(),
   traits: [

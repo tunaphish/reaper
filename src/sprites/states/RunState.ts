@@ -5,7 +5,6 @@ export class RunState implements State {
   static MAX_ACCELERATION = 30;
 
   enter(player: Player): void {
-    console.log('entering run state');
   }
 
   update(time: number, delta: number, player: Player): void {

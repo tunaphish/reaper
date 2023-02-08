@@ -1,5 +1,5 @@
 import { Enemy } from "./enemy";
-import { Party } from "./party";
+import { Party, PartyMember } from "./party";
 import { getRandomInt } from "../util/random";
 
 export enum ActionTags {
@@ -13,7 +13,7 @@ export enum ActionTags {
 export interface Action {
   name: string;
   staminaCost: number;
-  execute: (enemy: Enemy, party: Party) => void; 
+  execute: (enemies: Enemy[], party: Party, target: Enemy | PartyMember) => void; 
   tags: Set<ActionTags>,
 }
 
@@ -21,15 +21,9 @@ export const slash: Action = {
   name: 'Slash',
   staminaCost: 50,
   tags: new Set([ActionTags.ATTACK]),
-  execute: (enemy, party) => {
-    const randomTarget = getRandomInt(party.members.length);
+  execute: (enemies, party, target) => {
     const DAMAGE = 50;
-    party.members[randomTarget].health -= DAMAGE;
-    // check min dmg
-    // check defense
-    // play sound
-    // check if dead
-    console.log('here i go slashin again');
+    target.health -= DAMAGE;
   }
 }
 
@@ -37,8 +31,7 @@ export const block: Action = {
   name: 'Block', 
   staminaCost: 50,
   tags: new Set([ActionTags.DEFEND]),
-  execute: (enemy, party) => {
-    console.log('im a blockeeee');
+  execute: (enemies, party) => {
   }
 }
 
@@ -47,17 +40,16 @@ export const idle: Action = {
   staminaCost: 0,
   tags: new Set([ActionTags.ATTACK]),
   execute: () => {
-    console.log('im aint not doingo nothg');
   }
 }
 
-export const healSelf: Action = {
-  name: 'Heal Self',
+export const heal: Action = {
+  name: 'Heal',
   staminaCost: 50,
   tags: new Set([ActionTags.HEAL]),
-  execute: (enemy) => {
+  execute: (enemies) => {
     const HEALTH = 50;
+    const enemy = enemies[0];
     enemy.health = Math.min(enemy.maxHealth, enemy.health += HEALTH);
-    console.log('we self healin');
   }
 }

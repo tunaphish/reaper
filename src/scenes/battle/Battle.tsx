@@ -1,10 +1,10 @@
-import { load } from 'js-yaml';
 import { createElement } from '../../ui/jsxFactory';
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 import styles from './battle.module.css';
-import { Enemy, Sei } from '../../entities/enemy';
+import { Enemy, healieBoi } from '../../entities/enemy';
 import { DefaultParty, Party } from '../../entities/party';
 import { getRandomInt } from '../../util/random';
+import { Action, ActionTags } from '../../entities/action';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -30,7 +30,7 @@ export class Battle extends Phaser.Scene {
 
   public init(data): void {
     // load enemy
-    this.enemy = Sei;
+    this.enemy = healieBoi;
     this.party = DefaultParty;
   }
 
@@ -125,31 +125,43 @@ export class Battle extends Phaser.Scene {
       // update health
       // update stamina
       this.enemy.stamina = Math.min(this.enemy.maxStamina, this.enemy.stamina + 25);
-      this.selectAction(this.enemy);
+      //Select Action
+      const selectedAction = this.selectAction(this.enemy, this.party);
+      this.updateDisplay();
+      //side effects
+      this.enemy.stamina -= selectedAction.staminaCost;
+      selectedAction.execute(this.enemy, this.party);
     }
   }
 
-  selectAction(enemy: Enemy): void {
+  selectAction(enemy: Enemy, party: Party): Action {
+    // Baseline Behavior Filter
     const filteredBehaviors = enemy.behaviors.filter(behavior => {
       if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
       if (enemy.stamina < behavior.action.staminaCost) return false;
+      if (enemy.health === enemy.maxHealth && behavior.action.tags.has(ActionTags.HEAL)) return false;
       return true;
     });
 
-    const summedWeights = filteredBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
-    const randomInt = getRandomInt(summedWeights);
+    // Apply Traits
+    let modifiedBehaviors = filteredBehaviors;
+    enemy.traits.forEach(trait => {
+      modifiedBehaviors = trait.onUpdate(enemy, party, modifiedBehaviors);
+    })
+    console.table(modifiedBehaviors);
 
+
+    // Apply Emotions
+
+    // Randomly Select Action Based on Weight
+    const summedWeights = modifiedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
+    const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
     const selectedBehavior = filteredBehaviors.find(behavior => {
       runningSum += behavior.weight;
       return runningSum > randomInt;
     })
-    if (!selectedBehavior) return;
-
-    //side effects
-    this.enemy.stamina -= selectedBehavior.action.staminaCost;
-    selectedBehavior.action.executeAbility(this.enemy, this.party);
-    this.updateDisplay();
+    return selectedBehavior.action;
   }
 
   updateDisplay(): void {

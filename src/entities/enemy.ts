@@ -1,9 +1,8 @@
-
 import { Emotion, Anger } from "./emotion";
-import { Action, Slash, Block, Idle, HealSelf } from './action';
+import { Action, slash, idle, healSelf } from './action';
+import { Trait, selfPreservation } from "./trait";
 
-
-interface Behavior  {
+export interface Behavior {
   action: Action;
   weight: number;
 }
@@ -17,20 +16,23 @@ export interface Enemy {
   maxStamina: number;
   behaviors: Behavior[];
   emotionalState: Map<Emotion, Number>;
+  traits: Trait[];
   // imageUrl: String;
 }
 
-export const Sei: Enemy = {
-  name: 'Sei',
-  health: 100,
-  maxHealth: 100,
+export const healieBoi: Enemy = {
+  name: 'Healie Boi',
+  health: 25,
+  maxHealth: 200,
   stamina: 0,
   maxStamina: 200,
   behaviors: [
-    { action: Slash, weight: 100 }, 
-    { action: Block, weight: 100 },
-    { action: HealSelf, weight: 50 },
-    { action: Idle, weight: 200 },
+    { action: slash, weight: 100 }, 
+    { action: healSelf, weight: 25 },
+    { action: idle, weight: 200 },
   ],
   emotionalState: new Map(),
+  traits: [
+    selfPreservation,
+  ],
 }

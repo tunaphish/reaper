@@ -2,16 +2,26 @@ import { Enemy } from "./enemy";
 import { Party } from "./party";
 import { getRandomInt } from "../util/random";
 
+export enum ActionTags {
+  HEAL,
+  ATTACK,
+  DEFEND,
+  DEBUFF,
+  BUFF
+}
+
 export interface Action {
   name: string;
   staminaCost: number;
-  executeAbility: (enemy: Enemy, party: Party) => void; // event emitters and listeners?
+  execute: (enemy: Enemy, party: Party) => void; 
+  tags: Set<ActionTags>,
 }
 
-export const Slash: Action = {
+export const slash: Action = {
   name: 'Slash',
   staminaCost: 50,
-  executeAbility: (enemy, party) => {
+  tags: new Set([ActionTags.ATTACK]),
+  execute: (enemy, party) => {
     const randomTarget = getRandomInt(party.members.length);
     const DAMAGE = 50;
     party.members[randomTarget].health -= DAMAGE;
@@ -23,26 +33,29 @@ export const Slash: Action = {
   }
 }
 
-export const Block: Action = {
+export const block: Action = {
   name: 'Block', 
   staminaCost: 50,
-  executeAbility: (enemy, party) => {
+  tags: new Set([ActionTags.DEFEND]),
+  execute: (enemy, party) => {
     console.log('im a blockeeee');
   }
 }
 
-export const Idle: Action = {
+export const idle: Action = {
   name: 'Idle', 
   staminaCost: 0,
-  executeAbility: () => {
+  tags: new Set([ActionTags.ATTACK]),
+  execute: () => {
     console.log('im aint not doingo nothg');
   }
 }
 
-export const HealSelf: Action = {
+export const healSelf: Action = {
   name: 'Heal Self',
   staminaCost: 50,
-  executeAbility: (enemy) => {
+  tags: new Set([ActionTags.HEAL]),
+  execute: (enemy) => {
     const HEALTH = 50;
     enemy.health = Math.min(enemy.maxHealth, enemy.health += HEALTH);
     console.log('we self healin');

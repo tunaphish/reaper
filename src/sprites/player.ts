@@ -1,4 +1,3 @@
-import { getGameWidth, getGameHeight } from '../helpers';
 import * as States from './states';
 import State from './states/State';
 

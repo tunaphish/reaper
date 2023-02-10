@@ -1,4 +1,4 @@
-import { Action, ActionTags } from "../entities/action";
+import { Action, ActionTags } from "./action";
 
 export const slash: Action = {
   name: 'Slash',

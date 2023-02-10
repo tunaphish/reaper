@@ -5,7 +5,7 @@ export interface Emotion {
   name: string,
   display: string,
   // onApply: () => void; 
-  onUpdate: (enemies: Enemy[], party: Party, behaviors: Behavior[]) => void;
+  onUpdate?: (enemies: Enemy[], party: Party, behaviors: Behavior[], count: number) => Behavior[];
   // onRemove
 }
 

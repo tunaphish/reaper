@@ -1,11 +1,19 @@
 import { Emotion } from "../entities/emotion";
+import { ActionTags } from "./action";
 
 
-export const Anger: Emotion = {
+export const anger: Emotion = {
   name: 'Anger',
   display: '😡',
-  onUpdate: () => {
-    console.log('im angy');
+  onUpdate: (enemies, party, behaviors, count) => {
+    if (count === 0) return;
+    let newBehaviors = behaviors.map(behavior => {
+      if (!behavior.action.tags.has(ActionTags.ATTACK)) {
+        behavior.weight /= 2;
+      }
+      return behavior;
+    });
+    return newBehaviors;
   }
 }
 // Potential Future Emotions 

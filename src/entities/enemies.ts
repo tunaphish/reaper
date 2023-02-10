@@ -5,6 +5,7 @@ import { slash, idle, heal } from './actions';
 import { selfPreservation } from "./traits";
 
 import { getRandomInt } from "../util/random"
+import { anger } from './emotions';
 
 // handle resurrection edge cases
 // filter dead unit 
@@ -31,10 +32,10 @@ export const healieBoi: Enemy = {
   maxStamina: 200,
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty }, 
-    { action: heal, weight: 25, targetPriority: randomEnemy },
-    { action: idle, weight: 200, targetPriority: self },
+    { action: heal, weight: 100, targetPriority: randomEnemy },
+    { action: idle, weight: 100, targetPriority: self },
   ],
-  emotionalState: new Map(),
+  emotionalState: [], //[{ emotion: anger, count: 1}],
   traits: [
     selfPreservation,
   ],

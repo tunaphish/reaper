@@ -2,6 +2,7 @@ import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
+import { Behavior } from '../../entities/enemy';
 
 export interface IBattleView {
   updateStats: (model: BattleModel) => void;
@@ -22,6 +23,11 @@ export class TextBattleView implements IBattleView{
     const { enemies, party } = model;
     enemies.forEach(enemy => console.log(`${enemy.name}: ❤️ ${enemy.health} / ${enemy.maxHealth} |  ☀️ ${enemy.stamina} / ${enemy.maxStamina}`));
     party.members.forEach(member => console.log(`${member.name}: ❤️ ${member.health} / ${member.maxHealth} |  ☀️ ${member.stamina} / ${member.maxStamina}`));
+  }
+  
+  displayBehaviors(behaviors: Behavior[]): void {
+    const behaviorTable = behaviors.map(behavior => ({ name: behavior.action.name, weight: behavior.weight }));
+    console.table(behaviorTable);
   }
 }
 

@@ -21,7 +21,7 @@ export const block: Action = {
 export const idle: Action = {
   name: 'Idle', 
   staminaCost: 0,
-  tags: new Set([ActionTags.ATTACK]),
+  tags: new Set([ActionTags.DEFEND]),
   execute: () => {
   }
 }

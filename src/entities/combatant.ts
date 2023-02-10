@@ -1,4 +1,3 @@
-import { Emotion } from "./emotion";
 import { Trait } from "./trait";
 
 export interface Combatant {
@@ -8,6 +7,5 @@ export interface Combatant {
   // stackedDamage: number;
   stamina: number;
   maxStamina: number;
-  emotionalState: Map<Emotion, Number>;
   traits: Trait[];
 }

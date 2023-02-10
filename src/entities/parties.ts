@@ -6,7 +6,6 @@ export const Eji: PartyMember = {
   maxHealth: 100,
   stamina: 100,
   maxStamina: 100,
-  emotionalState: new Map(),
   traits: [],
 }
 
@@ -16,7 +15,6 @@ export const Keshi: PartyMember = {
   maxHealth: 100,
   stamina: 100,
   maxStamina: 100,
-  emotionalState: new Map(),
   traits: [],
 }
 
@@ -26,7 +24,6 @@ export const Elise: PartyMember = {
   maxHealth: 100,
   stamina: 100,
   maxStamina: 100,
-  emotionalState: new Map(),
   traits: [],
 }
 

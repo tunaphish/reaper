@@ -39,7 +39,7 @@ export const selfPreservation: Trait = {
   onUpdate: (enemies, party, behaviors) => {
     return behaviors.map((behavior: Behavior) => {
       if (behavior.action.tags.has(ActionTags.HEAL)) {
-        behavior.weight = 1000;
+        behavior.weight *= 2;
         behavior.targetPriority = self;
       }
       return behavior;

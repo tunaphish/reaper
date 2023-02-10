@@ -86,20 +86,24 @@ export class Battle extends Phaser.Scene {
     });
 
     // Apply Traits
-    let modifiedBehaviors = filteredBehaviors;
+    let traitedBehaviors = filteredBehaviors;
     enemy.traits.forEach(trait => {
-      modifiedBehaviors = trait.onUpdate(enemies, party, modifiedBehaviors);
+      traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
     })
+    this.textView.displayBehaviors(traitedBehaviors);
+
 
     // Apply Emotions
-    let emotionBehaviors = modifiedBehaviors;
-
-    // for (let emotion of enemy.emotionalState.keys()) {
-    //   console.log(emotion.display);
-    // }
+    let emotionBehaviors = traitedBehaviors;
+    for (let state of enemy.emotionalState) {
+      emotionBehaviors = state.emotion?.onUpdate(enemies, party, emotionBehaviors, state.count);
+    }
+    
+    // displayBehaviorTable
+    this.textView.displayBehaviors(emotionBehaviors);
 
     // Randomly Select Behavior Based on Weight
-    const summedWeights = modifiedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
+    const summedWeights = traitedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
     const selectedBehavior = filteredBehaviors.find(behavior => {

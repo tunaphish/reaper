@@ -32,7 +32,6 @@ export class DialogueList extends Phaser.Scene {
     //append script list
     //then attach event listenrs
     this.cache.text.entries.each((scriptFileKey) => {
-
       const scriptHeader: Element = <h1>{scriptFileKey}</h1>;
       container.appendChild(scriptHeader);
 

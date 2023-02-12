@@ -21,7 +21,7 @@ export class BattleDialogue extends Phaser.Scene {
   private animeText: any;
   private parallax: any;
 
-  private menu: Element
+  private menu: Element;
 
   private actorMessage: any;
   private actorName: any;
@@ -29,11 +29,11 @@ export class BattleDialogue extends Phaser.Scene {
 
   private choices: any;
 
-  private foreground: string = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png)';
-  private middleground: string = 'url("/reaper/assets/characters/eji.png")';
-  private background: string = 'url("/reaper/assets/backgrounds/pikrepo.jpg")'
+  private foreground = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png)';
+  private middleground = 'url("/reaper/assets/characters/eji.png")';
+  private background = 'url("/reaper/assets/backgrounds/pikrepo.jpg")';
 
-  private isAnimatingText: boolean = false;
+  private isAnimatingText = false;
 
   constructor() {
     super(sceneConfig);
@@ -44,10 +44,10 @@ export class BattleDialogue extends Phaser.Scene {
       data = {
         scriptFileKey: 'mission-7',
         scriptKey: 'start',
-      }
+      };
     }
     const scriptFile = this.cache.text.get(data.scriptFileKey);
-  
+
     this.scripts = load(scriptFile);
     this.script = this.scripts[data.scriptKey];
     this.lineIndex = -1;
@@ -55,28 +55,26 @@ export class BattleDialogue extends Phaser.Scene {
 
   public create(): void {
     this.dialogueAdvanceSound = this.sound.add('dialogue-advance');
-    this.animeText = <p className={styles.animeText}>Test Text</p>
+    this.animeText = <p className={styles.animeText}>Test Text</p>;
 
     this.parallax = (
       <div className={styles.parallax} id="parallax">
-          <div className={styles.tvContainer}>
+        <div className={styles.tvContainer}>
           <div className={styles.staticEffect}>
-            <div className={styles.oldTvContent}>
-              {this.animeText}
-            </div>
+            <div className={styles.oldTvContent}>{this.animeText}</div>
           </div>
         </div>
       </div>
     );
 
-    this.actorName = <div></div>
-    this.actorDialogue = <p className={styles.actorDialogue}></p>
+    this.actorName = <div></div>;
+    this.actorDialogue = <p className={styles.actorDialogue}></p>;
     this.actorMessage = (
       <div className={styles.actorMessage}>
         {this.actorName}
         {this.actorDialogue}
       </div>
-    )
+    );
     this.choices = <div></div>;
 
     this.menu = <div className={styles.menu}>{this.actorMessage}</div>;
@@ -110,7 +108,7 @@ export class BattleDialogue extends Phaser.Scene {
     );
 
     this.ui.create(container, this);
-    
+
     const _w = window.innerWidth / 2;
     const _h = window.innerHeight / 2;
     this.parallax.addEventListener('mousemove', (e: MouseEvent) => {
@@ -133,9 +131,9 @@ export class BattleDialogue extends Phaser.Scene {
         const _depth1 = `${50 - (gamma - 0) * 0.1}% ${50 - (beta - 90) * 0.1}%`; // background
         const _depth2 = `${50 - (gamma - 0) * 0.3}% ${50 - (beta - 90) * 0.3}%`; // portrait
         const _depth3 = `${50 - (gamma - 0) * 0.6}% ${50 - (beta - 90) * 0.6}%`; // foreground
-        
+
         const x = `${_depth3}, ${_depth2}, ${_depth1}`;
-    
+
         this.parallax.style.backgroundPosition = x;
       });
     }
@@ -146,12 +144,12 @@ export class BattleDialogue extends Phaser.Scene {
 
     this.animeText.addEventListener('animationend', () => {
       this.isAnimatingText = false;
-    })
+    });
 
     this.updateParallax();
     this.actorMessage.addEventListener('click', () => {
       this.advanceLine();
-    })
+    });
 
     this.advanceLine();
     this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
@@ -189,7 +187,7 @@ export class BattleDialogue extends Phaser.Scene {
         this.updateParallax();
         this.advanceLine();
         break;
-      case 'says': 
+      case 'says':
         this.menu.replaceChildren(this.actorMessage);
         this.dialogueAdvanceSound.play();
         this.actorName.innerText = actor;
@@ -200,7 +198,7 @@ export class BattleDialogue extends Phaser.Scene {
         this.actorDialogue.offsetWidth;
         this.actorDialogue.classList.add(styles.typeAnimation);
         break;
-      case 'announce': 
+      case 'announce':
         this.dialogueAdvanceSound.play();
         this.actorName.innerText = '';
         this.actorDialogue.innerText = value;
@@ -225,7 +223,7 @@ export class BattleDialogue extends Phaser.Scene {
         break;
       case 'choose':
         this.menu.replaceChildren(this.choices);
-        let options = value.split(' ~ ').map(pairs => {
+        const options = value.split(' ~ ').map((pairs) => {
           const [newScriptKey, displayText] = pairs.split(' * ');
           return { newScriptKey, displayText };
         });
@@ -236,13 +234,13 @@ export class BattleDialogue extends Phaser.Scene {
             this.dialogueAdvanceSound.play();
             this.script = this.scripts[option.newScriptKey];
             this.lineIndex = -1;
-            this.actorDialogue.innerText = ''
-            this.actorName.innerText = ''
+            this.actorDialogue.innerText = '';
+            this.actorName.innerText = '';
             this.menu.replaceChildren(this.actorMessage);
             this.advanceLine();
           });
         });
-        
+
         break;
       default:
         this.advanceLine();
@@ -250,7 +248,7 @@ export class BattleDialogue extends Phaser.Scene {
   }
 
   playSong(songKey): void {
-    this.music = this.sound.add(songKey, { loop: true })
+    this.music = this.sound.add(songKey, { loop: true });
     this.music.play();
   }
 

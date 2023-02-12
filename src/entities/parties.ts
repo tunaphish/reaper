@@ -1,5 +1,5 @@
-import { PartyMember, Party, Option } from "./party"
-import { slash, block, heal } from "./actions"
+import { PartyMember, Party, Option } from './party';
+import { slash, block, heal } from './actions';
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -10,24 +10,24 @@ export const Eji: PartyMember = {
   traits: [],
   primaryOptions: [
     {
-      name: "ATTACK",
-      options: [slash]
+      name: 'ATTACK',
+      options: [slash],
     },
     {
-      name: "DEFEND",
-      options: [block, heal]
+      name: 'DEFEND',
+      options: [block, heal],
     },
     {
-      name: "TALK",
-      options: [heal]
+      name: 'TALK',
+      options: [heal],
     },
     {
-      name: "ITEM",
-      options: [slash]
-    }
+      name: 'ITEM',
+      options: [slash],
+    },
   ],
   options: [],
-}
+};
 
 export const Keshi: PartyMember = {
   name: 'Keshi',
@@ -38,23 +38,24 @@ export const Keshi: PartyMember = {
   traits: [],
   primaryOptions: [
     {
-      name: "KILL",
-      options: [slash]
+      name: 'KILL',
+      options: [slash],
     },
     {
-      name: "COWARD",
-      options: [block, heal]
+      name: 'COWARD',
+      options: [block, heal],
     },
     {
-      name: "TALK",
-      options: [heal]
+      name: 'TALK',
+      options: [heal],
     },
     {
-      name: "ITEM",
-      options: [slash]
-    }
-  ],  options: [],
-}
+      name: 'ITEM',
+      options: [slash],
+    },
+  ],
+  options: [],
+};
 
 export const Elise: PartyMember = {
   name: 'Elise',
@@ -65,25 +66,25 @@ export const Elise: PartyMember = {
   traits: [],
   primaryOptions: [
     {
-      name: "WHAM",
-      options: [slash]
+      name: 'WHAM',
+      options: [slash],
     },
     {
-      name: "NOT WHAM",
-      options: [block, heal]
+      name: 'NOT WHAM',
+      options: [block, heal],
     },
     {
-      name: "TALK",
-      options: [heal]
+      name: 'TALK',
+      options: [heal],
     },
     {
-      name: "ITEM",
-      options: [slash]
-    }
+      name: 'ITEM',
+      options: [slash],
+    },
   ],
   options: [],
-}
+};
 
 export const DefaultParty: Party = {
-  members: [Eji, Keshi, Elise]
-}
+  members: [Eji, Keshi, Elise],
+};

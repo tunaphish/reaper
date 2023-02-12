@@ -1,7 +1,7 @@
-import { Trait } from "./trait";
+import { Trait } from './trait';
 
 export interface Combatant {
-  name: string,
+  name: string;
   health: number;
   maxHealth: number;
   // stackedDamage: number;

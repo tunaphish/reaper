@@ -1,15 +1,15 @@
 import { Behavior, Enemy } from '../../entities/enemy';
 import { Party, PartyMember } from '../../entities/party';
-import {  ActionTags } from '../../entities/action';
+import { ActionTags } from '../../entities/action';
 
 import { DefaultParty } from '../../entities/parties';
 import { healieBoi } from '../../entities/enemies';
 
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene 
+import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene
 import { getRandomInt } from '../../util/random';
 
 import { BattleModel } from './battleModel';
-import { BattleView,TextBattleView } from './BattleView';
+import { BattleView, TextBattleView } from './BattleView';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -25,7 +25,6 @@ export class Battle extends Phaser.Scene {
   private textView: TextBattleView;
   private buttonClickSound: Phaser.Sound.BaseSound;
 
-
   constructor() {
     super(sceneConfig);
   }
@@ -36,7 +35,7 @@ export class Battle extends Phaser.Scene {
       enemies: [healieBoi],
       party: DefaultParty,
       activePartyMemberIndex: 0,
-    }
+    };
   }
 
   public create(): void {
@@ -47,15 +46,15 @@ export class Battle extends Phaser.Scene {
 
   update(time, delta): void {
     const { party } = this.model;
-    if (party.members.every(member => member.health <= 0)) {
+    if (party.members.every((member) => member.health <= 0)) {
       console.log('HEROES DEAD');
     }
     // all hero health is gone
     // all enemy health is gone
     // battle checks
-  
+
     this.lastCalculation += delta;
-    
+
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
       //this.updateEnemies();
@@ -65,13 +64,13 @@ export class Battle extends Phaser.Scene {
   updateEnemies() {
     // Update Stats
     const { enemies, party } = this.model;
-    enemies.forEach(enemy => {
+    enemies.forEach((enemy) => {
       enemy.stamina = Math.min(enemy.maxStamina, enemy.stamina + 25);
-    
+
       //Select Behavior
       const selectedBehavior = this.selectBehavior(enemies, party, enemy);
       const target = selectedBehavior.targetPriority(enemies, party, enemy);
-  
+
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
@@ -82,7 +81,7 @@ export class Battle extends Phaser.Scene {
 
   selectBehavior(enemies: Enemy[], party: Party, enemy: Enemy): Behavior {
     // Baseline Behavior Filter
-    const filteredBehaviors = enemy.behaviors.filter(behavior => {
+    const filteredBehaviors = enemy.behaviors.filter((behavior) => {
       if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
       if (enemy.stamina < behavior.action.staminaCost) return false;
       if (enemy.health === enemy.maxHealth && behavior.action.tags.has(ActionTags.HEAL)) return false;
@@ -91,18 +90,17 @@ export class Battle extends Phaser.Scene {
 
     // Apply Traits
     let traitedBehaviors = filteredBehaviors;
-    enemy.traits.forEach(trait => {
+    enemy.traits.forEach((trait) => {
       traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
-    })
+    });
     this.textView.displayBehaviors(traitedBehaviors);
-
 
     // Apply Emotions
     let emotionBehaviors = traitedBehaviors;
-    for (let state of enemy.emotionalState) {
+    for (const state of enemy.emotionalState) {
       emotionBehaviors = state.emotion?.onUpdate(enemies, party, emotionBehaviors, state.count);
     }
-    
+
     // displayBehaviorTable
     this.textView.displayBehaviors(emotionBehaviors);
 
@@ -110,10 +108,10 @@ export class Battle extends Phaser.Scene {
     const summedWeights = traitedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
-    const selectedBehavior = filteredBehaviors.find(behavior => {
+    const selectedBehavior = filteredBehaviors.find((behavior) => {
       runningSum += behavior.weight;
       return runningSum > randomInt;
-    })
+    });
     return selectedBehavior;
   }
 

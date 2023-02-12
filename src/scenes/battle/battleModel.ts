@@ -5,4 +5,4 @@ export type BattleModel = {
   enemies: Enemy[];
   party: Party;
   activePartyMemberIndex: number;
-}
+};

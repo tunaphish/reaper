@@ -1,4 +1,5 @@
-import { PartyMember, Party } from "../entities/party"
+import { PartyMember, Party, Option } from "./party"
+import { slash, block, heal } from "./actions"
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -7,6 +8,25 @@ export const Eji: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
+  primaryOptions: [
+    {
+      name: "ATTACK",
+      options: [slash]
+    },
+    {
+      name: "DEFEND",
+      options: [block, heal]
+    },
+    {
+      name: "TALK",
+      options: [heal]
+    },
+    {
+      name: "ITEM",
+      options: [slash]
+    }
+  ],
+  options: [],
 }
 
 export const Keshi: PartyMember = {
@@ -16,6 +36,24 @@ export const Keshi: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
+  primaryOptions: [
+    {
+      name: "KILL",
+      options: [slash]
+    },
+    {
+      name: "COWARD",
+      options: [block, heal]
+    },
+    {
+      name: "TALK",
+      options: [heal]
+    },
+    {
+      name: "ITEM",
+      options: [slash]
+    }
+  ],  options: [],
 }
 
 export const Elise: PartyMember = {
@@ -25,6 +63,25 @@ export const Elise: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
+  primaryOptions: [
+    {
+      name: "WHAM",
+      options: [slash]
+    },
+    {
+      name: "NOT WHAM",
+      options: [block, heal]
+    },
+    {
+      name: "TALK",
+      options: [heal]
+    },
+    {
+      name: "ITEM",
+      options: [slash]
+    }
+  ],
+  options: [],
 }
 
 export const DefaultParty: Party = {

@@ -107,6 +107,10 @@
   align-items: center;
 }
 
+.active {
+  border: 1px solid yellow;
+}
+
 .actorMessage {
   padding: 10px;
   text-align: left;

@@ -1,5 +1,5 @@
 import { Behavior, Enemy } from '../../entities/enemy';
-import { Party } from '../../entities/party';
+import { Party, PartyMember } from '../../entities/party';
 import {  ActionTags } from '../../entities/action';
 
 import { DefaultParty } from '../../entities/parties';
@@ -9,7 +9,7 @@ import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this w
 import { getRandomInt } from '../../util/random';
 
 import { BattleModel } from './battleModel';
-import { BattleView, IBattleView, TextBattleView } from './BattleView';
+import { BattleView,TextBattleView } from './BattleView';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -23,6 +23,8 @@ export class Battle extends Phaser.Scene {
   private model: BattleModel;
   private view: BattleView;
   private textView: TextBattleView;
+  private buttonClickSound: Phaser.Sound.BaseSound;
+
 
   constructor() {
     super(sceneConfig);
@@ -32,11 +34,13 @@ export class Battle extends Phaser.Scene {
     // load enemy
     this.model = {
       enemies: [healieBoi],
-      party: DefaultParty
+      party: DefaultParty,
+      activePartyMemberIndex: 0,
     }
   }
 
   public create(): void {
+    this.buttonClickSound = this.sound.add('dialogue-advance');
     this.view = new BattleView(this, this.model);
     this.textView = new TextBattleView(this, this.model);
   }
@@ -111,5 +115,15 @@ export class Battle extends Phaser.Scene {
       return runningSum > randomInt;
     })
     return selectedBehavior;
+  }
+
+  setActivePartyMember(index: number) {
+    this.model.activePartyMemberIndex = index;
+    console.log(index);
+    this.view.updatePartyMemberView(this, this.model);
+  }
+
+  playButtonClickSound() {
+    this.buttonClickSound.play();
   }
 }

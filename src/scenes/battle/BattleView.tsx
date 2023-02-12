@@ -35,7 +35,12 @@ export class BattleView implements IBattleView {
   private enemyHealth: any;
   private enemyStamina: any;
   private animeText: any;
-  private menu: Element
+  private menu: Element;
+
+  private partyMemberPrimaryMenus: Element[] = [];
+  private partyMemberCells: Element[] = [];
+  private partyBar: Element;
+
 
   constructor(scene: Battle, battleModel: BattleModel) {
     const { enemies, party } = battleModel;
@@ -62,54 +67,54 @@ export class BattleView implements IBattleView {
     );
     parallax.style.backgroundImage = 'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png), url("/reaper/assets/characters/eji.png"), url("/reaper/assets/backgrounds/pikrepo.jpg")';
     parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
+    
 
-    const attackButton: Element = <div className={styles.menuButton}>Attack</div>;
-    const magicButton: Element = <div className={styles.menuButton}>Magic</div>;
-    const itemButton: Element = <div className={styles.menuButton}>Item</div>;
-    const runButton: Element = <div className={styles.menuButton}>Run</div>;
-
-    // Menu Display
-    const battleMenu = (
-      <div className={styles.battleOptions}>
-        <div className={styles.menuRow}>
-          {attackButton}
-          {magicButton}
-        </div>
-        <div className={styles.menuRow}>
-          {itemButton}
-          {runButton}
-        </div>
-      </div>
-    );
-    this.menu = <div className={styles.menu}>{battleMenu}</div>;
 
     // Party Bar Display
-    
-    const partyBar: Element = (
-      <div className={styles.partyBar}>
-        <div className={styles.characterCell}>
-          Eji
-          <div>❤️ 100/100</div>
-          <div>☀️ 100/100</div>
-        </div>
-        <div className={styles.characterCell}>
-          Keshi
-          <div>❤️ 100/100</div>
-          <div>☀️ 100/100</div>
-        </div>
-        <div className={styles.characterCell}>
-          Elise
-          <div>❤️ 100/100</div>
-          <div>☀️ 100/200</div>
-        </div>
-      </div>
+    this.partyBar = (
+      <div className={styles.partyBar} />
     );
+    party.members.forEach((member, index) => {
+      const partyMemberDisplay = (
+        <div className={styles.characterCell}>
+          { member.name }
+          <div>❤️ { member.health }/ { member.maxHealth }</div>
+          <div>☀️ { member.stamina }/ { member.maxStamina }</div>
+        </div>
+      );
+
+      partyMemberDisplay.addEventListener('click', () => {
+        scene.setActivePartyMember(index);
+      });
+      this.partyBar.appendChild(partyMemberDisplay);
+      this.partyMemberCells.push(partyMemberDisplay);
+    });
+
+    // Menu Display (Dependency on Party Bar for Setting Active Cell);
+    party.members.forEach((member) => {
+      const memberPrimaryMenu = (
+        <div className={styles.battleOptions}>
+          <div className={styles.menuRow}>
+            <div className={styles.menuButton}>{ member.primaryOptions[0].name }</div>
+            <div className={styles.menuButton}>{ member.primaryOptions[1].name }</div>
+          </div>
+          <div className={styles.menuRow}>
+            <div className={styles.menuButton}>{ member.primaryOptions[2].name }</div>
+            <div className={styles.menuButton}>{ member.primaryOptions[3].name }</div>
+          </div>
+        </div>
+      );
+
+      this.partyMemberPrimaryMenus.push(memberPrimaryMenu);
+    });
+    this.menu = <div className={styles.menu}/>
+    this.updatePartyMemberView(scene, battleModel);
 
     const container: Element = (
       <div className={styles.container}>
         {parallax}
         {this.menu}
-        {partyBar}
+        {this.partyBar}
       </div>
     );
 
@@ -118,4 +123,15 @@ export class BattleView implements IBattleView {
   }
 
   updateStats: (model: BattleModel) => void;
+  updatePartyMemberView(scene: Battle, model: BattleModel) {
+    this.menu.replaceChildren(this.partyMemberPrimaryMenus[model.activePartyMemberIndex]);
+    this.partyMemberCells.forEach((cell, index) => {
+      // remove style
+      cell.classList.remove(styles.active);
+      if (index === model.activePartyMemberIndex) {
+        cell.classList.add(styles.active);
+      }
+    });
+    scene.playButtonClickSound();
+  }
 }

@@ -7,5 +7,6 @@ export interface Combatant {
   // stackedDamage: number;
   stamina: number;
   maxStamina: number;
+  // defense?
   traits: Trait[];
 }

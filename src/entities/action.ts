@@ -1,5 +1,7 @@
+import { Combatant } from "./combatant";
 import { Enemy } from "./enemy";
 import { Party, PartyMember } from "./party";
+import { Option } from "./party";
 
 export enum ActionTags {
   HEAL,
@@ -9,9 +11,8 @@ export enum ActionTags {
   BUFF
 }
 
-export interface Action {
-  name: string;
+export type Action = Option & {
   staminaCost: number;
-  execute: (enemies: Enemy[], party: Party, target: Enemy | PartyMember) => void; 
+  execute: (enemies: Enemy[], party: Party, target: Combatant) => void; 
   tags: Set<ActionTags>,
 }

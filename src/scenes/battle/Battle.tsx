@@ -1,6 +1,6 @@
 import { Behavior, Enemy } from '../../entities/enemy';
 import { Party, PartyMember } from '../../entities/party';
-import { ActionTags } from '../../entities/action';
+import { Action, ActionTags } from '../../entities/action';
 
 import { DefaultParty } from '../../entities/parties';
 import { healieBoi } from '../../entities/enemies';
@@ -10,6 +10,7 @@ import { getRandomInt } from '../../util/random';
 
 import { BattleModel } from './battleModel';
 import { BattleView, TextBattleView } from './BattleView';
+import { Combatant } from '../../entities/combatant';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -24,6 +25,11 @@ export class Battle extends Phaser.Scene {
   private view: BattleView;
   private textView: TextBattleView;
   private buttonClickSound: Phaser.Sound.BaseSound;
+  private menuCloseSound: Phaser.Sound.BaseSound;
+
+  // player actions
+  private action?: Action;
+  private target?: Combatant;
 
   constructor() {
     super(sceneConfig);
@@ -40,14 +46,27 @@ export class Battle extends Phaser.Scene {
 
   public create(): void {
     this.buttonClickSound = this.sound.add('dialogue-advance');
+    this.menuCloseSound = this.sound.add('choice-select');
     this.view = new BattleView(this, this.model);
     this.textView = new TextBattleView(this, this.model);
   }
 
   update(time, delta): void {
-    const { party } = this.model;
+    const { enemies, party } = this.model;
     if (party.members.every((member) => member.health <= 0)) {
       console.log('HEROES DEAD');
+    }
+
+    if (this.action && this.target) {
+      console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
+      this.textView.displayAction(this.action, this.target, this.getActiveMember());
+      this.textView.updateStats(this.model);
+      this.action.execute(enemies, party, this.target);
+      this.action = null;
+      this.target = null;
+
+      // reduce stamina 
+      
     }
     // all hero health is gone
     // all enemy health is gone
@@ -74,8 +93,9 @@ export class Battle extends Phaser.Scene {
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
-      this.textView.displayEnemyAction(selectedBehavior, target, enemy);
+      this.textView.displayAction(selectedBehavior.action, target, enemy);
       this.textView.updateStats(this.model);
+      this.view.updatePartyMemberView(this, this.model)
     });
   }
 
@@ -124,4 +144,37 @@ export class Battle extends Phaser.Scene {
   playButtonClickSound() {
     this.buttonClickSound.play();
   }
+
+  playMenuCloseSound() {
+    this.menuCloseSound.play();
+  }
+
+  getOptions(optionKey: string): string[] {
+    const activeMember: PartyMember = this.getActiveMember();
+    const match = activeMember.options.find(option => option.name === optionKey)
+    console.log(match);
+    return match.options;
+  }
+
+  getAction(actionName: string): Action {
+    const activeMember = this.getActiveMember();
+    return activeMember.actions.find(action => actionName === action.name);
+  }
+
+  setAction(action: Action): void {
+    this.action = action;
+  }
+
+  getTargets(): Combatant[] {
+    return [...this.model.party.members, ...this.model.enemies];
+  };
+
+  getActiveMember(): PartyMember {
+    return this.model.party.members[this.model.activePartyMemberIndex];
+  }
+
+  setTarget(targetName: string): void {
+    this.target = this.getTargets().find(target => target.name === targetName);
+    console.log(this.target);
+  };
 }

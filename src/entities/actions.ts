@@ -1,4 +1,4 @@
-import { Action, ActionTags } from './action';
+import { Action, ActionTags, TargetType } from './action';
 
 export const slash: Action = {
   name: 'Slash',
@@ -8,6 +8,7 @@ export const slash: Action = {
     const DAMAGE = 50;
     target.health -= DAMAGE;
   },
+  targetType: TargetType.SINGLE_TARGET,
 };
 
 export const block: Action = {
@@ -15,6 +16,7 @@ export const block: Action = {
   staminaCost: 50,
   tags: new Set([ActionTags.DEFEND]),
   execute: (enemies, party) => {},
+  targetType: TargetType.SELF,
 };
 
 export const idle: Action = {
@@ -22,6 +24,7 @@ export const idle: Action = {
   staminaCost: 0,
   tags: new Set([ActionTags.DEFEND]),
   execute: () => {},
+  targetType: TargetType.SELF,
 };
 
 export const heal: Action = {
@@ -33,6 +36,7 @@ export const heal: Action = {
     const enemy = enemies[0];
     enemy.health = Math.min(enemy.maxHealth, (enemy.health += HEALTH));
   },
+  targetType: TargetType.SINGLE_TARGET,
 };
 
 // Potential Planned Abilities

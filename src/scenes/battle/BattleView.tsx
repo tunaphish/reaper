@@ -1,8 +1,13 @@
+import { Behavior } from '../../entities/enemy';
+import { Option } from '../../entities/party';
+
 import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
-import { Behavior } from '../../entities/enemy';
+import { Combatant } from '../../entities/combatant';
+import { Action } from '../../entities/action';
+
 
 export interface IBattleView {
   updateStats: (model: BattleModel) => void;
@@ -13,9 +18,9 @@ export class TextBattleView implements IBattleView {
     this.updateStats(battleModel);
   }
 
-  displayEnemyAction(selectedBehavior: any, target, enemy: any) {
+  displayAction(action: Action, target: Combatant, combatant: Combatant) {
     console.log('~');
-    console.log(`${enemy.name} used ${selectedBehavior.action.name} on ${target.name}`);
+    console.log(`${combatant.name} used ${action.name} on ${target.name}`);
   }
 
   updateStats(model: BattleModel): void {
@@ -47,6 +52,9 @@ export class BattleView implements IBattleView {
   private partyMemberPrimaryMenus: Element[] = [];
   private partyMemberCells: Element[] = [];
   private partyBar: Element;
+
+  private menuViewsContainer: Element;
+  private menuViews: Element[] = [];
 
   constructor(scene: Battle, battleModel: BattleModel) {
     const { enemies, party } = battleModel;
@@ -107,28 +115,22 @@ export class BattleView implements IBattleView {
 
     // Menu Display (Dependency on Party Bar for Setting Active Cell);
     party.members.forEach((member) => {
-      const primaryOptionsView = [];
-      member.primaryOptions.forEach((primaryOption) => {
-        const primaryOptionView: Element = <div className={styles.menuButton}>{primaryOption.name}</div>;
-        primaryOptionView.addEventListener('click', () => {
-          console.log(member);
-          console.log(primaryOption.options);
-          // open modal
-          scene.playButtonClickSound();
-        });
-        primaryOptionsView.push(primaryOptionView);
+      const actMenuButton = <div className={styles.menuButton}>ACT</div>;
+      actMenuButton.addEventListener('click', () => {
+        console.log(member);
+        this.addMenu(member.options.filter(option => option.isInitialOption).map(option => option.name), scene, 'ACT'); 
+      });
+
+      const itemMenuButton = <div className={styles.menuButton}>ITEM</div>;
+      itemMenuButton.addEventListener('click', () => {
+        console.log(member);
+        console.log('clicked item')
       });
 
       const memberPrimaryMenu = (
         <div className={styles.battleOptions}>
-          <div className={styles.menuRow}>
-            {primaryOptionsView[0]}
-            {primaryOptionsView[1]}
-          </div>
-          <div className={styles.menuRow}>
-            {primaryOptionsView[2]}
-            {primaryOptionsView[3]}
-          </div>
+          { actMenuButton }
+          { itemMenuButton }
         </div>
       );
 
@@ -137,28 +139,105 @@ export class BattleView implements IBattleView {
     this.menu = <div className={styles.menu} />;
     this.updatePartyMemberView(scene, battleModel);
 
+    this.menuViewsContainer = <div className={ styles.menuViewsContainer } />;
+
     const container: Element = (
       <div className={styles.container}>
         {parallax}
         {this.menu}
         {this.partyBar}
+        {this.menuViewsContainer}
       </div>
     );
 
     scene.ui.create(container, scene);
-    parallax.addEventListener('click', () => scene.updateEnemies());
+    parallax.addEventListener('click', () => scene.updateEnemies()); // for testing purposes
   }
 
   updateStats: (model: BattleModel) => void;
+
   updatePartyMemberView(scene: Battle, model: BattleModel) {
     this.menu.replaceChildren(this.partyMemberPrimaryMenus[model.activePartyMemberIndex]);
     this.partyMemberCells.forEach((cell, index) => {
-      // remove style
       cell.classList.remove(styles.active);
       if (index === model.activePartyMemberIndex) {
         cell.classList.add(styles.active);
       }
     });
     scene.playButtonClickSound();
+  }
+
+  // Handles All additional menus atm. (probably too much responsibility)
+  addMenu(options: string[], scene: Battle, header: string, isTargetMenu: boolean = false) {
+    const modalMenu = (
+      <div className={styles.modalMenu}>
+        <div className={styles.modalMenuHeader}> { header } </div>
+      </div>
+    );
+    modalMenu.addEventListener('click', (event) => {
+      event.stopPropagation();
+    })
+
+    options.forEach(option => {
+      const modalMenuOption: Element = (
+        <div className={styles.modalMenuOption}>
+          { option }
+        </div>
+      );
+
+      modalMenuOption.addEventListener('click', () => {
+        scene.playButtonClickSound();
+
+        if (isTargetMenu) {
+          scene.setTarget(option);
+          this.closeMenus();
+          return;
+        }
+
+        const action = scene.getAction(option);
+        if (action) {
+          scene.setAction(action);
+          console.log(action.targetType);
+          const targets = scene.getTargets();
+          const IS_TARGET_MENU = true;
+          this.addMenu(targets.map(target => target.name), scene, 'Targets', IS_TARGET_MENU);
+          return;
+        }
+        
+        const newOptions = scene.getOptions(option);
+        this.addMenu(newOptions, scene, option);
+      });
+
+      modalMenu.append(modalMenuOption);
+    });
+
+    const modalContainer = (
+      <div className={styles.modalContainer}>
+        { modalMenu }
+      </div>
+    );
+
+    this.menuViews.push(modalContainer);
+
+    modalContainer.addEventListener('click', () => {
+      this.menuViewsContainer.removeChild(modalContainer);
+      this.menuViews.pop();
+      scene.playMenuCloseSound();
+    });
+
+    modalContainer.style.zIndex = 10 * this.menuViews.length;
+    const RIGHT_OFFSET = 10;
+    modalMenu.style.right = (30 * (this.menuViews.length-1) + RIGHT_OFFSET) + 'px';
+    const BOTTOM_OFFSET = 240;
+    modalMenu.style.bottom = (30 * (this.menuViews.length-1) + BOTTOM_OFFSET) + 'px';
+
+    this.menuViewsContainer.appendChild(modalContainer);
+  }
+
+  closeMenus() {
+    while (this.menuViews.length > 0) {
+      const menuView = this.menuViews.pop();
+      menuView.remove();
+    }
   }
 }

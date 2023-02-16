@@ -279,3 +279,35 @@
       opacity: 0;
   }
 }
+
+.menuViewsContainer {
+}
+
+.modalContainer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+
+  /* set in js */
+  z-index: 10;  
+
+}
+
+.modalMenu {
+  position: absolute;
+  background: black;
+  border: 1px solid white;
+  width: fit-content;
+  padding: 5px;
+}
+
+.modalMenuHeader {
+
+}
+
+.modalMenuOption {
+  margin-left: 5px;
+  padding: 2px;
+}

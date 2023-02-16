@@ -1,4 +1,4 @@
-import { PartyMember, Party, Option } from './party';
+import { PartyMember, Party } from './party';
 import { slash, block, heal } from './actions';
 
 export const Eji: PartyMember = {
@@ -8,25 +8,23 @@ export const Eji: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
-  primaryOptions: [
+  actions: [ slash, block, heal ],
+  options: [
     {
       name: 'ATTACK',
-      options: [slash],
+      options: [slash.name],
+      isInitialOption: true,
     },
     {
       name: 'DEFEND',
-      options: [block, heal],
+      options: [block.name, 'UHH'],
+      isInitialOption: true,
     },
     {
-      name: 'TALK',
-      options: [heal],
-    },
-    {
-      name: 'ITEM',
-      options: [slash],
-    },
+      name: 'UHH',
+      options: [heal.name]
+    }
   ],
-  options: [],
 };
 
 export const Keshi: PartyMember = {
@@ -36,25 +34,23 @@ export const Keshi: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
-  primaryOptions: [
+  actions: [ slash, block, heal ],
+  options: [
     {
-      name: 'KILL',
-      options: [slash],
+      name: 'ATTACK',
+      options: [slash.name],
+      isInitialOption: true,
     },
     {
-      name: 'COWARD',
-      options: [block, heal],
+      name: 'DEFEND',
+      options: [block.name, 'UHH'],
+      isInitialOption: true,
     },
     {
-      name: 'TALK',
-      options: [heal],
-    },
-    {
-      name: 'ITEM',
-      options: [slash],
-    },
+      name: 'UHH',
+      options: [heal.name]
+    }
   ],
-  options: [],
 };
 
 export const Elise: PartyMember = {
@@ -64,25 +60,23 @@ export const Elise: PartyMember = {
   stamina: 100,
   maxStamina: 100,
   traits: [],
-  primaryOptions: [
+  actions: [ slash, block, heal ],
+  options: [
     {
-      name: 'WHAM',
-      options: [slash],
+      name: 'ATTACK',
+      options: [slash.name],
+      isInitialOption: true,
     },
     {
-      name: 'NOT WHAM',
-      options: [block, heal],
+      name: 'DEFEND',
+      options: [block.name, 'UHH'],
+      isInitialOption: true,
     },
     {
-      name: 'TALK',
-      options: [heal],
-    },
-    {
-      name: 'ITEM',
-      options: [slash],
-    },
+      name: 'UHH',
+      options: [heal.name]
+    }
   ],
-  options: [],
 };
 
 export const DefaultParty: Party = {

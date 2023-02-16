@@ -9,7 +9,7 @@ export const Eji: PartyMember = {
   stamina: 25,
   maxStamina: 100,
   traits: [],
-  actions: [ slash, block, heal ],
+  actions: [slash, block, heal],
   options: [
     {
       name: 'ATTACK',
@@ -23,12 +23,10 @@ export const Eji: PartyMember = {
     },
     {
       name: 'UHH',
-      options: [heal.name]
-    }
+      options: [heal.name],
+    },
   ],
-  emotionalState: [
-    { emotion: confusion, count: 1}
-  ],
+  emotionalState: [{ emotion: confusion, count: 1 }],
 };
 
 export const Keshi: PartyMember = {
@@ -38,7 +36,7 @@ export const Keshi: PartyMember = {
   stamina: 25,
   maxStamina: 100,
   traits: [],
-  actions: [ slash, block, heal ],
+  actions: [slash, block, heal],
   options: [
     {
       name: 'ATTACK',
@@ -52,10 +50,10 @@ export const Keshi: PartyMember = {
     },
     {
       name: 'UHH',
-      options: [heal.name]
-    }
+      options: [heal.name],
+    },
   ],
-  emotionalState: [{ emotion: anger, count: 1}],
+  emotionalState: [{ emotion: anger, count: 1 }],
 };
 
 export const Elise: PartyMember = {
@@ -65,7 +63,7 @@ export const Elise: PartyMember = {
   stamina: 25,
   maxStamina: 100,
   traits: [],
-  actions: [ slash, block, heal ],
+  actions: [slash, block, heal],
   options: [
     {
       name: 'ATTACK',
@@ -79,12 +77,12 @@ export const Elise: PartyMember = {
     },
     {
       name: 'UHH',
-      options: [heal.name]
-    }
+      options: [heal.name],
+    },
   ],
   emotionalState: [
-    { emotion: anger, count: 1},
-    { emotion: confusion, count: 1}
+    { emotion: anger, count: 1 },
+    { emotion: confusion, count: 1 },
   ],
 };
 

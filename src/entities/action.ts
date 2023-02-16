@@ -11,13 +11,13 @@ export enum ActionTags {
 }
 
 export enum TargetType {
-  SELF = 'SElF', 
+  SELF = 'SElF',
   SINGLE_TARGET = 'SINGLE_TARGET',
   AOE = 'AOE',
-  ALL = 'ALL'
+  ALL = 'ALL',
 }
 
-export type Action =  {
+export type Action = {
   name: string;
   staminaCost: number;
   execute: (enemies: Enemy[], party: Party, target: Combatant) => void;

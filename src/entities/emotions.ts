@@ -18,7 +18,7 @@ export const anger: Emotion = {
 
   onClick: (model, options, count) => {
     if (count === 0) return;
-    const newOptions = ['ATTACK', ...options]
+    const newOptions = ['ATTACK', ...options];
     return newOptions;
   },
 };
@@ -39,7 +39,6 @@ export const confusion: Emotion = {
     return newOptions;
   },
 };
-
 
 // Potential Future Emotions
 // - disgust: increase dodge rate

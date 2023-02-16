@@ -2,9 +2,9 @@ import { Action } from './action';
 import { Combatant } from './combatant';
 
 export interface Option {
-  name: string,
-  options: string[],
-  isInitialOption?: boolean,
+  name: string;
+  options: string[];
+  isInitialOption?: boolean;
 }
 
 export type PartyMember = Combatant & {

@@ -52,14 +52,14 @@ export class Battle extends Phaser.Scene {
     if (party.members.every((member) => member.health <= 0)) {
       console.log('HEROES DEAD');
     }
-    if (enemies.every(enemy => enemy.health <= 0)) {
+    if (enemies.every((enemy) => enemy.health <= 0)) {
       console.log('ENEMIES DEAD');
     }
 
     if (this.action && this.target) {
       console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
       this.action.execute(enemies, party, this.target);
-      // update view 
+      // update view
       this.action = null;
       this.target = null;
     }
@@ -68,15 +68,15 @@ export class Battle extends Phaser.Scene {
 
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
-      
-      this.getCombatants().forEach(target => {
+
+      this.getCombatants().forEach((target) => {
         this.updateCombantantStamina(target);
       });
 
       this.updateEnemies(); // behavior
-      
-      //updateCombatants?  
-      //update respective displays 
+
+      //updateCombatants?
+      //update respective displays
     }
 
     this.view.updateStats(this.model);
@@ -93,7 +93,7 @@ export class Battle extends Phaser.Scene {
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
-      this.view.updatePartyMemberView(this, this.model)
+      this.view.updatePartyMemberView(this, this.model);
     });
   }
 
@@ -145,8 +145,8 @@ export class Battle extends Phaser.Scene {
 
   getOptions(optionKey: string): string[] {
     const activeMember: PartyMember = this.getActiveMember();
-    const matchedOptions = activeMember.options.find(option => option.name === optionKey)
-    
+    const matchedOptions = activeMember.options.find((option) => option.name === optionKey);
+
     // Apply Traits
 
     // Apply emotion
@@ -161,7 +161,7 @@ export class Battle extends Phaser.Scene {
 
   getAction(actionName: string): Action {
     const activeMember = this.getActiveMember();
-    return activeMember.actions.find(action => actionName === action.name);
+    return activeMember.actions.find((action) => actionName === action.name);
   }
 
   setAction(action: Action): void {
@@ -176,15 +176,15 @@ export class Battle extends Phaser.Scene {
     // Apply Traits
     // Apply Emotions
     return this.getCombatants();
-  };
+  }
 
   getActiveMember(): PartyMember {
     return this.model.party.members[this.model.activePartyMemberIndex];
   }
 
   setTarget(targetName: string): void {
-    this.target = this.getTargets().find(target => target.name === targetName);
-  };
+    this.target = this.getTargets().find((target) => target.name === targetName);
+  }
 
   updateCombantantStamina(combatant: Combatant): void {
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + 25);

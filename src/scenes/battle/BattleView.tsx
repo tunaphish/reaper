@@ -3,8 +3,6 @@ import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 
-
-
 export class BattleView {
   private enemyHealth: any;
   private enemyStamina: any;
@@ -26,9 +24,17 @@ export class BattleView {
 
     // Enemy Display
     const enemy = enemies[0];
-    this.enemyHealth = <div>❤️ {enemy.health}/{enemy.maxHealth}</div>
-    this.enemyStamina = <div>☀️ {enemy.stamina}/{enemy.maxStamina}</div>
-    
+    this.enemyHealth = (
+      <div>
+        ❤️ {enemy.health}/{enemy.maxHealth}
+      </div>
+    );
+    this.enemyStamina = (
+      <div>
+        ☀️ {enemy.stamina}/{enemy.maxStamina}
+      </div>
+    );
+
     this.animeText = <p className={styles.animeText}>Test Text</p>;
     const parallax = (
       <div className={styles.parallax} id="parallax">
@@ -52,8 +58,16 @@ export class BattleView {
     // Party Bar Display
     this.partyBar = <div className={styles.partyBar} />;
     party.members.forEach((member, index) => {
-      const memberHealthView = <div>❤️ {member.health}/ {member.maxHealth}</div>
-      const memberStaminaView = <div>☀️ {member.stamina}/ {member.maxStamina}</div>
+      const memberHealthView = (
+        <div>
+          ❤️ {member.health}/ {member.maxHealth}
+        </div>
+      );
+      const memberStaminaView = (
+        <div>
+          ☀️ {member.stamina}/ {member.maxStamina}
+        </div>
+      );
 
       const partyMemberDisplay = (
         <div className={styles.characterCell}>
@@ -77,19 +91,23 @@ export class BattleView {
       const actMenuButton = <div className={styles.menuButton}>ACT</div>;
       actMenuButton.addEventListener('click', () => {
         scene.playButtonClickSound();
-        this.addMenu(member.options.filter(option => option.isInitialOption).map(option => option.name), scene, 'ACT'); 
+        this.addMenu(
+          member.options.filter((option) => option.isInitialOption).map((option) => option.name),
+          scene,
+          'ACT',
+        );
       });
 
       const itemMenuButton = <div className={styles.menuButton}>ITEM</div>;
       itemMenuButton.addEventListener('click', () => {
         console.log(member);
-        console.log('clicked item')
+        console.log('clicked item');
       });
 
       const memberPrimaryMenu = (
         <div className={styles.battleOptions}>
-          { actMenuButton }
-          { itemMenuButton }
+          {actMenuButton}
+          {itemMenuButton}
         </div>
       );
 
@@ -98,7 +116,7 @@ export class BattleView {
     this.menu = <div className={styles.menu} />;
     this.updatePartyMemberView(scene, battleModel);
 
-    this.menuViewsContainer = <div className={ styles.menuViewsContainer } />;
+    this.menuViewsContainer = <div className={styles.menuViewsContainer} />;
 
     const container: Element = (
       <div className={styles.container}>
@@ -116,15 +134,18 @@ export class BattleView {
   updateStats(model: BattleModel) {
     const enemy = model.enemies[0];
     // maybe caching?
-    this.enemyHealth.innerText = `❤️ ${enemy.health}/${enemy.maxHealth}`
-    this.enemyStamina.innerText = `☀️ ${enemy.stamina}/${enemy.maxStamina}`
+    this.enemyHealth.innerText = `❤️ ${enemy.health}/${enemy.maxHealth}`;
+    this.enemyStamina.innerText = `☀️ ${enemy.stamina}/${enemy.maxStamina}`;
 
-    for (let i=0; i<model.party.members.length; i++) {
-      this.partyMemberHealthViews[i].innerText = `❤️ ${model.party.members[i].health}/${model.party.members[i].maxHealth}`;
-      this.partyMemberStaminaViews[i].innerText = `☀️ ${model.party.members[i].stamina}/${model.party.members[i].maxStamina}`;
-
+    for (let i = 0; i < model.party.members.length; i++) {
+      this.partyMemberHealthViews[
+        i
+      ].innerText = `❤️ ${model.party.members[i].health}/${model.party.members[i].maxHealth}`;
+      this.partyMemberStaminaViews[
+        i
+      ].innerText = `☀️ ${model.party.members[i].stamina}/${model.party.members[i].maxStamina}`;
     }
-  };
+  }
 
   updatePartyMemberView(scene: Battle, model: BattleModel) {
     this.menu.replaceChildren(this.partyMemberPrimaryMenus[model.activePartyMemberIndex]);
@@ -138,22 +159,18 @@ export class BattleView {
   }
 
   // Handles All additional menus atm. (probably too much responsibility)
-  addMenu(options: string[], scene: Battle, header: string, isTargetMenu: boolean = false) {
+  addMenu(options: string[], scene: Battle, header: string, isTargetMenu = false) {
     const modalMenu = (
       <div className={styles.modalMenu}>
-        <div className={styles.modalMenuHeader}> { header } </div>
+        <div className={styles.modalMenuHeader}> {header} </div>
       </div>
     );
     modalMenu.addEventListener('click', (event) => {
       event.stopPropagation();
-    })
+    });
 
-    options.forEach(option => {
-      const modalMenuOption: Element = (
-        <div className={styles.modalMenuOption}>
-          { option }
-        </div>
-      );
+    options.forEach((option) => {
+      const modalMenuOption: Element = <div className={styles.modalMenuOption}>{option}</div>;
 
       modalMenuOption.addEventListener('click', () => {
         scene.playButtonClickSound();
@@ -170,10 +187,15 @@ export class BattleView {
           console.log(action.targetType);
           const targets = scene.getTargets();
           const IS_TARGET_MENU = true;
-          this.addMenu(targets.map(target => target.name), scene, 'Targets', IS_TARGET_MENU);
+          this.addMenu(
+            targets.map((target) => target.name),
+            scene,
+            'Targets',
+            IS_TARGET_MENU,
+          );
           return;
         }
-        
+
         const newOptions = scene.getOptions(option);
         this.addMenu(newOptions, scene, option);
       });
@@ -181,11 +203,7 @@ export class BattleView {
       modalMenu.append(modalMenuOption);
     });
 
-    const modalContainer = (
-      <div className={styles.modalContainer}>
-        { modalMenu }
-      </div>
-    );
+    const modalContainer = <div className={styles.modalContainer}>{modalMenu}</div>;
 
     this.menuViews.push(modalContainer);
 
@@ -197,9 +215,9 @@ export class BattleView {
 
     modalContainer.style.zIndex = 10 * this.menuViews.length;
     const RIGHT_OFFSET = 10;
-    modalMenu.style.right = (30 * (this.menuViews.length-1) + RIGHT_OFFSET) + 'px';
+    modalMenu.style.right = 30 * (this.menuViews.length - 1) + RIGHT_OFFSET + 'px';
     const BOTTOM_OFFSET = 240;
-    modalMenu.style.bottom = (30 * (this.menuViews.length-1) + BOTTOM_OFFSET) + 'px';
+    modalMenu.style.bottom = 30 * (this.menuViews.length - 1) + BOTTOM_OFFSET + 'px';
 
     this.menuViewsContainer.appendChild(modalContainer);
   }

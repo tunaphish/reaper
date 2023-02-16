@@ -9,7 +9,7 @@ import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this w
 import { getRandomInt } from '../../util/random';
 
 import { BattleModel } from './battleModel';
-import { BattleView, TextBattleView } from './BattleView';
+import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -23,11 +23,9 @@ export class Battle extends Phaser.Scene {
   private lastCalculation = 0;
   private model: BattleModel;
   private view: BattleView;
-  private textView: TextBattleView;
   private buttonClickSound: Phaser.Sound.BaseSound;
   private menuCloseSound: Phaser.Sound.BaseSound;
 
-  // player actions
   private action?: Action;
   private target?: Combatant;
 
@@ -36,7 +34,6 @@ export class Battle extends Phaser.Scene {
   }
 
   public init(data): void {
-    // load enemy
     this.model = {
       enemies: [healieBoi],
       party: DefaultParty,
@@ -48,7 +45,6 @@ export class Battle extends Phaser.Scene {
     this.buttonClickSound = this.sound.add('dialogue-advance');
     this.menuCloseSound = this.sound.add('choice-select');
     this.view = new BattleView(this, this.model);
-    this.textView = new TextBattleView(this, this.model);
   }
 
   update(time, delta): void {
@@ -56,40 +52,40 @@ export class Battle extends Phaser.Scene {
     if (party.members.every((member) => member.health <= 0)) {
       console.log('HEROES DEAD');
     }
-
     if (enemies.every(enemy => enemy.health <= 0)) {
       console.log('ENEMIES DEAD');
     }
 
     if (this.action && this.target) {
       console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
-      this.textView.displayAction(this.action, this.target, this.getActiveMember());
-      this.textView.updateStats(this.model);
       this.action.execute(enemies, party, this.target);
+      // update view 
       this.action = null;
       this.target = null;
-
-      // reduce stamina 
-      
     }
 
     this.lastCalculation += delta;
 
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
-      //this.updateEnemies();
-      //this.updateParty(); apply stamina regen
-      //updateCombatants?  apply stacked damage
+      
+      this.getCombatants().forEach(target => {
+        this.updateCombantantStamina(target);
+      });
+
+      this.updateEnemies(); // behavior
+      
+      //updateCombatants?  
       //update respective displays 
     }
+
+    this.view.updateStats(this.model);
   }
 
   updateEnemies() {
     // Update Stats
     const { enemies, party } = this.model;
     enemies.forEach((enemy) => {
-      enemy.stamina = Math.min(enemy.maxStamina, enemy.stamina + 25);
-
       //Select Behavior
       const selectedBehavior = this.selectBehavior(enemies, party, enemy);
       const target = selectedBehavior.targetPriority(enemies, party, enemy);
@@ -97,8 +93,6 @@ export class Battle extends Phaser.Scene {
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
-      this.textView.displayAction(selectedBehavior.action, target, enemy);
-      this.textView.updateStats(this.model);
       this.view.updatePartyMemberView(this, this.model)
     });
   }
@@ -117,16 +111,12 @@ export class Battle extends Phaser.Scene {
     enemy.traits.forEach((trait) => {
       traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
     });
-    this.textView.displayBehaviors(traitedBehaviors);
 
     // Apply Emotions
     let emotionBehaviors = traitedBehaviors;
     for (const state of enemy.emotionalState) {
       emotionBehaviors = state.emotion?.onUpdate(enemies, party, emotionBehaviors, state.count);
     }
-
-    // displayBehaviorTable
-    this.textView.displayBehaviors(emotionBehaviors);
 
     // Randomly Select Behavior Based on Weight
     const summedWeights = traitedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
@@ -157,6 +147,9 @@ export class Battle extends Phaser.Scene {
     const activeMember: PartyMember = this.getActiveMember();
     const matchedOptions = activeMember.options.find(option => option.name === optionKey)
     
+    // Apply Traits
+
+    // Apply emotion
     const { enemies, party } = this.model;
     let emotionalOptions = matchedOptions.options;
     for (const state of activeMember.emotionalState) {
@@ -175,8 +168,14 @@ export class Battle extends Phaser.Scene {
     this.action = action;
   }
 
+  getCombatants(): Combatant[] {
+    return [...this.model.party.members, ...this.model.enemies].filter(isAlive);
+  }
+
   getTargets(): Combatant[] {
-    return [...this.model.party.members, ...this.model.enemies];
+    // Apply Traits
+    // Apply Emotions
+    return this.getCombatants();
   };
 
   getActiveMember(): PartyMember {
@@ -185,6 +184,11 @@ export class Battle extends Phaser.Scene {
 
   setTarget(targetName: string): void {
     this.target = this.getTargets().find(target => target.name === targetName);
-    console.log(this.target);
   };
+
+  updateCombantantStamina(combatant: Combatant): void {
+    combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + 25);
+  }
 }
+
+const isAlive = (combatant: Combatant) => combatant.health > 0;

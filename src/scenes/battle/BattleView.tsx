@@ -1,56 +1,21 @@
-import { Behavior } from '../../entities/enemy';
-import { Option } from '../../entities/party';
-
 import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
-import { Combatant } from '../../entities/combatant';
-import { Action } from '../../entities/action';
 
 
-export interface IBattleView {
-  updateStats: (model: BattleModel) => void;
-}
 
-export class TextBattleView implements IBattleView {
-  constructor(scene: Battle, battleModel: BattleModel) {
-    this.updateStats(battleModel);
-  }
-
-  displayAction(action: Action, target: Combatant, combatant: Combatant) {
-    console.log('~');
-    console.log(`${combatant.name} used ${action.name} on ${target.name}`);
-  }
-
-  updateStats(model: BattleModel): void {
-    const { enemies, party } = model;
-    enemies.forEach((enemy) =>
-      console.log(
-        `${enemy.name}: ❤️ ${enemy.health} / ${enemy.maxHealth} |  ☀️ ${enemy.stamina} / ${enemy.maxStamina}`,
-      ),
-    );
-    party.members.forEach((member) =>
-      console.log(
-        `${member.name}: ❤️ ${member.health} / ${member.maxHealth} |  ☀️ ${member.stamina} / ${member.maxStamina}`,
-      ),
-    );
-  }
-
-  displayBehaviors(behaviors: Behavior[]): void {
-    const behaviorTable = behaviors.map((behavior) => ({ name: behavior.action.name, weight: behavior.weight }));
-    console.table(behaviorTable);
-  }
-}
-
-export class BattleView implements IBattleView {
+export class BattleView {
   private enemyHealth: any;
   private enemyStamina: any;
   private animeText: any;
   private menu: Element;
 
   private partyMemberPrimaryMenus: Element[] = [];
+
   private partyMemberCells: Element[] = [];
+  private partyMemberHealthViews: any[] = [];
+  private partyMemberStaminaViews: any[] = [];
   private partyBar: Element;
 
   private menuViewsContainer: Element;
@@ -61,16 +26,9 @@ export class BattleView implements IBattleView {
 
     // Enemy Display
     const enemy = enemies[0];
-    this.enemyHealth = (
-      <div>
-        ❤️ {enemy.health}/{enemy.maxHealth}
-      </div>
-    );
-    this.enemyStamina = (
-      <div>
-        ☀️ {enemy.stamina}/{enemy.maxStamina}
-      </div>
-    );
+    this.enemyHealth = <div>❤️ {enemy.health}/{enemy.maxHealth}</div>
+    this.enemyStamina = <div>☀️ {enemy.stamina}/{enemy.maxStamina}</div>
+    
     this.animeText = <p className={styles.animeText}>Test Text</p>;
     const parallax = (
       <div className={styles.parallax} id="parallax">
@@ -94,15 +52,14 @@ export class BattleView implements IBattleView {
     // Party Bar Display
     this.partyBar = <div className={styles.partyBar} />;
     party.members.forEach((member, index) => {
+      const memberHealthView = <div>❤️ {member.health}/ {member.maxHealth}</div>
+      const memberStaminaView = <div>☀️ {member.stamina}/ {member.maxStamina}</div>
+
       const partyMemberDisplay = (
         <div className={styles.characterCell}>
           {member.name}
-          <div>
-            ❤️ {member.health}/ {member.maxHealth}
-          </div>
-          <div>
-            ☀️ {member.stamina}/ {member.maxStamina}
-          </div>
+          {memberHealthView}
+          {memberStaminaView}
         </div>
       );
 
@@ -111,13 +68,15 @@ export class BattleView implements IBattleView {
       });
       this.partyBar.appendChild(partyMemberDisplay);
       this.partyMemberCells.push(partyMemberDisplay);
+      this.partyMemberHealthViews.push(memberHealthView);
+      this.partyMemberStaminaViews.push(memberStaminaView);
     });
 
     // Menu Display (Dependency on Party Bar for Setting Active Cell);
     party.members.forEach((member) => {
       const actMenuButton = <div className={styles.menuButton}>ACT</div>;
       actMenuButton.addEventListener('click', () => {
-        console.log(member);
+        scene.playButtonClickSound();
         this.addMenu(member.options.filter(option => option.isInitialOption).map(option => option.name), scene, 'ACT'); 
       });
 
@@ -154,7 +113,18 @@ export class BattleView implements IBattleView {
     parallax.addEventListener('click', () => scene.updateEnemies()); // for testing purposes
   }
 
-  updateStats: (model: BattleModel) => void;
+  updateStats(model: BattleModel) {
+    const enemy = model.enemies[0];
+    // maybe caching?
+    this.enemyHealth.innerText = `❤️ ${enemy.health}/${enemy.maxHealth}`
+    this.enemyStamina.innerText = `☀️ ${enemy.stamina}/${enemy.maxStamina}`
+
+    for (let i=0; i<model.party.members.length; i++) {
+      this.partyMemberHealthViews[i].innerText = `❤️ ${model.party.members[i].health}/${model.party.members[i].maxHealth}`;
+      this.partyMemberStaminaViews[i].innerText = `☀️ ${model.party.members[i].stamina}/${model.party.members[i].maxStamina}`;
+
+    }
+  };
 
   updatePartyMemberView(scene: Battle, model: BattleModel) {
     this.menu.replaceChildren(this.partyMemberPrimaryMenus[model.activePartyMemberIndex]);

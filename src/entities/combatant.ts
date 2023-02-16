@@ -1,3 +1,4 @@
+import { Emotion } from './emotion';
 import { Trait } from './trait';
 
 export interface Combatant {
@@ -9,4 +10,5 @@ export interface Combatant {
   maxStamina: number;
   // defense?
   traits: Trait[];
+  emotionalState: { emotion: Emotion; count: number }[];
 }

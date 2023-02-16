@@ -1,4 +1,5 @@
 import { Emotion } from '../entities/emotion';
+import { shuffle } from '../util';
 import { ActionTags } from './action';
 
 export const anger: Emotion = {
@@ -14,7 +15,32 @@ export const anger: Emotion = {
     });
     return newBehaviors;
   },
+
+  onClick: (model, options, count) => {
+    if (count === 0) return;
+    const newOptions = ['ATTACK', ...options]
+    return newOptions;
+  },
 };
+
+export const confusion: Emotion = {
+  name: 'Confusion',
+  display: '🤔',
+  onUpdate: (enemies, party, behaviors, count) => {
+    if (count === 0) return;
+    // mix targets
+    return behaviors;
+  },
+
+  onClick: (model, options, count) => {
+    if (count === 0) return;
+    const newOptions = shuffle(options);
+    console.log(newOptions);
+    return newOptions;
+  },
+};
+
+
 // Potential Future Emotions
 // - disgust: increase dodge rate
 // 	- repulsed: poison

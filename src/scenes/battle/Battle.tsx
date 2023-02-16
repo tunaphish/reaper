@@ -57,6 +57,10 @@ export class Battle extends Phaser.Scene {
       console.log('HEROES DEAD');
     }
 
+    if (enemies.every(enemy => enemy.health <= 0)) {
+      console.log('ENEMIES DEAD');
+    }
+
     if (this.action && this.target) {
       console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
       this.textView.displayAction(this.action, this.target, this.getActiveMember());
@@ -68,15 +72,15 @@ export class Battle extends Phaser.Scene {
       // reduce stamina 
       
     }
-    // all hero health is gone
-    // all enemy health is gone
-    // battle checks
 
     this.lastCalculation += delta;
 
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
       //this.updateEnemies();
+      //this.updateParty(); apply stamina regen
+      //updateCombatants?  apply stacked damage
+      //update respective displays 
     }
   }
 
@@ -151,9 +155,15 @@ export class Battle extends Phaser.Scene {
 
   getOptions(optionKey: string): string[] {
     const activeMember: PartyMember = this.getActiveMember();
-    const match = activeMember.options.find(option => option.name === optionKey)
-    console.log(match);
-    return match.options;
+    const matchedOptions = activeMember.options.find(option => option.name === optionKey)
+    
+    const { enemies, party } = this.model;
+    let emotionalOptions = matchedOptions.options;
+    for (const state of activeMember.emotionalState) {
+      emotionalOptions = state.emotion?.onClick(this.model, emotionalOptions, state.count);
+    }
+
+    return emotionalOptions;
   }
 
   getAction(actionName: string): Action {

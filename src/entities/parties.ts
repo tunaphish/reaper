@@ -1,5 +1,6 @@
 import { PartyMember, Party } from './party';
 import { slash, block, heal } from './actions';
+import { anger, confusion } from './emotions';
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -24,6 +25,9 @@ export const Eji: PartyMember = {
       name: 'UHH',
       options: [heal.name]
     }
+  ],
+  emotionalState: [
+    { emotion: confusion, count: 1}
   ],
 };
 
@@ -51,6 +55,7 @@ export const Keshi: PartyMember = {
       options: [heal.name]
     }
   ],
+  emotionalState: [{ emotion: anger, count: 1}],
 };
 
 export const Elise: PartyMember = {
@@ -76,6 +81,10 @@ export const Elise: PartyMember = {
       name: 'UHH',
       options: [heal.name]
     }
+  ],
+  emotionalState: [
+    { emotion: anger, count: 1},
+    { emotion: confusion, count: 1}
   ],
 };
 

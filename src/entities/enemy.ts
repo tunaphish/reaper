@@ -13,6 +13,5 @@ export interface Behavior {
 
 export type Enemy = Combatant & {
   behaviors: Behavior[];
-  emotionalState: { emotion: Emotion; count: number }[];
   // imageUrl: String;
 };

@@ -2,8 +2,10 @@ import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
+import { shakeElement } from '../../animations';
 
 export class BattleView {
+  private parallax: any;
   private enemyHealth: any;
   private enemyStamina: any;
   private animeText: any;
@@ -36,7 +38,7 @@ export class BattleView {
     );
 
     this.animeText = <p className={styles.animeText}>Test Text</p>;
-    const parallax = (
+    this.parallax = (
       <div className={styles.parallax} id="parallax">
         <div className={styles.tvContainer}>
           <div className={styles.staticEffect}>
@@ -51,9 +53,9 @@ export class BattleView {
         </div>
       </div>
     );
-    parallax.style.backgroundImage =
+    this.parallax.style.backgroundImage =
       'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png), url("/reaper/assets/characters/eji.png"), url("/reaper/assets/backgrounds/pikrepo.jpg")';
-    parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
+    this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
 
     // Party Bar Display
     this.partyBar = <div className={styles.partyBar} />;
@@ -120,7 +122,7 @@ export class BattleView {
 
     const container: Element = (
       <div className={styles.container}>
-        {parallax}
+        {this.parallax}
         {this.menu}
         {this.partyBar}
         {this.menuViewsContainer}
@@ -128,7 +130,11 @@ export class BattleView {
     );
 
     scene.ui.create(container, scene);
-    parallax.addEventListener('click', () => scene.updateEnemies()); // for testing purposes
+
+    // for testing purposes
+    this.parallax.addEventListener('click', () => {
+      scene.updateEnemies()
+    }); 
   }
 
   updateStats(model: BattleModel) {
@@ -155,7 +161,6 @@ export class BattleView {
         cell.classList.add(styles.active);
       }
     });
-    scene.playButtonClickSound();
   }
 
   // Handles All additional menus atm. (probably too much responsibility)
@@ -184,7 +189,6 @@ export class BattleView {
         const action = scene.getAction(option);
         if (action) {
           scene.setAction(action);
-          console.log(action.targetType);
           const targets = scene.getTargets();
           const IS_TARGET_MENU = true;
           this.addMenu(
@@ -222,10 +226,18 @@ export class BattleView {
     this.menuViewsContainer.appendChild(modalContainer);
   }
 
-  closeMenus() {
+  closeMenus(): void {
     while (this.menuViews.length > 0) {
       const menuView = this.menuViews.pop();
       menuView.remove();
     }
+  }
+
+  shakeEnemy(): void {
+    shakeElement(this.parallax);
+  };
+
+  shakePartyMember(partyMemberIndex: number): void {
+    shakeElement(this.partyMemberCells[partyMemberIndex]);
   }
 }

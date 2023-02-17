@@ -59,9 +59,11 @@ export class Battle extends Phaser.Scene {
     if (this.action && this.target) {
       console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
       this.action.execute(enemies, party, this.target);
-      // update view
+      // todo: check if actually damage dealing attacks
+      this.shakeTarget(this.target, this.action);
       this.action = null;
       this.target = null;
+
     }
 
     this.lastCalculation += delta;
@@ -93,6 +95,7 @@ export class Battle extends Phaser.Scene {
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
+      this.shakeTarget(target, selectedBehavior.action);
       this.view.updatePartyMemberView(this, this.model);
     });
   }
@@ -131,7 +134,6 @@ export class Battle extends Phaser.Scene {
 
   setActivePartyMember(index: number) {
     this.model.activePartyMemberIndex = index;
-    console.log(index);
     this.view.updatePartyMemberView(this, this.model);
   }
 
@@ -147,7 +149,7 @@ export class Battle extends Phaser.Scene {
     const activeMember: PartyMember = this.getActiveMember();
     const matchedOptions = activeMember.options.find((option) => option.name === optionKey);
 
-    // Apply Traits
+    // TODO: Apply Traits
 
     // Apply emotion
     const { enemies, party } = this.model;
@@ -173,8 +175,8 @@ export class Battle extends Phaser.Scene {
   }
 
   getTargets(): Combatant[] {
-    // Apply Traits
-    // Apply Emotions
+    // TODO: Apply Traits
+    // TODO: Apply Emotions
     return this.getCombatants();
   }
 
@@ -188,6 +190,17 @@ export class Battle extends Phaser.Scene {
 
   updateCombantantStamina(combatant: Combatant): void {
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + 25);
+  }
+
+  shakeTarget(target: Combatant, action: Action): void {
+    if (!action.tags.has(ActionTags.ATTACK)) return;
+    for (let i = 0; i<this.model.enemies.length; i++) {
+      if (this.model.enemies[i] === target) this.view.shakeEnemy();
+    }
+    
+    for (let i = 0; i<this.model.party.members.length; i++) {
+      if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
+    }
   }
 }
 

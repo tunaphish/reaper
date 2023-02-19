@@ -23,8 +23,10 @@ export class Battle extends Phaser.Scene {
   private lastCalculation = 0;
   private model: BattleModel;
   private view: BattleView;
+
   private buttonClickSound: Phaser.Sound.BaseSound;
   private menuCloseSound: Phaser.Sound.BaseSound;
+  private battleMusic: Phaser.Sound.BaseSound;
 
   private action?: Action;
   private target?: Combatant;
@@ -44,7 +46,9 @@ export class Battle extends Phaser.Scene {
   public create(): void {
     this.buttonClickSound = this.sound.add('dialogue-advance');
     this.menuCloseSound = this.sound.add('choice-select');
-    this.view = new BattleView(this, this.model);
+    this.battleMusic = this.sound.add('upgrade');
+    this.battleMusic.play();
+    this.view = new BattleView(this, this.model);    
   }
 
   update(time, delta): void {
@@ -59,11 +63,10 @@ export class Battle extends Phaser.Scene {
     if (this.action && this.target) {
       console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
       this.action.execute(enemies, party, this.target);
-      // todo: check if actually damage dealing attacks
+      if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
       this.shakeTarget(this.target, this.action);
       this.action = null;
       this.target = null;
-
     }
 
     this.lastCalculation += delta;
@@ -77,24 +80,21 @@ export class Battle extends Phaser.Scene {
 
       this.updateEnemies(); // behavior
 
-      //updateCombatants?
-      //update respective displays
     }
 
     this.view.updateStats(this.model);
   }
 
   updateEnemies() {
-    // Update Stats
     const { enemies, party } = this.model;
     enemies.forEach((enemy) => {
-      //Select Behavior
       const selectedBehavior = this.selectBehavior(enemies, party, enemy);
       const target = selectedBehavior.targetPriority(enemies, party, enemy);
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(enemies, party, target);
+      if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       this.shakeTarget(target, selectedBehavior.action);
       this.view.updatePartyMemberView(this, this.model);
     });

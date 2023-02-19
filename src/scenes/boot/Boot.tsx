@@ -55,6 +55,12 @@ export class Boot extends Phaser.Scene {
     this.load.audio('choice-hover', '/reaper/assets/sounds/choice-hover.wav');
     this.load.audio('choice-select', '/reaper/assets/sounds/choice-select.wav');
     this.load.audio('dialogue-advance', '/reaper/assets/sounds/dialogue-advance.wav');
+    this.load.audio('heal', '/reaper/assets/sounds/heal.mp3');
+    this.load.audio('attack', '/reaper/assets/sounds/attack.wav');
+
+    // #region effects
+    this.load.image('heal', '/reaper/assets/effects/heal.gif');
+
 
     // this.load.audio('main-menu-music', '/reaper/assets/music/corner-of-memories.mp3');
     this.load.audio('knight', '/reaper/assets/music/knight.mp3');
@@ -67,7 +73,7 @@ export class Boot extends Phaser.Scene {
     // this.load.audio('resonance', '/reaper/assets/music/resonance.mp3');
     // this.load.audio('soundlessly', '/reaper/assets/music/soundlessly.mp3');
     // this.load.audio('twilight', '/reaper/assets/music/twilight.mp3');
-    // this.load.audio('upgrade', '/reaper/assets/music/upgrade.mp3');
+    this.load.audio('upgrade', '/reaper/assets/music/upgrade.mp3');
 
     this.load.text('mission-4', '/reaper/assets/scripts/mission-4.yaml');
     this.load.text('mission-6', '/reaper/assets/scripts/mission-6.yaml');

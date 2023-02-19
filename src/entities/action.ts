@@ -23,4 +23,6 @@ export type Action = {
   execute: (enemies: Enemy[], party: Party, target: Combatant) => void;
   tags: Set<ActionTags>;
   targetType: TargetType;
+  soundKeyName?: string;
+  imageKeyName?: string;
 };

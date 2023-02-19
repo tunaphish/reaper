@@ -80,6 +80,8 @@ export class BattleView {
       );
 
       partyMemberDisplay.addEventListener('click', () => {
+        // return if party member is mf dead
+        scene.playButtonClickSound();
         scene.setActivePartyMember(index);
       });
       this.partyBar.appendChild(partyMemberDisplay);

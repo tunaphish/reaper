@@ -9,6 +9,7 @@ export const slash: Action = {
     target.health -= DAMAGE;
   },
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack'
 };
 
 export const block: Action = {
@@ -37,6 +38,8 @@ export const heal: Action = {
     enemy.health = Math.min(enemy.maxHealth, (enemy.health += HEALTH));
   },
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'heal',
+  imageKeyName: 'heal',
 };
 
 // Potential Planned Abilities

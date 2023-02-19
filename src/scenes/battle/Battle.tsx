@@ -24,8 +24,6 @@ export class Battle extends Phaser.Scene {
   private model: BattleModel;
   private view: BattleView;
 
-  private buttonClickSound: Phaser.Sound.BaseSound;
-  private menuCloseSound: Phaser.Sound.BaseSound;
   private battleMusic: Phaser.Sound.BaseSound;
 
   private action?: Action;
@@ -44,10 +42,8 @@ export class Battle extends Phaser.Scene {
   }
 
   public create(): void {
-    this.buttonClickSound = this.sound.add('dialogue-advance');
-    this.menuCloseSound = this.sound.add('choice-select');
     this.battleMusic = this.sound.add('upgrade');
-    this.battleMusic.play();
+    //this.battleMusic.play();
     this.view = new BattleView(this, this.model);    
   }
 
@@ -88,7 +84,6 @@ export class Battle extends Phaser.Scene {
       });
 
       this.updateEnemies(); // behavior
-
     }
 
     this.view.updateStats(this.model);
@@ -147,11 +142,11 @@ export class Battle extends Phaser.Scene {
   }
 
   playButtonClickSound() {
-    this.buttonClickSound.play();
+    this.sound.play('dialogue-advance');
   }
 
   playMenuCloseSound() {
-    this.menuCloseSound.play();
+    this.sound.play('choice-select');
   }
 
   getOptions(optionKey: string): string[] {

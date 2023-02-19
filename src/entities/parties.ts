@@ -12,17 +12,17 @@ export const Eji: PartyMember = {
   actions: [slash, block, heal],
   options: [
     {
-      name: 'ATTACK',
+      name: 'Attack',
       options: [slash.name],
       isInitialOption: true,
     },
     {
-      name: 'DEFEND',
-      options: [block.name, 'UHH'],
+      name: 'Defend',
+      options: [block.name, 'Restoration'],
       isInitialOption: true,
     },
     {
-      name: 'UHH',
+      name: 'Restoration',
       options: [heal.name],
     },
   ],
@@ -39,17 +39,17 @@ export const Keshi: PartyMember = {
   actions: [slash, block, heal],
   options: [
     {
-      name: 'ATTACK',
+      name: 'Attack',
       options: [slash.name],
       isInitialOption: true,
     },
     {
-      name: 'DEFEND',
+      name: 'Defend',
       options: [block.name, 'UHH'],
       isInitialOption: true,
     },
     {
-      name: 'UHH',
+      name: 'Restoration',
       options: [heal.name],
     },
   ],
@@ -66,17 +66,17 @@ export const Elise: PartyMember = {
   actions: [slash, block, heal],
   options: [
     {
-      name: 'ATTACK',
+      name: 'Attack',
       options: [slash.name],
       isInitialOption: true,
     },
     {
-      name: 'DEFEND',
-      options: [block.name, 'UHH'],
+      name: 'Defend',
+      options: [block.name, 'Restoration'],
       isInitialOption: true,
     },
     {
-      name: 'UHH',
+      name: 'Restoration',
       options: [heal.name],
     },
   ],

@@ -18,7 +18,7 @@ export const anger: Emotion = {
 
   onClick: (model, options, count) => {
     if (count === 0) return options;
-    const newOptions = ['ATTACK', ...options];
+    const newOptions = ['Attack', ...options];
     return newOptions;
   },
 };

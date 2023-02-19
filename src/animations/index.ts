@@ -11,14 +11,11 @@ export const shakeElement = (element: Element) => {
     iterationCount: 1,
   }
 
-  console.time('generate-keyframes');
   let keyFrames = [];
   for (let i=0; i<10; i++) {
     keyFrames.push({ transform: `translate(${-20+getRandomInt(40)}px, ${-20+getRandomInt(40)}px) rotate(${-10+getRandomInt(20)}deg)`});
   }
   keyFrames.push({ transform: 'translate(0, 0) rotate(0)'});
-  console.timeEnd('generate-keyframes');
-  console.log(keyFrames)
 
   element.animate(keyFrames, shakeTiming);
 }

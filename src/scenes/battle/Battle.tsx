@@ -171,13 +171,21 @@ export class Battle extends Phaser.Scene {
   }
 
   getCombatants(): Combatant[] {
-    return [...this.model.party.members, ...this.model.enemies].filter(isAlive);
+    return [...this.model.party.members, ...this.model.enemies];//.filter(isAlive);
   }
 
   getTargets(): Combatant[] {
     // TODO: Apply Traits
-    // TODO: Apply Emotions
-    return this.getCombatants();
+
+    const activeMember = this.getActiveMember();
+    const initialTargets = this.getCombatants();
+
+    let emotionalTargets = initialTargets;
+    for (const state of activeMember.emotionalState) {
+      if (state.emotion.onOpenTargets) emotionalTargets = state.emotion.onOpenTargets(emotionalTargets, state.count);
+    };
+
+    return emotionalTargets;
   }
 
   getActiveMember(): PartyMember {
@@ -185,7 +193,7 @@ export class Battle extends Phaser.Scene {
   }
 
   setTarget(targetName: string): void {
-    this.target = this.getTargets().find((target) => target.name === targetName);
+    this.target = this.getCombatants().find((target) => target.name === targetName);
   }
 
   updateCombantantStamina(combatant: Combatant): void {
@@ -202,6 +210,8 @@ export class Battle extends Phaser.Scene {
       if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
     }
   }
+
+  // TODO:  apply dmg 
 }
 
 const isAlive = (combatant: Combatant) => combatant.health > 0;

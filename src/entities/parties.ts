@@ -82,7 +82,7 @@ export const Elise: PartyMember = {
   ],
   emotionalState: [
     { emotion: anger, count: 1 },
-    { emotion: confusion, count: 1 },
+    { emotion: confusion, count: 3 },
   ],
 };
 

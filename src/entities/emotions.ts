@@ -17,7 +17,7 @@ export const anger: Emotion = {
   },
 
   onClick: (model, options, count) => {
-    if (count === 0) return;
+    if (count === 0) return options;
     const newOptions = ['ATTACK', ...options];
     return newOptions;
   },
@@ -27,17 +27,21 @@ export const confusion: Emotion = {
   name: 'Confusion',
   display: '🤔',
   onUpdate: (enemies, party, behaviors, count) => {
-    if (count === 0) return;
+    if (count === 0) return behaviors;
     // mix targets
     return behaviors;
   },
 
   onClick: (model, options, count) => {
-    if (count === 0) return;
+    if (count === 0) return options;
     const newOptions = shuffle(options);
-    console.log(newOptions);
     return newOptions;
   },
+
+  onOpenTargets: (targets, count: number) => {
+    if (count < 2) return targets;
+    return shuffle(targets);
+  }
 };
 
 // Potential Future Emotions

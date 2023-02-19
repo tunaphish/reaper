@@ -61,10 +61,19 @@ export class Battle extends Phaser.Scene {
     }
 
     if (this.action && this.target) {
-      console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
-      this.action.execute(enemies, party, this.target);
-      if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
-      this.shakeTarget(this.target, this.action);
+      
+      const activeMember = this.getActiveMember();
+      if (activeMember.stamina < 0) {
+        this.sound.play('stamina-depleted');
+      }
+      else {
+        console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
+        activeMember.stamina -= this.action.staminaCost;
+        this.action.execute(enemies, party, this.target);
+        if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
+        this.shakeTarget(this.target, this.action);
+      }
+
       this.action = null;
       this.target = null;
     }

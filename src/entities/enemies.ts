@@ -31,9 +31,9 @@ export const lowestHealthPartyMember: TargetPriority = (enemies, party) =>
 
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
-  health: 25,
+  health: 200,
   maxHealth: 200,
-  stamina: 0,
+  stamina: 200,
   maxStamina: 200,
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty },

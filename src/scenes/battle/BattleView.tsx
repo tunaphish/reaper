@@ -3,6 +3,7 @@ import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
+import { Status } from '../../entities/party';
 
 export class BattleView {
   private parallax: any;
@@ -80,7 +81,10 @@ export class BattleView {
       );
 
       partyMemberDisplay.addEventListener('click', () => {
-        // return if party member is mf dead
+        if (scene.getMemberStatus(index) === Status.DEAD) {
+          scene.playBadOptionSound();
+          return;
+        }
         scene.playButtonClickSound();
         scene.setActivePartyMember(index);
       });
@@ -241,5 +245,20 @@ export class BattleView {
 
   shakePartyMember(partyMemberIndex: number): void {
     shakeElement(this.partyMemberCells[partyMemberIndex]);
+  }
+
+  setPartyMemberCellDead(memberIndex: number): void {
+    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
+    this.partyMemberCells[memberIndex].classList.add(styles.characterCellDead);
+  }
+
+  setPartyMemberCellExhausted(memberIndex: number): void {
+    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
+    this.partyMemberCells[memberIndex].classList.add(styles.characterCellExhausted);
+  }
+
+  setPartyMemberCellNormal(memberIndex: number): void {
+    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
+    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
   }
 }

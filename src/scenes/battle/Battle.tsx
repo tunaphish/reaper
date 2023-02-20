@@ -1,5 +1,5 @@
 import { Behavior, Enemy } from '../../entities/enemy';
-import { Party, PartyMember } from '../../entities/party';
+import { Party, PartyMember, Status } from '../../entities/party';
 import { Action, ActionTags } from '../../entities/action';
 
 import { DefaultParty } from '../../entities/parties';
@@ -49,7 +49,34 @@ export class Battle extends Phaser.Scene {
 
   update(time, delta): void {
     const { enemies, party } = this.model;
-    if (party.members.every((member) => member.health <= 0)) {
+
+    party.members.forEach((member, idx) => {
+      if (member.health <= 0) {
+        member.status = Status.DEAD;
+        this.view.setPartyMemberCellDead(idx);
+        if (this.model.activePartyMemberIndex === idx) {
+          // get live party member
+          for (let i=0; i<party.members.length; i++) {
+            if (party.members[i].status !== Status.DEAD) {
+              this.model.activePartyMemberIndex = i;
+              this.view.updatePartyMemberView(this, this.model);
+              this.view.closeMenus();
+              break;
+            }
+          }
+        }
+      }
+      else if (member.stamina <= 0) {
+        member.status = Status.EXHAUSTED;
+        this.view.setPartyMemberCellExhausted(idx);
+      }
+      else {
+        member.status = Status.NORMAL;
+        this.view.setPartyMemberCellNormal(idx);
+      }
+    });
+
+    if (party.members.every((member) => member.status === Status.DEAD)) {
       console.log('HEROES DEAD');
     }
     if (enemies.every((enemy) => enemy.health <= 0)) {
@@ -57,10 +84,9 @@ export class Battle extends Phaser.Scene {
     }
 
     if (this.action && this.target) {
-      
       const activeMember = this.getActiveMember();
       if (activeMember.stamina < 0) {
-        this.sound.play('stamina-depleted');
+        this.playBadOptionSound();
       }
       else {
         console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
@@ -149,6 +175,10 @@ export class Battle extends Phaser.Scene {
     this.sound.play('choice-select');
   }
 
+  playBadOptionSound() {
+    this.sound.play('stamina-depleted');
+  }
+
   getOptions(optionKey: string): string[] {
     const activeMember: PartyMember = this.getActiveMember();
     const matchedOptions = activeMember.options.find((option) => option.name === optionKey);
@@ -215,7 +245,9 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  // TODO:  apply dmg 
+  getMemberStatus(memberIndex: number) {
+    return this.model.party.members[memberIndex].status;
+  }
 }
 
 const isAlive = (combatant: Combatant) => combatant.health > 0;

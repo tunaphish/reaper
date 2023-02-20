@@ -1,6 +1,5 @@
+import { BattleModel } from '../scenes/battle/battleModel';
 import { Combatant } from './combatant';
-import { Enemy } from './enemy';
-import { Party } from './party';
 
 export enum ActionTags {
   HEAL,
@@ -20,7 +19,7 @@ export enum TargetType {
 export type Action = {
   name: string;
   staminaCost: number;
-  execute: (enemies: Enemy[], party: Party, target: Combatant) => void;
+  execute: (model: BattleModel, target: Combatant) => void;
   tags: Set<ActionTags>;
   targetType: TargetType;
   soundKeyName?: string;

@@ -1,6 +1,6 @@
 import { PartyMember, Party } from './party';
 import { Status } from './combatant';
-import { slash, block, heal } from './actions';
+import { slash, block, heal, annoy, stifle } from './actions';
 import { anger, confusion } from './emotions';
 
 export const Eji: PartyMember = {
@@ -10,7 +10,7 @@ export const Eji: PartyMember = {
   stamina: 0,
   maxStamina: 400,
   traits: [],
-  actions: [slash, block, heal],
+  actions: [slash, block, heal, stifle],
   staminaRegenRate: 13,
   options: [
     {
@@ -20,13 +20,14 @@ export const Eji: PartyMember = {
     },
     {
       name: 'Defend',
-      options: [block.name, 'Restoration'],
+      options: [block.name],
       isInitialOption: true,
     },
     {
-      name: 'Restoration',
-      options: [heal.name],
-    },
+      name: stifle.name,
+      options: [],
+      isInitialOption: true,
+    }
   ],
   status: Status.NORMAL,
   emotionalState: [{ emotion: confusion, count: 1 }],
@@ -69,7 +70,7 @@ export const Elise: PartyMember = {
   maxStamina: 500,
   staminaRegenRate: 10,
   traits: [],
-  actions: [slash, block, heal],
+  actions: [slash, block, heal, annoy],
   options: [
     {
       name: 'Attack',
@@ -78,12 +79,13 @@ export const Elise: PartyMember = {
     },
     {
       name: 'Defend',
-      options: [block.name, 'Restoration'],
+      options: [block.name],
       isInitialOption: true,
     },
     {
-      name: 'Restoration',
-      options: [heal.name],
+      name: 'Manipulation',
+      options: [annoy.name],
+      isInitialOption: true,
     },
   ],
   status: Status.NORMAL,

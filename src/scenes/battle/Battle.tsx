@@ -92,7 +92,7 @@ export class Battle extends Phaser.Scene {
       else {
         console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
         activeMember.stamina -= this.action.staminaCost;
-        this.action.execute(enemies, party, this.target);
+        this.action.execute(this.model, this.target);
         if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
         this.shakeTarget(this.target, this.action);
       }
@@ -123,7 +123,7 @@ export class Battle extends Phaser.Scene {
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(enemies, party, target);
+      selectedBehavior.action.execute(this.model, target);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       this.shakeTarget(target, selectedBehavior.action);
       this.view.updatePartyMemberView(this, this.model);
@@ -205,14 +205,15 @@ export class Battle extends Phaser.Scene {
   }
 
   getCombatants(): Combatant[] {
-    return [...this.model.party.members, ...this.model.enemies];//.filter(isAlive);
+    return [...this.model.party.members, ...this.model.enemies];
   }
 
   getTargets(): Combatant[] {
     // TODO: Apply Traits
 
     const activeMember = this.getActiveMember();
-    const initialTargets = this.getCombatants();
+    // TODO: don't filter if action can target dead people;
+    const initialTargets = this.getCombatants().filter(isAlive);
 
     let emotionalTargets = initialTargets;
     for (const state of activeMember.emotionalState) {

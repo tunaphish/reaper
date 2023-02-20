@@ -1,5 +1,5 @@
 import { Enemy, TargetPriority } from '../entities/enemy';
-import { Combatant } from '../entities/combatant';
+import { Combatant, Status } from '../entities/combatant';
 
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
@@ -33,8 +33,9 @@ export const healieBoi: Enemy = {
   name: 'Healie Boi',
   health: 200,
   maxHealth: 200,
-  stamina: 200,
-  maxStamina: 200,
+  stamina: 20,
+  maxStamina: 800,
+  staminaRegenRate: 25,
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty },
     { action: heal, weight: 100, targetPriority: randomEnemy },
@@ -42,4 +43,5 @@ export const healieBoi: Enemy = {
   ],
   emotionalState: [], //[{ emotion: anger, count: 1}],
   traits: [selfPreservation],
+  status: Status.NORMAL,
 };

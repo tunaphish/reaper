@@ -1,4 +1,5 @@
-import { PartyMember, Party, Status } from './party';
+import { PartyMember, Party } from './party';
+import { Status } from './combatant';
 import { slash, block, heal } from './actions';
 import { anger, confusion } from './emotions';
 
@@ -6,10 +7,11 @@ export const Eji: PartyMember = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  stamina: 25,
-  maxStamina: 100,
+  stamina: 0,
+  maxStamina: 400,
   traits: [],
   actions: [slash, block, heal],
+  staminaRegenRate: 13,
   options: [
     {
       name: 'Attack',
@@ -34,8 +36,9 @@ export const Keshi: PartyMember = {
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
-  stamina: 25,
-  maxStamina: 100,
+  stamina: 0,
+  maxStamina: 300,
+  staminaRegenRate: 15,
   traits: [],
   actions: [slash, block, heal],
   options: [
@@ -46,7 +49,7 @@ export const Keshi: PartyMember = {
     },
     {
       name: 'Defend',
-      options: [block.name, 'UHH'],
+      options: [block.name, 'Restoration'],
       isInitialOption: true,
     },
     {
@@ -62,8 +65,9 @@ export const Elise: PartyMember = {
   name: 'Elise',
   health: 100,
   maxHealth: 100,
-  stamina: 25,
-  maxStamina: 100,
+  stamina: 0,
+  maxStamina: 500,
+  staminaRegenRate: 10,
   traits: [],
   actions: [slash, block, heal],
   options: [

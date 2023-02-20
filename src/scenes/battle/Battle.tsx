@@ -1,6 +1,7 @@
 import { Behavior, Enemy } from '../../entities/enemy';
-import { Party, PartyMember, Status } from '../../entities/party';
+import { Party, PartyMember } from '../../entities/party';
 import { Action, ActionTags } from '../../entities/action';
+import { Status } from '../../entities/combatant';
 
 import { DefaultParty } from '../../entities/parties';
 import { healieBoi } from '../../entities/enemies';
@@ -43,11 +44,11 @@ export class Battle extends Phaser.Scene {
 
   public create(): void {
     this.battleMusic = this.sound.add('upgrade');
-    //this.battleMusic.play();
+    this.battleMusic.play();
     this.view = new BattleView(this, this.model);    
   }
 
-  update(time, delta): void {
+  update(time, delta: number): void {
     const { enemies, party } = this.model;
 
     party.members.forEach((member, idx) => {
@@ -100,15 +101,14 @@ export class Battle extends Phaser.Scene {
       this.target = null;
     }
 
+    this.getCombatants().forEach((target) => {
+      this.updateCombatantStamina(target, delta);
+    });
+
     this.lastCalculation += delta;
 
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
-
-      this.getCombatants().forEach((target) => {
-        this.updateCombantantStamina(target);
-      });
-
       this.updateEnemies(); // behavior
     }
 
@@ -230,8 +230,10 @@ export class Battle extends Phaser.Scene {
     this.target = this.getCombatants().find((target) => target.name === targetName);
   }
 
-  updateCombantantStamina(combatant: Combatant): void {
-    combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + 25);
+  updateCombatantStamina(combatant: Combatant, delta: number): void {
+    if (combatant.status === Status.DEAD) return;
+    const regenPerTick = combatant.staminaRegenRate * (delta/1000);
+    combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
   shakeTarget(target: Combatant, action: Action): void {

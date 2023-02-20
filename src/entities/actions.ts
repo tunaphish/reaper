@@ -2,7 +2,7 @@ import { Action, ActionTags, TargetType } from './action';
 
 export const slash: Action = {
   name: 'Slash',
-  staminaCost: 50,
+  staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
   execute: (enemies, party, target) => {
     const DAMAGE = 50;
@@ -30,7 +30,7 @@ export const idle: Action = {
 
 export const heal: Action = {
   name: 'Heal',
-  staminaCost: 50,
+  staminaCost: 100,
   tags: new Set([ActionTags.HEAL]),
   execute: (enemies) => {
     const HEALTH = 50;

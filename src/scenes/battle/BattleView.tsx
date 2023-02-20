@@ -3,7 +3,7 @@ import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
-import { Status } from '../../entities/party';
+import { Status } from '../../entities/combatant';
 
 export class BattleView {
   private parallax: any;
@@ -147,7 +147,7 @@ export class BattleView {
     const enemy = model.enemies[0];
     // maybe caching?
     this.enemyHealth.innerText = `❤️ ${enemy.health}/${enemy.maxHealth}`;
-    this.enemyStamina.innerText = `☀️ ${enemy.stamina}/${enemy.maxStamina}`;
+    this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
 
     for (let i = 0; i < model.party.members.length; i++) {
       this.partyMemberHealthViews[
@@ -155,7 +155,7 @@ export class BattleView {
       ].innerText = `❤️ ${model.party.members[i].health}/${model.party.members[i].maxHealth}`;
       this.partyMemberStaminaViews[
         i
-      ].innerText = `☀️ ${model.party.members[i].stamina}/${model.party.members[i].maxStamina}`;
+      ].innerText = `☀️ ${Math.trunc(model.party.members[i].stamina)}/${model.party.members[i].maxStamina}`;
     }
   }
 

@@ -1,6 +1,6 @@
 import { Behavior, Enemy } from '../../entities/enemy';
 import { Party, PartyMember } from '../../entities/party';
-import { Action, ActionTags } from '../../entities/action';
+import { Action, ActionTags, TargetType } from '../../entities/action';
 import { Status } from '../../entities/combatant';
 
 import { DefaultParty } from '../../entities/parties';
@@ -202,6 +202,7 @@ export class Battle extends Phaser.Scene {
 
   setAction(action: Action): void {
     this.action = action;
+    if (action.targetType === TargetType.SELF) this.target = this.getActiveMember();
   }
 
   getCombatants(): Combatant[] {

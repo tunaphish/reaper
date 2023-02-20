@@ -4,6 +4,7 @@ import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
 import { Status } from '../../entities/combatant';
+import { TargetType } from '../../entities/action';
 
 export class BattleView {
   private parallax: any;
@@ -197,6 +198,11 @@ export class BattleView {
           scene.setAction(action);
           const targets = scene.getTargets();
           const IS_TARGET_MENU = true;
+          if (action.targetType === TargetType.SELF) {
+            this.closeMenus();
+            return;
+          }
+
           this.addMenu(
             targets.map((target) => target.name),
             scene,

@@ -12,6 +12,7 @@ import { getRandomInt } from '../../util/random';
 import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
+import { disgusted, envious } from '../../entities/emotions';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -51,6 +52,7 @@ export class Battle extends Phaser.Scene {
   update(time, delta: number): void {
     const { enemies, party } = this.model;
 
+    // Set Party Member Status
     party.members.forEach((member, idx) => {
       if (member.health <= 0) {
         member.status = Status.DEAD;
@@ -109,6 +111,10 @@ export class Battle extends Phaser.Scene {
     this.lastCalculation += delta;
 
     if (this.lastCalculation > 2000) {
+      this.getCombatants().forEach((combatant) => {
+        const isEnvious = combatant.emotionalState.some(state => state.emotion === envious && state.count > 0);
+        if (isEnvious) combatant.stackedDamage += 10;
+      })
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
     }
@@ -149,7 +155,7 @@ export class Battle extends Phaser.Scene {
     // Apply Emotions
     let emotionBehaviors = traitedBehaviors;
     for (const state of enemy.emotionalState) {
-      emotionBehaviors = state.emotion?.onUpdate(enemies, party, emotionBehaviors, state.count);
+      emotionBehaviors = state.emotion.onUpdate?.(enemies, party, emotionBehaviors, state.count);
     }
 
     // Randomly Select Behavior Based on Weight
@@ -235,7 +241,8 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
-    const DAMAGE_TICK_RATE = 10 * (delta/1000);
+    const isDisgusted = combatant.emotionalState.some(state => state.emotion === disgusted && state.count > 0);
+    const DAMAGE_TICK_RATE = (delta/1000) * (isDisgusted ? 20 : 10);
     combatant.stackedDamage -= DAMAGE_TICK_RATE;
     combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
   }

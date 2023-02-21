@@ -5,6 +5,7 @@ import { ActionTags } from './action';
 export const anger: Emotion = {
   name: 'Anger',
   display: '😡',
+  description: 'Increases likelyhood to attack',
   onUpdate: (enemies, party, behaviors, count) => {
     if (count === 0) return;
     const newBehaviors = behaviors.map((behavior) => {
@@ -26,6 +27,7 @@ export const anger: Emotion = {
 export const confusion: Emotion = {
   name: 'Confusion',
   display: '🤔',
+  description: 'Increases likelyhood to perform illogical actions',
   onUpdate: (enemies, party, behaviors, count) => {
     if (count === 0) return behaviors;
     // mix targets
@@ -42,7 +44,27 @@ export const confusion: Emotion = {
     if (count < 2) return targets;
     return shuffle(targets);
   }
-};
+}; 
+
+export const envious: Emotion = {
+  name: 'Envious',
+  display: '😒',
+  description: 'Applies damage over time to target',
+}
+
+export const disgusted: Emotion = {
+  name: '🤢',
+  display: 'Disgusted',
+  description: 'Doubles stacked damage applied every tick',
+}
+
+export const exhausted: Emotion = {
+  name: '😵',
+  display: 'Exhausted',
+  description: 'Lowers max health',
+  // TODO: on apply
+  // TODO: on remove
+}
 
 // Potential Future Emotions
 // - disgust: increase dodge rate

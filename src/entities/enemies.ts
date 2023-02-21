@@ -5,7 +5,7 @@ import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
 
 import { getRandomInt } from '../util/random';
-import { anger } from './emotions';
+import { anger, disgusted, envious } from './emotions';
 
 // handle resurrection edge cases
 // filter dead unit
@@ -42,7 +42,7 @@ export const healieBoi: Enemy = {
     { action: heal, weight: 100, targetPriority: randomEnemy },
     { action: idle, weight: 100, targetPriority: self },
   ],
-  emotionalState: [], //[{ emotion: anger, count: 1}],
+  emotionalState: [],
   traits: [selfPreservation],
   status: Status.NORMAL,
 };

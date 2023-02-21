@@ -147,13 +147,13 @@ export class BattleView {
   updateStats(model: BattleModel) {
     const enemy = model.enemies[0];
     // maybe caching?
-    this.enemyHealth.innerText = `❤️ ${enemy.health}/${enemy.maxHealth}`;
+    this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;
     this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
 
     for (let i = 0; i < model.party.members.length; i++) {
       this.partyMemberHealthViews[
         i
-      ].innerText = `❤️ ${model.party.members[i].health}/${model.party.members[i].maxHealth}`;
+      ].innerText = `❤️ ${Math.trunc(model.party.members[i].health)}/${model.party.members[i].maxHealth}`;
       this.partyMemberStaminaViews[
         i
       ].innerText = `☀️ ${Math.trunc(model.party.members[i].stamina)}/${model.party.members[i].maxStamina}`;

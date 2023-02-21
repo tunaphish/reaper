@@ -8,8 +8,7 @@ export const slash: Action = {
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
   execute: (battleModel, target) => {
-    const DAMAGE = 50;
-    target.health -= DAMAGE;
+    target.stackedDamage += 50;
   },
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack'
@@ -59,7 +58,6 @@ export const stifle: Action = {
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
   execute: (battleModel, target) => {
-    console.log('roo')
     for (let state of target.emotionalState) {
       updateEmotionalState(target, state.emotion, -1);
     }

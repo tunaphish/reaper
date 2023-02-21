@@ -33,6 +33,7 @@ export const healieBoi: Enemy = {
   name: 'Healie Boi',
   health: 200,
   maxHealth: 200,
+  stackedDamage: 0,
   stamina: 20,
   maxStamina: 800,
   staminaRegenRate: 25,

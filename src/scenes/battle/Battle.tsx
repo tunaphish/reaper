@@ -102,6 +102,7 @@ export class Battle extends Phaser.Scene {
     }
 
     this.getCombatants().forEach((target) => {
+      this.updateCombatantHealth(target, delta);
       this.updateCombatantStamina(target, delta);
     });
 
@@ -230,6 +231,13 @@ export class Battle extends Phaser.Scene {
 
   setTarget(targetName: string): void {
     this.target = this.getCombatants().find((target) => target.name === targetName);
+  }
+
+  updateCombatantHealth(combatant: Combatant, delta: number): void {
+    if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
+    const DAMAGE_TICK_RATE = 10 * (delta/1000);
+    combatant.stackedDamage -= DAMAGE_TICK_RATE;
+    combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
   }
 
   updateCombatantStamina(combatant: Combatant, delta: number): void {

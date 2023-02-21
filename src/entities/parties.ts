@@ -7,6 +7,7 @@ export const Eji: PartyMember = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
+  stackedDamage: 0,
   stamina: 0,
   maxStamina: 400,
   traits: [],
@@ -37,6 +38,7 @@ export const Keshi: PartyMember = {
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
+  stackedDamage: 0,
   stamina: 0,
   maxStamina: 300,
   staminaRegenRate: 15,
@@ -65,6 +67,7 @@ export const Keshi: PartyMember = {
 export const Elise: PartyMember = {
   name: 'Elise',
   health: 100,
+  stackedDamage: 0,
   maxHealth: 100,
   stamina: 0,
   maxStamina: 500,

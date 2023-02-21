@@ -12,7 +12,7 @@ export interface Combatant {
   name: string;
   health: number;
   maxHealth: number;
-  // stackedDamage: number;
+  stackedDamage: number;
   stamina: number;
   maxStamina: number;
   staminaRegenRate: number; // per second

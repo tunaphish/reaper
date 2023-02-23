@@ -37,13 +37,15 @@ export const selfPreservation: Trait = {
   description: 'Prioritizes Healing when Low on Health',
   onStart: () => {},
   onUpdate: (enemies, party, behaviors) => {
-    return behaviors.map((behavior: Behavior) => {
-      if (behavior.action.tags.has(ActionTags.HEAL)) {
-        behavior.weight *= 2;
-        behavior.targetPriority = self;
-      }
-      return behavior;
+    const newBehaviors = behaviors.map((behavior: Behavior) => {
+      if (!behavior.action.tags.has(ActionTags.HEAL)) return behavior;
+      return {
+        action: behavior.action,
+        weight: behavior.weight * 2,
+        targetPriority: self
+      };
     });
+    return newBehaviors;
   },
 };
 

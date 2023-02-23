@@ -7,12 +7,13 @@ export const anger: Emotion = {
   display: '😡',
   description: 'Increases likelyhood to attack',
   onUpdate: (enemies, party, behaviors, count) => {
-    if (count === 0) return;
+    if (count === 0) return behaviors;
     const newBehaviors = behaviors.map((behavior) => {
-      if (!behavior.action.tags.has(ActionTags.ATTACK)) {
-        behavior.weight /= 2;
-      }
-      return behavior;
+      return {
+        action: behavior.action,
+        weight: Math.trunc(behavior.weight/2),
+        targetPriority: behavior.targetPriority,
+      };
     });
     return newBehaviors;
   },
@@ -58,12 +59,13 @@ export const disgusted: Emotion = {
   description: 'Doubles stacked damage applied every tick',
 }
 
-export const exhausted: Emotion = {
-  name: '😵',
-  display: 'Exhausted',
-  description: 'Lowers max health',
-  // TODO: on apply
-  // TODO: on remove
+export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
+  return new Map([
+    [anger, 0],
+    [confusion, 0],
+    [envious, 0],
+    [disgusted, 0],
+  ]);
 }
 
 // Potential Future Emotions

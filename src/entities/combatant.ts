@@ -17,6 +17,6 @@ export interface Combatant {
   maxStamina: number;
   staminaRegenRate: number; // per second
   traits: Trait[];
-  emotionalState: { emotion: Emotion; count: number }[];
+  emotionalState: Map<Emotion, number>;
   status: Status;
 }

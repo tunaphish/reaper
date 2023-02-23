@@ -112,8 +112,7 @@ export class Battle extends Phaser.Scene {
 
     if (this.lastCalculation > 2000) {
       this.getCombatants().forEach((combatant) => {
-        const isEnvious = combatant.emotionalState.some(state => state.emotion === envious && state.count > 0);
-        if (isEnvious) combatant.stackedDamage += 10;
+        if (combatant.emotionalState.get(envious) > 0) combatant.stackedDamage += 10;
       })
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
@@ -154,12 +153,13 @@ export class Battle extends Phaser.Scene {
 
     // Apply Emotions
     let emotionBehaviors = traitedBehaviors;
-    for (const state of enemy.emotionalState) {
-      emotionBehaviors = state.emotion.onUpdate?.(enemies, party, emotionBehaviors, state.count);
+    for (const [emotion, count] of enemy.emotionalState) {
+      if (emotion.onUpdate) emotionBehaviors = emotion.onUpdate(enemies, party, emotionBehaviors, count);
     }
+    console.log(emotionBehaviors);
 
     // Randomly Select Behavior Based on Weight
-    const summedWeights = traitedBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
+    const summedWeights = emotionBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
     const selectedBehavior = filteredBehaviors.find((behavior) => {
@@ -195,8 +195,8 @@ export class Battle extends Phaser.Scene {
     // Apply emotion
     const { enemies, party } = this.model;
     let emotionalOptions = matchedOptions.options;
-    for (const state of activeMember.emotionalState) {
-      emotionalOptions = state.emotion?.onClick(this.model, emotionalOptions, state.count);
+    for (const [emotion, count] of activeMember.emotionalState) {
+      if (emotion.onClick) emotionalOptions = emotion.onClick(this.model, emotionalOptions, count);
     }
 
     return emotionalOptions;
@@ -224,8 +224,8 @@ export class Battle extends Phaser.Scene {
     const initialTargets = this.getCombatants().filter(isAlive);
 
     let emotionalTargets = initialTargets;
-    for (const state of activeMember.emotionalState) {
-      if (state.emotion.onOpenTargets) emotionalTargets = state.emotion.onOpenTargets(emotionalTargets, state.count);
+    for (const [emotion, count] of activeMember.emotionalState) {
+      if (emotion.onOpenTargets) emotionalTargets = emotion.onOpenTargets(emotionalTargets, count);
     };
 
     return emotionalTargets;
@@ -241,7 +241,7 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
-    const isDisgusted = combatant.emotionalState.some(state => state.emotion === disgusted && state.count > 0);
+    const isDisgusted = combatant.emotionalState.get(disgusted) > 0
     const DAMAGE_TICK_RATE = (delta/1000) * (isDisgusted ? 20 : 10);
     combatant.stackedDamage -= DAMAGE_TICK_RATE;
     combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);

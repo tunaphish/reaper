@@ -1,7 +1,7 @@
 import { PartyMember, Party } from './party';
 import { Status } from './combatant';
 import { slash, block, heal, annoy, stifle } from './actions';
-import { anger, confusion } from './emotions';
+import { anger, confusion, disgusted, envious } from './emotions';
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -31,7 +31,12 @@ export const Eji: PartyMember = {
     }
   ],
   status: Status.NORMAL,
-  emotionalState: [{ emotion: confusion, count: 1 }],
+  emotionalState: new Map([
+    [anger, 0],
+    [confusion, 1],
+    [disgusted, 0],
+    [envious, 0]
+  ])
 };
 
 export const Keshi: PartyMember = {
@@ -61,7 +66,12 @@ export const Keshi: PartyMember = {
     },
   ],
   status: Status.NORMAL,
-  emotionalState: [{ emotion: anger, count: 1 }],
+  emotionalState: new Map([
+    [anger, 1],
+    [confusion, 0],
+    [disgusted, 0],
+    [envious, 0]
+  ])
 };
 
 export const Elise: PartyMember = {
@@ -92,10 +102,12 @@ export const Elise: PartyMember = {
     },
   ],
   status: Status.NORMAL,
-  emotionalState: [
-    { emotion: anger, count: 1 },
-    { emotion: confusion, count: 3 },
-  ],
+  emotionalState: new Map([
+    [anger, 1],
+    [confusion, 3],
+    [disgusted, 0],
+    [envious, 0]
+  ])
 };
 
 export const DefaultParty: Party = {

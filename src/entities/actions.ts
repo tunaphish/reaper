@@ -58,8 +58,8 @@ export const stifle: Action = {
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
   execute: (battleModel, target) => {
-    for (let state of target.emotionalState) {
-      updateEmotionalState(target, state.emotion, -1);
+    for (let [emotion, count] of target.emotionalState) {
+      updateEmotionalState(target, emotion, -1);
     }
   },
   targetType: TargetType.SELF,
@@ -69,13 +69,9 @@ export const stifle: Action = {
 const updateHealth = () => {};
 
 const updateEmotionalState = (target: Combatant, emotion: Emotion, change: number): void => {
-  for (let state of target.emotionalState) {
-    if (state.emotion === emotion) {
-      if (state.count+change >= 0) state.count += change;
-      return;
-    }
-  }
-  target.emotionalState.push({ emotion, count: change });
+  const count = target.emotionalState.get(emotion) || 0;
+  const update = count + change > 0 ? count + change : 0;
+  target.emotionalState.set(emotion, update);
 }
 // get emotion
 

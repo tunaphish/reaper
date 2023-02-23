@@ -5,7 +5,7 @@ import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
 
 import { getRandomInt } from '../util/random';
-import { anger, disgusted, envious } from './emotions';
+import { anger, disgusted, emptyEmotionalStateMap, envious, confusion } from './emotions';
 
 // handle resurrection edge cases
 // filter dead unit
@@ -42,7 +42,12 @@ export const healieBoi: Enemy = {
     { action: heal, weight: 100, targetPriority: randomEnemy },
     { action: idle, weight: 100, targetPriority: self },
   ],
-  emotionalState: [],
+  emotionalState: new Map([
+    [anger, 1],
+    [confusion, 0],
+    [disgusted, 0],
+    [envious, 0]
+  ]),
   traits: [selfPreservation],
   status: Status.NORMAL,
 };

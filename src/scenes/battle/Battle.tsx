@@ -4,7 +4,7 @@ import { Action, ActionTags, TargetType } from '../../entities/action';
 import { Status } from '../../entities/combatant';
 
 import { DefaultParty } from '../../entities/parties';
-import { healieBoi } from '../../entities/enemies';
+import { healieBoi, randomEnemy } from '../../entities/enemies';
 
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene
 import { getRandomInt } from '../../util/random';
@@ -12,7 +12,8 @@ import { getRandomInt } from '../../util/random';
 import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
-import { disgusted, envious } from '../../entities/emotions';
+import { overexcited, depressed, disgusted, envious } from '../../entities/emotions';
+import { slash } from '../../entities/actions';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -119,6 +120,16 @@ export class Battle extends Phaser.Scene {
     }
 
     this.view.updateStats(this.model);
+
+    // bloodlust check
+    party.members.forEach((member, idx) => {
+      if (member.emotionalState.get(overexcited) > 0 && member.stamina === member.maxStamina) {
+        this.view.closeMenus();
+        this.setActivePartyMember(idx);
+        this.action = slash; // TODO: select random attack
+        this.target = randomEnemy(enemies, party, null);
+      }
+    });
   }
 
   updateEnemies() {
@@ -162,7 +173,7 @@ export class Battle extends Phaser.Scene {
     const summedWeights = emotionBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
-    const selectedBehavior = filteredBehaviors.find((behavior) => {
+    const selectedBehavior = emotionBehaviors.find((behavior) => {
       runningSum += behavior.weight;
       return runningSum > randomInt;
     });
@@ -249,7 +260,7 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantStamina(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD) return;
-    const regenPerTick = combatant.staminaRegenRate * (delta/1000);
+    const regenPerTick = combatant.staminaRegenRate * (delta/1000) * combatant.emotionalState.get(depressed) > 0 ? .5 : 1;
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 

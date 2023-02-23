@@ -54,9 +54,21 @@ export const envious: Emotion = {
 }
 
 export const disgusted: Emotion = {
-  name: '🤢',
-  display: 'Disgusted',
+  name: 'Disgusted',
+  display: '🤢',
   description: 'Doubles stacked damage applied every tick',
+}
+
+export const overexcited: Emotion = {
+  name: 'Overexcited', 
+  display: '🤪',
+  description: 'Will automatically attack random enemy if stamina builds up too high',
+}
+
+export const depressed: Emotion = {
+  name: 'Depressed',
+  display: '😶',
+  description: 'Slows stamina regen rate',
 }
 
 export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
@@ -65,6 +77,8 @@ export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
     [confusion, 0],
     [envious, 0],
     [disgusted, 0],
+    [overexcited, 0],
+    [depressed, 0],
   ]);
 }
 

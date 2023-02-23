@@ -43,7 +43,7 @@ export const healieBoi: Enemy = {
     { action: idle, weight: 100, targetPriority: self },
   ],
   emotionalState: new Map([
-    [anger, 1],
+    [anger, 0],
     [confusion, 0],
     [disgusted, 0],
     [envious, 0]

@@ -1,7 +1,7 @@
 import { PartyMember, Party } from './party';
 import { Status } from './combatant';
 import { slash, block, heal, annoy, stifle } from './actions';
-import { anger, confusion, disgusted, envious } from './emotions';
+import { anger, overexcited, confusion, depressed, disgusted, envious } from './emotions';
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -35,7 +35,8 @@ export const Eji: PartyMember = {
     [anger, 0],
     [confusion, 1],
     [disgusted, 0],
-    [envious, 0]
+    [envious, 0],
+    [depressed, 1],
   ])
 };
 
@@ -70,7 +71,8 @@ export const Keshi: PartyMember = {
     [anger, 1],
     [confusion, 0],
     [disgusted, 0],
-    [envious, 0]
+    [envious, 0],
+    [overexcited, 1]
   ])
 };
 

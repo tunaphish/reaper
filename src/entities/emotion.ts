@@ -12,5 +12,5 @@ export interface Emotion {
   // onRemove
   // player behavior
   onClick?: (model: BattleModel, options: string[], count: number) => string[];
-  onOpenTargets?: (targets: Combatant[], count: number) =>  Combatant[];
+  onOpenTargets?: (targets: Combatant[], count: number) => Combatant[];
 }

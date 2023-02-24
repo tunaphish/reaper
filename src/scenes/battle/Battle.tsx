@@ -47,7 +47,7 @@ export class Battle extends Phaser.Scene {
   public create(): void {
     this.battleMusic = this.sound.add('upgrade');
     this.battleMusic.play();
-    this.view = new BattleView(this, this.model);    
+    this.view = new BattleView(this, this.model);
   }
 
   update(time, delta: number): void {
@@ -60,7 +60,7 @@ export class Battle extends Phaser.Scene {
         this.view.setPartyMemberCellDead(idx);
         if (this.model.activePartyMemberIndex === idx) {
           // get live party member
-          for (let i=0; i<party.members.length; i++) {
+          for (let i = 0; i < party.members.length; i++) {
             if (party.members[i].status !== Status.DEAD) {
               this.model.activePartyMemberIndex = i;
               this.view.updatePartyMemberView(this, this.model);
@@ -69,12 +69,10 @@ export class Battle extends Phaser.Scene {
             }
           }
         }
-      }
-      else if (member.stamina <= 0) {
+      } else if (member.stamina <= 0) {
         member.status = Status.EXHAUSTED;
         this.view.setPartyMemberCellExhausted(idx);
-      }
-      else {
+      } else {
         member.status = Status.NORMAL;
         this.view.setPartyMemberCellNormal(idx);
       }
@@ -91,8 +89,7 @@ export class Battle extends Phaser.Scene {
       const activeMember = this.getActiveMember();
       if (activeMember.stamina < 0) {
         this.playBadOptionSound();
-      }
-      else {
+      } else {
         console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.targets[0].name}`);
         activeMember.stamina -= this.action.staminaCost;
         this.action.execute(this.model, this.targets);
@@ -114,7 +111,7 @@ export class Battle extends Phaser.Scene {
     if (this.lastCalculation > 2000) {
       this.getCombatants().forEach((combatant) => {
         if (combatant.emotionalState.get(envious) > 0) combatant.stackedDamage += 10;
-      })
+      });
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
     }
@@ -233,7 +230,7 @@ export class Battle extends Phaser.Scene {
     let emotionalTargets = initialTargets;
     for (const [emotion, count] of activeMember.emotionalState) {
       if (emotion.onOpenTargets) emotionalTargets = emotion.onOpenTargets(emotionalTargets, count);
-    };
+    }
 
     return emotionalTargets;
   }
@@ -246,7 +243,7 @@ export class Battle extends Phaser.Scene {
     // Target Self
     if (this.action.targetType === TargetType.SELF) {
       this.targets = [this.getActiveMember()];
-      return
+      return;
     }
 
     if (this.action.targetType === TargetType.ALL) {
@@ -260,28 +257,29 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
-    const isDisgusted = combatant.emotionalState.get(disgusted) > 0
-    const DAMAGE_TICK_RATE = (delta/1000) * (isDisgusted ? 20 : 10);
+    const isDisgusted = combatant.emotionalState.get(disgusted) > 0;
+    const DAMAGE_TICK_RATE = (delta / 1000) * (isDisgusted ? 20 : 10);
     combatant.stackedDamage -= DAMAGE_TICK_RATE;
     combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
   }
 
   updateCombatantStamina(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD) return;
-    const regenPerTick = combatant.staminaRegenRate * (delta/1000) * (combatant.emotionalState.get(depressed) > 0 ? .5 : 1);
+    const regenPerTick =
+      combatant.staminaRegenRate * (delta / 1000) * (combatant.emotionalState.get(depressed) > 0 ? 0.5 : 1);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
   shakeTarget(targets: Combatant[], action: Action): void {
     if (!action.tags.has(ActionTags.ATTACK)) return;
     for (const target of targets) {
-      for (let i = 0; i<this.model.enemies.length; i++) {
+      for (let i = 0; i < this.model.enemies.length; i++) {
         if (this.model.enemies[i] === target) this.view.shakeEnemy();
       }
-      
-      for (let i = 0; i<this.model.party.members.length; i++) {
+
+      for (let i = 0; i < this.model.party.members.length; i++) {
         if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
-      }      
+      }
     }
   }
 

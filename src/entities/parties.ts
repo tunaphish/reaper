@@ -1,6 +1,6 @@
 import { PartyMember, Party } from './party';
 import { Status } from './combatant';
-import { slash, block, heal, annoy, stifle, slashAll, finisher } from './actions';
+import { slash, block, heal, annoy, stifle, slashAll, finisher, flirt, ankleSlice } from './actions';
 import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
 
 export const Eji: PartyMember = {
@@ -11,12 +11,12 @@ export const Eji: PartyMember = {
   stamina: 0,
   maxStamina: 400,
   traits: [],
-  actions: [slash, slashAll, finisher, block, heal, stifle],
+  actions: [slash, slashAll, finisher, block, heal, stifle, ankleSlice],
   staminaRegenRate: 13,
   options: [
     {
       name: 'Attack',
-      options: [slash.name, slashAll.name, finisher.name],
+      options: [slash.name, slashAll.name, ankleSlice.name, finisher.name],
       isInitialOption: true,
     },
     {
@@ -28,16 +28,16 @@ export const Eji: PartyMember = {
       name: stifle.name,
       options: [],
       isInitialOption: true,
-    }
+    },
   ],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
-    [confusion, 1],
+    [confusion, 0],
     [disgusted, 0],
     [envious, 0],
     [depressed, 0],
-  ])
+  ]),
 };
 
 export const Keshi: PartyMember = {
@@ -72,8 +72,8 @@ export const Keshi: PartyMember = {
     [confusion, 0],
     [disgusted, 0],
     [envious, 0],
-    [excited, 0]
-  ])
+    [excited, 0],
+  ]),
 };
 
 export const Elise: PartyMember = {
@@ -85,7 +85,7 @@ export const Elise: PartyMember = {
   maxStamina: 500,
   staminaRegenRate: 10,
   traits: [],
-  actions: [slash, block, heal, annoy],
+  actions: [slash, block, heal, annoy, flirt],
   options: [
     {
       name: 'Attack',
@@ -99,17 +99,17 @@ export const Elise: PartyMember = {
     },
     {
       name: 'Manipulation',
-      options: [annoy.name],
+      options: [annoy.name, flirt.name],
       isInitialOption: true,
     },
   ],
   status: Status.NORMAL,
   emotionalState: new Map([
-    [anger, 1],
-    [confusion, 3],
+    [anger, 0],
+    [confusion, 0],
     [disgusted, 0],
-    [envious, 0]
-  ])
+    [envious, 0],
+  ]),
 };
 
 export const DefaultParty: Party = {

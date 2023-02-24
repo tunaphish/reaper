@@ -62,7 +62,6 @@ export class Boot extends Phaser.Scene {
     // #region effects
     this.load.image('heal', '/reaper/assets/effects/heal.gif');
 
-
     // this.load.audio('main-menu-music', '/reaper/assets/music/corner-of-memories.mp3');
     this.load.audio('knight', '/reaper/assets/music/knight.mp3');
     // this.load.audio('palace', '/reaper/assets/music/palace.mp3');

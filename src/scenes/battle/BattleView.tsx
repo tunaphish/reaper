@@ -140,8 +140,8 @@ export class BattleView {
 
     // for testing purposes
     this.parallax.addEventListener('click', () => {
-      scene.updateEnemies()
-    }); 
+      scene.updateEnemies();
+    });
   }
 
   updateStats(model: BattleModel) {
@@ -151,12 +151,12 @@ export class BattleView {
     this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
 
     for (let i = 0; i < model.party.members.length; i++) {
-      this.partyMemberHealthViews[
-        i
-      ].innerText = `❤️ ${Math.trunc(model.party.members[i].health)}/${model.party.members[i].maxHealth}`;
-      this.partyMemberStaminaViews[
-        i
-      ].innerText = `☀️ ${Math.trunc(model.party.members[i].stamina)}/${model.party.members[i].maxStamina}`;
+      this.partyMemberHealthViews[i].innerText = `❤️ ${Math.trunc(model.party.members[i].health)}/${
+        model.party.members[i].maxHealth
+      }`;
+      this.partyMemberStaminaViews[i].innerText = `☀️ ${Math.trunc(model.party.members[i].stamina)}/${
+        model.party.members[i].maxStamina
+      }`;
     }
   }
 
@@ -248,7 +248,7 @@ export class BattleView {
 
   shakeEnemy(): void {
     shakeElement(this.parallax);
-  };
+  }
 
   shakePartyMember(partyMemberIndex: number): void {
     shakeElement(this.partyMemberCells[partyMemberIndex]);

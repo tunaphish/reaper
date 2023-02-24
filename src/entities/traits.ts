@@ -42,7 +42,7 @@ export const selfPreservation: Trait = {
       return {
         action: behavior.action,
         weight: behavior.weight * 2,
-        targetPriority: self
+        targetPriority: self,
       };
     });
     return newBehaviors;

@@ -1,7 +1,7 @@
 import { Action, ActionTags, TargetType } from './action';
 import { Combatant } from './combatant';
 import { Emotion } from './emotion';
-import { anger } from './emotions';
+import { anger, disgusted } from './emotions';
 
 export const slash: Action = {
   name: 'Slash',
@@ -12,25 +12,25 @@ export const slash: Action = {
     targets[0].stackedDamage += 50;
   },
   targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack'
+  soundKeyName: 'attack',
 };
 
 export const slashAll: Action = {
   name: 'Slash All',
   description: 'Attacks everyone indiscriminately',
-  staminaCost: 50,
+  staminaCost: 250,
   tags: new Set([ActionTags.ATTACK]),
   execute: (battleModel, targets) => {
-    targets.forEach(target => target.stackedDamage += 50);
+    targets.forEach((target) => (target.stackedDamage += 50));
   },
   targetType: TargetType.ALL,
-  soundKeyName: 'attack'
+  soundKeyName: 'attack',
 };
 
 export const finisher: Action = {
   name: 'Finisher',
   description: 'Immediately applies all stacked damage',
-  staminaCost: 10,
+  staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
   execute: (battleModel, targets) => {
     const target = targets[0];
@@ -40,18 +40,33 @@ export const finisher: Action = {
     }
   },
   targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack'
+  soundKeyName: 'attack',
 };
+
+export const ankleSlice: Action = {
+  name: 'Ankle Slice',
+  description: 'Deals damage and reduces stamina for target',
+  staminaCost: 100,
+  tags: new Set([ActionTags.ATTACK]),
+  execute: (battleModel, targets) => {
+    const target = targets[0];
+    target.stackedDamage += 50;
+    target.stamina = Math.max(0, target.stamina -= 50);
+  },
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+};
+
 
 export const block: Action = {
   name: 'Block',
-  description: 'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
+  description:
+    'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
   staminaCost: 50,
   tags: new Set([ActionTags.DEFEND]),
   execute: (battleModel) => {},
   targetType: TargetType.SELF,
 };
-
 
 export const idle: Action = {
   name: 'Idle',
@@ -85,7 +100,18 @@ export const annoy: Action = {
     updateEmotionalState(targets, anger, 1);
   },
   targetType: TargetType.SINGLE_TARGET,
-}
+};
+
+export const flirt: Action = {
+  name: 'Flirt',
+  description: 'Makes target disgusted (usually)',
+  staminaCost: 200,
+  tags: new Set([ActionTags.DEBUFF]),
+  execute: (battleModel, targets) => {
+    updateEmotionalState(targets, disgusted, 1);
+  },
+  targetType: TargetType.SINGLE_TARGET,
+};
 
 export const stifle: Action = {
   name: 'Stifle',
@@ -93,28 +119,21 @@ export const stifle: Action = {
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
   execute: (battleModel, targets) => {
-    for (let [emotion, count] of targets[0].emotionalState) {
+    for (const [emotion, count] of targets[0].emotionalState) {
       updateEmotionalState(targets, emotion, -1);
     }
   },
   targetType: TargetType.SELF,
-}
+};
+
 
 
 const updateHealth = () => {};
 
 const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: number): void => {
-  const count = targets[0].emotionalState.get(emotion) || 0;
-  const update = count + change > 0 ? count + change : 0;
-  targets[0].emotionalState.set(emotion, update);
-}
-// get emotion
-
-// Potential Planned Abilities
-// - Flirt: Usually inflicts disgust
-// - Compliment: buffs target
-// - Wager: Bet you'll avoid every attack.
-// - Empathise: mirror target's state (eji thief skill, reflects his ability to act through others)
-// - Ankle Slice: Deals damage. Lowers stamina.
-// - Defend: Reduce effectiveness of next attack
-// - Intel: Gather's information on target (reveals HP, outside of battle can get more info on targets)
+  targets.forEach((target) => {
+    const count = target.emotionalState.get(emotion) || 0;
+    const update = count + change > 0 ? count + change : 0;
+    target.emotionalState.set(emotion, update);
+  });
+};

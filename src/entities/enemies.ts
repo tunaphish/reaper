@@ -19,12 +19,12 @@ export const randomParty: TargetPriority = (enemies, party) => {
 };
 export const lowestHealthPartyMember: TargetPriority = (enemies, party) => {
   const member = party.members
-  .filter(filterDeadUnits)
-  .reduce((prevMember, currMember) =>
-    prevMember === null || currMember.health < prevMember.health ? currMember : prevMember,
-  );
+    .filter(filterDeadUnits)
+    .reduce((prevMember, currMember) =>
+      prevMember === null || currMember.health < prevMember.health ? currMember : prevMember,
+    );
   return [member];
-}
+};
 
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
@@ -43,7 +43,7 @@ export const healieBoi: Enemy = {
     [anger, 0],
     [confusion, 0],
     [disgusted, 0],
-    [envious, 0]
+    [envious, 0],
   ]),
   traits: [selfPreservation],
   status: Status.NORMAL,

@@ -11,7 +11,7 @@ export const anger: Emotion = {
     const newBehaviors = behaviors.map((behavior) => {
       return {
         action: behavior.action,
-        weight: Math.trunc(behavior.weight/2),
+        weight: Math.trunc(behavior.weight / 2),
         targetPriority: behavior.targetPriority,
       };
     });
@@ -44,32 +44,32 @@ export const confusion: Emotion = {
   onOpenTargets: (targets, count: number) => {
     if (count < 2) return targets;
     return shuffle(targets);
-  }
-}; 
+  },
+};
 
 export const envious: Emotion = {
   name: 'Envious',
   display: '😒',
   description: 'Applies damage over time to target',
-}
+};
 
 export const disgusted: Emotion = {
   name: 'Disgusted',
   display: '🤢',
   description: 'Doubles stacked damage applied every tick',
-}
+};
 
 export const excited: Emotion = {
-  name: 'Excited', 
+  name: 'Excited',
   display: '🤪',
   description: 'Will automatically attack random enemy if stamina reaches max',
-}
+};
 
 export const depressed: Emotion = {
   name: 'Depressed',
   display: '😶',
   description: 'Slows stamina regen rate',
-}
+};
 
 export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
   return new Map([
@@ -80,7 +80,7 @@ export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
     [excited, 0],
     [depressed, 0],
   ]);
-}
+};
 
 // Potential Future Emotions
 // - disgust: increase dodge rate

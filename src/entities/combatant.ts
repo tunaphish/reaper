@@ -4,7 +4,7 @@ import { Trait } from './trait';
 export enum Status {
   NORMAL = 'NORMAL',
   BLOCKING = 'BLOCKING',
-  EXHAUSTED = 'EXHAUSTED', 
+  EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
 }
 

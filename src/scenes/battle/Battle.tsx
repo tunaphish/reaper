@@ -268,7 +268,7 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantStamina(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD) return;
-    const regenPerTick = combatant.staminaRegenRate * (delta/1000) * combatant.emotionalState.get(depressed) > 0 ? .5 : 1;
+    const regenPerTick = combatant.staminaRegenRate * (delta/1000) * (combatant.emotionalState.get(depressed) > 0 ? .5 : 1);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 

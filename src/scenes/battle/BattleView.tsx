@@ -197,15 +197,13 @@ export class BattleView {
         if (action) {
           scene.setAction(action);
           const targets = scene.getTargets();
-
-          const IS_TARGET_MENU = true;
-          console.log(action);
           if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
             this.closeMenus();
             scene.setTargets(null);
             return;
           }
 
+          const IS_TARGET_MENU = true;
           this.addMenu(
             targets.map((target) => target.name),
             scene,

@@ -5,6 +5,7 @@ import { anger } from './emotions';
 
 export const slash: Action = {
   name: 'Slash',
+  description: 'Basic attack',
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
   execute: (battleModel, targets) => {
@@ -16,6 +17,7 @@ export const slash: Action = {
 
 export const slashAll: Action = {
   name: 'Slash All',
+  description: 'Attacks everyone indiscriminately',
   staminaCost: 50,
   tags: new Set([ActionTags.ATTACK]),
   execute: (battleModel, targets) => {
@@ -25,16 +27,35 @@ export const slashAll: Action = {
   soundKeyName: 'attack'
 };
 
+export const finisher: Action = {
+  name: 'Finisher',
+  description: 'Immediately applies all stacked damage',
+  staminaCost: 10,
+  tags: new Set([ActionTags.ATTACK]),
+  execute: (battleModel, targets) => {
+    const target = targets[0];
+    if (target) {
+      target.health = Math.max(0, target.health - target.stackedDamage);
+      target.stackedDamage = 0;
+    }
+  },
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack'
+};
+
 export const block: Action = {
   name: 'Block',
+  description: 'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
   staminaCost: 50,
   tags: new Set([ActionTags.DEFEND]),
   execute: (battleModel) => {},
   targetType: TargetType.SELF,
 };
 
+
 export const idle: Action = {
   name: 'Idle',
+  description: 'Does Nothing',
   staminaCost: 0,
   tags: new Set([ActionTags.DEFEND]),
   execute: () => {},
@@ -43,6 +64,7 @@ export const idle: Action = {
 
 export const heal: Action = {
   name: 'Heal',
+  description: 'Restores health to target',
   staminaCost: 100,
   tags: new Set([ActionTags.HEAL]),
   execute: (battleModel, targets) => {
@@ -56,6 +78,7 @@ export const heal: Action = {
 
 export const annoy: Action = {
   name: 'Annoy',
+  description: 'Makes target angry',
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   execute: (battleModel, targets) => {
@@ -66,6 +89,7 @@ export const annoy: Action = {
 
 export const stifle: Action = {
   name: 'Stifle',
+  description: 'Calms emotional state',
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
   execute: (battleModel, targets) => {
@@ -88,14 +112,9 @@ const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: nu
 
 // Potential Planned Abilities
 // - Flirt: Usually inflicts disgust
-// 	- Lesbian Spirit, flirting with [[Ava]] will make her charmed
 // - Compliment: buffs target
-// 	- eventually you learn positive enforcement on enemies, while making them strong can pacify them.
 // - Wager: Bet you'll avoid every attack.
 // - Empathise: mirror target's state (eji thief skill, reflects his ability to act through others)
-// - Cheer: positively influence's side's emotional state
-// - Stifle: lowers all emotions
 // - Ankle Slice: Deals damage. Lowers stamina.
-// - Finisher: Immediately drains stacked damage
 // - Defend: Reduce effectiveness of next attack
 // - Intel: Gather's information on target (reveals HP, outside of battle can get more info on targets)

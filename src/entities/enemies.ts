@@ -33,7 +33,7 @@ export const healieBoi: Enemy = {
   stackedDamage: 0,
   stamina: 20,
   maxStamina: 800,
-  staminaRegenRate: 25,
+  staminaRegenRate: 1,
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty },
     { action: heal, weight: 100, targetPriority: randomEnemy },

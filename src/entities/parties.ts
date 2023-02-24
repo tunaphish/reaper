@@ -1,6 +1,6 @@
 import { PartyMember, Party } from './party';
 import { Status } from './combatant';
-import { slash, block, heal, annoy, stifle, slashAll } from './actions';
+import { slash, block, heal, annoy, stifle, slashAll, finisher } from './actions';
 import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
 
 export const Eji: PartyMember = {
@@ -11,12 +11,12 @@ export const Eji: PartyMember = {
   stamina: 0,
   maxStamina: 400,
   traits: [],
-  actions: [slash, slashAll, block, heal, stifle],
+  actions: [slash, slashAll, finisher, block, heal, stifle],
   staminaRegenRate: 13,
   options: [
     {
       name: 'Attack',
-      options: [slash.name, slashAll.name],
+      options: [slash.name, slashAll.name, finisher.name],
       isInitialOption: true,
     },
     {

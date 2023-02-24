@@ -18,6 +18,7 @@ export enum TargetType {
 
 export type Action = {
   name: string;
+  description: string;
   staminaCost: number;
   execute: (model: BattleModel, targets: Combatant[]) => void;
   tags: Set<ActionTags>;

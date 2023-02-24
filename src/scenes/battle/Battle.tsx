@@ -220,7 +220,6 @@ export class Battle extends Phaser.Scene {
 
   setAction(action: Action): void {
     this.action = action;
-    if (action.targetType === TargetType.SELF) this.targets = [this.getActiveMember()];
   }
 
   getCombatants(): Combatant[] {
@@ -228,10 +227,7 @@ export class Battle extends Phaser.Scene {
   }
 
   getTargets(): Combatant[] {
-    // TODO: Apply Traits
-
     const activeMember = this.getActiveMember();
-    // TODO: don't filter if action can target dead people;
     const initialTargets = this.getCombatants().filter(isAlive);
 
     let emotionalTargets = initialTargets;
@@ -246,8 +242,20 @@ export class Battle extends Phaser.Scene {
     return this.model.party.members[this.model.activePartyMemberIndex];
   }
 
-  setTarget(targetName: string): void {
-    this.targets = [this.getCombatants().find((target) => target.name === targetName)];
+  setTargets(targets: string): void {
+    // Target Self
+    if (this.action.targetType === TargetType.SELF) {
+      this.targets = [this.getActiveMember()];
+      return
+    }
+
+    if (this.action.targetType === TargetType.ALL) {
+      this.targets = this.getCombatants().filter(isAlive);
+      return;
+    }
+
+    // Target Single
+    this.targets = [this.getCombatants().find((target) => target.name === targets)];
   }
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
@@ -266,12 +274,14 @@ export class Battle extends Phaser.Scene {
 
   shakeTarget(targets: Combatant[], action: Action): void {
     if (!action.tags.has(ActionTags.ATTACK)) return;
-    for (let i = 0; i<this.model.enemies.length; i++) {
-      if (this.model.enemies[i] === targets[0]) this.view.shakeEnemy();
-    }
-    
-    for (let i = 0; i<this.model.party.members.length; i++) {
-      if (this.model.party.members[i] === targets[0]) this.view.shakePartyMember(i);
+    for (const target of targets) {
+      for (let i = 0; i<this.model.enemies.length; i++) {
+        if (this.model.enemies[i] === target) this.view.shakeEnemy();
+      }
+      
+      for (let i = 0; i<this.model.party.members.length; i++) {
+        if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
+      }      
     }
   }
 

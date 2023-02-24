@@ -188,7 +188,7 @@ export class BattleView {
         scene.playButtonClickSound();
 
         if (isTargetMenu) {
-          scene.setTarget(option);
+          scene.setTargets(option);
           this.closeMenus();
           return;
         }
@@ -197,9 +197,12 @@ export class BattleView {
         if (action) {
           scene.setAction(action);
           const targets = scene.getTargets();
+
           const IS_TARGET_MENU = true;
-          if (action.targetType === TargetType.SELF) {
+          console.log(action);
+          if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
             this.closeMenus();
+            scene.setTargets(null);
             return;
           }
 

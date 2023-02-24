@@ -14,6 +14,17 @@ export const slash: Action = {
   soundKeyName: 'attack'
 };
 
+export const slashAll: Action = {
+  name: 'Slash All',
+  staminaCost: 50,
+  tags: new Set([ActionTags.ATTACK]),
+  execute: (battleModel, targets) => {
+    targets.forEach(target => target.stackedDamage += 50);
+  },
+  targetType: TargetType.ALL,
+  soundKeyName: 'attack'
+};
+
 export const block: Action = {
   name: 'Block',
   staminaCost: 50,

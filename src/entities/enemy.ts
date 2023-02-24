@@ -2,7 +2,7 @@ import { Action } from './action';
 import { Party } from './party';
 import { Combatant } from './combatant';
 
-export type TargetPriority = (enemies: Enemy[], party: Party, enemy: Enemy) => Combatant;
+export type TargetPriority = (enemies: Enemy[], party: Party, enemy: Enemy) => Combatant[];
 
 export interface Behavior {
   action: Action;

@@ -7,8 +7,8 @@ export const slash: Action = {
   name: 'Slash',
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
-  execute: (battleModel, target) => {
-    target.stackedDamage += 50;
+  execute: (battleModel, targets) => {
+    targets[0].stackedDamage += 50;
   },
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack'
@@ -34,9 +34,9 @@ export const heal: Action = {
   name: 'Heal',
   staminaCost: 100,
   tags: new Set([ActionTags.HEAL]),
-  execute: (battleModel, target) => {
+  execute: (battleModel, targets) => {
     const HEALTH = 50;
-    target.health = Math.min(target.maxHealth, (target.health += HEALTH));
+    targets[0].health = Math.min(targets[0].maxHealth, (targets[0].health += HEALTH));
   },
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
@@ -47,8 +47,8 @@ export const annoy: Action = {
   name: 'Annoy',
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
-  execute: (battleModel, target) => {
-    updateEmotionalState(target, anger, 1);
+  execute: (battleModel, targets) => {
+    updateEmotionalState(targets, anger, 1);
   },
   targetType: TargetType.SINGLE_TARGET,
 }
@@ -57,9 +57,9 @@ export const stifle: Action = {
   name: 'Stifle',
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
-  execute: (battleModel, target) => {
-    for (let [emotion, count] of target.emotionalState) {
-      updateEmotionalState(target, emotion, -1);
+  execute: (battleModel, targets) => {
+    for (let [emotion, count] of targets[0].emotionalState) {
+      updateEmotionalState(targets, emotion, -1);
     }
   },
   targetType: TargetType.SELF,
@@ -68,10 +68,10 @@ export const stifle: Action = {
 
 const updateHealth = () => {};
 
-const updateEmotionalState = (target: Combatant, emotion: Emotion, change: number): void => {
-  const count = target.emotionalState.get(emotion) || 0;
+const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: number): void => {
+  const count = targets[0].emotionalState.get(emotion) || 0;
   const update = count + change > 0 ? count + change : 0;
-  target.emotionalState.set(emotion, update);
+  targets[0].emotionalState.set(emotion, update);
 }
 // get emotion
 
@@ -87,4 +87,4 @@ const updateEmotionalState = (target: Combatant, emotion: Emotion, change: numbe
 // - Ankle Slice: Deals damage. Lowers stamina.
 // - Finisher: Immediately drains stacked damage
 // - Defend: Reduce effectiveness of next attack
-// - Intel: Gather's information on target (reveals HP, outside of battle can get more info on target)
+// - Intel: Gather's information on target (reveals HP, outside of battle can get more info on targets)

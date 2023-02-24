@@ -12,7 +12,7 @@ import { getRandomInt } from '../../util/random';
 import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
-import { overexcited, depressed, disgusted, envious } from '../../entities/emotions';
+import { excited, depressed, disgusted, envious } from '../../entities/emotions';
 import { slash } from '../../entities/actions';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -30,7 +30,7 @@ export class Battle extends Phaser.Scene {
   private battleMusic: Phaser.Sound.BaseSound;
 
   private action?: Action;
-  private target?: Combatant;
+  private targets?: Combatant[];
 
   constructor() {
     super(sceneConfig);
@@ -87,21 +87,21 @@ export class Battle extends Phaser.Scene {
       console.log('ENEMIES DEAD');
     }
 
-    if (this.action && this.target) {
+    if (this.action && this.targets) {
       const activeMember = this.getActiveMember();
       if (activeMember.stamina < 0) {
         this.playBadOptionSound();
       }
       else {
-        console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.target.name}`);
+        console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.targets[0].name}`);
         activeMember.stamina -= this.action.staminaCost;
-        this.action.execute(this.model, this.target);
+        this.action.execute(this.model, this.targets);
         if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
-        this.shakeTarget(this.target, this.action);
+        this.shakeTarget(this.targets, this.action);
       }
 
       this.action = null;
-      this.target = null;
+      this.targets = null;
     }
 
     this.getCombatants().forEach((target) => {
@@ -123,11 +123,11 @@ export class Battle extends Phaser.Scene {
 
     // bloodlust check
     party.members.forEach((member, idx) => {
-      if (member.emotionalState.get(overexcited) > 0 && member.stamina === member.maxStamina) {
+      if (member.emotionalState.get(excited) > 0 && member.stamina === member.maxStamina) {
         this.view.closeMenus();
         this.setActivePartyMember(idx);
         this.action = slash; // TODO: select random attack
-        this.target = randomEnemy(enemies, party, null);
+        this.targets = randomEnemy(enemies, party, null);
       }
     });
   }
@@ -220,7 +220,7 @@ export class Battle extends Phaser.Scene {
 
   setAction(action: Action): void {
     this.action = action;
-    if (action.targetType === TargetType.SELF) this.target = this.getActiveMember();
+    if (action.targetType === TargetType.SELF) this.targets = [this.getActiveMember()];
   }
 
   getCombatants(): Combatant[] {
@@ -247,7 +247,7 @@ export class Battle extends Phaser.Scene {
   }
 
   setTarget(targetName: string): void {
-    this.target = this.getCombatants().find((target) => target.name === targetName);
+    this.targets = [this.getCombatants().find((target) => target.name === targetName)];
   }
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
@@ -264,14 +264,14 @@ export class Battle extends Phaser.Scene {
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
-  shakeTarget(target: Combatant, action: Action): void {
+  shakeTarget(targets: Combatant[], action: Action): void {
     if (!action.tags.has(ActionTags.ATTACK)) return;
     for (let i = 0; i<this.model.enemies.length; i++) {
-      if (this.model.enemies[i] === target) this.view.shakeEnemy();
+      if (this.model.enemies[i] === targets[0]) this.view.shakeEnemy();
     }
     
     for (let i = 0; i<this.model.party.members.length; i++) {
-      if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
+      if (this.model.party.members[i] === targets[0]) this.view.shakePartyMember(i);
     }
   }
 

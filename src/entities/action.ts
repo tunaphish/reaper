@@ -19,7 +19,7 @@ export enum TargetType {
 export type Action = {
   name: string;
   staminaCost: number;
-  execute: (model: BattleModel, target: Combatant) => void;
+  execute: (model: BattleModel, targets: Combatant[]) => void;
   tags: Set<ActionTags>;
   targetType: TargetType;
   soundKeyName?: string;

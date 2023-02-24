@@ -7,27 +7,24 @@ import { selfPreservation } from './traits';
 import { getRandomInt } from '../util/random';
 import { anger, disgusted, emptyEmotionalStateMap, envious, confusion } from './emotions';
 
-// handle resurrection edge cases
-// filter dead unit
-// dead enemy
-// dead ally
-// random dead ally
 const filterDeadUnits = (unit: Combatant) => unit.health !== 0;
-export const self: TargetPriority = (enemies, party, enemy) => enemy;
+export const self: TargetPriority = (enemies, party, enemy) => [enemy];
 export const randomEnemy: TargetPriority = (enemies, party) => {
   const aliveEnemies = enemies.filter(filterDeadUnits);
-  return aliveEnemies.at(getRandomInt(aliveEnemies.length));
+  return [aliveEnemies.at(getRandomInt(aliveEnemies.length))];
 };
 export const randomParty: TargetPriority = (enemies, party) => {
   const alivePartyMembers = party.members.filter(filterDeadUnits);
-  return alivePartyMembers.at(getRandomInt(alivePartyMembers.length));
+  return [alivePartyMembers.at(getRandomInt(alivePartyMembers.length))];
 };
-export const lowestHealthPartyMember: TargetPriority = (enemies, party) =>
-  party.members
-    .filter(filterDeadUnits)
-    .reduce((prevMember, currMember) =>
-      prevMember === null || currMember.health < prevMember.health ? currMember : prevMember,
-    );
+export const lowestHealthPartyMember: TargetPriority = (enemies, party) => {
+  const member = party.members
+  .filter(filterDeadUnits)
+  .reduce((prevMember, currMember) =>
+    prevMember === null || currMember.health < prevMember.health ? currMember : prevMember,
+  );
+  return [member];
+}
 
 export const healieBoi: Enemy = {
   name: 'Healie Boi',

@@ -17,20 +17,21 @@
   align-items: center;
 }
 
-.parallax {
-  position: relative;
-  width: 100%;
+.background {
+  position: fixed;
+  z-index: -1;
   height: 100%;
-
+  width: 100%;
+  background-position: 50% 50%;
   background-repeat: no-repeat;
-  /* background-size: cover; */
-  flex: 4;
+}
 
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-
+.enemyPortait {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
 }
 
 .enemyUi {
@@ -164,9 +165,16 @@
 
 
 .tvContainer {
-  flex: 4;
+  position: relative;
   width: 100%;
   height: 100%;
+
+  flex: 4;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 /* big moving line effect */

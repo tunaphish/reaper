@@ -10,9 +10,10 @@ import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
 
 export class BattleView {
-  private parallax: any;
+  private battleDisplay: any;
   private enemyHealth: any;
   private enemyStamina: any;
+  private enemyPortrait: any;
   private animeText: any;
   private menu: Element;
 
@@ -42,25 +43,28 @@ export class BattleView {
       </div>
     );
 
+    const background = <div className={styles.background}/>;
+    background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
+
+    this.enemyPortrait = <div className={styles.enemyPortait}/>
+    this.enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')";
+
     this.animeText = <p className={styles.animeText}>Test Text</p>;
-    this.parallax = (
-      <div className={styles.parallax} id="parallax">
-        <div className={styles.tvContainer}>
-          <div className={styles.staticEffect}>
-            <div className={styles.oldTvContent}>
-              <div className={styles.enemyUi}>
-                {this.enemyHealth}
-                {this.enemyStamina}
-              </div>
-              {this.animeText}
+    this.battleDisplay = (
+      <div className={styles.tvContainer}>
+        <div className={styles.staticEffect}>
+          <div className={styles.oldTvContent}>
+            {background}
+            {this.enemyPortrait}
+            <div className={styles.enemyUi}>
+              {this.enemyHealth}
+              {this.enemyStamina}
             </div>
+            {this.animeText}
           </div>
         </div>
       </div>
     );
-    this.parallax.style.backgroundImage =
-      'url(https://raw.githubusercontent.com/oscicen/oscicen.github.io/master/img/depth-3.png), url("/reaper/assets/characters/eji.png"), url("/reaper/assets/backgrounds/pikrepo.jpg")';
-    this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
 
     // Party Bar Display
     this.partyBar = <div className={styles.partyBar} />;
@@ -132,7 +136,7 @@ export class BattleView {
 
     const container: Element = (
       <div className={styles.container}>
-        {this.parallax}
+        {this.battleDisplay}
         {this.menu}
         {this.partyBar}
         {this.menuViewsContainer}
@@ -141,10 +145,7 @@ export class BattleView {
 
     scene.ui.create(container, scene);
 
-    // for testing purposes
-    this.parallax.addEventListener('click', () => {
-      scene.updateEnemies();
-    });
+
   }
 
   updateStats(model: BattleModel) {
@@ -274,7 +275,7 @@ export class BattleView {
   }
 
   shakeEnemy(): void {
-    shakeElement(this.parallax);
+    shakeElement(this.enemyPortrait);
   }
 
   shakePartyMember(partyMemberIndex: number): void {

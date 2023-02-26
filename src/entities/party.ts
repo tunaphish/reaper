@@ -3,14 +3,16 @@ import { Combatant } from './combatant';
 
 export interface Option {
   name: string;
-  options: string[];
   isInitialOption?: boolean;
+}
+
+export type Folder = Option & {
+  options: Option[];
 }
 
 export type PartyMember = Combatant & {
   // imageUrl: String;
   options: Option[];
-  actions: Action[];
   // items
   // equipment
 };

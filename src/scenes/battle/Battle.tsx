@@ -1,5 +1,5 @@
 import { Behavior, Enemy } from '../../entities/enemy';
-import { Party, PartyMember } from '../../entities/party';
+import { Party, PartyMember, Option, Folder } from '../../entities/party';
 import { Action, ActionTags, TargetType } from '../../entities/action';
 import { Status } from '../../entities/combatant';
 
@@ -12,8 +12,9 @@ import { getRandomInt } from '../../util/random';
 import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
-import { excited, depressed, disgusted, envious } from '../../entities/emotions';
-import { slash } from '../../entities/actions';
+import { excited, depressed, disgusted, envious, anger, confusion } from '../../entities/emotions';
+import { ACTION_SET, slash } from '../../entities/actions';
+import { shuffle } from '../../util';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -194,25 +195,20 @@ export class Battle extends Phaser.Scene {
     this.sound.play('stamina-depleted');
   }
 
-  getOptions(optionKey: string): string[] {
+  getOptions(option: Option): Option[] {
+    // const activeMember: PartyMember = this.getActiveMember();
+    // TODO: fix emotion application
+    // const { enemies, party } = this.model;
+    // let emotionalOptions = option.options;
+    // for (const [emotion, count] of activeMember.emotionalState) {
+    //   if (emotion.onClick) emotionalOptions = emotion.onClick(this.model, emotionalOptions, count);
+    // }
     const activeMember: PartyMember = this.getActiveMember();
-    const matchedOptions = activeMember.options.find((option) => option.name === optionKey);
+    let emotionOptions = [...(option as Folder).options];
+    if (activeMember.emotionalState.get(anger) > 0) emotionOptions.unshift(activeMember.options[0]) // attack is always the first
+    if (activeMember.emotionalState.get(confusion) > 0) emotionOptions = shuffle(emotionOptions);
 
-    // TODO: Apply Traits
-
-    // Apply emotion
-    const { enemies, party } = this.model;
-    let emotionalOptions = matchedOptions.options;
-    for (const [emotion, count] of activeMember.emotionalState) {
-      if (emotion.onClick) emotionalOptions = emotion.onClick(this.model, emotionalOptions, count);
-    }
-
-    return emotionalOptions;
-  }
-
-  getAction(actionName: string): Action {
-    const activeMember = this.getActiveMember();
-    return activeMember.actions.find((action) => actionName === action.name);
+    return emotionOptions;
   }
 
   setAction(action: Action): void {

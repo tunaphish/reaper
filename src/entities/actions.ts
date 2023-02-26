@@ -182,3 +182,18 @@ const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: nu
     target.emotionalState.set(emotion, update);
   });
 };
+
+export const ACTION_SET: Set<Action> = new Set([
+  slash,
+  slashAll,
+  finisher,
+  ankleSlice,
+  block,
+  idle,
+  heal,
+  annoy,
+  flirt,
+  boast,
+  excite,
+  depress,
+])

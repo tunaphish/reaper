@@ -1,7 +1,18 @@
-import { PartyMember, Party } from './party';
+import { PartyMember, Party, Folder } from './party';
 import { Status } from './combatant';
-import { slash, block, heal, annoy, stifle, slashAll, finisher, flirt, ankleSlice, boast, excite, depress } from './actions';
+import * as Actions from './actions';
 import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
+
+const ejiAttackFolder: Folder = {
+  name: 'Attack',
+  options: [Actions.slash, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
+  isInitialOption: true,
+}
+const ejiDefendFolder: Folder = {
+  name: 'Defend',
+  options: [Actions.block],
+  isInitialOption: true,
+};
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -11,33 +22,31 @@ export const Eji: PartyMember = {
   stamina: 0,
   maxStamina: 400,
   traits: [],
-  actions: [slash, slashAll, finisher, block, heal, stifle, ankleSlice],
   staminaRegenRate: 13,
-  options: [
-    {
-      name: 'Attack',
-      options: [slash.name, slashAll.name, ankleSlice.name, finisher.name],
-      isInitialOption: true,
-    },
-    {
-      name: 'Defend',
-      options: [block.name],
-      isInitialOption: true,
-    },
-    {
-      name: stifle.name,
-      options: [],
-      isInitialOption: true,
-    },
-  ],
+  options: [ejiAttackFolder, ejiDefendFolder, Actions.stifle],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
-    [confusion, 0],
+    [confusion, 2],
     [disgusted, 0],
     [envious, 0],
     [depressed, 0],
   ]),
+};
+
+const keshiAttackFolder: Folder = {
+  name: 'Attack',
+  options: [Actions.slash],
+  isInitialOption: true,
+};
+const keshiRestorationFolder: Folder = {
+  name: 'Restoration',
+  options: [Actions.heal],
+};
+const keshiDefendFolder: Folder = {
+  name: 'Defend',
+  options: [Actions.block, keshiRestorationFolder],
+  isInitialOption: true,
 };
 
 export const Keshi: PartyMember = {
@@ -49,23 +58,7 @@ export const Keshi: PartyMember = {
   maxStamina: 300,
   staminaRegenRate: 15,
   traits: [],
-  actions: [slash, block, heal],
-  options: [
-    {
-      name: 'Attack',
-      options: [slash.name],
-      isInitialOption: true,
-    },
-    {
-      name: 'Defend',
-      options: [block.name, 'Restoration'],
-      isInitialOption: true,
-    },
-    {
-      name: 'Restoration',
-      options: [heal.name],
-    },
-  ],
+  options: [keshiAttackFolder, keshiDefendFolder, keshiRestorationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 1],
@@ -76,6 +69,23 @@ export const Keshi: PartyMember = {
   ]),
 };
 
+const eliseAttackFolder: Folder = {
+  name: 'Attack',
+  options: [Actions.slash],
+  isInitialOption: true,
+};
+const eliseDefendFolder: Folder = {
+  name: 'Defend',
+  options: [Actions.block],
+  isInitialOption: true,
+};
+const eliseManipulationFolder: Folder = {
+  name: 'Manipulation',
+  options: [Actions.annoy, Actions.flirt, Actions.boast, Actions.excite, Actions.depress],
+  isInitialOption: true,
+};
+
+
 export const Elise: PartyMember = {
   name: 'Elise',
   health: 100,
@@ -85,28 +95,11 @@ export const Elise: PartyMember = {
   maxStamina: 500,
   staminaRegenRate: 10,
   traits: [],
-  actions: [slash, block, heal, annoy, flirt, boast, excite, depress],
-  options: [
-    {
-      name: 'Attack',
-      options: [slash.name],
-      isInitialOption: true,
-    },
-    {
-      name: 'Defend',
-      options: [block.name],
-      isInitialOption: true,
-    },
-    {
-      name: 'Manipulation',
-      options: [annoy.name, flirt.name, boast.name, excite.name, depress.name],
-      isInitialOption: true,
-    },
-  ],
+  options: [eliseAttackFolder, eliseDefendFolder, eliseManipulationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
-    [anger, 0],
-    [confusion, 0],
+    [anger, 1],
+    [confusion, 3],
     [disgusted, 0],
     [envious, 0],
   ]),

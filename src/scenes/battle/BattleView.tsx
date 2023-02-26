@@ -1,10 +1,14 @@
+import { Status } from '../../entities/combatant';
+import { TargetType } from '../../entities/action';
+import { Option } from '../../entities/party';
+import { Action } from '../../entities/action';
+
 import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
-import { Status } from '../../entities/combatant';
-import { TargetType } from '../../entities/action';
+
 
 export class BattleView {
   private parallax: any;
@@ -101,7 +105,7 @@ export class BattleView {
       actMenuButton.addEventListener('click', () => {
         scene.playButtonClickSound();
         this.addMenu(
-          member.options.filter((option) => option.isInitialOption).map((option) => option.name),
+          member.options.filter((option) => option.isInitialOption),
           scene,
           'ACT',
         );
@@ -171,7 +175,7 @@ export class BattleView {
   }
 
   // Handles All additional menus atm. (probably too much responsibility)
-  addMenu(options: string[], scene: Battle, header: string, isTargetMenu = false) {
+  addMenu(options: Option[], scene: Battle, header: string, isTargetMenu = false) {
     const modalMenu = (
       <div className={styles.modalMenu}>
         <div className={styles.modalMenuHeader}> {header} </div>
@@ -182,19 +186,21 @@ export class BattleView {
     });
 
     options.forEach((option) => {
-      const modalMenuOption: Element = <div className={styles.modalMenuOption}>{option}</div>;
+      const modalMenuOption: Element = <div className={styles.modalMenuOption}>{option.name}</div>;
 
       modalMenuOption.addEventListener('click', () => {
         scene.playButtonClickSound();
 
+        // Target 
         if (isTargetMenu) {
-          scene.setTargets(option);
+          scene.setTargets(option.name);
           this.closeMenus();
           return;
         }
 
-        const action = scene.getAction(option);
-        if (action) {
+        // Action 
+        if (isAction(option) ) {
+          const action = (option as Action);
           scene.setAction(action);
           const targets = scene.getTargets();
           if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
@@ -205,7 +211,7 @@ export class BattleView {
 
           const IS_TARGET_MENU = true;
           this.addMenu(
-            targets.map((target) => target.name),
+            targets.map((target) => ({ name: target.name })),
             scene,
             'Targets',
             IS_TARGET_MENU,
@@ -213,8 +219,9 @@ export class BattleView {
           return;
         }
 
+        // Option 
         const newOptions = scene.getOptions(option);
-        this.addMenu(newOptions, scene, option);
+        this.addMenu(newOptions, scene, option.name);
       });
 
       modalMenu.append(modalMenuOption);
@@ -268,4 +275,8 @@ export class BattleView {
     this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
     this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
   }
+}
+
+function isAction(option: Option): option is Action {
+  return (option as Action).execute !== undefined;
 }

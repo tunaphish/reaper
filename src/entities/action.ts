@@ -1,5 +1,6 @@
 import { BattleModel } from '../scenes/battle/battleModel';
 import { Combatant } from './combatant';
+import { Option } from './party';
 
 export enum ActionTags {
   HEAL,
@@ -16,8 +17,7 @@ export enum TargetType {
   ALL = 'ALL',
 }
 
-export type Action = {
-  name: string;
+export type Action = Option & {
   description: string;
   staminaCost: number;
   execute: (model: BattleModel, targets: Combatant[]) => void;

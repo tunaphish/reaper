@@ -9,7 +9,6 @@ import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
 import { shakeElement } from '../../animations';
 
-
 export class BattleView {
   private parallax: any;
   private enemyHealth: any;
@@ -186,43 +185,64 @@ export class BattleView {
     });
 
     options.forEach((option) => {
-      const modalMenuOption: Element = <div className={styles.modalMenuOption}>{option.name}</div>;
+      let modalMenuOption: Element;
 
-      modalMenuOption.addEventListener('click', () => {
-        scene.playButtonClickSound();
-
-        // Target 
-        if (isTargetMenu) {
+      // Target
+      if (isTargetMenu) {
+        modalMenuOption = <div className={styles.modalMenuOption}>{option.name}</div>;
+        modalMenuOption.addEventListener('click', () => {
+          scene.playButtonClickSound();
           scene.setTargets(option.name);
           this.closeMenus();
           return;
-        }
+        });
+      }
 
-        // Action 
-        if (isAction(option) ) {
-          const action = (option as Action);
-          scene.setAction(action);
-          const targets = scene.getTargets();
-          if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
-            this.closeMenus();
-            scene.setTargets(null);
+      // Action 
+      else if (isAction(option)) {
+        const action = (option as Action);
+        modalMenuOption = <div className={styles.modalMenuOption}>{ `${option.name} - ${action.staminaCost}`}</div>;
+
+        modalMenuOption.addEventListener('click', () => {
+          scene.playButtonClickSound();
+            scene.setAction(action);
+            const targets = scene.getTargets();
+            if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
+              this.closeMenus();
+              scene.setTargets(null);
+              return;
+            }
+  
+            const IS_TARGET_MENU = true;
+            this.addMenu(
+              targets.map((target) => ({ name: target.name })),
+              scene,
+              'Targets',
+              IS_TARGET_MENU,
+            );
             return;
-          }
+        });
+      }
+      
+      else { // is option
+        modalMenuOption = <div className={styles.modalMenuOption}>{option.name}</div>;
+        modalMenuOption.addEventListener('click', () => {
+          scene.playButtonClickSound();
+          const newOptions = scene.getOptions(option);
+          this.addMenu(newOptions, scene, option.name);
+        });
+      }
 
-          const IS_TARGET_MENU = true;
-          this.addMenu(
-            targets.map((target) => ({ name: target.name })),
-            scene,
-            'Targets',
-            IS_TARGET_MENU,
-          );
+      modalMenuOption.setAttribute('data-text', modalMenuOption.innerHTML);
+      const emotions = scene.getEmotionStyleKeys();
+      emotions.forEach(emotion => {
+        if (emotion === 'anger') {
+          shakeElement(modalMenuOption, Infinity);
           return;
         }
-
-        // Option 
-        const newOptions = scene.getOptions(option);
-        this.addMenu(newOptions, scene, option.name);
+        modalMenuOption.classList.add(styles[emotion]);
       });
+      console.log(emotions);
 
       modalMenu.append(modalMenuOption);
     });

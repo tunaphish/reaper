@@ -6,6 +6,7 @@ export const anger: Emotion = {
   name: 'Anger',
   display: '😡',
   description: 'Increases likelyhood to attack',
+  styleKeyName: 'anger',
   onUpdate: (enemies, party, behaviors, count) => {
     if (count === 0) return behaviors;
     const newBehaviors = behaviors.map((behavior) => {
@@ -29,6 +30,7 @@ export const confusion: Emotion = {
   name: 'Confusion',
   display: '🤔',
   description: 'Increases likelyhood to perform illogical actions',
+  styleKeyName: 'confusion',
   onUpdate: (enemies, party, behaviors, count) => {
     if (count === 0) return behaviors;
     // mix targets

@@ -196,13 +196,6 @@ export class Battle extends Phaser.Scene {
   }
 
   getOptions(option: Option): Option[] {
-    // const activeMember: PartyMember = this.getActiveMember();
-    // TODO: fix emotion application
-    // const { enemies, party } = this.model;
-    // let emotionalOptions = option.options;
-    // for (const [emotion, count] of activeMember.emotionalState) {
-    //   if (emotion.onClick) emotionalOptions = emotion.onClick(this.model, emotionalOptions, count);
-    // }
     const activeMember: PartyMember = this.getActiveMember();
     let emotionOptions = [...(option as Folder).options];
     if (activeMember.emotionalState.get(anger) > 0) emotionOptions.unshift(activeMember.options[0]) // attack is always the first
@@ -236,7 +229,6 @@ export class Battle extends Phaser.Scene {
   }
 
   setTargets(targets: string): void {
-    // Target Self
     if (this.action.targetType === TargetType.SELF) {
       this.targets = [this.getActiveMember()];
       return;
@@ -247,7 +239,6 @@ export class Battle extends Phaser.Scene {
       return;
     }
 
-    // Target Single
     this.targets = [this.getCombatants().find((target) => target.name === targets)];
   }
 
@@ -281,6 +272,15 @@ export class Battle extends Phaser.Scene {
 
   getMemberStatus(memberIndex: number) {
     return this.model.party.members[memberIndex].status;
+  }
+
+  getEmotionStyleKeys(): string[] {
+    const activeMember = this.getActiveMember();
+    const emotionStyleKeys: string[] = [];
+    activeMember.emotionalState.forEach((value, emotion) => {
+      if (value > 0 && emotion.styleKeyName) emotionStyleKeys.push(emotion.styleKeyName);
+    })
+    return emotionStyleKeys;
   }
 }
 

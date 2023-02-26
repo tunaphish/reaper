@@ -10,7 +10,7 @@ const ejiAttackFolder: Folder = {
 }
 const ejiDefendFolder: Folder = {
   name: 'Defend',
-  options: [Actions.block],
+  options: [Actions.block, Actions.stifle],
   isInitialOption: true,
 };
 
@@ -23,7 +23,7 @@ export const Eji: PartyMember = {
   maxStamina: 400,
   traits: [],
   staminaRegenRate: 13,
-  options: [ejiAttackFolder, ejiDefendFolder, Actions.stifle],
+  options: [ejiAttackFolder, ejiDefendFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],

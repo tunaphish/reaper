@@ -2,13 +2,13 @@ import { getRandomInt } from '../util';
 // TODO: Add randomness to shake
 // TODO: Add damage scaling
 
-export const shakeElement = (element: Element) => {
+export const shakeElement = (element: Element, iterations: number = 1) => {
   const duration = 350 + getRandomInt(100);
 
   const shakeTiming = {
     duration,
     timing: 'ease-in-out',
-    iterationCount: 1,
+    iterations,
   };
 
   const keyFrames = [];

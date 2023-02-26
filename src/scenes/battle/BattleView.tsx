@@ -238,7 +238,7 @@ export class BattleView {
       const emotions = scene.getEmotionStyleKeys();
       emotions.forEach(emotion => {
         if (emotion === 'anger') {
-          shakeElement(modalMenuOption, Infinity);
+          this.shakeText(modalMenuOption);
           return;
         }
         modalMenuOption.classList.add(styles[emotion]);
@@ -280,6 +280,18 @@ export class BattleView {
 
   shakePartyMember(partyMemberIndex: number): void {
     shakeElement(this.partyMemberCells[partyMemberIndex]);
+  }
+
+  shakeText(element: Element) {
+    element.innerHTML = element.innerHTML.split('').map(function(element){
+      return '<div>' + element + '</div>';
+    }).join('');
+    for (let i = 0; i < element.children.length; i++) {
+      const child: any = element.children[i];
+      child.style.display = 'inline-block';
+      shakeElement(child, Infinity, false);
+    }
+    
   }
 
   setPartyMemberCellDead(memberIndex: number): void {

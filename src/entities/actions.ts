@@ -1,7 +1,7 @@
 import { Action, ActionTags, TargetType } from './action';
-import { Combatant } from './combatant';
-import { Emotion } from './emotion';
+import { updateEmotionalState } from './combatant';
 import { anger, depressed, disgusted, envious, excited } from './emotions';
+
 
 export const slash: Action = {
   name: 'Slash',
@@ -174,14 +174,6 @@ export const stifle: Action = {
 
 
 const updateHealth = () => {};
-
-const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: number): void => {
-  targets.forEach((target) => {
-    const count = target.emotionalState.get(emotion) || 0;
-    const update = count + change > 0 ? count + change : 0;
-    target.emotionalState.set(emotion, update);
-  });
-};
 
 export const ACTION_SET: Set<Action> = new Set([
   slash,

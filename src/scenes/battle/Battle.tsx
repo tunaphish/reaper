@@ -4,7 +4,8 @@ import { Action, ActionTags, TargetType } from '../../entities/action';
 import { Status } from '../../entities/combatant';
 
 import { DefaultParty } from '../../entities/parties';
-import { healieBoi, randomEnemy } from '../../entities/enemies';
+import { healieBoi } from '../../entities/enemies';
+import { randomEnemy } from '../../entities/targetPriorities';
 
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene
 import { getRandomInt } from '../../util/random';
@@ -13,7 +14,7 @@ import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
 import { excited, depressed, disgusted, envious, anger, confusion } from '../../entities/emotions';
-import { ACTION_SET, slash } from '../../entities/actions';
+import { slash } from '../../entities/actions';
 import { shuffle } from '../../util';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -49,6 +50,13 @@ export class Battle extends Phaser.Scene {
     this.battleMusic = this.sound.add('upgrade');
     this.battleMusic.play();
     this.view = new BattleView(this, this.model);
+
+    // apply on start traits
+    this.getCombatants().forEach(combatant => {
+      combatant.traits.forEach(trait => {
+        if(trait.onStart) trait.onStart(this.model, combatant);
+      });
+    })
   }
 
   update(time, delta: number): void {
@@ -119,7 +127,7 @@ export class Battle extends Phaser.Scene {
 
     this.view.updateStats(this.model);
 
-    // bloodlust check
+    // excited check
     party.members.forEach((member, idx) => {
       if (member.emotionalState.get(excited) > 0 && member.stamina === member.maxStamina) {
         this.view.closeMenus();
@@ -157,7 +165,7 @@ export class Battle extends Phaser.Scene {
     // Apply Traits
     let traitedBehaviors = filteredBehaviors;
     enemy.traits.forEach((trait) => {
-      traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
+      if (trait.onUpdate) traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
     });
 
     // Apply Emotions
@@ -165,7 +173,6 @@ export class Battle extends Phaser.Scene {
     for (const [emotion, count] of enemy.emotionalState) {
       if (emotion.onUpdate) emotionBehaviors = emotion.onUpdate(enemies, party, emotionBehaviors, count);
     }
-    console.log(emotionBehaviors);
 
     // Randomly Select Behavior Based on Weight
     const summedWeights = emotionBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);

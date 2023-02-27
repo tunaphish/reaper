@@ -2,6 +2,7 @@ import { PartyMember, Party, Folder } from './party';
 import { Status } from './combatant';
 import * as Actions from './actions';
 import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
+import { edgelord, empath, romantic } from './traits';
 
 const ejiAttackFolder: Folder = {
   name: 'Attack',
@@ -21,7 +22,7 @@ export const Eji: PartyMember = {
   stackedDamage: 0,
   stamina: 0,
   maxStamina: 400,
-  traits: [],
+  traits: new Set([empath]),
   staminaRegenRate: 13,
   options: [ejiAttackFolder, ejiDefendFolder],
   status: Status.NORMAL,
@@ -57,11 +58,11 @@ export const Keshi: PartyMember = {
   stamina: 0,
   maxStamina: 300,
   staminaRegenRate: 15,
-  traits: [],
+  traits: new Set([edgelord]),
   options: [keshiAttackFolder, keshiDefendFolder, keshiRestorationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
-    [anger, 1],
+    [anger, 0],
     [confusion, 0],
     [disgusted, 0],
     [envious, 0],
@@ -94,11 +95,11 @@ export const Elise: PartyMember = {
   stamina: 0,
   maxStamina: 500,
   staminaRegenRate: 10,
-  traits: [],
+  traits: new Set([romantic]),
   options: [eliseAttackFolder, eliseDefendFolder, eliseManipulationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
-    [anger, 1],
+    [anger, 0],
     [confusion, 3],
     [disgusted, 0],
     [envious, 0],

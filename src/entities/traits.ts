@@ -1,41 +1,40 @@
 import { Trait } from '../entities/trait';
 import { ActionTags } from '../entities/action';
 import { Behavior } from '../entities/enemy';
+import { updateEmotionalState } from './combatant';
 
-import { self } from './enemies';
+import { self } from './targetPriorities';
+import { BattleModel } from '../scenes/battle/battleModel';
+import { Combatant } from './combatant';
+import { anger, excited } from './emotions';
 
-export const bloodlust: Trait = {
-  name: 'Bloodlust',
-  description: 'Start each battle excited',
-  onStart: () => {},
+// likely need to split enemy traits from party traits 
+
+export const edgelord: Trait = {
+  name: 'Edgelord',
+  description: 'Starts each battle angry and excited',
+  onStart: (model: BattleModel, combantant: Combatant) => {
+    updateEmotionalState([combantant], anger, 1);
+    updateEmotionalState([combantant], excited, 1);
+  },  
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 
-export const headstrong: Trait = {
-  name: 'Headstrong',
-  description: 'Easily angered',
-  onStart: () => {},
-  onUpdate: (enemies, party, behaviors) => behaviors,
-};
+export const romantic: Trait = {
+  name: 'Romantic', 
+  description: 'Receives a surge of stamina whenever inflicted by an emotion',
+  onUpdate: (enemy, party, behaviors) => behaviors,
+}
 
-export const stoic: Trait = {
-  name: 'Stoic',
-  description: 'Emotional status is less effected',
-  onStart: () => {},
-  onUpdate: (enemies, party, behaviors) => behaviors,
-};
-
-export const misogynist: Trait = {
-  name: 'Misogynist',
-  description: 'Targets women with Higher Priority',
-  onStart: () => {},
-  onUpdate: (enemies, party, behaviors) => behaviors,
-};
+export const empath: Trait = {
+  name: 'Empath', 
+  description: 'It is both a blessing and a curse to feel things so deeply',
+  onUpdate: (enemy, party, behaviors) => behaviors,
+}
 
 export const selfPreservation: Trait = {
   name: 'Self Preservation',
   description: 'Prioritizes Healing when Low on Health',
-  onStart: () => {},
   onUpdate: (enemies, party, behaviors) => {
     const newBehaviors = behaviors.map((behavior: Behavior) => {
       if (!behavior.action.tags.has(ActionTags.HEAL)) return behavior;
@@ -49,10 +48,27 @@ export const selfPreservation: Trait = {
   },
 };
 
+export const headstrong: Trait = {
+  name: 'Headstrong',
+  description: 'Easily angered',
+  onUpdate: (enemies, party, behaviors) => behaviors,
+};
+
+export const stoic: Trait = {
+  name: 'Stoic',
+  description: 'Emotional status is less effected',
+  onUpdate: (enemies, party, behaviors) => behaviors,
+};
+
+export const misogynist: Trait = {
+  name: 'Misogynist',
+  description: 'Targets women with Higher Priority',
+  onUpdate: (enemies, party, behaviors) => behaviors,
+};
+
 export const motherlyInstinct: Trait = {
   name: 'Motherly Instinct',
   description: 'Prioritizes Healing Children',
-  onStart: () => {},
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 
@@ -62,3 +78,5 @@ export const vindictive: Trait = {
   onStart: () => {},
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
+
+console.log(selfPreservation);

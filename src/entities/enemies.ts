@@ -1,30 +1,12 @@
-import { Enemy, TargetPriority } from '../entities/enemy';
-import { Combatant, Status } from '../entities/combatant';
+import { Enemy } from '../entities/enemy';
+import { Status } from '../entities/combatant';
+import { randomEnemy, randomParty, self } from './targetPriorities';
 
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
 
-import { getRandomInt } from '../util/random';
-import { anger, disgusted, emptyEmotionalStateMap, envious, confusion } from './emotions';
+import { anger, disgusted, envious, confusion } from './emotions';
 
-const filterDeadUnits = (unit: Combatant) => unit.health !== 0;
-export const self: TargetPriority = (enemies, party, enemy) => [enemy];
-export const randomEnemy: TargetPriority = (enemies, party) => {
-  const aliveEnemies = enemies.filter(filterDeadUnits);
-  return [aliveEnemies.at(getRandomInt(aliveEnemies.length))];
-};
-export const randomParty: TargetPriority = (enemies, party) => {
-  const alivePartyMembers = party.members.filter(filterDeadUnits);
-  return [alivePartyMembers.at(getRandomInt(alivePartyMembers.length))];
-};
-export const lowestHealthPartyMember: TargetPriority = (enemies, party) => {
-  const member = party.members
-    .filter(filterDeadUnits)
-    .reduce((prevMember, currMember) =>
-      prevMember === null || currMember.health < prevMember.health ? currMember : prevMember,
-    );
-  return [member];
-};
 
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
@@ -34,6 +16,7 @@ export const healieBoi: Enemy = {
   stamina: 20,
   maxStamina: 800,
   staminaRegenRate: 1,
+  traits: new Set([selfPreservation]),
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty },
     { action: heal, weight: 100, targetPriority: randomEnemy },
@@ -45,6 +28,5 @@ export const healieBoi: Enemy = {
     [disgusted, 0],
     [envious, 0],
   ]),
-  traits: [selfPreservation],
   status: Status.NORMAL,
 };

@@ -24,7 +24,7 @@ export const Eji: PartyMember = {
   maxStamina: 400,
   traits: new Set([empath]),
   staminaRegenRate: 13,
-  options: [ejiAttackFolder, ejiDefendFolder],
+  options: [ejiAttackFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
@@ -43,6 +43,7 @@ const keshiAttackFolder: Folder = {
 const keshiRestorationFolder: Folder = {
   name: 'Restoration',
   options: [Actions.heal],
+  isInitialOption: true,
 };
 const keshiDefendFolder: Folder = {
   name: 'Defend',
@@ -59,7 +60,7 @@ export const Keshi: PartyMember = {
   maxStamina: 300,
   staminaRegenRate: 15,
   traits: new Set([edgelord]),
-  options: [keshiAttackFolder, keshiDefendFolder, keshiRestorationFolder],
+  options: [keshiAttackFolder, keshiRestorationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
@@ -96,7 +97,7 @@ export const Elise: PartyMember = {
   maxStamina: 500,
   staminaRegenRate: 10,
   traits: new Set([romantic]),
-  options: [eliseAttackFolder, eliseDefendFolder, eliseManipulationFolder],
+  options: [eliseAttackFolder, eliseManipulationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],

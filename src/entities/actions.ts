@@ -1,5 +1,5 @@
 import { Action, ActionTags, TargetType } from './action';
-import { updateEmotionalState } from './combatant';
+import { updateEmotionalState, updateDamage, updateStamina } from './combatant';
 import { anger, depressed, disgusted, envious, excited } from './emotions';
 
 
@@ -12,7 +12,7 @@ export const slash: Action = {
 
   description: 'Deals damage to target',
   execute: (battleModel, targets) => {
-    targets[0].stackedDamage += 50;
+    updateDamage(targets[0], -50);
   },
 };
 
@@ -26,7 +26,7 @@ export const slashAll: Action = {
 
   description: 'Attacks everyone indiscriminately',
   execute: (battleModel, targets) => {
-    targets.forEach((target) => (target.stackedDamage += 50));
+    targets.forEach((target) => updateDamage(targets[0], -50));
   },
 };
 
@@ -49,7 +49,7 @@ export const finisher: Action = {
 
 export const ankleSlice: Action = {
   name: 'Ankle Slice',
-  staminaCost: 100,
+  staminaCost: 125,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -57,8 +57,8 @@ export const ankleSlice: Action = {
   description: 'Deals damage and reduces stamina for target',
   execute: (battleModel, targets) => {
     const target = targets[0];
-    target.stackedDamage += 50;
-    target.stamina = Math.max(0, target.stamina -= 50);
+    updateDamage(target, -50);
+    updateStamina(target, -50);
   },
 };
 
@@ -103,7 +103,8 @@ export const annoy: Action = {
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
-  
+  soundKeyName: 'debuff',
+
   description: 'Makes target angry',
   execute: (battleModel, targets) => {
     updateEmotionalState(targets, anger, 1);
@@ -115,6 +116,7 @@ export const flirt: Action = {
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'debuff',
 
   description: 'Makes target disgusted (usually)',
   execute: (battleModel, targets) => {
@@ -127,6 +129,7 @@ export const boast: Action = {
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'debuff',
 
   description: 'Makes target envious (chance to make target angry?)',
   execute: (battleModel, targets) => {
@@ -139,6 +142,7 @@ export const excite: Action = {
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'debuff',
 
   description: 'Makes target excited',
   execute: (battleModel, targets) => {
@@ -151,6 +155,7 @@ export const depress: Action = {
   staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'debuff',
 
   description: 'Makes target depressed',
   execute: (battleModel, targets) => {
@@ -163,7 +168,8 @@ export const stifle: Action = {
   staminaCost: 50,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SELF,
-  
+  soundKeyName: 'debuff',
+
   description: 'Calms emotional state',
   execute: (battleModel, targets) => {
     for (const [emotion, count] of targets[0].emotionalState) {

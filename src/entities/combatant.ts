@@ -36,3 +36,11 @@ export const updateEmotionalState = (targets: Combatant[], emotion: Emotion, cha
     console.log(target);
   });
 };
+
+export const updateDamage = (target: Combatant, change: number): void => {
+  if (target.status === Status.EXHAUSTED) {
+    target.health = Math.max(0, target.health - change);
+    return;
+  }
+  target.stackedDamage += change;
+};

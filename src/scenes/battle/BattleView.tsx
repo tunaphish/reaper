@@ -130,7 +130,7 @@ export class BattleView {
       this.partyMemberPrimaryMenus.push(memberPrimaryMenu);
     });
     this.menu = <div className={styles.menu} />;
-    this.updatePartyMemberView(scene, battleModel);
+    this.updatePartyMemberView(scene);
 
     this.menuViewsContainer = <div className={styles.menuViewsContainer} />;
 
@@ -144,8 +144,6 @@ export class BattleView {
     );
 
     scene.ui.create(container, scene);
-
-
   }
 
   updateStats(model: BattleModel) {
@@ -164,11 +162,12 @@ export class BattleView {
     }
   }
 
-  updatePartyMemberView(scene: Battle, model: BattleModel) {
-    this.menu.replaceChildren(this.partyMemberPrimaryMenus[model.activePartyMemberIndex]);
+  updatePartyMemberView(scene: Battle) {
+    const activePartyMemberIndex = scene.model.activePartyMemberIndex;
+    this.menu.replaceChildren(this.partyMemberPrimaryMenus[activePartyMemberIndex]);
     this.partyMemberCells.forEach((cell, index) => {
       cell.classList.remove(styles.active);
-      if (index === model.activePartyMemberIndex) {
+      if (index === activePartyMemberIndex) {
         cell.classList.add(styles.active);
       }
     });
@@ -195,6 +194,7 @@ export class BattleView {
           scene.playButtonClickSound();
           scene.setTargets(option.name);
           this.closeMenus();
+          this.updatePartyMemberView(scene);
           return;
         });
       }
@@ -221,6 +221,10 @@ export class BattleView {
               'Targets',
               IS_TARGET_MENU,
             );
+
+            const attackDescription = <div className={styles.attackDescription}>{action.description}</div>;
+            this.menu.replaceChildren(attackDescription);
+
             return;
         });
       }
@@ -256,6 +260,7 @@ export class BattleView {
       this.menuViewsContainer.removeChild(modalContainer);
       this.menuViews.pop();
       scene.playMenuCloseSound();
+      if (isTargetMenu) this.updatePartyMemberView(scene);
     });
 
     modalContainer.style.zIndex = 10 * this.menuViews.length;

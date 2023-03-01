@@ -26,7 +26,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class Battle extends Phaser.Scene {
   ui: UiOverlayPlugin;
   private lastCalculation = 0;
-  private model: BattleModel;
+  model: BattleModel;
   private view: BattleView;
 
   private battleMusic: Phaser.Sound.BaseSound;
@@ -72,7 +72,7 @@ export class Battle extends Phaser.Scene {
           for (let i = 0; i < party.members.length; i++) {
             if (party.members[i].status !== Status.DEAD) {
               this.model.activePartyMemberIndex = i;
-              this.view.updatePartyMemberView(this, this.model);
+              this.view.updatePartyMemberView(this);
               this.view.closeMenus();
               break;
             }
@@ -150,7 +150,6 @@ export class Battle extends Phaser.Scene {
       selectedBehavior.action.execute(this.model, target);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       this.shakeTarget(target, selectedBehavior.action);
-      this.view.updatePartyMemberView(this, this.model);
     });
   }
 
@@ -188,7 +187,7 @@ export class Battle extends Phaser.Scene {
 
   setActivePartyMember(index: number) {
     this.model.activePartyMemberIndex = index;
-    this.view.updatePartyMemberView(this, this.model);
+    this.view.updatePartyMemberView(this);
   }
 
   playButtonClickSound() {

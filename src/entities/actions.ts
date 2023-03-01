@@ -9,6 +9,7 @@ export const slash: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
   execute: (battleModel, targets) => {
@@ -23,10 +24,11 @@ export const slashAll: Action = {
 
   targetType: TargetType.ALL,
   soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
 
   description: 'Attacks everyone indiscriminately',
   execute: (battleModel, targets) => {
-    targets.forEach((target) => updateDamage(targets[0], 50));
+    targets.forEach((target) => updateDamage(target, 50));
   },
 };
 
@@ -36,6 +38,7 @@ export const finisher: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
 
   description: 'Immediately applies all stacked damage',
   execute: (battleModel, targets) => {
@@ -53,6 +56,7 @@ export const ankleSlice: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
 
   description: 'Deals damage and reduces stamina for target',
   execute: (battleModel, targets) => {
@@ -104,6 +108,7 @@ export const annoy: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Makes target angry',
   execute: (battleModel, targets) => {
@@ -117,6 +122,7 @@ export const flirt: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Makes target disgusted (usually)',
   execute: (battleModel, targets) => {
@@ -130,6 +136,7 @@ export const boast: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Makes target envious (chance to make target angry?)',
   execute: (battleModel, targets) => {
@@ -143,6 +150,7 @@ export const excite: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Makes target excited',
   execute: (battleModel, targets) => {
@@ -156,6 +164,7 @@ export const depress: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Makes target depressed',
   execute: (battleModel, targets) => {
@@ -169,6 +178,7 @@ export const stifle: Action = {
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SELF,
   soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
 
   description: 'Calms emotional state',
   execute: (battleModel, targets) => {

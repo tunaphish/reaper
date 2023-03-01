@@ -1,6 +1,7 @@
 import { Emotion } from './emotion';
+import { anger } from './emotions';
 import { Trait } from './trait';
-import { empath, romantic } from './traits';
+import { edgelord, empath, romantic } from './traits';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -30,10 +31,10 @@ export const updateEmotionalState = (targets: Combatant[], emotion: Emotion, cha
     if (change > 0) {
       if (target.traits.has(empath)) change += 1;
       if (target.traits.has(romantic)) updateStamina(target, 50);
+      if (target.traits.has(edgelord) && emotion !== anger) updateEmotionalState([target], anger, 1);
     }
     const update = count + change > 0 ? count + change : 0;
     target.emotionalState.set(emotion, update);
-    console.log(target);
   });
 };
 

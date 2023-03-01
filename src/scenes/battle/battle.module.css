@@ -3,10 +3,9 @@
   height: 100%;
   flex-direction: column;
 
-  /* references chromatic abberation SVG embedded in BattleView */
-  position: relative;
+  /* position: relative;
   filter: url(#chromaticAbberation);
-  -webkit-filter: url(#chromaticAbberation);
+  -webkit-filter: url(#chromaticAbberation); */
 }
 
 .sceneContainer {
@@ -107,6 +106,8 @@
   flex: 1;
   border: 1px solid white;
   text-align: center;
+  
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -335,6 +336,22 @@
   padding: 2px;
 }
 
-.chromaticAbberation {
+.effect {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
 
+  pointer-events: none;
+
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  animation: fadeOut .5s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1;}
+  75% { opacity: 1;}
+  100% { opacity: 0;}
 }

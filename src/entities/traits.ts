@@ -13,10 +13,7 @@ import { anger, excited } from './emotions';
 export const edgelord: Trait = {
   name: 'Edgelord',
   description: 'Starts each battle angry and excited',
-  onStart: (model: BattleModel, combantant: Combatant) => {
-    updateEmotionalState([combantant], anger, 1);
-    updateEmotionalState([combantant], excited, 1);
-  },  
+  onStart: (model: BattleModel, combantant: Combatant) => {},  
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 

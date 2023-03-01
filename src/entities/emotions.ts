@@ -96,7 +96,6 @@ export const emptyEmotionalStateMap = (): Map<Emotion, number> => {
 // - Anger: increases damage taken and damage dealth
 // 	- furious: causes menu to auto open and start triggering moves
 // 	- anger initially only increases dmg dealt and received. effects become more complicated and intrusive as it increases
-// 	- bloodlust: unlocks ultimate attack in ava, recklessly attack
 // - confusion: moves menu options to unexpected places, glitch effect on UI
 // - charmed:
 // 	- seduced: obscure's menu options with hearts, reduces effectiveness?

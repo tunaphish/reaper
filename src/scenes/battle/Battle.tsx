@@ -52,11 +52,11 @@ export class Battle extends Phaser.Scene {
     this.view = new BattleView(this, this.model);
 
     // apply on start traits
-    this.getCombatants().forEach(combatant => {
-      combatant.traits.forEach(trait => {
-        if(trait.onStart) trait.onStart(this.model, combatant);
-      });
-    })
+    // this.getCombatants().forEach(combatant => {
+    //   combatant.traits.forEach(trait => {
+    //     if(trait.onStart) trait.onStart(this.model, combatant);
+    //   });
+    // })
   }
 
   update(time, delta: number): void {
@@ -103,6 +103,7 @@ export class Battle extends Phaser.Scene {
         activeMember.stamina -= this.action.staminaCost;
         this.action.execute(this.model, this.targets);
         if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
+        if (this.action.imageKeyName) this.displayEffect(this.targets, this.action.imageKeyName);
         this.shakeTarget(this.targets, this.action);
       }
 
@@ -285,9 +286,21 @@ export class Battle extends Phaser.Scene {
     const activeMember = this.getActiveMember();
     const emotionStyleKeys: string[] = [];
     activeMember.emotionalState.forEach((value, emotion) => {
+
       if (value > 0 && emotion.styleKeyName) emotionStyleKeys.push(emotion.styleKeyName);
     })
     return emotionStyleKeys;
+  }
+
+  displayEffect(targets: Combatant[], effectKeyName: string): void {
+    for (const target of targets) {
+      for (let i = 0; i < this.model.enemies.length; i++) {
+        if (this.model.enemies[i] === target) this.view.displayEffectOnEnemy(effectKeyName);
+      }
+      for (let i = 0; i < this.model.party.members.length; i++) {
+        if (this.model.party.members[i] === target) this.view.displayEffectOnMember(i, effectKeyName);
+      }
+    }
   }
 }
 

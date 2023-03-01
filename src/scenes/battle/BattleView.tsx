@@ -308,6 +308,24 @@ export class BattleView {
     this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
     this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
   }
+
+  displayEffectOnEnemy(effectKeyName: string): void {
+    const effect = <div className={styles.effect} />
+    effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
+    this.enemyPortrait.appendChild(effect)
+    setTimeout(function () {
+      effect.remove();
+    }, 1000)    
+  }
+
+  displayEffectOnMember(partyMemberIndex: number, effectKeyName: string): void {
+    const effect = <div className={styles.effect} />
+    effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
+    this.partyMemberCells[partyMemberIndex].appendChild(effect)
+    setTimeout(function () {
+      effect.remove();
+    }, 1000)    
+  }
 }
 
 function isAction(option: Option): option is Action {

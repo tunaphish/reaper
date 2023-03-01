@@ -12,7 +12,7 @@ export const slash: Action = {
 
   description: 'Deals damage to target',
   execute: (battleModel, targets) => {
-    updateDamage(targets[0], -50);
+    updateDamage(targets[0], 50);
   },
 };
 
@@ -26,7 +26,7 @@ export const slashAll: Action = {
 
   description: 'Attacks everyone indiscriminately',
   execute: (battleModel, targets) => {
-    targets.forEach((target) => updateDamage(targets[0], -50));
+    targets.forEach((target) => updateDamage(targets[0], 50));
   },
 };
 
@@ -57,7 +57,7 @@ export const ankleSlice: Action = {
   description: 'Deals damage and reduces stamina for target',
   execute: (battleModel, targets) => {
     const target = targets[0];
-    updateDamage(target, -50);
+    updateDamage(target, 50);
     updateStamina(target, -50);
   },
 };
@@ -89,7 +89,7 @@ export const heal: Action = {
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
-  imageKeyName: 'heal',
+  imageKeyName: 'heal.gif',
 
   description: 'Restores health to target',
   execute: (battleModel, targets) => {
@@ -178,8 +178,6 @@ export const stifle: Action = {
   },
 };
 
-
-const updateHealth = () => {};
 
 export const ACTION_SET: Set<Action> = new Set([
   slash,

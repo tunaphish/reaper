@@ -49,7 +49,7 @@ export class Battle extends Phaser.Scene {
   public create(): void {
     this.battleMusic = this.sound.add('upgrade');
     this.battleMusic.play();
-    this.view = new BattleView(this, this.model);
+    this.view = new BattleView(this);
 
     // apply on start traits
     // this.getCombatants().forEach(combatant => {
@@ -126,7 +126,7 @@ export class Battle extends Phaser.Scene {
       this.updateEnemies(); // behavior
     }
 
-    this.view.updateStats(this.model);
+    this.view.updateStats(this);
 
     // excited check
     party.members.forEach((member, idx) => {

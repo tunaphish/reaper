@@ -27,8 +27,8 @@ export class BattleView {
   private menuViewsContainer: Element;
   private menuViews: Element[] = [];
 
-  constructor(scene: Battle, battleModel: BattleModel) {
-    const { enemies, party } = battleModel;
+  constructor(scene: Battle) {
+    const { enemies, party } = scene.model;
 
     // Enemy Display
     const enemy = enemies[0];
@@ -146,7 +146,8 @@ export class BattleView {
     scene.ui.create(container, scene);
   }
 
-  updateStats(model: BattleModel) {
+  updateStats(scene: Battle) {
+    const model = scene.model;
     const enemy = model.enemies[0];
     // maybe caching?
     this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;

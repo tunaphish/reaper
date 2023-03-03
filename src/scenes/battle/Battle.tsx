@@ -5,7 +5,7 @@ import { Status } from '../../entities/combatant';
 
 import { DefaultParty } from '../../entities/parties';
 import { healieBoi } from '../../entities/enemies';
-import { randomEnemy } from '../../entities/targetPriorities';
+import { randomEnemy, self } from '../../entities/targetPriorities';
 
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene
 import { getRandomInt } from '../../util/random';
@@ -14,7 +14,7 @@ import { BattleModel } from './battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../entities/combatant';
 import { excited, depressed, disgusted, envious, anger, confusion } from '../../entities/emotions';
-import { slash } from '../../entities/actions';
+import { idle, slash } from '../../entities/actions';
 import { shuffle } from '../../util';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -101,7 +101,7 @@ export class Battle extends Phaser.Scene {
       } else {
         console.log(`${this.getActiveMember().name} used ${this.action.name} on ${this.targets[0].name}`);
         activeMember.stamina -= this.action.staminaCost;
-        this.action.execute(this.model, this.targets);
+        this.action.execute(this.model, this.targets, activeMember);
         if (this.action.soundKeyName) this.sound.play(this.action.soundKeyName);
         if (this.action.imageKeyName) this.displayEffect(this.targets, this.action.imageKeyName);
         this.shakeTarget(this.targets, this.action);
@@ -147,7 +147,7 @@ export class Battle extends Phaser.Scene {
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(this.model, target);
+      selectedBehavior.action.execute(this.model, target, enemy);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       this.shakeTarget(target, selectedBehavior.action);
     });
@@ -182,7 +182,7 @@ export class Battle extends Phaser.Scene {
       runningSum += behavior.weight;
       return runningSum > randomInt;
     });
-    return selectedBehavior;
+    return selectedBehavior || { action: idle, weight: 100, targetPriority: self }; // in case it doesn't pick anything
   }
 
   setActivePartyMember(index: number) {

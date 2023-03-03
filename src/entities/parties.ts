@@ -6,7 +6,12 @@ import { edgelord, empath, romantic } from './traits';
 
 const ejiAttackFolder: Folder = {
   name: 'Attack',
-  options: [Actions.slash, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
+  options: [Actions.slash],
+  isInitialOption: true,
+}
+const ejiThiefFolder: Folder = {
+  name: 'Thief',
+  options: [Actions.stifle, Actions.drain, Actions.empathize],
   isInitialOption: true,
 }
 const ejiDefendFolder: Folder = {
@@ -24,7 +29,7 @@ export const Eji: PartyMember = {
   maxStamina: 400,
   traits: new Set([empath]),
   staminaRegenRate: 13,
-  options: [ejiAttackFolder],
+  options: [ejiAttackFolder, ejiThiefFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
@@ -40,14 +45,20 @@ const keshiAttackFolder: Folder = {
   options: [Actions.slash],
   isInitialOption: true,
 };
-const keshiRestorationFolder: Folder = {
-  name: 'Restoration',
-  options: [Actions.heal],
+const keshiBerserkerFolder: Folder = {
+  name: 'Berserker',
+  options: [
+    Actions.channel, 
+    Actions.assault, 
+    Actions.slashAll, 
+    Actions.ankleSlice, 
+    Actions.finisher
+  ],
   isInitialOption: true,
-};
+}
 const keshiDefendFolder: Folder = {
   name: 'Defend',
-  options: [Actions.block, keshiRestorationFolder],
+  options: [Actions.block],
   isInitialOption: true,
 };
 
@@ -60,11 +71,11 @@ export const Keshi: PartyMember = {
   maxStamina: 300,
   staminaRegenRate: 15,
   traits: new Set([edgelord]),
-  options: [keshiAttackFolder, keshiRestorationFolder],
+  options: [keshiAttackFolder, keshiBerserkerFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
     [anger, 0],
-    [confusion, 0],
+    [confusion, 1],
     [disgusted, 0],
     [envious, 0],
     [excited, 0],
@@ -81,12 +92,16 @@ const eliseDefendFolder: Folder = {
   options: [Actions.block],
   isInitialOption: true,
 };
+const eliseRestorationFolder: Folder = {
+  name: 'Restoration',
+  options: [Actions.heal, Actions.gratitude],
+  isInitialOption: true,
+};
 const eliseManipulationFolder: Folder = {
   name: 'Manipulation',
   options: [Actions.annoy, Actions.flirt, Actions.boast, Actions.excite, Actions.depress],
   isInitialOption: true,
 };
-
 
 export const Elise: PartyMember = {
   name: 'Elise',
@@ -97,10 +112,10 @@ export const Elise: PartyMember = {
   maxStamina: 500,
   staminaRegenRate: 10,
   traits: new Set([romantic]),
-  options: [eliseAttackFolder, eliseManipulationFolder],
+  options: [eliseAttackFolder, eliseRestorationFolder, eliseManipulationFolder],
   status: Status.NORMAL,
   emotionalState: new Map([
-    [anger, 0],
+    [anger, 1],
     [confusion, 3],
     [disgusted, 0],
     [envious, 0],

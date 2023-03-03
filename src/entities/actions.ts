@@ -1,5 +1,5 @@
 import { Action, ActionTags, TargetType } from './action';
-import { updateEmotionalState, updateDamage, updateStamina } from './combatant';
+import { updateEmotionalState, updateDamage, updateStamina, updateHealth } from './combatant';
 import { anger, depressed, disgusted, envious, excited } from './emotions';
 
 
@@ -50,9 +50,25 @@ export const finisher: Action = {
   },
 };
 
+export const assault: Action = {
+  name: 'Assault',
+  staminaCost: 100,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Deals double damage, but hurts yourself',
+  execute: (battleModel, targets, source) => {
+    const target = targets[0];
+    updateDamage(targets[0], 50);
+    updateDamage(source, 50);
+  },
+};
+
 export const ankleSlice: Action = {
   name: 'Ankle Slice',
-  staminaCost: 125,
+  staminaCost: 150,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -66,6 +82,41 @@ export const ankleSlice: Action = {
   },
 };
 
+export const drain: Action = {
+  name: 'Drain',
+  staminaCost: 150,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Drains health',
+  execute: (battleModel, targets, source) => {
+    const target = targets[0];
+    updateDamage(target, 50);
+    updateHealth(source, 25);
+  },
+};
+
+export const empathize: Action = {
+  name: 'Empathize',
+  staminaCost: 200,
+  tags: new Set([ActionTags.DEBUFF]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
+
+  description: 'Mirrors targets emotional state',
+  execute: (battleModel, targets, source) => {
+    const target = targets[0];
+    for (let [emotion, count] of source.emotionalState) {
+      source.emotionalState.set(emotion, target.emotionalState.get(emotion));
+    }
+    for (let [emotion, count] of target.emotionalState) {
+      source.emotionalState.set(emotion, target.emotionalState.get(emotion));
+    }
+  },
+};
 
 export const block: Action = {
   name: 'Block',
@@ -99,6 +150,20 @@ export const heal: Action = {
   execute: (battleModel, targets) => {
     const HEALTH = 50;
     targets[0].health = Math.min(targets[0].maxHealth, (targets[0].health += HEALTH));
+  },
+};
+
+export const gratitude: Action = {
+  name: 'Gratitude',
+  staminaCost: 100,
+  tags: new Set([ActionTags.HEAL]),
+  targetType: TargetType.SELF,
+  soundKeyName: 'heal',
+  imageKeyName: 'heal.gif',
+
+  description: 'Lowers enviouos feelings',
+  execute: (battleModel, targets) => {
+    updateEmotionalState(targets, envious, -1);
   },
 };
 
@@ -187,6 +252,26 @@ export const stifle: Action = {
     }
   },
 };
+
+export const channel: Action = {
+  name: 'Channel', 
+  staminaCost: 200, 
+  tags: new Set([ActionTags.DEBUFF]),
+  targetType: TargetType.SELF,
+  soundKeyName: 'debuff',
+  imageKeyName: 'debuff.gif',
+
+  description: 'Converts random emotion to anger.',
+  execute: (battleModel, targets) => {
+    for (const [emotion, count] of targets[0].emotionalState) {
+      if (count > 0) {
+        updateEmotionalState(targets, emotion, -1);
+        break;
+      }
+    }
+    updateEmotionalState(targets, anger, 1);
+  },
+}
 
 
 export const ACTION_SET: Set<Action> = new Set([

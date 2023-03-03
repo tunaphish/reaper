@@ -12,7 +12,7 @@ import { anger, excited } from './emotions';
 
 export const edgelord: Trait = {
   name: 'Edgelord',
-  description: 'Starts each battle angry and excited',
+  description: 'Becomes angry when inflicted by an emotion',
   onStart: (model: BattleModel, combantant: Combatant) => {},  
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
@@ -76,4 +76,4 @@ export const vindictive: Trait = {
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 
-console.log(selfPreservation);
+// burn the ships - anger cannot be lowered

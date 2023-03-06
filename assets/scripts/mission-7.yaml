@@ -48,6 +48,7 @@ fight:
 - says eji | It changed me.  
 - announce | > ... the wind is howling
 - display | I see
+- initiate 
 
 giveup: 
 - display | Glad you found reason again

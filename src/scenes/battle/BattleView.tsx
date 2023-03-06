@@ -27,6 +27,14 @@ export class BattleView {
   private menuViewsContainer: Element;
   private menuViews: Element[] = [];
 
+  // Dialogue logic
+  private isAnimatingText = false;
+
+  private actorMessage: any;
+  private actorName: any;
+  private actorDialogue: any;
+  private choices: any;
+
   constructor(scene: Battle) {
     const { enemies, party } = scene.model;
 
@@ -134,6 +142,18 @@ export class BattleView {
 
     this.menuViewsContainer = <div className={styles.menuViewsContainer} />;
 
+    // Dialogue - Alternate Menu 
+    this.actorName = <div></div>;
+    this.actorDialogue = <p className={styles.actorDialogue}></p>;
+    this.actorMessage = (
+      <div className={styles.actorMessage}>
+        {this.actorName}
+        {this.actorDialogue}
+      </div>
+    );
+    this.choices = <div></div>;
+    this.menu.replaceChildren(this.actorMessage); // Overrides battle menu replacement
+  
     const container: Element = (
       <div className={styles.container}>
         {this.battleDisplay}
@@ -144,6 +164,26 @@ export class BattleView {
     );
 
     scene.ui.create(container, scene);
+
+    // Dialogue Event Listeners
+    this.actorDialogue.addEventListener('animationend', () => {
+      this.isAnimatingText = false;
+    });
+
+    this.animeText.addEventListener('animationend', () => {
+      this.isAnimatingText = false;
+    });
+
+    this.actorMessage.addEventListener('click', () => {
+      if (this.isAnimatingText) {
+        this.animeText.classList?.remove(styles.typeAnimation);
+        this.actorDialogue.classList?.remove(styles.typeAnimation);
+        this.isAnimatingText = false;
+        return;
+      }
+
+      scene.advanceLine();
+    });
   }
 
   updateStats(scene: Battle) {
@@ -332,6 +372,50 @@ export class BattleView {
       effect.remove();
     }, 1000)    
   }
+
+  updateAnimeText(value: string) {
+    this.animeText.innerText = value;
+    //work around to trigger CSS animation
+    this.isAnimatingText = true;
+    this.animeText.classList.remove(styles.typeAnimation);
+    this.animeText.offsetWidth;
+    this.animeText.classList.add(styles.typeAnimation);
+  }
+
+  updateMenuText(actor: string, value: string) {
+    console.log('roo')
+    this.menu.replaceChildren(this.actorMessage);
+
+    console.log(actor);
+    console.log(value);
+    //work around to trigger CSS animation
+    this.isAnimatingText = true;
+    this.actorDialogue.classList.remove(styles.typeAnimation);
+    this.actorDialogue.offsetWidth;
+    this.actorDialogue.classList.add(styles.typeAnimation);
+    this.actorName.innerText = actor;
+    this.actorDialogue.innerText = value;
+  }
+
+  updateMenuChoices(scene: Battle, value: string) {
+    this.menu.replaceChildren(this.choices);
+    const options = value.split(' ~ ').map((pairs) => {
+      const [newScriptKey, displayText] = pairs.split(' * ');
+      return { newScriptKey, displayText };
+    });
+
+    options.forEach((option) => {
+      const optionDiv = <div className={styles.optionDiv}>{option.displayText}</div>;
+      this.choices.appendChild(optionDiv);
+      optionDiv.addEventListener('click', () => {
+        this.menu.replaceChildren(this.actorMessage);
+        this.actorDialogue.innerText = '';
+        this.actorName.innerText = '';
+        scene.updateScript(option.newScriptKey);
+      });
+    });
+  }
+
 }
 
 function isAction(option: Option): option is Action {

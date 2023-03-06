@@ -1,3 +1,4 @@
+import { load } from 'js-yaml';
 import { Behavior, Enemy } from '../../entities/enemy';
 import { Party, PartyMember, Option, Folder } from '../../entities/party';
 import { Action, ActionTags, TargetType } from '../../entities/action';
@@ -29,37 +30,53 @@ export class Battle extends Phaser.Scene {
   model: BattleModel;
   private view: BattleView;
 
-  private battleMusic: Phaser.Sound.BaseSound;
+  private music: Phaser.Sound.BaseSound;
 
   private action?: Action;
   private targets?: Combatant[];
+
+  // Dialogue Additions
+  private isBattlePaused = true;
+  private lineIndex;
+  private scripts: any;
+  private script: string[];
 
   constructor() {
     super(sceneConfig);
   }
 
   public init(data): void {
+    // Init Battle
     this.model = {
       enemies: [healieBoi],
       party: DefaultParty,
       activePartyMemberIndex: 0,
     };
+
+    this.view = new BattleView(this);
+
+    //Init Dialogue
+    if (!data.scriptFileKey) {
+      data = {
+        scriptFileKey: 'mission-7',
+        scriptKey: 'start',
+      };
+    }
+    const scriptFile = this.cache.text.get(data.scriptFileKey);
+
+    this.scripts = load(scriptFile);
+    this.script = this.scripts[data.scriptKey];
+    this.lineIndex = -1;
+
+    this.advanceLine();
   }
 
   public create(): void {
-    this.battleMusic = this.sound.add('upgrade');
-    this.battleMusic.play();
-    this.view = new BattleView(this);
-
-    // apply on start traits
-    // this.getCombatants().forEach(combatant => {
-    //   combatant.traits.forEach(trait => {
-    //     if(trait.onStart) trait.onStart(this.model, combatant);
-    //   });
-    // })
   }
 
   update(time, delta: number): void {
+    if (this.isBattlePaused) return;
+
     const { enemies, party } = this.model;
 
     // Set Party Member Status
@@ -205,7 +222,9 @@ export class Battle extends Phaser.Scene {
   getOptions(option: Option): Option[] {
     const activeMember: PartyMember = this.getActiveMember();
     let emotionOptions = [...(option as Folder).options];
-    if (activeMember.emotionalState.get(anger) > 0) emotionOptions.unshift(activeMember.options[0]) // attack is always the first
+    if (activeMember.emotionalState.get(anger) > 0) {
+      emotionOptions.unshift(activeMember.options[0]) // add slash attack 
+    }
     if (activeMember.emotionalState.get(confusion) > 0) emotionOptions = shuffle(emotionOptions);
 
     return emotionOptions;
@@ -246,6 +265,7 @@ export class Battle extends Phaser.Scene {
       return;
     }
 
+    // if it contains commas... it's multiple targets. (what about mass confusion) 
     this.targets = [this.getCombatants().find((target) => target.name === targets)];
   }
 
@@ -300,6 +320,73 @@ export class Battle extends Phaser.Scene {
         if (this.model.party.members[i] === target) this.view.displayEffectOnMember(i, effectKeyName);
       }
     }
+  }
+
+  advanceLine(): void {
+    this.lineIndex++;
+    if (this.lineIndex >= this.script.length) {
+      this.music?.stop();
+      this.scene.start('Battle');
+      return;
+    }
+
+    const line = this.script[this.lineIndex];
+    const [keys, value] = line.split(' | ');
+    const [action, actor, adjective] = keys.split(' ');
+
+    switch (action) {
+      case 'show':
+        // this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;
+        // this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
+        // this.updateParallax();
+        this.advanceLine();
+        break;
+      case 'enter':
+        // const emotion = adjective ? `-${adjective}` : '';
+        // this.middleground = `url("/reaper/assets/characters/${actor}${emotion}.png")`;
+        // this.updateParallax();
+        this.advanceLine();
+        break;
+      case 'says':
+        this.playButtonClickSound();
+        console.log(value);
+        this.view.updateMenuText(actor, value);
+        break;
+      case 'announce':
+        this.playButtonClickSound();
+        this.view.updateMenuText('', value);
+        break;
+      case 'display':
+        this.playButtonClickSound();
+        this.view.updateAnimeText(value);
+        break;
+      case 'play':
+        this.playSong(actor);
+        this.advanceLine();
+        break;
+      case 'choose':
+        this.view.updateMenuChoices(this, value);
+        break;
+      case 'initiate': 
+        this.view.updatePartyMemberView(this);
+        this.isBattlePaused = false;
+        this.sound.play('battle-start');
+        break;
+      default:
+        this.advanceLine();
+    }
+  }
+
+  playSong(songKey): void {
+    this.music = this.sound.add(songKey, { loop: true });
+    this.music.play();
+  }
+
+  updateScript(newScriptKey: string) {
+    this.playButtonClickSound();
+    this.script = this.scripts[newScriptKey];
+    this.lineIndex = -1;
+    this.advanceLine();
   }
 }
 

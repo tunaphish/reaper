@@ -13,7 +13,7 @@ export const healieBoi: Enemy = {
   health: 200,
   maxHealth: 200,
   stackedDamage: 0,
-  stamina: 20,
+  stamina: 0,
   maxStamina: 800,
   staminaRegenRate: 1,
   traits: new Set([selfPreservation]),

@@ -55,6 +55,7 @@ export class Boot extends Phaser.Scene {
     this.load.audio('choice-hover', '/reaper/assets/sounds/choice-hover.wav');
     this.load.audio('choice-select', '/reaper/assets/sounds/choice-select.wav');
     this.load.audio('dialogue-advance', '/reaper/assets/sounds/dialogue-advance.wav');
+    this.load.audio('battle-start', '/reaper/assets/sounds/battle-start-2.mp3');
 
     this.load.audio('heal', '/reaper/assets/sounds/heal.mp3');
     this.load.audio('attack', '/reaper/assets/sounds/attack.wav');

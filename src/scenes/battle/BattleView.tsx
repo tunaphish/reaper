@@ -56,7 +56,7 @@ export class BattleView {
     this.enemyPortrait = <div className={styles.enemyPortait}/>
     this.enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')";
 
-    this.animeText = <p className={styles.animeText}>Test Text</p>;
+    this.animeText = <p className={styles.animeText} />
     this.battleDisplay = (
       <div className={styles.tvContainer}>
         <div className={styles.staticEffect}>
@@ -391,7 +391,6 @@ export class BattleView {
   }
 
   updateMenuText(actor: string, value: string) {
-    console.log('roo')
     this.menu.replaceChildren(this.actorMessage);
 
     console.log(actor);

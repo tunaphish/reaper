@@ -36,7 +36,7 @@ export class Battle extends Phaser.Scene {
   private targets?: Combatant[];
 
   // Dialogue Additions
-  isBattlePaused = true;
+  isBattlePaused = false;
   private lineIndex;
   private scripts: any;
   private script: string[];
@@ -51,7 +51,12 @@ export class Battle extends Phaser.Scene {
       enemies: [healieBoi],
       party: DefaultParty,
       activePartyMemberIndex: 0,
+      scriptFileName: 'mission-7',
       dialogueTriggers: [
+        {
+          trigger: ([healieBoi], DefaultParty) => true,
+          scriptKeyName: 'start'
+        },
         {
           trigger: ([healieBoi], DefaultParty) => healieBoi.health < 150,
           scriptKeyName: 'fuck_you'
@@ -64,21 +69,8 @@ export class Battle extends Phaser.Scene {
     };
 
     this.view = new BattleView(this);
-
-    //Init Dialogue
-    if (!data.scriptFileKey) {
-      data = {
-        scriptFileKey: 'mission-7',
-        scriptKey: 'start',
-      };
-    }
-    const scriptFile = this.cache.text.get(data.scriptFileKey);
-
+    const scriptFile = this.cache.text.get(this.model.scriptFileName);
     this.scripts = load(scriptFile);
-    this.script = this.scripts[data.scriptKey];
-    this.lineIndex = -1;
-
-    this.advanceLine();
   }
 
   public create(): void {
@@ -92,10 +84,10 @@ export class Battle extends Phaser.Scene {
     // Dialogue Trigger Checks
     dialogueTriggers.forEach((dialogueTrigger, idx) => {
       if (dialogueTrigger.trigger(enemies, party)) {
+        this.view.switchToDialogueMenu();
         this.isBattlePaused = true;
         this.updateScript(dialogueTrigger.scriptKeyName);
         dialogueTriggers.splice(idx, 1); // remove dialogue trigger
-        this.view.switchToDialogueMenu();
         return;
       }
     })
@@ -354,7 +346,6 @@ export class Battle extends Phaser.Scene {
     const line = this.script[this.lineIndex];
     const [keys, value] = line.split(' | ');
     const [action, actor, adjective] = keys.split(' ');
-
     switch (action) {
       case 'show':
         // this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;
@@ -370,7 +361,6 @@ export class Battle extends Phaser.Scene {
         break;
       case 'says':
         this.playButtonClickSound();
-        console.log(value);
         this.view.updateMenuText(actor, value);
         break;
       case 'announce':

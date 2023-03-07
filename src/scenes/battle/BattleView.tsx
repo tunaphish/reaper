@@ -3,7 +3,6 @@ import { TargetType } from '../../entities/action';
 import { Option } from '../../entities/party';
 import { Action } from '../../entities/action';
 
-import { BattleModel } from './battleModel';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
@@ -96,8 +95,10 @@ export class BattleView {
         </div>
       );
 
-      partyMemberDisplay.addEventListener('click', () => {
-        if (scene.getMemberStatus(index) === Status.DEAD) {
+    partyMemberDisplay.addEventListener('click', () => {
+      // disable if dialogue
+      if (scene.isBattlePaused) return;
+      if (scene.getMemberStatus(index) === Status.DEAD) {
           scene.playBadOptionSound();
           return;
         }
@@ -152,7 +153,7 @@ export class BattleView {
       </div>
     );
     this.choices = <div></div>;
-    this.menu.replaceChildren(this.actorMessage); // Overrides battle menu replacement
+    this.switchToDialogueMenu();
   
     const container: Element = (
       <div className={styles.container}>
@@ -380,6 +381,13 @@ export class BattleView {
     this.animeText.classList.remove(styles.typeAnimation);
     this.animeText.offsetWidth;
     this.animeText.classList.add(styles.typeAnimation);
+  }
+
+  switchToDialogueMenu() {
+    this.closeMenus();
+    this.menu.replaceChildren(this.actorMessage); // Overrides battle menu replacement
+    this.actorDialogue.innerText = '';
+    this.actorName.innerText = '';
   }
 
   updateMenuText(actor: string, value: string) {

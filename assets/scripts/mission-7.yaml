@@ -52,3 +52,16 @@ fight:
 
 giveup: 
 - display | Glad you found reason again
+
+fuck_you:
+- display | Do you know how many times I've done this
+- display | You think if there was any other way
+- display | any other possibility
+- display | that I wouldn't have tried it
+- display | Know your place
+- initiate 
+
+death: 
+- display | I knew you had it in you
+- display | Had that mf dawg in you
+- initiate

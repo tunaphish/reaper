@@ -36,7 +36,7 @@ export class Battle extends Phaser.Scene {
   private targets?: Combatant[];
 
   // Dialogue Additions
-  private isBattlePaused = true;
+  isBattlePaused = true;
   private lineIndex;
   private scripts: any;
   private script: string[];
@@ -51,6 +51,16 @@ export class Battle extends Phaser.Scene {
       enemies: [healieBoi],
       party: DefaultParty,
       activePartyMemberIndex: 0,
+      dialogueTriggers: [
+        {
+          trigger: ([healieBoi], DefaultParty) => healieBoi.health < 150,
+          scriptKeyName: 'fuck_you'
+        },
+        {
+          trigger: ([healieBoi], DefaultParty) => healieBoi.health < 1,
+          scriptKeyName: 'death'
+        }
+      ]
     };
 
     this.view = new BattleView(this);
@@ -77,7 +87,18 @@ export class Battle extends Phaser.Scene {
   update(time, delta: number): void {
     if (this.isBattlePaused) return;
 
-    const { enemies, party } = this.model;
+    const { enemies, party, dialogueTriggers } = this.model;
+
+    // Dialogue Trigger Checks
+    dialogueTriggers.forEach((dialogueTrigger, idx) => {
+      if (dialogueTrigger.trigger(enemies, party)) {
+        this.isBattlePaused = true;
+        this.updateScript(dialogueTrigger.scriptKeyName);
+        dialogueTriggers.splice(idx, 1); // remove dialogue trigger
+        this.view.switchToDialogueMenu();
+        return;
+      }
+    })
 
     // Set Party Member Status
     party.members.forEach((member, idx) => {
@@ -326,7 +347,7 @@ export class Battle extends Phaser.Scene {
     this.lineIndex++;
     if (this.lineIndex >= this.script.length) {
       this.music?.stop();
-      this.scene.start('Battle');
+      this.scene.start('Battle'); //TODO: send elsewhere
       return;
     }
 
@@ -370,7 +391,7 @@ export class Battle extends Phaser.Scene {
       case 'initiate': 
         this.view.updatePartyMemberView(this);
         this.isBattlePaused = false;
-        this.sound.play('battle-start');
+        // this.sound.play('battle-start');
         break;
       default:
         this.advanceLine();

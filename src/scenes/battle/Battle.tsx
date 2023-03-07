@@ -173,13 +173,18 @@ export class Battle extends Phaser.Scene {
     const { enemies, party } = this.model;
     enemies.forEach((enemy) => {
       const selectedBehavior = this.selectBehavior(enemies, party, enemy);
-      const target = selectedBehavior.targetPriority(enemies, party, enemy);
+      const targets = selectedBehavior.targetPriority(enemies, party, enemy);
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(this.model, target, enemy);
+      selectedBehavior.action.execute(this.model, targets, enemy);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
-      this.shakeTarget(target, selectedBehavior.action);
+      if (selectedBehavior.action.imageKeyName) this.displayEffect(targets, selectedBehavior.action.imageKeyName);
+      this.shakeTarget(targets, selectedBehavior.action);
+      if (selectedBehavior.dialoguePool && (Math.floor(Math.random() * 2) === 0)) {
+        const randomActionDialogue = selectedBehavior.dialoguePool[Math.floor(Math.random() * selectedBehavior.dialoguePool.length)];
+        this.view.updateAnimeText(randomActionDialogue);
+      }
     });
   }
 

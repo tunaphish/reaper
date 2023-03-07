@@ -8,6 +8,7 @@ export interface Behavior {
   action: Action;
   weight: number;
   targetPriority: TargetPriority;
+  dialoguePool?: string[];
 }
 
 export type Enemy = Combatant & {

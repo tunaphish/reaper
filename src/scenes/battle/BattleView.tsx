@@ -153,7 +153,6 @@ export class BattleView {
       </div>
     );
     this.choices = <div></div>;
-    this.switchToDialogueMenu();
   
     const container: Element = (
       <div className={styles.container}>

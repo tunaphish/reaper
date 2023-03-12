@@ -19,6 +19,7 @@ export class BattleView {
   private partyMemberPrimaryMenus: Element[] = [];
 
   private partyMemberCells: Element[] = [];
+  private partyMemberStatBoxes: Element[] = [];
   private partyMemberHealthViews: any[] = [];
   private partyMemberStaminaViews: any[] = [];
   private partyBar: Element;
@@ -87,11 +88,21 @@ export class BattleView {
         </div>
       );
 
-      const partyMemberDisplay = (
-        <div className={styles.characterCell}>
-          {member.name}
+      const partyMemberStatBox = (
+        <div className={styles.characterStats}>
           {memberHealthView}
           {memberStaminaView}
+      </div>
+      );
+
+      const partyMemberPortrait = <img src={member.imageUrl} className={styles.characterPortrait}/>
+      partyMemberPortrait.style.setProperty("-webkit-filter", `drop-shadow(-5px 5px 0 ${member.shadowColor})`);
+      partyMemberPortrait.style.setProperty("filter", `drop-shadow(-5px 5px 0 ${member.shadowColor})`);
+
+      const partyMemberDisplay = (
+        <div className={styles.characterCell}>
+          {partyMemberPortrait}
+          {partyMemberStatBox}
         </div>
       );
 
@@ -107,6 +118,7 @@ export class BattleView {
       });
       this.partyBar.appendChild(partyMemberDisplay);
       this.partyMemberCells.push(partyMemberDisplay);
+      this.partyMemberStatBoxes.push(partyMemberStatBox);
       this.partyMemberHealthViews.push(memberHealthView);
       this.partyMemberStaminaViews.push(memberStaminaView);
     });
@@ -189,7 +201,7 @@ export class BattleView {
   updateStats(scene: Battle) {
     const model = scene.model;
     const enemy = model.enemies[0];
-    // maybe caching?
+
     this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;
     this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
 
@@ -206,7 +218,7 @@ export class BattleView {
   updatePartyMemberView(scene: Battle) {
     const activePartyMemberIndex = scene.model.activePartyMemberIndex;
     this.menu.replaceChildren(this.partyMemberPrimaryMenus[activePartyMemberIndex]);
-    this.partyMemberCells.forEach((cell, index) => {
+    this.partyMemberStatBoxes.forEach((cell, index) => {
       cell.classList.remove(styles.active);
       if (index === activePartyMemberIndex) {
         cell.classList.add(styles.active);
@@ -288,7 +300,6 @@ export class BattleView {
         }
         modalMenuOption.classList.add(styles[emotion]);
       });
-      console.log(emotions);
 
       modalMenu.append(modalMenuOption);
     });
@@ -341,18 +352,18 @@ export class BattleView {
   }
 
   setPartyMemberCellDead(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
-    this.partyMemberCells[memberIndex].classList.add(styles.characterCellDead);
+    this.partyMemberStatBoxes[memberIndex].classList.remove(styles.characterCellExhausted);
+    this.partyMemberStatBoxes[memberIndex].classList.add(styles.characterCellDead);
   }
 
   setPartyMemberCellExhausted(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
-    this.partyMemberCells[memberIndex].classList.add(styles.characterCellExhausted);
+    this.partyMemberStatBoxes[memberIndex].classList.remove(styles.characterCellDead);
+    this.partyMemberStatBoxes[memberIndex].classList.add(styles.characterCellExhausted);
   }
 
   setPartyMemberCellNormal(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
+    this.partyMemberStatBoxes[memberIndex].classList.remove(styles.characterCellDead);
+    this.partyMemberStatBoxes[memberIndex].classList.remove(styles.characterCellExhausted);
   }
 
   displayEffectOnEnemy(effectKeyName: string): void {
@@ -421,7 +432,6 @@ export class BattleView {
       });
     });
   }
-
 }
 
 function isAction(option: Option): option is Action {

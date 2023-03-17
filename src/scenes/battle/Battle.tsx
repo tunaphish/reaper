@@ -53,10 +53,10 @@ export class Battle extends Phaser.Scene {
       activePartyMemberIndex: 0,
       scriptFileName: 'mission-7',
       dialogueTriggers: [
-        {
-          trigger: ([healieBoi], DefaultParty) => true,
-          scriptKeyName: 'start'
-        },
+        // {
+        //   trigger: ([healieBoi], DefaultParty) => true,
+        //   scriptKeyName: 'start'
+        // },
         {
           trigger: ([healieBoi], DefaultParty) => healieBoi.health < 150,
           scriptKeyName: 'fuck_you'
@@ -67,7 +67,6 @@ export class Battle extends Phaser.Scene {
         }
       ]
     };
-
     this.view = new BattleView(this);
     const scriptFile = this.cache.text.get(this.model.scriptFileName);
     this.scripts = load(scriptFile);
@@ -154,6 +153,9 @@ export class Battle extends Phaser.Scene {
       });
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
+      
+      // emoji emitter
+      this.view.displayPartyEmoji(this);
     }
 
     this.view.updateStats(this);

@@ -6,7 +6,7 @@ import { Action } from '../../entities/action';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
-import { shakeElement } from '../../animations';
+import { shakeElement, shootElement } from '../../animations';
 
 export class BattleView {
   private battleDisplay: any;
@@ -382,6 +382,26 @@ export class BattleView {
     setTimeout(function () {
       effect.remove();
     }, 1000)    
+  }
+
+  displayPartyEmoji(scene: Battle) {
+    const { party } = scene.model;
+    for (let i=0; i<party.members.length; i++) {
+      const member = party.members[i];
+      for (let [emotion, emotionCount] of member.emotionalState) {
+          for (let emotionIdx = 0; emotionIdx<emotionCount; emotionIdx ++) {
+            let randomTime = Math.random() * 2000;
+            setTimeout(() => {
+              const emotionElement = <span className={styles.emoji}>{emotion.display}</span>;
+              this.partyMemberCells[i].appendChild(emotionElement);
+              shootElement(emotionElement);
+              setTimeout(function () {
+                emotionElement.remove();
+              }, 1000) ;
+            }, randomTime);
+          }
+      }
+    }
   }
 
   updateAnimeText(value: string) {

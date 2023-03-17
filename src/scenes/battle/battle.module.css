@@ -382,3 +382,12 @@
   font-size: 24px;
   padding: 10px;
 }
+
+.emoji {
+  position: absolute;
+  z-index: 70;
+  bottom: 80px; 
+  pointer-events: none;
+  font-size: 24px;
+}
+

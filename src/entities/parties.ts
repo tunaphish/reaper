@@ -38,8 +38,6 @@ export const Eji: PartyMember = {
     [envious, 0],
     [depressed, 0],
   ]),
-  imageUrl: "/reaper/assets/characters/eji-ui.png",
-  shadowColor: 'red',
 };
 
 const keshiAttackFolder: Folder = {
@@ -82,8 +80,6 @@ export const Keshi: PartyMember = {
     [envious, 0],
     [excited, 0],
   ]),
-  imageUrl: "/reaper/assets/characters/keshi-ui.png",
-  shadowColor: 'purple',
 };
 
 const eliseAttackFolder: Folder = {
@@ -124,8 +120,6 @@ export const Elise: PartyMember = {
     [disgusted, 0],
     [envious, 0],
   ]),
-  imageUrl: "/reaper/assets/characters/elise-ui.png",
-  shadowColor: 'yellow',
 };
 
 export const DefaultParty: Party = {

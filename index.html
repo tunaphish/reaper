@@ -15,8 +15,7 @@
 
 <body>
     <div id="game"></div>
-    <!-- Causing the height of the game to stretch for some raison
-      <svg width="0" height="0">
+    <svg width="0" height="0">
         <filter id="chromaticAbberation">
           <feGaussianBlur in="SourceGraphic" stdDeviation=".2" />
           <feColorMatrix type="matrix" 
@@ -36,7 +35,7 @@
           <feOffset in="blue_" dx="-1" dy="0" result="blue"/>    
           <feBlend mode="screen" in="red" in2="blue"/>
         </filter>
-      </svg> -->
+      </svg>
     <script src="vendors.app.bundle.js"></script>
     <script src="app.bundle.js"></script>
 </body>

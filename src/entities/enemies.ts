@@ -15,7 +15,7 @@ export const healieBoi: Enemy = {
   stackedDamage: 0,
   stamina: 0,
   maxStamina: 800,
-  staminaRegenRate: 30,
+  staminaRegenRate: 100,
   traits: new Set([selfPreservation]),
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty, dialoguePool: ["Suffer as I have", "Eat shit"] },

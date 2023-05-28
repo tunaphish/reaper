@@ -11,8 +11,7 @@ export type Folder = Option & {
 }
 
 export type PartyMember = Combatant & {
-  imageUrl: String;
-  shadowColor: string;
+  // imageUrl: String;
   options: Option[];
   // items
   // equipment

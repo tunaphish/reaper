@@ -26,13 +26,11 @@
 }
 
 .enemyPortait {
-  position: absolute;
-  z-index: -1;
+  position: fixed;
   height: 100%;
   width: 100%;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  justify-self: flex-end;
 }
 
 .enemyUi {
@@ -76,8 +74,6 @@
   border: 1px solid white;
   display: flex;
   flex-direction: column;
-
-  margin: 20px;
 }
 
 .battleOptions {
@@ -106,34 +102,19 @@
 .partyBar {
   display: flex;
   flex: 1;
-  margin: 10px;
 }
-
 
 .characterCell {
   flex: 1;
+  border: 1px solid white;
   text-align: center;
   
   position: relative;
 
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-}
-
-.characterPortrait {
-  position: absolute;
-  z-index: -1;
-}
-
-.characterStats {
-  position: absolute;
-  bottom: -8px;
-  background-color: black;
-  border: 1px solid white;
-  font-size: 12px;
-  padding: 3px 9px 3px 9px;
 }
 
 .active {
@@ -185,9 +166,10 @@
   color: yellow;
 }
 
-/*  battle display */
+
 .tvContainer {
   position: relative;
+  width: 100%;
   height: 100%;
 
   flex: 4;
@@ -196,8 +178,6 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: center;
-
-  margin: 20px;
 }
 
 /* big moving line effect */

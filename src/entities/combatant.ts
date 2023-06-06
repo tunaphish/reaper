@@ -17,6 +17,8 @@ export interface Combatant {
   stackedDamage: number;
   stamina: number;
   maxStamina: number;
+  magic: number;
+  maxMagic: number;
   staminaRegenRate: number; // per second
   traits: Set<Trait>;
   emotionalState: Map<Emotion, number>;

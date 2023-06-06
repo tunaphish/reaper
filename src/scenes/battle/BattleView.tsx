@@ -13,6 +13,7 @@ export class BattleView {
   private enemyCells: Element[] = [];
   private enemyHealthViews: any[] = [];
   private enemyStaminaViews: any[] = [];
+  private enemyMagicViews: any[] = [];
 
   private battleDisplay: any;
   private enemyPortrait: any;
@@ -25,6 +26,7 @@ export class BattleView {
   private partyMemberCells: Element[] = [];
   private partyMemberHealthViews: any[] = [];
   private partyMemberStaminaViews: any[] = [];
+  private partyMemberMagicViews: any[] = [];
   private partyBar: Element;
 
   private menuViewsContainer: Element;
@@ -52,12 +54,18 @@ export class BattleView {
           ☀️ {enemy.stamina}/ {enemy.maxStamina}
         </div>
       );
+      const enemyMagicView = (
+        <div>
+          🌙 {enemy.magic}/ {enemy.maxMagic}
+        </div>
+      );
 
       const enemyDisplay = (
         <div className={styles.characterCell}>
           {enemy.name}
           {enemyHealthView}
           {enemyStaminaView}
+          {enemyMagicView}
         </div>
       );
 
@@ -65,6 +73,7 @@ export class BattleView {
       this.enemyCells.push(enemyDisplay);
       this.enemyHealthViews.push(enemyHealthView);
       this.enemyStaminaViews.push(enemyStaminaView);
+      this.enemyMagicViews.push(enemyMagicView);
     });
 
     const background = <div className={styles.background}/>;
@@ -99,12 +108,18 @@ export class BattleView {
           ☀️ {member.stamina}/ {member.maxStamina}
         </div>
       );
+      const memberMagicView = (
+        <div>
+          🌙 {member.magic}/ {member.maxMagic}
+        </div>
+      )
 
       const partyMemberDisplay = (
         <div className={styles.characterCell}>
           {member.name}
           {memberHealthView}
           {memberStaminaView}
+          {memberMagicView}
         </div>
       );
 
@@ -122,6 +137,7 @@ export class BattleView {
       this.partyMemberCells.push(partyMemberDisplay);
       this.partyMemberHealthViews.push(memberHealthView);
       this.partyMemberStaminaViews.push(memberStaminaView);
+      this.partyMemberMagicViews.push(memberMagicView);
     });
 
     // Menu Display (Dependency on Party Bar for Setting Active Cell);
@@ -194,6 +210,9 @@ export class BattleView {
       this.enemyStaminaViews[i].innerText = `☀️ ${Math.trunc(model.enemies[i].stamina)}/${
         model.enemies[i].maxStamina
       }`;
+      this.enemyMagicViews[i].innerText = `🌙 ${Math.trunc(model.enemies[i].magic)}/${
+        model.enemies[i].maxMagic
+      }`;
     }
 
     for (let i = 0; i < model.party.members.length; i++) {
@@ -202,6 +221,9 @@ export class BattleView {
       }`;
       this.partyMemberStaminaViews[i].innerText = `☀️ ${Math.trunc(model.party.members[i].stamina)}/${
         model.party.members[i].maxStamina
+      }`;
+      this.partyMemberMagicViews[i].innerText = `🌙 ${Math.trunc(model.party.members[i].magic)}/${
+        model.party.members[i].maxMagic
       }`;
     }
   }

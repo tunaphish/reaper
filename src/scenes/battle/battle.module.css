@@ -33,13 +33,6 @@
   background-repeat: no-repeat;
 }
 
-.enemyUi {
-  flex: 1;
-  text-align: center;
-  justify-self: flex-start;
-  padding-top: 20px;
-}
-
 .animeText {
   font-family: Arial;
   font-weight: bold;

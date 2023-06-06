@@ -9,10 +9,11 @@ import { Battle } from './Battle';
 import { shakeElement, shootElement } from '../../animations';
 
 export class BattleView {
+  private enemyBar: Element;
+
   private battleDisplay: any;
-  private enemyHealth: any;
-  private enemyStamina: any;
   private enemyPortrait: any;
+
   private animeText: any;
   private menu: Element;
 
@@ -38,17 +39,29 @@ export class BattleView {
     const { enemies, party } = scene.model;
 
     // Enemy Display
-    const enemy = enemies[0];
-    this.enemyHealth = (
-      <div>
-        ❤️ {enemy.health}/{enemy.maxHealth}
-      </div>
-    );
-    this.enemyStamina = (
-      <div>
-        ☀️ {enemy.stamina}/{enemy.maxStamina}
-      </div>
-    );
+    this.enemyBar = <div className={styles.enemyBar} />;
+    enemies.forEach((enemy, index) => {
+      const enemyHealthView = (
+        <div>
+          ❤️ {enemy.health}/ {enemy.maxHealth}
+        </div>
+      );
+      const enemyStaminaView = (
+        <div>
+          ☀️ {enemy.stamina}/ {enemy.maxStamina}
+        </div>
+      );
+
+      const enemyDisplay = (
+        <div className={styles.characterCell}>
+          {enemy.name}
+          {enemyHealthView}
+          {enemyStaminaView}
+        </div>
+      );
+
+      this.enemyBar.appendChild(enemyDisplay);
+    });
 
     const background = <div className={styles.background}/>;
     background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
@@ -63,10 +76,6 @@ export class BattleView {
           <div className={styles.oldTvContent}>
             {background}
             {this.enemyPortrait}
-            <div className={styles.enemyUi}>
-              {this.enemyHealth}
-              {this.enemyStamina}
-            </div>
             {this.animeText}
           </div>
         </div>
@@ -156,6 +165,7 @@ export class BattleView {
   
     const container: Element = (
       <div className={styles.container}>
+        {this.enemyBar}
         {this.battleDisplay}
         {this.menu}
         {this.partyBar}
@@ -190,8 +200,8 @@ export class BattleView {
     const model = scene.model;
     const enemy = model.enemies[0];
     // maybe caching?
-    this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;
-    this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
+    // this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;
+    // this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
 
     for (let i = 0; i < model.party.members.length; i++) {
       this.partyMemberHealthViews[i].innerText = `❤️ ${Math.trunc(model.party.members[i].health)}/${

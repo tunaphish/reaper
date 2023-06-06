@@ -95,7 +95,6 @@ export class Battle extends Phaser.Scene {
     party.members.forEach((member, idx) => {
       if (member.health <= 0) {
         member.status = Status.DEAD;
-        this.view.setPartyMemberCellDead(idx);
         if (this.model.activePartyMemberIndex === idx) {
           // get live party member
           for (let i = 0; i < party.members.length; i++) {
@@ -109,11 +108,12 @@ export class Battle extends Phaser.Scene {
         }
       } else if (member.stamina <= 0) {
         member.status = Status.EXHAUSTED;
-        this.view.setPartyMemberCellExhausted(idx);
+      } else if (member.status === Status.BLOCKING) {
+        // do nothing
       } else {
         member.status = Status.NORMAL;
-        this.view.setPartyMemberCellNormal(idx);
       }
+      this.view.setPartyMemberStatus(idx, member);
     });
 
     if (party.members.every((member) => member.status === Status.DEAD)) {

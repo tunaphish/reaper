@@ -1,6 +1,6 @@
 import { Status } from '../../entities/combatant';
 import { TargetType } from '../../entities/action';
-import { Option } from '../../entities/party';
+import { Option, PartyMember } from '../../entities/party';
 import { Action } from '../../entities/action';
 
 import styles from './battle.module.css';
@@ -9,33 +9,33 @@ import { Battle } from './Battle';
 import { shakeElement, shootElement } from '../../animations';
 
 export class BattleView {
-  private enemyBar: Element;
-  private enemyCells: Element[] = [];
-  private enemyHealthViews: any[] = [];
-  private enemyStaminaViews: any[] = [];
-  private enemyMagicViews: any[] = [];
+  private enemyBar: HTMLElement;
+  private enemyCells: HTMLElement[] = [];
+  private enemyHealthViews: HTMLElement[] = [];
+  private enemyStaminaViews: HTMLElement[] = [];
+  private enemyMagicViews: HTMLElement[] = [];
 
-  private battleDisplay: any;
-  private enemyPortrait: any;
+  private battleDisplay: HTMLElement;
+  private enemyPortrait: HTMLElement;
 
-  private animeText: any;
-  private menu: Element;
+  private animeText: HTMLElement;
+  private menu: HTMLElement;
 
-  private partyMemberPrimaryMenus: Element[] = [];
+  private partyMemberPrimaryMenus: HTMLElement[] = [];
 
-  private partyMemberCells: Element[] = [];
-  private partyMemberHealthViews: any[] = [];
-  private partyMemberStaminaViews: any[] = [];
-  private partyMemberMagicViews: any[] = [];
-  private partyBar: Element;
+  private partyMemberCells: HTMLElement[] = [];
+  private partyMemberHealthViews: HTMLElement[] = [];
+  private partyMemberStaminaViews: HTMLElement[] = [];
+  private partyMemberMagicViews: HTMLElement[] = [];
+  private partyBar: HTMLElement;
 
-  private menuViewsContainer: Element;
-  private menuViews: Element[] = [];
+  private menuViewsContainer: HTMLElement;
+  private menuViews: HTMLElement[] = [];
 
   // Dialogue Logic
-  private actorMessage: any;
-  private actorName: any;
-  private actorDialogue: any;
+  private actorMessage: HTMLElement;
+  private actorName: HTMLElement;
+  private actorDialogue: HTMLElement;
   private choices: any;
 
   constructor(scene: Battle) {
@@ -365,19 +365,26 @@ export class BattleView {
     
   }
 
-  setPartyMemberCellDead(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
-    this.partyMemberCells[memberIndex].classList.add(styles.characterCellDead);
-  }
-
-  setPartyMemberCellExhausted(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
-    this.partyMemberCells[memberIndex].classList.add(styles.characterCellExhausted);
-  }
-
-  setPartyMemberCellNormal(memberIndex: number): void {
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellDead);
-    this.partyMemberCells[memberIndex].classList.remove(styles.characterCellExhausted);
+  setPartyMemberStatus(memberIndex: number, member: PartyMember) {
+    const cell = this.partyMemberCells[memberIndex];
+    switch (member.status) {
+      case Status.BLOCKING:
+        cell.style.border = '1px solid green';
+        cell.style.color = 'green';
+        break;
+      case Status.DEAD:
+        cell.style.border = '1px solid red';
+        cell.style.color = 'gray';
+        break;
+      case Status.EXHAUSTED:
+        cell.style.border = '1px solid purple';
+        cell.style.color = 'purple';
+        break;
+      default: 
+      cell.style.border = '';
+      cell.style.color = '';
+        break;
+    }
   }
 
   displayEffectOnEnemy(effectKeyName: string): void {

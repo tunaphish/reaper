@@ -10,6 +10,9 @@ import { shakeElement, shootElement } from '../../animations';
 
 export class BattleView {
   private enemyBar: Element;
+  private enemyCells: Element[] = [];
+  private enemyHealthViews: any[] = [];
+  private enemyStaminaViews: any[] = [];
 
   private battleDisplay: any;
   private enemyPortrait: any;
@@ -27,9 +30,7 @@ export class BattleView {
   private menuViewsContainer: Element;
   private menuViews: Element[] = [];
 
-  // Dialogue logic
-  private isAnimatingText = false;
-
+  // Dialogue Logic
   private actorMessage: any;
   private actorName: any;
   private actorDialogue: any;
@@ -39,7 +40,7 @@ export class BattleView {
     const { enemies, party } = scene.model;
 
     // Enemy Display
-    this.enemyBar = <div className={styles.enemyBar} />;
+    this.enemyBar = <div className={styles.partyBar} />;
     enemies.forEach((enemy, index) => {
       const enemyHealthView = (
         <div>
@@ -61,6 +62,9 @@ export class BattleView {
       );
 
       this.enemyBar.appendChild(enemyDisplay);
+      this.enemyCells.push(enemyDisplay);
+      this.enemyHealthViews.push(enemyHealthView);
+      this.enemyStaminaViews.push(enemyStaminaView);
     });
 
     const background = <div className={styles.background}/>;
@@ -175,33 +179,22 @@ export class BattleView {
 
     scene.ui.create(container, scene);
 
-    // Dialogue Event Listeners
-    this.actorDialogue.addEventListener('animationend', () => {
-      this.isAnimatingText = false;
-    });
-
-    this.animeText.addEventListener('animationend', () => {
-      this.isAnimatingText = false;
-    });
-
     this.actorMessage.addEventListener('click', () => {
-      if (this.isAnimatingText) {
-        this.animeText.classList?.remove(styles.typeAnimation);
-        this.actorDialogue.classList?.remove(styles.typeAnimation);
-        this.isAnimatingText = false;
-        return;
-      }
-
       scene.advanceLine();
     });
   }
 
   updateStats(scene: Battle) {
     const model = scene.model;
-    const enemy = model.enemies[0];
-    // maybe caching?
-    // this.enemyHealth.innerText = `❤️ ${Math.trunc(enemy.health)}/${enemy.maxHealth}`;
-    // this.enemyStamina.innerText = `☀️ ${Math.trunc(enemy.stamina)}/${enemy.maxStamina}`;
+
+    for (let i = 0; i< model.enemies.length; i++) {
+      this.enemyHealthViews[i].innerText = `❤️ ${Math.trunc(model.enemies[i].health)}/${
+        model.enemies[i].maxHealth
+      }`;
+      this.enemyStaminaViews[i].innerText = `☀️ ${Math.trunc(model.enemies[i].stamina)}/${
+        model.enemies[i].maxStamina
+      }`;
+    }
 
     for (let i = 0; i < model.party.members.length; i++) {
       this.partyMemberHealthViews[i].innerText = `❤️ ${Math.trunc(model.party.members[i].health)}/${
@@ -368,7 +361,8 @@ export class BattleView {
   displayEffectOnEnemy(effectKeyName: string): void {
     const effect = <div className={styles.effect} />
     effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
-    this.enemyPortrait.appendChild(effect)
+    // TODO: Multiple enemies
+    this.enemyCells[0].appendChild(effect)
     setTimeout(function () {
       effect.remove();
     }, 1000)    
@@ -405,11 +399,6 @@ export class BattleView {
 
   updateAnimeText(value: string) {
     this.animeText.innerText = value;
-    //work around to trigger CSS animation
-    this.isAnimatingText = true;
-    this.animeText.classList.remove(styles.typeAnimation);
-    this.animeText.offsetWidth;
-    this.animeText.classList.add(styles.typeAnimation);
   }
 
   switchToDialogueMenu() {
@@ -422,13 +411,6 @@ export class BattleView {
   updateMenuText(actor: string, value: string) {
     this.menu.replaceChildren(this.actorMessage);
 
-    console.log(actor);
-    console.log(value);
-    //work around to trigger CSS animation
-    this.isAnimatingText = true;
-    this.actorDialogue.classList.remove(styles.typeAnimation);
-    this.actorDialogue.offsetWidth;
-    this.actorDialogue.classList.add(styles.typeAnimation);
     this.actorName.innerText = actor;
     this.actorDialogue.innerText = value;
   }

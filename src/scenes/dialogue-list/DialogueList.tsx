@@ -49,7 +49,7 @@ export class DialogueList extends Phaser.Scene {
 
           sceneListItem.addEventListener('click', () => {
             this.choiceSelectSound.play();
-            this.scene.start('BattleDialogue', { scriptFileKey, scriptKey });
+            this.scene.start('Battle', { scriptFileKey, scriptKey });
           });
 
           sceneListItem.addEventListener('mouseover', () => {

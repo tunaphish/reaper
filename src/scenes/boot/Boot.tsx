@@ -30,7 +30,7 @@ export class Boot extends Phaser.Scene {
     this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
 
     this.load.on('complete', () => {
-      this.scene.start('World');
+      this.scene.start('Battle');
     });
 
     this.loadAssets();

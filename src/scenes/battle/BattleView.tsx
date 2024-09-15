@@ -405,9 +405,9 @@ export class BattleView {
     const { party } = scene.model;
     for (let i = 0; i < party.members.length; i++) {
       const member = party.members[i];
-      for (let [emotion, emotionCount] of member.emotionalState) {
+      for (const [emotion, emotionCount] of member.emotionalState) {
         for (let emotionIdx = 0; emotionIdx < emotionCount; emotionIdx++) {
-          let randomTime = Math.random() * 2000;
+          const randomTime = Math.random() * 2000;
           setTimeout(() => {
             const emotionElement = <span className={styles.emoji}>{emotion.display}</span>;
             this.partyMemberCells[i].appendChild(emotionElement);

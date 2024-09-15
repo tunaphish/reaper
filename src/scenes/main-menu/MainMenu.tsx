@@ -28,34 +28,24 @@ export class MainMenu extends Phaser.Scene {
     this.menuMusic = this.sound.add('main-menu-music', { loop: true });
     this.menuMusic.play();
 
-    const startGameButton = <div className={styles.mainMenuButton}>start game</div>;
-    const settingsButton = <div className={styles.mainMenuButton}>settings</div>;
+    const onClickStart = () => {
+      this.menuMusic.stop();
+      this.choiceSelectSound.play();
+      this.scene.start('World');
+    };
+
+    const onMouseOverStart = () => {
+      this.choiceHoverSound.play();
+    };
 
     const menuItems = (
       <div>
-        {startGameButton}
-        {settingsButton}
+        <div className={styles.mainMenuButton} onclick={onClickStart} onmouseover={onMouseOverStart}>
+          start game
+        </div>
       </div>
     );
 
     this.ui.create(menuItems, this);
-
-    startGameButton.addEventListener('click', () => {
-      this.menuMusic.stop();
-      this.choiceSelectSound.play();
-      this.scene.start('World');
-    });
-
-    settingsButton.addEventListener('click', () => {
-      this.choiceSelectSound.play();
-    });
-
-    startGameButton.addEventListener('mouseover', () => {
-      this.choiceHoverSound.play();
-    });
-
-    settingsButton.addEventListener('mouseover', () => {
-      this.choiceHoverSound.play();
-    });
   }
 }

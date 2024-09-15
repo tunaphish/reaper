@@ -19,8 +19,8 @@ module.exports = {
       {
         test: /\.css/,
         use: ['style-loader', 'css-loader'],
-        include: __dirname + '/src'
-      }
+        include: __dirname + '/src',
+      },
     ],
   },
 
@@ -50,7 +50,7 @@ module.exports = {
         },
         {
           from: 'assets',
-          to: process.env.NODE_ENV == 'production' ? 'assets' : 'reaper/assets'
+          to: process.env.NODE_ENV == 'production' ? 'assets' : 'reaper/assets',
         },
       ],
     }),
@@ -59,5 +59,4 @@ module.exports = {
       'typeof WEBGL_RENDERER': JSON.stringify(true),
     }),
   ],
-
 };

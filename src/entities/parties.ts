@@ -8,12 +8,12 @@ const ejiAttackFolder: Folder = {
   name: 'Attack',
   options: [Actions.slash],
   isInitialOption: true,
-}
+};
 const ejiThiefFolder: Folder = {
   name: 'Thief',
   options: [Actions.stifle, Actions.drain, Actions.empathize],
   isInitialOption: true,
-}
+};
 const ejiDefendFolder: Folder = {
   name: 'Defend',
   options: [Actions.block, Actions.stifle],
@@ -49,15 +49,9 @@ const keshiAttackFolder: Folder = {
 };
 const keshiBerserkerFolder: Folder = {
   name: 'Berserker',
-  options: [
-    Actions.channel, 
-    Actions.assault, 
-    Actions.slashAll, 
-    Actions.ankleSlice, 
-    Actions.finisher
-  ],
+  options: [Actions.channel, Actions.assault, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
   isInitialOption: true,
-}
+};
 const keshiDefendFolder: Folder = {
   name: 'Defend',
   options: [Actions.block],

@@ -30,7 +30,7 @@ export class Boot extends Phaser.Scene {
     this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
 
     this.load.on('complete', () => {
-      this.scene.start('Battle');
+      this.scene.start('World');
     });
 
     this.loadAssets();
@@ -60,7 +60,7 @@ export class Boot extends Phaser.Scene {
     this.load.audio('heal', '/reaper/assets/sounds/heal.mp3');
     this.load.audio('attack', '/reaper/assets/sounds/attack.wav');
     this.load.audio('debuff', '/reaper/assets/sounds/debuff.wav');
-    
+
     this.load.audio('stamina-depleted', '/reaper/assets/sounds/stamina-depleted.wav');
 
     // #region effects

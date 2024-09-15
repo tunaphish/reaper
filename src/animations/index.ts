@@ -19,15 +19,13 @@ export const shakeElement = (element: Element, iterations: number = 1, strong: b
                               ${-20 + getRandomInt(40)}px) 
                        rotate(${-10 + getRandomInt(20)}deg)`,
       });
-    }
-    else {
+    } else {
       keyFrames.push({
         transform: `translate(${-6 + getRandomInt(12)}px, 
                               ${-6 + getRandomInt(12)}px) 
                        rotate(${-2 + getRandomInt(4)}deg)`,
       });
     }
-
   }
   keyFrames.push({ transform: 'translate(0, 0) rotate(0)' });
 
@@ -44,7 +42,7 @@ export const shootElement = (element: Element) => {
   // generate key frames
   const shootTiming = {
     duration: 1000,
-    fill: "forwards", 
+    fill: 'forwards',
   };
 
   const keyframes = [
@@ -59,9 +57,9 @@ export const shootElement = (element: Element) => {
     {
       transform: `translate(${x}px, -${y}px)`,
       opacity: 0,
-    }
-  ]
-  
+    },
+  ];
+
   // @ts-ignore not sure why it does no recognize fill
   element.animate(keyframes, shootTiming);
-}
+};

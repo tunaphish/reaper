@@ -7,7 +7,6 @@ import { selfPreservation } from './traits';
 
 import { anger, disgusted, envious, confusion } from './emotions';
 
-
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
   health: 200,
@@ -20,7 +19,7 @@ export const healieBoi: Enemy = {
   staminaRegenRate: 100,
   traits: new Set([selfPreservation]),
   behaviors: [
-    { action: slash, weight: 100, targetPriority: randomParty, dialoguePool: ["Suffer as I have", "Eat shit"] },
+    { action: slash, weight: 100, targetPriority: randomParty, dialoguePool: ['Suffer as I have', 'Eat shit'] },
     { action: heal, weight: 100, targetPriority: randomEnemy },
     { action: idle, weight: 100, targetPriority: self },
   ],

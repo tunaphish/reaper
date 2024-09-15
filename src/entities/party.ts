@@ -8,7 +8,7 @@ export interface Option {
 
 export type Folder = Option & {
   options: Option[];
-}
+};
 
 export type PartyMember = Combatant & {
   // imageUrl: String;

@@ -59,21 +59,20 @@ export class Battle extends Phaser.Scene {
         // },
         {
           trigger: ([healieBoi], DefaultParty) => healieBoi.health < 150,
-          scriptKeyName: 'fuck_you'
+          scriptKeyName: 'fuck_you',
         },
         {
           trigger: ([healieBoi], DefaultParty) => healieBoi.health < 1,
-          scriptKeyName: 'death'
-        }
-      ]
+          scriptKeyName: 'death',
+        },
+      ],
     };
     this.view = new BattleView(this);
     const scriptFile = this.cache.text.get(this.model.scriptFileName);
     this.scripts = load(scriptFile);
   }
 
-  public create(): void {
-  }
+  public create(): void {}
 
   update(time, delta: number): void {
     if (this.isBattlePaused) return;
@@ -89,7 +88,7 @@ export class Battle extends Phaser.Scene {
         dialogueTriggers.splice(idx, 1); // remove dialogue trigger
         return;
       }
-    })
+    });
 
     // Set Party Member Status
     party.members.forEach((member, idx) => {
@@ -153,7 +152,7 @@ export class Battle extends Phaser.Scene {
       });
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
-      
+
       // emoji emitter
       this.view.displayPartyEmoji(this);
     }
@@ -183,8 +182,9 @@ export class Battle extends Phaser.Scene {
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       if (selectedBehavior.action.imageKeyName) this.displayEffect(targets, selectedBehavior.action.imageKeyName);
       this.shakeTarget(targets, selectedBehavior.action);
-      if (selectedBehavior.dialoguePool && (Math.floor(Math.random() * 2) === 0)) {
-        const randomActionDialogue = selectedBehavior.dialoguePool[Math.floor(Math.random() * selectedBehavior.dialoguePool.length)];
+      if (selectedBehavior.dialoguePool && Math.floor(Math.random() * 2) === 0) {
+        const randomActionDialogue =
+          selectedBehavior.dialoguePool[Math.floor(Math.random() * selectedBehavior.dialoguePool.length)];
         this.view.updateAnimeText(randomActionDialogue);
       }
     });
@@ -243,7 +243,7 @@ export class Battle extends Phaser.Scene {
     const activeMember: PartyMember = this.getActiveMember();
     let emotionOptions = [...(option as Folder).options];
     if (activeMember.emotionalState.get(anger) > 0) {
-      emotionOptions.unshift(activeMember.options[0]) // add slash attack 
+      emotionOptions.unshift(activeMember.options[0]); // add slash attack
     }
     if (activeMember.emotionalState.get(confusion) > 0) emotionOptions = shuffle(emotionOptions);
 
@@ -285,7 +285,7 @@ export class Battle extends Phaser.Scene {
       return;
     }
 
-    // if it contains commas... it's multiple targets. (what about mass confusion) 
+    // if it contains commas... it's multiple targets. (what about mass confusion)
     this.targets = [this.getCombatants().find((target) => target.name === targets)];
   }
 
@@ -325,9 +325,8 @@ export class Battle extends Phaser.Scene {
     const activeMember = this.getActiveMember();
     const emotionStyleKeys: string[] = [];
     activeMember.emotionalState.forEach((value, emotion) => {
-
       if (value > 0 && emotion.styleKeyName) emotionStyleKeys.push(emotion.styleKeyName);
-    })
+    });
     return emotionStyleKeys;
   }
 
@@ -385,7 +384,7 @@ export class Battle extends Phaser.Scene {
       case 'choose':
         this.view.updateMenuChoices(this, value);
         break;
-      case 'initiate': 
+      case 'initiate':
         this.view.updatePartyMemberView(this);
         this.isBattlePaused = false;
         // this.sound.play('battle-start');

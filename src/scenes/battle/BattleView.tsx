@@ -76,13 +76,13 @@ export class BattleView {
       this.enemyMagicViews.push(enemyMagicView);
     });
 
-    const background = <div className={styles.background}/>;
+    const background = <div className={styles.background} />;
     background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
 
-    this.enemyPortrait = <div className={styles.enemyPortait}/>
+    this.enemyPortrait = <div className={styles.enemyPortait} />;
     this.enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')";
 
-    this.animeText = <p className={styles.animeText} />
+    this.animeText = <p className={styles.animeText} />;
     this.battleDisplay = (
       <div className={styles.tvContainer}>
         <div className={styles.staticEffect}>
@@ -112,7 +112,7 @@ export class BattleView {
         <div>
           🌙 {member.magic}/ {member.maxMagic}
         </div>
-      )
+      );
 
       const partyMemberDisplay = (
         <div className={styles.characterCell}>
@@ -123,10 +123,10 @@ export class BattleView {
         </div>
       );
 
-    partyMemberDisplay.addEventListener('click', () => {
-      // disable if dialogue
-      if (scene.isBattlePaused) return;
-      if (scene.getMemberStatus(index) === Status.DEAD) {
+      partyMemberDisplay.addEventListener('click', () => {
+        // disable if dialogue
+        if (scene.isBattlePaused) return;
+        if (scene.getMemberStatus(index) === Status.DEAD) {
           scene.playBadOptionSound();
           return;
         }
@@ -172,7 +172,7 @@ export class BattleView {
 
     this.menuViewsContainer = <div className={styles.menuViewsContainer} />;
 
-    // Dialogue - Alternate Menu 
+    // Dialogue - Alternate Menu
     this.actorName = <div></div>;
     this.actorDialogue = <p className={styles.actorDialogue}></p>;
     this.actorMessage = (
@@ -182,7 +182,7 @@ export class BattleView {
       </div>
     );
     this.choices = <div></div>;
-  
+
     const container: Element = (
       <div className={styles.container}>
         {this.enemyBar}
@@ -203,16 +203,10 @@ export class BattleView {
   updateStats(scene: Battle) {
     const model = scene.model;
 
-    for (let i = 0; i< model.enemies.length; i++) {
-      this.enemyHealthViews[i].innerText = `❤️ ${Math.trunc(model.enemies[i].health)}/${
-        model.enemies[i].maxHealth
-      }`;
-      this.enemyStaminaViews[i].innerText = `☀️ ${Math.trunc(model.enemies[i].stamina)}/${
-        model.enemies[i].maxStamina
-      }`;
-      this.enemyMagicViews[i].innerText = `🌙 ${Math.trunc(model.enemies[i].magic)}/${
-        model.enemies[i].maxMagic
-      }`;
+    for (let i = 0; i < model.enemies.length; i++) {
+      this.enemyHealthViews[i].innerText = `❤️ ${Math.trunc(model.enemies[i].health)}/${model.enemies[i].maxHealth}`;
+      this.enemyStaminaViews[i].innerText = `☀️ ${Math.trunc(model.enemies[i].stamina)}/${model.enemies[i].maxStamina}`;
+      this.enemyMagicViews[i].innerText = `🌙 ${Math.trunc(model.enemies[i].magic)}/${model.enemies[i].maxMagic}`;
     }
 
     for (let i = 0; i < model.party.members.length; i++) {
@@ -265,37 +259,36 @@ export class BattleView {
         });
       }
 
-      // Action 
+      // Action
       else if (isAction(option)) {
-        const action = (option as Action);
-        modalMenuOption = <div className={styles.modalMenuOption}>{ `${option.name} - ${action.staminaCost}`}</div>;
+        const action = option as Action;
+        modalMenuOption = <div className={styles.modalMenuOption}>{`${option.name} - ${action.staminaCost}`}</div>;
 
         modalMenuOption.addEventListener('click', () => {
           scene.playButtonClickSound();
-            scene.setAction(action);
-            const targets = scene.getTargets();
-            if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
-              this.closeMenus();
-              scene.setTargets(null);
-              return;
-            }
-  
-            const IS_TARGET_MENU = true;
-            this.addMenu(
-              targets.map((target) => ({ name: target.name })),
-              scene,
-              'Targets',
-              IS_TARGET_MENU,
-            );
-
-            const attackDescription = <div className={styles.attackDescription}>{action.description}</div>;
-            this.menu.replaceChildren(attackDescription);
-
+          scene.setAction(action);
+          const targets = scene.getTargets();
+          if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
+            this.closeMenus();
+            scene.setTargets(null);
             return;
+          }
+
+          const IS_TARGET_MENU = true;
+          this.addMenu(
+            targets.map((target) => ({ name: target.name })),
+            scene,
+            'Targets',
+            IS_TARGET_MENU,
+          );
+
+          const attackDescription = <div className={styles.attackDescription}>{action.description}</div>;
+          this.menu.replaceChildren(attackDescription);
+
+          return;
         });
-      }
-      
-      else { // is option
+      } else {
+        // is option
         modalMenuOption = <div className={styles.modalMenuOption}>{option.name}</div>;
         modalMenuOption.addEventListener('click', () => {
           scene.playButtonClickSound();
@@ -306,7 +299,7 @@ export class BattleView {
 
       modalMenuOption.setAttribute('data-text', modalMenuOption.innerHTML);
       const emotions = scene.getEmotionStyleKeys();
-      emotions.forEach(emotion => {
+      emotions.forEach((emotion) => {
         if (emotion === 'anger') {
           this.shakeText(modalMenuOption);
           return;
@@ -354,15 +347,17 @@ export class BattleView {
   }
 
   shakeText(element: Element) {
-    element.innerHTML = element.innerHTML.split('').map(function(element){
-      return '<div>' + element + '</div>';
-    }).join('');
+    element.innerHTML = element.innerHTML
+      .split('')
+      .map(function (element) {
+        return '<div>' + element + '</div>';
+      })
+      .join('');
     for (let i = 0; i < element.children.length; i++) {
       const child: any = element.children[i];
       child.style.display = 'inline-block';
       shakeElement(child, Infinity, false);
     }
-    
   }
 
   setPartyMemberStatus(memberIndex: number, member: PartyMember) {
@@ -380,48 +375,48 @@ export class BattleView {
         cell.style.border = '1px solid purple';
         cell.style.color = 'purple';
         break;
-      default: 
-      cell.style.border = '';
-      cell.style.color = '';
+      default:
+        cell.style.border = '';
+        cell.style.color = '';
         break;
     }
   }
 
   displayEffectOnEnemy(effectKeyName: string): void {
-    const effect = <div className={styles.effect} />
+    const effect = <div className={styles.effect} />;
     effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
     // TODO: Multiple enemies
-    this.enemyCells[0].appendChild(effect)
+    this.enemyCells[0].appendChild(effect);
     setTimeout(function () {
       effect.remove();
-    }, 1000)    
+    }, 1000);
   }
 
   displayEffectOnMember(partyMemberIndex: number, effectKeyName: string): void {
-    const effect = <div className={styles.effect} />
+    const effect = <div className={styles.effect} />;
     effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
-    this.partyMemberCells[partyMemberIndex].appendChild(effect)
+    this.partyMemberCells[partyMemberIndex].appendChild(effect);
     setTimeout(function () {
       effect.remove();
-    }, 1000)    
+    }, 1000);
   }
 
   displayPartyEmoji(scene: Battle) {
     const { party } = scene.model;
-    for (let i=0; i<party.members.length; i++) {
+    for (let i = 0; i < party.members.length; i++) {
       const member = party.members[i];
       for (let [emotion, emotionCount] of member.emotionalState) {
-          for (let emotionIdx = 0; emotionIdx<emotionCount; emotionIdx ++) {
-            let randomTime = Math.random() * 2000;
-            setTimeout(() => {
-              const emotionElement = <span className={styles.emoji}>{emotion.display}</span>;
-              this.partyMemberCells[i].appendChild(emotionElement);
-              shootElement(emotionElement);
-              setTimeout(function () {
-                emotionElement.remove();
-              }, 1000) ;
-            }, randomTime);
-          }
+        for (let emotionIdx = 0; emotionIdx < emotionCount; emotionIdx++) {
+          let randomTime = Math.random() * 2000;
+          setTimeout(() => {
+            const emotionElement = <span className={styles.emoji}>{emotion.display}</span>;
+            this.partyMemberCells[i].appendChild(emotionElement);
+            shootElement(emotionElement);
+            setTimeout(function () {
+              emotionElement.remove();
+            }, 1000);
+          }, randomTime);
+        }
       }
     }
   }
@@ -462,7 +457,6 @@ export class BattleView {
       });
     });
   }
-
 }
 
 function isAction(option: Option): option is Action {

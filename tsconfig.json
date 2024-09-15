@@ -7,8 +7,5 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "downlevelIteration": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"]
 }

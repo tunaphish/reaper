@@ -8,26 +8,26 @@ import { BattleModel } from '../scenes/battle/battleModel';
 import { Combatant } from './combatant';
 import { anger, excited } from './emotions';
 
-// likely need to split enemy traits from party traits 
+// likely need to split enemy traits from party traits
 
 export const edgelord: Trait = {
   name: 'Edgelord',
   description: 'Becomes angry when inflicted by an emotion',
-  onStart: (model: BattleModel, combantant: Combatant) => {},  
+  onStart: (model: BattleModel, combantant: Combatant) => {},
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 
 export const romantic: Trait = {
-  name: 'Romantic', 
+  name: 'Romantic',
   description: 'Receives a surge of stamina whenever inflicted by an emotion',
   onUpdate: (enemy, party, behaviors) => behaviors,
-}
+};
 
 export const empath: Trait = {
-  name: 'Empath', 
+  name: 'Empath',
   description: 'It is both a blessing and a curse to feel things so deeply',
   onUpdate: (enemy, party, behaviors) => behaviors,
-}
+};
 
 export const selfPreservation: Trait = {
   name: 'Self Preservation',

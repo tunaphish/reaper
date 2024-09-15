@@ -25,8 +25,12 @@ export interface Combatant {
   status: Status;
 }
 
-export const updateHealth = (target: Combatant, change: number): void => { target.health = Math.min(target.maxHealth, target.health + change) };
-export const updateStamina = (target: Combatant, change: number): void => { target.stamina = Math.min(target.maxStamina, target.stamina + change) };
+export const updateHealth = (target: Combatant, change: number): void => {
+  target.health = Math.min(target.maxHealth, target.health + change);
+};
+export const updateStamina = (target: Combatant, change: number): void => {
+  target.stamina = Math.min(target.maxStamina, target.stamina + change);
+};
 
 export const updateEmotionalState = (targets: Combatant[], emotion: Emotion, change: number): void => {
   targets.forEach((target) => {

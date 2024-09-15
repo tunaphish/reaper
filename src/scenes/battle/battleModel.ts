@@ -3,7 +3,7 @@ import { Party } from '../../entities/party';
 
 export interface DialogueTrigger {
   trigger: (enemies: Enemy[], party: Party) => boolean;
-  scriptKeyName: string, 
+  scriptKeyName: string;
 }
 
 export type BattleModel = {

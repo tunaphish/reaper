@@ -4,10 +4,10 @@
   align-items: flex-end;
 }
 
-.dialogueBox {  
+.dialogueBox {
   flex: 1;
   height: 33%;
-    
+
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
@@ -19,15 +19,15 @@
   margin: 2px;
   border: medium solid white;
   border-radius: 5px;
-  
+
   grid-column-start: 3;
   grid-column-end: -1;
   grid-row-start: 1;
   grid-row-end: 2;
-  
+
   justify-self: end;
   align-self: end;
-  
+
   font-size: 18px;
 }
 
@@ -36,7 +36,7 @@
   grid-column-end: -1;
   grid-row-start: 2;
   grid-row-end: 3;
-  
+
   background-color: black;
 }
 
@@ -45,7 +45,7 @@
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: -1;
-  
+
   align-self: end;
 }
 
@@ -54,7 +54,7 @@
   grid-column-end: -1;
   grid-row-start: 2;
   grid-row-end: 3;
-  
+
   font-size: 20px;
   margin: 10px;
 }

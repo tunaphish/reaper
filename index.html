@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>r e a p e r</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta http-equiv="cleartype" content="on">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta http-equiv="cleartype" content="on" />
 
-    <link rel="stylesheet" href="/reaper/assets/css/index.css">
-    <link rel="shortcut icon" type="image/jpg" href="/reaper/assets/favicon.ico"/>
-</head>
+    <link rel="stylesheet" href="/reaper/assets/css/index.css" />
+    <link rel="shortcut icon" type="image/jpg" href="/reaper/assets/favicon.ico" />
+  </head>
 
-<body>
+  <body>
     <div id="game"></div>
     <svg width="0" height="0">
-        <filter id="chromaticAbberation">
-          <feGaussianBlur in="SourceGraphic" stdDeviation=".2" />
-          <feColorMatrix type="matrix" 
-            result="red_"             
-            values="4 0 0 0 0
+      <filter id="chromaticAbberation">
+        <feGaussianBlur in="SourceGraphic" stdDeviation=".2" />
+        <feColorMatrix
+          type="matrix"
+          result="red_"
+          values="4 0 0 0 0
                     0 0 0 0 0 
                     0 0 0 0 0 
-                    0 0 0 1 0"/>
-          <feOffset in="red_" dx="1" dy="0" result="red"/>
-          <feColorMatrix type="matrix" 
-            in="SourceGraphic"             
-            result="blue_"             
-            values="0 0 0 0 0
+                    0 0 0 1 0"
+        />
+        <feOffset in="red_" dx="1" dy="0" result="red" />
+        <feColorMatrix
+          type="matrix"
+          in="SourceGraphic"
+          result="blue_"
+          values="0 0 0 0 0
                     0 3 0 0 0 
                     0 0 10 0 0 
-                    0 0 0 1 0"/>
-          <feOffset in="blue_" dx="-1" dy="0" result="blue"/>    
-          <feBlend mode="screen" in="red" in2="blue"/>
-        </filter>
-      </svg>
+                    0 0 0 1 0"
+        />
+        <feOffset in="blue_" dx="-1" dy="0" result="blue" />
+        <feBlend mode="screen" in="red" in2="blue" />
+      </filter>
+    </svg>
     <script src="vendors.app.bundle.js"></script>
     <script src="app.bundle.js"></script>
-</body>
-
+  </body>
 </html>

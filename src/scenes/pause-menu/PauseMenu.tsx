@@ -8,9 +8,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'PauseMenu',
 };
 
-/**
- * The initial scene that starts, shows the splash screens, and loads the necessary assets.
- */
 export class PauseMenu extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
@@ -24,35 +21,27 @@ export class PauseMenu extends Phaser.Scene {
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceHoverSound = this.sound.add('choice-hover');
 
-    const continueButton = <div className={styles.pauseMenuButton}>continue</div>;
-    const exitButton = <div className={styles.pauseMenuButton}>exit to main menu</div>;
+    const onClickContinue = () => {
+      this.choiceSelectSound.play();
+      this.scene.stop();
+      this.scene.resume('World');
+    };
+
+    const onMouseOverContinue = () => {
+      this.choiceHoverSound.play();
+    };
 
     const menuItems = (
       <div>
-        {continueButton}
-        {exitButton}
+        <div className={styles.pauseMenuButton} onclick={onClickContinue} onmouseover={onMouseOverContinue}>
+          continue
+        </div>
+        <div className={styles.pauseMenuButton} onmouseover={onMouseOverContinue}>
+          exit to main menu
+        </div>
       </div>
     );
 
     this.ui.create(menuItems, this);
-
-    continueButton.addEventListener('click', () => {
-      this.choiceSelectSound.play();
-      this.scene.stop();
-      this.scene.resume('World');
-    });
-
-    exitButton.addEventListener('click', () => {
-      this.choiceSelectSound.play();
-      // todo: close all scenes
-    });
-
-    continueButton.addEventListener('mouseover', () => {
-      this.choiceHoverSound.play();
-    });
-
-    exitButton.addEventListener('mouseover', () => {
-      this.choiceHoverSound.play();
-    });
   }
 }

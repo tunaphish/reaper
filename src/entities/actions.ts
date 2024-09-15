@@ -2,7 +2,6 @@ import { Action, ActionTags, TargetType } from './action';
 import { updateEmotionalState, updateDamage, updateStamina, updateHealth } from './combatant';
 import { anger, depressed, disgusted, envious, excited } from './emotions';
 
-
 export const slash: Action = {
   name: 'Slash',
   staminaCost: 100,
@@ -124,7 +123,8 @@ export const block: Action = {
   tags: new Set([ActionTags.DEFEND]),
   targetType: TargetType.SELF,
 
-  description:  'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
+  description:
+    'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
   execute: (battleModel) => {},
 };
 
@@ -254,8 +254,8 @@ export const stifle: Action = {
 };
 
 export const channel: Action = {
-  name: 'Channel', 
-  staminaCost: 200, 
+  name: 'Channel',
+  staminaCost: 200,
   tags: new Set([ActionTags.DEBUFF]),
   targetType: TargetType.SELF,
   soundKeyName: 'debuff',
@@ -271,8 +271,7 @@ export const channel: Action = {
     }
     updateEmotionalState(targets, anger, 1);
   },
-}
-
+};
 
 export const ACTION_SET: Set<Action> = new Set([
   slash,
@@ -287,4 +286,4 @@ export const ACTION_SET: Set<Action> = new Set([
   boast,
   excite,
   depress,
-])
+]);

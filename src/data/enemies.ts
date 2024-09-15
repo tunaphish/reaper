@@ -1,6 +1,6 @@
-import { Enemy } from '../entities/enemy';
-import { Status } from '../entities/combatant';
-import { randomEnemy, randomParty, self } from './targetPriorities';
+import { Enemy } from '../model/enemy';
+import { Status } from '../model/combatant';
+import { randomEnemy, randomParty, self } from '../model/targetPriorities';
 
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';

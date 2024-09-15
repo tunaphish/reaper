@@ -1,7 +1,7 @@
-import { Status } from '../../entities/combatant';
-import { TargetType } from '../../entities/action';
-import { Option, PartyMember } from '../../entities/party';
-import { Action } from '../../entities/action';
+import { Status } from '../../model/combatant';
+import { TargetType } from '../../model/action';
+import { Option, PartyMember } from '../../model/party';
+import { Action } from '../../model/action';
 
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';

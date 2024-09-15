@@ -1,5 +1,5 @@
-import { PartyMember, Party, Folder } from './party';
-import { Status } from './combatant';
+import { PartyMember, Party, Folder } from '../model/party';
+import { Status } from '../model/combatant';
 import * as Actions from './actions';
 import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
 import { edgelord, empath, romantic } from './traits';

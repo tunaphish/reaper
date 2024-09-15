@@ -1,11 +1,11 @@
-import { Trait } from '../entities/trait';
-import { ActionTags } from '../entities/action';
-import { Behavior } from '../entities/enemy';
-import { updateEmotionalState } from './combatant';
+import { Trait } from '../model/trait';
+import { ActionTags } from '../model/action';
+import { Behavior } from '../model/enemy';
+import { updateEmotionalState } from '../model/combatant';
 
-import { self } from './targetPriorities';
-import { BattleModel } from '../scenes/battle/battleModel';
-import { Combatant } from './combatant';
+import { self } from '../model/targetPriorities';
+import { BattleModel } from '../model/battleModel';
+import { Combatant } from '../model/combatant';
 import { anger, excited } from './emotions';
 
 // likely need to split enemy traits from party traits

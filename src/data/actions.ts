@@ -1,5 +1,5 @@
-import { Action, ActionTags, TargetType } from './action';
-import { updateEmotionalState, updateDamage, updateStamina, updateHealth } from './combatant';
+import { Action, ActionTags, TargetType } from '../model/action';
+import { updateEmotionalState, updateDamage, updateStamina, updateHealth } from '../model/combatant';
 import { anger, depressed, disgusted, envious, excited } from './emotions';
 
 export const slash: Action = {

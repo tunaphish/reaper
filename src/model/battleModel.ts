@@ -1,5 +1,5 @@
-import { Enemy } from '../../entities/enemy';
-import { Party } from '../../entities/party';
+import { Enemy } from './enemy';
+import { Party } from './party';
 
 export interface DialogueTrigger {
   trigger: (enemies: Enemy[], party: Party) => boolean;

@@ -1,4 +1,4 @@
-import { BattleModel } from '../scenes/battle/battleModel';
+import { BattleModel } from './battleModel';
 import { Combatant } from './combatant';
 import { Option } from './party';
 

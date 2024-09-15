@@ -1,7 +1,7 @@
-import { Emotion } from './emotion';
-import { anger } from './emotions';
+import { Emotion } from '../model/emotion';
+import { anger } from '../data/emotions';
 import { Trait } from './trait';
-import { edgelord, empath, romantic } from './traits';
+import { edgelord, empath, romantic } from '../data/traits';
 
 export enum Status {
   NORMAL = 'NORMAL',

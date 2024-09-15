@@ -1,5 +1,5 @@
-import { BattleModel } from '../scenes/battle/battleModel';
-import { Combatant } from './combatant';
+import { BattleModel } from './battleModel';
+import { Combatant } from '../model/combatant';
 import { Behavior, Enemy } from './enemy';
 import { Party } from './party';
 

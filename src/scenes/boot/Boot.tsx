@@ -30,7 +30,7 @@ export class Boot extends Phaser.Scene {
     this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
 
     this.load.on('complete', () => {
-      this.scene.start('Battle');
+      this.scene.start('MainMenu');
     });
 
     this.loadAssets();
@@ -66,7 +66,7 @@ export class Boot extends Phaser.Scene {
     // #region effects
     this.load.image('heal', '/reaper/assets/effects/heal.gif');
 
-    // this.load.audio('main-menu-music', '/reaper/assets/music/corner-of-memories.mp3');
+    this.load.audio('main-menu-music', '/reaper/assets/music/corner-of-memories.mp3');
     this.load.audio('knight', '/reaper/assets/music/knight.mp3');
     // this.load.audio('palace', '/reaper/assets/music/palace.mp3');
     // this.load.audio('apathy', '/reaper/assets/music/apathy.mp3');

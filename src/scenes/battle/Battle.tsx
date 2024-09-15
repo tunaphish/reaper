@@ -1,21 +1,21 @@
 import { load } from 'js-yaml';
-import { Behavior, Enemy } from '../../entities/enemy';
-import { Party, PartyMember, Option, Folder } from '../../entities/party';
-import { Action, ActionTags, TargetType } from '../../entities/action';
-import { Status } from '../../entities/combatant';
+import { Behavior, Enemy } from '../../model/enemy';
+import { Party, PartyMember, Option, Folder } from '../../model/party';
+import { Action, ActionTags, TargetType } from '../../model/action';
+import { Status } from '../../model/combatant';
 
-import { DefaultParty } from '../../entities/parties';
-import { healieBoi } from '../../entities/enemies';
-import { randomEnemy, self } from '../../entities/targetPriorities';
+import { DefaultParty } from '../../data/parties';
+import { healieBoi } from '../../data/enemies';
+import { randomEnemy, self } from '../../model/targetPriorities';
 
 import UiOverlayPlugin from '../../ui/UiOverlayPlugin'; // figure out how this works, I think it gets injected into every scene
 import { getRandomInt } from '../../util/random';
 
-import { BattleModel } from './battleModel';
+import { BattleModel } from '../../model/battleModel';
 import { BattleView } from './BattleView';
-import { Combatant } from '../../entities/combatant';
-import { excited, depressed, disgusted, envious, anger, confusion } from '../../entities/emotions';
-import { idle, slash } from '../../entities/actions';
+import { Combatant } from '../../model/combatant';
+import { excited, depressed, disgusted, envious, anger, confusion } from '../../data/emotions';
+import { idle, slash } from '../../data/actions';
 import { shuffle } from '../../util';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {

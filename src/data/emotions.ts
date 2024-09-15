@@ -1,6 +1,6 @@
-import { Emotion } from '../entities/emotion';
+import { Emotion } from '../model/emotion';
 import { shuffle } from '../util';
-import { ActionTags } from './action';
+import { ActionTags } from '../model/action';
 
 export const anger: Emotion = {
   name: 'Anger',

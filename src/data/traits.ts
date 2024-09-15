@@ -1,33 +1,8 @@
 import { Trait } from '../model/trait';
 import { ActionTags } from '../model/action';
 import { Behavior } from '../model/enemy';
-import { updateEmotionalState } from '../model/combatant';
 
 import { self } from '../model/targetPriorities';
-import { BattleModel } from '../model/battleModel';
-import { Combatant } from '../model/combatant';
-import { anger, excited } from './emotions';
-
-// likely need to split enemy traits from party traits
-
-export const edgelord: Trait = {
-  name: 'Edgelord',
-  description: 'Becomes angry when inflicted by an emotion',
-  onStart: (model: BattleModel, combantant: Combatant) => {},
-  onUpdate: (enemies, party, behaviors) => behaviors,
-};
-
-export const romantic: Trait = {
-  name: 'Romantic',
-  description: 'Receives a surge of stamina whenever inflicted by an emotion',
-  onUpdate: (enemy, party, behaviors) => behaviors,
-};
-
-export const empath: Trait = {
-  name: 'Empath',
-  description: 'It is both a blessing and a curse to feel things so deeply',
-  onUpdate: (enemy, party, behaviors) => behaviors,
-};
 
 export const selfPreservation: Trait = {
   name: 'Self Preservation',
@@ -48,12 +23,6 @@ export const selfPreservation: Trait = {
 export const headstrong: Trait = {
   name: 'Headstrong',
   description: 'Easily angered',
-  onUpdate: (enemies, party, behaviors) => behaviors,
-};
-
-export const stoic: Trait = {
-  name: 'Stoic',
-  description: 'Emotional status is less effected',
   onUpdate: (enemies, party, behaviors) => behaviors,
 };
 

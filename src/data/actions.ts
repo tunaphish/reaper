@@ -1,6 +1,5 @@
 import { Action, ActionTags, TargetType } from '../model/action';
-import { updateEmotionalState, updateDamage, updateStamina, updateHealth } from '../model/combatant';
-import { anger, depressed, disgusted, envious, excited } from './emotions';
+import { updateDamage, updateStamina, updateHealth } from '../model/combatant';
 
 export const slash: Action = {
   name: 'Slash',
@@ -97,26 +96,6 @@ export const drain: Action = {
   },
 };
 
-export const empathize: Action = {
-  name: 'Empathize',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Mirrors targets emotional state',
-  execute: (battleModel, targets, source) => {
-    const target = targets[0];
-    for (let [emotion, count] of source.emotionalState) {
-      source.emotionalState.set(emotion, target.emotionalState.get(emotion));
-    }
-    for (let [emotion, count] of target.emotionalState) {
-      source.emotionalState.set(emotion, target.emotionalState.get(emotion));
-    }
-  },
-};
-
 export const block: Action = {
   name: 'Block',
   staminaCost: 50,
@@ -153,137 +132,4 @@ export const heal: Action = {
   },
 };
 
-export const gratitude: Action = {
-  name: 'Gratitude',
-  staminaCost: 100,
-  tags: new Set([ActionTags.HEAL]),
-  targetType: TargetType.SELF,
-  soundKeyName: 'heal',
-  imageKeyName: 'heal.gif',
-
-  description: 'Lowers enviouos feelings',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, envious, -1);
-  },
-};
-
-export const annoy: Action = {
-  name: 'Annoy',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Makes target angry',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, anger, 1);
-  },
-};
-
-export const flirt: Action = {
-  name: 'Flirt',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Makes target disgusted (usually)',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, disgusted, 1);
-  },
-};
-
-export const boast: Action = {
-  name: 'Boast',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Makes target envious (chance to make target angry?)',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, envious, 1);
-  },
-};
-
-export const excite: Action = {
-  name: 'Excite',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Makes target excited',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, excited, 1);
-  },
-};
-
-export const depress: Action = {
-  name: 'Depress',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Makes target depressed',
-  execute: (battleModel, targets) => {
-    updateEmotionalState(targets, depressed, 1);
-  },
-};
-
-export const stifle: Action = {
-  name: 'Stifle',
-  staminaCost: 50,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SELF,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Calms emotional state',
-  execute: (battleModel, targets) => {
-    for (const [emotion, count] of targets[0].emotionalState) {
-      updateEmotionalState(targets, emotion, -1);
-    }
-  },
-};
-
-export const channel: Action = {
-  name: 'Channel',
-  staminaCost: 200,
-  tags: new Set([ActionTags.DEBUFF]),
-  targetType: TargetType.SELF,
-  soundKeyName: 'debuff',
-  imageKeyName: 'debuff.gif',
-
-  description: 'Converts random emotion to anger.',
-  execute: (battleModel, targets) => {
-    for (const [emotion, count] of targets[0].emotionalState) {
-      if (count > 0) {
-        updateEmotionalState(targets, emotion, -1);
-        break;
-      }
-    }
-    updateEmotionalState(targets, anger, 1);
-  },
-};
-
-export const ACTION_SET: Set<Action> = new Set([
-  slash,
-  slashAll,
-  finisher,
-  ankleSlice,
-  block,
-  idle,
-  heal,
-  annoy,
-  flirt,
-  boast,
-  excite,
-  depress,
-]);
+export const ACTION_SET: Set<Action> = new Set([slash, slashAll, finisher, ankleSlice, block, idle, heal]);

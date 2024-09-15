@@ -1,8 +1,6 @@
 import { PartyMember, Party, Folder } from '../model/party';
 import { Status } from '../model/combatant';
 import * as Actions from './actions';
-import { anger, excited, confusion, depressed, disgusted, envious } from './emotions';
-import { edgelord, empath, romantic } from './traits';
 
 const ejiAttackFolder: Folder = {
   name: 'Attack',
@@ -11,12 +9,12 @@ const ejiAttackFolder: Folder = {
 };
 const ejiThiefFolder: Folder = {
   name: 'Thief',
-  options: [Actions.stifle, Actions.drain, Actions.empathize],
+  options: [Actions.drain],
   isInitialOption: true,
 };
 const ejiDefendFolder: Folder = {
   name: 'Defend',
-  options: [Actions.block, Actions.stifle],
+  options: [Actions.block],
   isInitialOption: true,
 };
 
@@ -29,17 +27,10 @@ export const Eji: PartyMember = {
   maxStamina: 400,
   magic: 100,
   maxMagic: 100,
-  traits: new Set([empath]),
+  traits: new Set([]),
   staminaRegenRate: 13,
   options: [ejiAttackFolder, ejiThiefFolder],
   status: Status.NORMAL,
-  emotionalState: new Map([
-    [anger, 0],
-    [confusion, 2],
-    [disgusted, 0],
-    [envious, 0],
-    [depressed, 0],
-  ]),
 };
 
 const keshiAttackFolder: Folder = {
@@ -49,7 +40,7 @@ const keshiAttackFolder: Folder = {
 };
 const keshiBerserkerFolder: Folder = {
   name: 'Berserker',
-  options: [Actions.channel, Actions.assault, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
+  options: [Actions.assault, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
   isInitialOption: true,
 };
 const keshiDefendFolder: Folder = {
@@ -68,16 +59,9 @@ export const Keshi: PartyMember = {
   magic: 100,
   maxMagic: 100,
   staminaRegenRate: 15,
-  traits: new Set([edgelord]),
+  traits: new Set([]),
   options: [keshiAttackFolder, keshiBerserkerFolder],
   status: Status.NORMAL,
-  emotionalState: new Map([
-    [anger, 0],
-    [confusion, 1],
-    [disgusted, 0],
-    [envious, 0],
-    [excited, 0],
-  ]),
 };
 
 const eliseAttackFolder: Folder = {
@@ -92,12 +76,7 @@ const eliseDefendFolder: Folder = {
 };
 const eliseRestorationFolder: Folder = {
   name: 'Restoration',
-  options: [Actions.heal, Actions.gratitude],
-  isInitialOption: true,
-};
-const eliseManipulationFolder: Folder = {
-  name: 'Manipulation',
-  options: [Actions.annoy, Actions.flirt, Actions.boast, Actions.excite, Actions.depress],
+  options: [Actions.heal],
   isInitialOption: true,
 };
 
@@ -111,15 +90,9 @@ export const Elise: PartyMember = {
   magic: 100,
   maxMagic: 100,
   staminaRegenRate: 10,
-  traits: new Set([romantic]),
-  options: [eliseAttackFolder, eliseRestorationFolder, eliseManipulationFolder],
+  traits: new Set([]),
+  options: [eliseAttackFolder, eliseRestorationFolder],
   status: Status.NORMAL,
-  emotionalState: new Map([
-    [anger, 1],
-    [confusion, 3],
-    [disgusted, 0],
-    [envious, 0],
-  ]),
 };
 
 export const DefaultParty: Party = {

@@ -6,7 +6,7 @@ import { Action } from '../../model/action';
 import styles from './battle.module.css';
 import { createElement } from '../../ui/jsxFactory';
 import { Battle } from './Battle';
-import { shakeElement, shootElement } from '../../animations';
+import { shakeElement } from '../../animations';
 
 export class BattleView {
   private enemyBar: HTMLElement;
@@ -43,7 +43,7 @@ export class BattleView {
 
     // Enemy Display
     this.enemyBar = <div className={styles.partyBar} />;
-    enemies.forEach((enemy, index) => {
+    enemies.forEach((enemy) => {
       const enemyHealthView = (
         <div>
           ❤️ {enemy.health}/ {enemy.maxHealth}
@@ -298,16 +298,6 @@ export class BattleView {
       }
 
       modalMenuOption.setAttribute('data-text', modalMenuOption.innerHTML);
-      const emotions = scene.getEmotionStyleKeys();
-      emotions.forEach((emotion) => {
-        if (emotion === 'anger') {
-          this.shakeText(modalMenuOption);
-          return;
-        }
-        modalMenuOption.classList.add(styles[emotion]);
-      });
-      console.log(emotions);
-
       modalMenu.append(modalMenuOption);
     });
 
@@ -399,26 +389,6 @@ export class BattleView {
     setTimeout(function () {
       effect.remove();
     }, 1000);
-  }
-
-  displayPartyEmoji(scene: Battle) {
-    const { party } = scene.model;
-    for (let i = 0; i < party.members.length; i++) {
-      const member = party.members[i];
-      for (const [emotion, emotionCount] of member.emotionalState) {
-        for (let emotionIdx = 0; emotionIdx < emotionCount; emotionIdx++) {
-          const randomTime = Math.random() * 2000;
-          setTimeout(() => {
-            const emotionElement = <span className={styles.emoji}>{emotion.display}</span>;
-            this.partyMemberCells[i].appendChild(emotionElement);
-            shootElement(emotionElement);
-            setTimeout(function () {
-              emotionElement.remove();
-            }, 1000);
-          }, randomTime);
-        }
-      }
-    }
   }
 
   updateAnimeText(value: string) {

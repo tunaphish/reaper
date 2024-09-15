@@ -5,8 +5,6 @@ import { randomEnemy, randomParty, self } from '../model/targetPriorities';
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
 
-import { anger, disgusted, envious, confusion } from './emotions';
-
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
   health: 200,
@@ -23,11 +21,5 @@ export const healieBoi: Enemy = {
     { action: heal, weight: 100, targetPriority: randomEnemy },
     { action: idle, weight: 100, targetPriority: self },
   ],
-  emotionalState: new Map([
-    [anger, 0],
-    [confusion, 0],
-    [disgusted, 0],
-    [envious, 0],
-  ]),
   status: Status.NORMAL,
 };

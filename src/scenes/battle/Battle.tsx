@@ -14,7 +14,6 @@ import { getRandomInt } from '../../util/random';
 import { BattleModel } from '../../model/battleModel';
 import { BattleView } from './BattleView';
 import { Combatant } from '../../model/combatant';
-import { excited, depressed, disgusted, envious, anger, confusion } from '../../data/emotions';
 import { idle, slash } from '../../data/actions';
 import { shuffle } from '../../util';
 
@@ -147,27 +146,11 @@ export class Battle extends Phaser.Scene {
     this.lastCalculation += delta;
 
     if (this.lastCalculation > 2000) {
-      this.getCombatants().forEach((combatant) => {
-        if (combatant.emotionalState.get(envious) > 0) combatant.stackedDamage += 10;
-      });
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
-
-      // emoji emitter
-      this.view.displayPartyEmoji(this);
     }
 
     this.view.updateStats(this);
-
-    // excited check
-    party.members.forEach((member, idx) => {
-      if (member.emotionalState.get(excited) > 0 && member.stamina === member.maxStamina) {
-        this.view.closeMenus();
-        this.setActivePartyMember(idx);
-        this.action = slash; // TODO: select random attack
-        this.targets = randomEnemy(enemies, party, null);
-      }
-    });
   }
 
   updateEnemies() {
@@ -205,17 +188,11 @@ export class Battle extends Phaser.Scene {
       if (trait.onUpdate) traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
     });
 
-    // Apply Emotions
-    let emotionBehaviors = traitedBehaviors;
-    for (const [emotion, count] of enemy.emotionalState) {
-      if (emotion.onUpdate) emotionBehaviors = emotion.onUpdate(enemies, party, emotionBehaviors, count);
-    }
-
     // Randomly Select Behavior Based on Weight
-    const summedWeights = emotionBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
+    const summedWeights = filteredBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
     const randomInt = getRandomInt(summedWeights);
     let runningSum = 0;
-    const selectedBehavior = emotionBehaviors.find((behavior) => {
+    const selectedBehavior = filteredBehaviors.find((behavior) => {
       runningSum += behavior.weight;
       return runningSum > randomInt;
     });
@@ -240,14 +217,8 @@ export class Battle extends Phaser.Scene {
   }
 
   getOptions(option: Option): Option[] {
-    const activeMember: PartyMember = this.getActiveMember();
-    let emotionOptions = [...(option as Folder).options];
-    if (activeMember.emotionalState.get(anger) > 0) {
-      emotionOptions.unshift(activeMember.options[0]); // add slash attack
-    }
-    if (activeMember.emotionalState.get(confusion) > 0) emotionOptions = shuffle(emotionOptions);
-
-    return emotionOptions;
+    const options = [...(option as Folder).options];
+    return options;
   }
 
   setAction(action: Action): void {
@@ -259,15 +230,8 @@ export class Battle extends Phaser.Scene {
   }
 
   getTargets(): Combatant[] {
-    const activeMember = this.getActiveMember();
     const initialTargets = this.getCombatants().filter(isAlive);
-
-    let emotionalTargets = initialTargets;
-    for (const [emotion, count] of activeMember.emotionalState) {
-      if (emotion.onOpenTargets) emotionalTargets = emotion.onOpenTargets(emotionalTargets, count);
-    }
-
-    return emotionalTargets;
+    return initialTargets;
   }
 
   getActiveMember(): PartyMember {
@@ -291,16 +255,14 @@ export class Battle extends Phaser.Scene {
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
-    const isDisgusted = combatant.emotionalState.get(disgusted) > 0;
-    const DAMAGE_TICK_RATE = (delta / 1000) * (isDisgusted ? 20 : 10);
+    const DAMAGE_TICK_RATE = (delta / 1000) * 10;
     combatant.stackedDamage -= DAMAGE_TICK_RATE;
     combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
   }
 
   updateCombatantStamina(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD) return;
-    const regenPerTick =
-      combatant.staminaRegenRate * (delta / 1000) * (combatant.emotionalState.get(depressed) > 0 ? 0.5 : 1);
+    const regenPerTick = combatant.staminaRegenRate * (delta / 1000);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
@@ -319,15 +281,6 @@ export class Battle extends Phaser.Scene {
 
   getMemberStatus(memberIndex: number) {
     return this.model.party.members[memberIndex].status;
-  }
-
-  getEmotionStyleKeys(): string[] {
-    const activeMember = this.getActiveMember();
-    const emotionStyleKeys: string[] = [];
-    activeMember.emotionalState.forEach((value, emotion) => {
-      if (value > 0 && emotion.styleKeyName) emotionStyleKeys.push(emotion.styleKeyName);
-    });
-    return emotionStyleKeys;
   }
 
   displayEffect(targets: Combatant[], effectKeyName: string): void {

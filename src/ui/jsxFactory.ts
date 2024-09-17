@@ -14,7 +14,6 @@ export function createElement(tagName: string, attributes, ...children: any[]): 
         // JSX does not allow class as a valid name
         element.setAttribute('class', attributeValue);
       } else if (key.startsWith('on') && typeof attributes[key] === 'function') {
-        console.log(key);
         element.addEventListener(key.substring(2), attributeValue);
       } else {
         // <input disable />      { disable: true }

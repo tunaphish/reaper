@@ -58,7 +58,6 @@ export const assault: Action = {
 
   description: 'Deals double damage, but hurts yourself',
   execute: (battleModel, targets, source) => {
-    const target = targets[0];
     updateDamage(targets[0], 50);
     updateDamage(source, 50);
   },
@@ -104,7 +103,8 @@ export const block: Action = {
 
   description:
     'Stops stamina regeneration, converts all additional to reduce stamina, stops stacked damage from applying',
-  execute: (battleModel) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,
+  execute: () => {},
 };
 
 export const idle: Action = {
@@ -114,6 +114,7 @@ export const idle: Action = {
   targetType: TargetType.SELF,
 
   description: 'Does Nothing',
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   execute: () => {},
 };
 

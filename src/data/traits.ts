@@ -41,6 +41,7 @@ export const motherlyInstinct: Trait = {
 export const vindictive: Trait = {
   name: 'Motherly Instinct',
   description: 'Prioritizes Enemy who Attacked them Last',
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onStart: () => {},
   onUpdate: (enemies, party, behaviors) => behaviors,
 };

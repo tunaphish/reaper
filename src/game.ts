@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
-import UiOverlayPlugin from './ui/UiOverlayPlugin';
+import UiOverlayPlugin from './features/ui-plugin/UiOverlayPlugin';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',
@@ -24,11 +24,13 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     createContainer: true,
   },
   plugins: {
-    global: [{ key: 'ui-overlay', plugin: UiOverlayPlugin, start: false, mapping: 'ui' }],
+    global: [{ key: 'ui-overlay', plugin: UiOverlayPlugin, start: true, mapping: 'ui' }],
   },
 };
 
-export const game = new Phaser.Game(gameConfig);
+const game = new Phaser.Game(gameConfig);
+
+export default game;
 
 window.addEventListener('resize', () => {
   game.scale.refresh();

@@ -2,7 +2,7 @@ import { getRandomInt } from '../util';
 // TODO: Add randomness to shake
 // TODO: Add damage scaling
 
-export const shakeElement = (element: Element, iterations: number = 1, strong: boolean = true) => {
+export const shakeElement = (element: Element, iterations = 1, strong = true): void => {
   const duration = 350 + getRandomInt(100);
 
   const shakeTiming = {

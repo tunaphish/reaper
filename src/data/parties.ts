@@ -5,17 +5,10 @@ import * as Actions from './actions';
 const ejiAttackFolder: Folder = {
   name: 'Attack',
   options: [Actions.slash],
-  isInitialOption: true,
 };
 const ejiThiefFolder: Folder = {
   name: 'Thief',
   options: [Actions.drain],
-  isInitialOption: true,
-};
-const ejiDefendFolder: Folder = {
-  name: 'Defend',
-  options: [Actions.block],
-  isInitialOption: true,
 };
 
 export const Eji: PartyMember = {
@@ -36,22 +29,15 @@ export const Eji: PartyMember = {
 const keshiAttackFolder: Folder = {
   name: 'Attack',
   options: [Actions.slash],
-  isInitialOption: true,
 };
 const keshiBerserkerFolder: Folder = {
   name: 'Berserker',
   options: [Actions.assault, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
-  isInitialOption: true,
-};
-const keshiDefendFolder: Folder = {
-  name: 'Defend',
-  options: [Actions.block],
-  isInitialOption: true,
 };
 
 export const Keshi: PartyMember = {
   name: 'Keshi',
-  health: 100,
+  health: 0,
   maxHealth: 100,
   stackedDamage: 0,
   stamina: 0,
@@ -67,17 +53,11 @@ export const Keshi: PartyMember = {
 const eliseAttackFolder: Folder = {
   name: 'Attack',
   options: [Actions.slash],
-  isInitialOption: true,
 };
-const eliseDefendFolder: Folder = {
-  name: 'Defend',
-  options: [Actions.block],
-  isInitialOption: true,
-};
+
 const eliseRestorationFolder: Folder = {
   name: 'Restoration',
   options: [Actions.heal],
-  isInitialOption: true,
 };
 
 export const Elise: PartyMember = {

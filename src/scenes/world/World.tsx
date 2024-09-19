@@ -1,7 +1,6 @@
-import { createElement } from '../../ui/jsxFactory';
-import styles from './world.module.css';
+import * as React from 'react';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import Player from '../../sprites/Player';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -21,9 +20,9 @@ export class World extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
 
-    const belowLayer = map.createLayer('Below Player', tileset, 0, 0);
+    map.createLayer('Below Player', tileset, 0, 0);
     const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
-    const aboveLayer = map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
+    map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
 
     const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
     this.player = new Player(this, spawnPoint.x, spawnPoint.y);
@@ -31,20 +30,16 @@ export class World extends Phaser.Scene {
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
 
-    // event start dialogue
-    // this.input.keyboard.on('keydown-W', function startDialogueScene() {
-    //   this.scene.pause();
-    //   this.scene.run('Dialogue');
-    // }, this);
+    const Ui = () => {
+      const onClickPause = () => {
+        this.scene.pause();
+        this.scene.run('PauseMenu');
+      }
+      return <div onClick={onClickPause}>click me</div>;
+    }
+    
+    this.ui.create(<Ui/>, this);
 
-    const pauseButton = <div>click me</div>;
-    const container = <div>{pauseButton}</div>;
-    this.ui.create(container, this);
-
-    pauseButton.addEventListener('click', () => {
-      this.scene.pause();
-      this.scene.run('PauseMenu');
-    });
   }
 
   public update(time: number, delta: number): void {

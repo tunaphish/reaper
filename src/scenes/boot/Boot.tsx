@@ -1,5 +1,5 @@
-import { createElement } from '../../ui/jsxFactory';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
+import * as React from 'react';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -8,26 +8,30 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export class Boot extends Phaser.Scene {
-  ui: UiOverlayPlugin;
+  ui: UiOverlayPlugin
 
   constructor() {
     super(sceneConfig);
   }
 
   public preload(): void {
-    const percentText = <div>0%</div>;
-    const assetText = <div></div>;
-    const container = (
-      <div>
-        {percentText}
-        {assetText}
-      </div>
-    );
+    const Ui = () => {
+      const [percent, setPercent] = React.useState<number>(0);
+      const [fileKey, setFileKey] = React.useState<string>('');
 
-    this.ui.create(container, this);
+      React.useEffect(() => {    
+        this.load.on('progress', (value) => (setPercent(value * 100)));
+        this.load.on('fileprogress', (file) => (setFileKey(file.key)));
+      });
 
-    this.load.on('progress', (value) => (percentText.innerText = `${value * 100}%`));
-    this.load.on('fileprogress', (file) => (assetText.innerText = file.key));
+      return (
+          <div>
+            <div>{percent}%</div>
+            <div>{fileKey}</div>
+        </div>
+      );
+    }
+    this.ui.create(<Ui/>, this);
 
     this.load.on('complete', () => {
       this.scene.start('Battle');

@@ -1,6 +1,6 @@
-import { createElement } from '../../ui/jsxFactory';
+import * as React from 'react';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import styles from './pausemenu.module.css';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -11,7 +11,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class PauseMenu extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
-  private choiceHoverSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
@@ -19,7 +18,6 @@ export class PauseMenu extends Phaser.Scene {
 
   public create(): void {
     this.choiceSelectSound = this.sound.add('choice-select');
-    this.choiceHoverSound = this.sound.add('choice-hover');
 
     const onClickContinue = () => {
       this.choiceSelectSound.play();
@@ -27,21 +25,19 @@ export class PauseMenu extends Phaser.Scene {
       this.scene.resume('World');
     };
 
-    const onMouseOverContinue = () => {
-      this.choiceHoverSound.play();
+    const Ui = () => {
+      return (
+        <div>
+          <div className={styles.pauseMenuButton} onClick={onClickContinue}>
+            continue
+          </div>
+          <div className={styles.pauseMenuButton}>
+            exit to main menu
+          </div>
+        </div>
+      )
     };
 
-    const menuItems = (
-      <div>
-        <div className={styles.pauseMenuButton} onclick={onClickContinue} onmouseover={onMouseOverContinue}>
-          continue
-        </div>
-        <div className={styles.pauseMenuButton} onmouseover={onMouseOverContinue}>
-          exit to main menu
-        </div>
-      </div>
-    );
-
-    this.ui.create(menuItems, this);
+    this.ui.create(<Ui/>, this);
   }
 }

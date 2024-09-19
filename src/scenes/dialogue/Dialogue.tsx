@@ -1,6 +1,6 @@
-import { createElement } from '../../ui/jsxFactory';
+import * as React from 'react';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import styles from './dialogue.module.css';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -18,7 +18,6 @@ const DIALOGUE_TEXT_ARRAY = [
 
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex;
-  private dialogueTextElement;
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
 
   private ui: UiOverlayPlugin;
@@ -32,32 +31,33 @@ export class Dialogue extends Phaser.Scene {
     this.dialogueAdvanceSound.play();
     this.dialogueTextIndex = 0;
 
-    this.dialogueTextElement = <div className={styles.dialogueText}>{DIALOGUE_TEXT_ARRAY[0]}</div>;
-    const dialogueUi = (
-      <div className={styles.dialogueContainer}>
-        <div className={styles.dialogueBox}>
-          <div className={styles.dialogueBackground} />
-          <div className={styles.dialoguePortrait}>
-            <img src={'/reaper/assets/characters/rise.png'}></img>
+
+    const Ui = () => {
+      const [dialogueText, setDialogueText] = React.useState<string>(DIALOGUE_TEXT_ARRAY[0])
+      const onClick = () => {
+        this.dialogueTextIndex++;
+        if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
+          this.scene.start('World');
+          return;
+        }
+        this.dialogueAdvanceSound.play();
+        setDialogueText(DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex]);
+      }
+
+      return (
+        <div className={styles.dialogueContainer}>
+          <div className={styles.dialogueBox}>
+            <div className={styles.dialogueBackground} />
+            <div className={styles.dialoguePortrait}>
+              <img src={'/reaper/assets/characters/rise.png'}></img>
+            </div>
+            <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
+            <div onClick={onClick} className={styles.dialogueText}>{dialogueText}</div>
           </div>
-          <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
-          {this.dialogueTextElement}
         </div>
-      </div>
-    );
-
-    this.ui.create(dialogueUi, this);
-
-    dialogueUi.addEventListener('click', this.advanceDialogue.bind(this));
-  }
-
-  advanceDialogue(): void {
-    this.dialogueTextIndex++;
-    if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
-      this.scene.start('World');
-      return;
+      )
     }
-    this.dialogueAdvanceSound.play();
-    this.dialogueTextElement.innerText = DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex];
+
+    this.ui.create(<Ui/>, this);
   }
 }

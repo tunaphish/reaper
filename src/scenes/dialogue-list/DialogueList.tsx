@@ -1,6 +1,6 @@
-import { createElement } from '../../ui/jsxFactory';
+import * as React from 'react';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import styles from './dialoguelist.module.css';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -16,7 +16,6 @@ import { load } from 'js-yaml';
 export class DialogueList extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
-  private choiceHoverSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
@@ -24,40 +23,37 @@ export class DialogueList extends Phaser.Scene {
 
   public create(): void {
     this.choiceSelectSound = this.sound.add('choice-select');
-    this.choiceHoverSound = this.sound.add('choice-hover');
 
-    const container: any = <div className={styles.container}></div>;
-    this.ui.create(container, this);
-
-    //append script list
-    //then attach event listenrs
-    this.cache.text.entries.each((scriptFileKey) => {
-      const scriptHeader: Element = <h1>{scriptFileKey}</h1>;
-      container.appendChild(scriptHeader);
-
-      const data = this.cache.text.entries.get(scriptFileKey);
-      const parsedData = load(data);
-      const scriptKeys = Object.keys(parsedData);
-      const filter = ['briefing', 'seis_age', 'temporary_beauty', 'animal_souls', 'start'];
-      scriptKeys
-        .filter((scriptKey) => {
-          return filter.includes(scriptKey);
-        })
-        .forEach((scriptKey) => {
-          const sceneListItem: Element = <div className={styles.scriptButton}>- {scriptKey}</div>;
-          scriptHeader.appendChild(sceneListItem);
-
-          sceneListItem.addEventListener('click', () => {
-            this.choiceSelectSound.play();
-            this.scene.start('Battle', { scriptFileKey, scriptKey });
+    const Ui = (): React.ReactElement => {
+      const FileHeaders = this.cache.text.entries.keys().map((scriptFileKey) => {
+        const data = this.cache.text.entries.get(scriptFileKey);
+        const parsedData = load(data);
+        const scriptKeys = Object.keys(parsedData);
+        const filter = ['briefing', 'seis_age', 'temporary_beauty', 'animal_souls', 'start'];
+        const scripts = scriptKeys
+          .filter((scriptKey) => {
+            return filter.includes(scriptKey);
+          })
+          .map((scriptKey) => {
+            const onClickSceneListItem = () => {
+              this.choiceSelectSound.play();
+              this.scene.start('Battle', { scriptFileKey, scriptKey });
+            };
+            return <div key={scriptKey} className={styles.scriptButton} onClick={onClickSceneListItem}>- {scriptKey}</div>;
           });
 
-          sceneListItem.addEventListener('mouseover', () => {
-            this.choiceHoverSound.play();
-          });
-        });
+        return (
+          <div key={scriptFileKey as string}>
+            <h1>{scriptFileKey}</h1>
+            {scripts}  
+          </div>
+        )
+      });
 
-      container.style.height = '100%';
-    });
+      return (
+        <div className={styles.container}>{FileHeaders}</div>
+      );
+    };
+    this.ui.create(<Ui/>, this);
   }
 }

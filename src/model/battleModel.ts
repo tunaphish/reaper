@@ -9,7 +9,6 @@ export interface DialogueTrigger {
 export type BattleModel = {
   enemies: Enemy[];
   party: Party;
-  activePartyMemberIndex: number;
   scriptFileName: string;
   dialogueTriggers: DialogueTrigger[];
 };

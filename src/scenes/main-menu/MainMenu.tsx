@@ -1,6 +1,6 @@
-import { createElement } from '../../ui/jsxFactory';
+import * as React from 'react';
 import styles from './mainmenu.module.css';
-import UiOverlayPlugin from '../../ui/UiOverlayPlugin';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -14,7 +14,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class MainMenu extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;
-  private choiceHoverSound: Phaser.Sound.BaseSound;
   private menuMusic: Phaser.Sound.BaseSound;
 
   constructor() {
@@ -23,29 +22,26 @@ export class MainMenu extends Phaser.Scene {
 
   public create(): void {
     this.choiceSelectSound = this.sound.add('choice-select');
-    this.choiceHoverSound = this.sound.add('choice-hover');
     this.add.image(0, 0, 'main-menu').setOrigin(0, 0);
     this.menuMusic = this.sound.add('main-menu-music', { loop: true });
     this.menuMusic.play();
 
-    const onClickStart = () => {
-      this.menuMusic.stop();
-      this.choiceSelectSound.play();
-      this.scene.start('World');
-    };
+    const Ui = () => {
+      const onClickStart = () => {
+        this.menuMusic.stop();
+        this.choiceSelectSound.play();
+        this.scene.start('World');
+      };
 
-    const onMouseOverStart = () => {
-      this.choiceHoverSound.play();
-    };
-
-    const menuItems = (
-      <div>
-        <div className={styles.mainMenuButton} onclick={onClickStart} onmouseover={onMouseOverStart}>
-          start game
+      return (
+        <div>
+          <div className={styles.mainMenuButton} onClick={onClickStart}>
+            start game
+          </div>
         </div>
-      </div>
-    );
+      )
+    }
 
-    this.ui.create(menuItems, this);
+    this.ui.create(<Ui/>, this);
   }
 }

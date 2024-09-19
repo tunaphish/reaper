@@ -1,9 +1,7 @@
-import { Action } from './action';
 import { Combatant } from './combatant';
 
 export interface Option {
   name: string;
-  isInitialOption?: boolean;
 }
 
 export type Folder = Option & {

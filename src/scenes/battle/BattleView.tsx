@@ -59,20 +59,6 @@ export const BattleView = (props: { scene: Battle }) => {
         /* background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
         enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')"; */
 
-    // Menu Display (Dependency on Party Bar for Setting Active Cell);
-    // party.members.forEach((member) => {
-    //   const actMenuButton = ;
-    //   actMenuButton.addEventListener('click', () => {
-    //     scene.playButtonClickSound();
-    //     this.addMenu(
-    //       scene,
-    //       'ACT',
-    //     );
-    //   });
-
-
-
-
   // // Handles All additional menus atm. (probably too much responsibility)
   // addMenu(options: Option[], scene: Battle, header: string, isTargetMenu = false) {
   //   const modalMenu = (
@@ -230,11 +216,6 @@ export const BattleView = (props: { scene: Battle }) => {
   //     effect.remove();
   //   }, 1000);
   // }
-
-  // updateAnimeText(value: string) {
-  //   this.animeText.innerText = value;
-  // }
-
 
 // function isAction(option: Option): option is Action {
 //   return (option as Action).execute !== undefined;

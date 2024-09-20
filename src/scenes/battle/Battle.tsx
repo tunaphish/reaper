@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { load } from 'js-yaml';
-import { observable, action, makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { Behavior, Enemy } from '../../model/enemy';
 import { Party, PartyMember, Option, Folder } from '../../model/party';
 import { Action, ActionTags, TargetType } from '../../model/action';
@@ -33,7 +32,7 @@ export class BattleStore {
   party: Party;
   caster?: PartyMember;
   action?: Action;
-  targets?: Combatant[];
+  target?: Combatant;
   menus: Option[][] = [];
 
   constructor(enemies: Enemy[], party: Party) {
@@ -44,7 +43,10 @@ export class BattleStore {
 
   setCaster(member?: PartyMember): void {
     this.caster = member
-    console.log(this.caster);
+  }
+
+  setTarget(member?: Combatant): void {
+    this.target = member
   }
 }
 
@@ -90,48 +92,47 @@ export class Battle extends Phaser.Scene {
       console.log('ENEMIES DEAD');
     }
 
-    if (this.battleStore.action && this.battleStore.targets) {
+    if (this.battleStore.action && this.battleStore.target) {
       if (this.battleStore.caster.stamina < 0) {
         this.sound.play('stamina-depleted');
       } else {
-        console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.targets[0].name}`);
+        console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target[0].name}`);
         this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
-        this.battleStore.action.execute(this.battleStore.targets, this.battleStore.caster);
+        this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
         if (this.battleStore.action.soundKeyName) this.sound.play(this.battleStore.action.soundKeyName);
-        if (this.battleStore.action.imageKeyName) this.displayEffect(this.battleStore.targets, this.battleStore.action.imageKeyName);
-        this.shakeTarget(this.battleStore.targets, this.battleStore.action);
+        //if (this.battleStore.action.imageKeyName) this.displayEffect(this.battleStore.target, this.battleStore.action.imageKeyName);
+        //this.shakeTarget(this.battleStore.target, this.battleStore.action);
       }
 
       this.battleStore.action = null;
-      this.battleStore.targets = null;
+      this.battleStore.target = null;
     }
 
     this.getCombatants().forEach((target) => {
       this.updateCombatantHealth(target, delta);
       this.updateCombatantStamina(target, delta);
+      // this.view.updateStats(this);
     });
 
     this.lastCalculation += delta;
-
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
       this.updateEnemies(); // behavior
     }
 
-    // this.view.updateStats(this);
   }
 
   updateEnemies() {
     this.battleStore.enemies.forEach((enemy) => {
       const selectedBehavior = this.selectBehavior(this.battleStore.enemies, this.battleStore.party, enemy);
-      const targets = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.party, enemy);
+      const target = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.party, enemy);
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(targets, enemy);
+      selectedBehavior.action.execute(target, enemy);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
-      if (selectedBehavior.action.imageKeyName) this.displayEffect(targets, selectedBehavior.action.imageKeyName);
-      this.shakeTarget(targets, selectedBehavior.action);
+      //if (selectedBehavior.action.imageKeyName) this.displayEffect(target, selectedBehavior.action.imageKeyName);
+      //this.shakeTarget(target, selectedBehavior.action);
       if (selectedBehavior.dialoguePool && Math.floor(Math.random() * 2) === 0) {
         const randomActionDialogue =
           selectedBehavior.dialoguePool[Math.floor(Math.random() * selectedBehavior.dialoguePool.length)];
@@ -179,24 +180,21 @@ export class Battle extends Phaser.Scene {
     return [...this.battleStore.party.members, ...this.battleStore.enemies];
   }
 
-  getTargets(): Combatant[] {
-    const initialTargets = this.getCombatants().filter(isAlive);
-    return initialTargets;
+  gettarget(): Combatant[] {
+    const initialtarget = this.getCombatants().filter(isAlive);
+    return initialtarget;
   }
 
-  setTargets(targets: string): void {
+  settarget(combatant: Combatant): void {
     if (this.battleStore.action.targetType === TargetType.SELF) {
-      this.battleStore.targets = [this.battleStore.caster];
+      this.battleStore.setTarget(this.battleStore.caster);
       return;
     }
+    this.battleStore.setTarget(combatant);
 
-    if (this.battleStore.action.targetType === TargetType.ALL) {
-      this.battleStore.targets = this.getCombatants().filter(isAlive);
-      return;
-    }
 
-    // if it contains commas... it's multiple targets. (what about mass confusion)
-    this.battleStore.targets = [this.getCombatants().find((target) => target.name === targets)];
+    // if it contains commas... it's multiple target. (what about mass confusion)
+    
   }
 
   updateCombatantHealth(combatant: Combatant, delta: number): void {
@@ -212,34 +210,34 @@ export class Battle extends Phaser.Scene {
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
-  shakeTarget(targets: Combatant[], action: Action): void {
-    if (!action.tags.has(ActionTags.ATTACK)) return;
-    for (const target of targets) {
-      for (let i = 0; i < this.battleStore.enemies.length; i++) {
-        //if (this.model.enemies[i] === target) 
-          // this.view.shakeEnemy();
-      }
+  // shakeTarget(target: Combatant[], action: Action): void {
+  //   if (!action.tags.has(ActionTags.ATTACK)) return;
+  //   for (const target of target) {
+  //     for (let i = 0; i < this.battleStore.enemies.length; i++) {
+  //       //if (this.model.enemies[i] === target) 
+  //         // this.view.shakeEnemy();
+  //     }
 
-      for (let i = 0; i < this.battleStore.party.members.length; i++) {
-        //if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
-      }
-    }
-  }
+  //     for (let i = 0; i < this.battleStore.party.members.length; i++) {
+  //       //if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
+  //     }
+  //   }
+  // }
 
   getMemberStatus(memberIndex: number) {
     return this.battleStore.party.members[memberIndex].status;
   }
 
-  displayEffect(targets: Combatant[], effectKeyName: string): void {
-    for (const target of targets) {
-      for (let i = 0; i < this.battleStore.enemies.length; i++) {
-        //if (this.model.enemies[i] === target) // this.view.displayEffectOnEnemy(effectKeyName);
-      }
-      for (let i = 0; i < this.battleStore.party.members.length; i++) {
-        //if (this.model.party.members[i] === target) // this.view.displayEffectOnMember(i, effectKeyName);
-      }
-    }
-  }
+  // displayEffect(target: Combatant[], effectKeyName: string): void {
+  //   for (const target of target) {
+  //     for (let i = 0; i < this.battleStore.enemies.length; i++) {
+  //       //if (this.model.enemies[i] === target) // this.view.displayEffectOnEnemy(effectKeyName);
+  //     }
+  //     for (let i = 0; i < this.battleStore.party.members.length; i++) {
+  //       //if (this.model.party.members[i] === target) // this.view.displayEffectOnMember(i, effectKeyName);
+  //     }
+  //   }
+  // }
 
   playSong(songKey: string): void {
     this.music = this.sound.add(songKey, { loop: true });

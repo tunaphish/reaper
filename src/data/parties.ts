@@ -32,7 +32,7 @@ const keshiAttackFolder: Folder = {
 };
 const keshiBerserkerFolder: Folder = {
   name: 'Berserker',
-  options: [Actions.assault, Actions.slashAll, Actions.ankleSlice, Actions.finisher],
+  options: [Actions.assault, Actions.ankleSlice, Actions.finisher],
 };
 
 export const Keshi: PartyMember = {

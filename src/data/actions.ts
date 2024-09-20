@@ -15,21 +15,6 @@ export const slash: Action = {
   },
 };
 
-export const slashAll: Action = {
-  name: 'Slash All',
-  staminaCost: 250,
-  tags: new Set([ActionTags.ATTACK]),
-
-  targetType: TargetType.ALL,
-  soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
-
-  description: 'Attacks everyone indiscriminately',
-  execute: (targets) => {
-    targets.forEach((target) => updateDamage(target, 50));
-  },
-};
-
 export const finisher: Action = {
   name: 'Finisher',
   staminaCost: 100,
@@ -133,4 +118,4 @@ export const heal: Action = {
   },
 };
 
-export const ACTION_SET: Set<Action> = new Set([slash, slashAll, finisher, ankleSlice, block, idle, heal]);
+export const ACTION_SET: Set<Action> = new Set([slash, finisher, ankleSlice, block, idle, heal]);

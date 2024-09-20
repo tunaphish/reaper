@@ -55,14 +55,6 @@ export class Battle extends Phaser.Scene {
 
   battleStore: BattleStore;
 
-  // Dialogue Additions
-  scriptFileName: string;
-  dialogueTriggers: DialogueTrigger[];
-  isBattlePaused = false;
-  private lineIndex;
-  private scripts: any;
-  private script: string[];
-
   constructor() {
     super(sceneConfig);
   }
@@ -70,39 +62,10 @@ export class Battle extends Phaser.Scene {
   public init(data): void {
     // Init Battle
     this.battleStore = new BattleStore([healieBoi], DefaultParty);
-    this.scriptFileName = 'mission-7';
-    this.dialogueTriggers = [
-      // {
-      //   trigger: ([healieBoi], DefaultParty) => true,
-      //   scriptKeyName: 'start'
-      // },
-      {
-        trigger: ([healieBoi], DefaultParty) => healieBoi.health < 150,
-        scriptKeyName: 'fuck_you',
-      },
-      {
-        trigger: ([healieBoi], DefaultParty) => healieBoi.health < 1,
-        scriptKeyName: 'death',
-      },
-    ];
     this.ui.create(<BattleView scene={this}/>, this);
-    this.scripts = load(this.cache.text.get(this.scriptFileName));
   }
 
   update(time, delta: number): void {
-    if (this.isBattlePaused) return;
-
-    // Dialogue Trigger Checks
-    this.dialogueTriggers.forEach((dialogueTrigger, idx) => {
-      if (dialogueTrigger.trigger(this.battleStore.enemies, this.battleStore.party)) {
-        // // this.view.switchToDialogueMenu();
-        this.isBattlePaused = true;
-        this.updateScript(dialogueTrigger.scriptKeyName);
-        this.dialogueTriggers.splice(idx, 1); // remove dialogue trigger
-        return;
-      }
-    });
-
     // Set Party Member Status
     this.battleStore.party.members.forEach((member, idx) => {
       if (member.health <= 0) {
@@ -278,73 +241,12 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  advanceLine(): void {
-    this.lineIndex++;
-    if (this.lineIndex >= this.script.length) {
-      this.music?.stop();
-      this.scene.start('Battle'); //TODO: send elsewhere
-      return;
-    }
-
-    const line = this.script[this.lineIndex];
-    const [keys, value] = line.split(' | ');
-    const [action, actor, adjective] = keys.split(' ');
-    switch (action) {
-      case 'show':
-        // this.background = `url("/reaper/assets/backgrounds/${actor}.jpg")`;
-        // this.parallax.style.backgroundPosition = '50% 50%, 50% 50%, 50% 50%';
-        // this.updateParallax();
-        this.advanceLine();
-        break;
-      case 'enter':
-        // const emotion = adjective ? `-${adjective}` : '';
-        // this.middleground = `url("/reaper/assets/characters/${actor}${emotion}.png")`;
-        // this.updateParallax();
-        this.advanceLine();
-        break;
-      case 'says':
-        this.sound.play('dialogue-advance');
-        // this.view.updateMenuText(actor, value);
-        break;
-      case 'announce':
-        this.sound.play('dialogue-advance');
-        // this.view.updateMenuText('', value);
-        break;
-      case 'display':
-        this.sound.play('dialogue-advance');
-        // this.view.updateAnimeText(value);
-        break;
-      case 'play':
-        this.playSong(actor);
-        this.advanceLine();
-        break;
-      case 'choose':
-        // this.view.updateMenuChoices(this, value);
-        break;
-      case 'initiate':
-        // this.view.updatePartyMemberView(this);
-        this.isBattlePaused = false;
-        // this.sound.play('battle-start');
-        break;
-      default:
-        this.advanceLine();
-    }
-  }
-
-  playSong(songKey): void {
+  playSong(songKey: string): void {
     this.music = this.sound.add(songKey, { loop: true });
     this.music.play();
   }
 
-  updateScript(newScriptKey: string) {
-    this.sound.play('dialogue-advance');
-    this.script = this.scripts[newScriptKey];
-    this.lineIndex = -1;
-    this.advanceLine();
-  }
-
   openInitialMenu(member?: PartyMember) {
-    if (this.isBattlePaused) return;
     if (member.status === Status.DEAD) {
       this.sound.play('stamina-depleted');
       return;

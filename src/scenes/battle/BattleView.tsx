@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { Scene } from 'phaser';
+import { observer } from 'mobx-react-lite';
+
 import { Combatant, Status } from '../../model/combatant';
 import { TargetType } from '../../model/action';
 import { Option, PartyMember } from '../../model/party';
 import { Action } from '../../model/action';
 
 import styles from './battle.module.css';
-import { Battle } from './Battle';
+import { Battle, BattleStore } from './Battle';
 import { shakeElement } from '../../animations';
-import { Scene } from 'phaser';
 
-const ResourceDisplay = (props: {combatant: Combatant, onClickCell?: () => void}) => {
 
+const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
   return (
     <div className={styles.characterCell} onClick={props.onClickCell}>
       <div>{props.combatant.name}</div>
@@ -19,17 +21,14 @@ const ResourceDisplay = (props: {combatant: Combatant, onClickCell?: () => void}
       <div>🌙 {Math.ceil(props.combatant.magic)}/ {props.combatant.maxMagic}</div>
     </div>
   )
-}
+});
 
-export class BattleView {
-  constructor(scene: Battle) {
-    const { enemies, party } = scene.model;
+export const BattleView = (props: { scene: Battle }) => {
+    const { enemies, party } = props.scene.battleStore;
     const onClickPartyMember = (member: PartyMember) => {
-      scene.openInitialMenu(member);
+      props.scene.openInitialMenu(member);
     }
-
-    const Ui = () => {
-      return (
+    return (
         <div className={styles.container}>
           <div className={styles.partyBar}>
             {enemies.map((enemy) => {
@@ -47,7 +46,6 @@ export class BattleView {
           </div>
         </div>
   
-
         <div className={styles.partyBar}>
             {party.members.map((member) => {
               return <ResourceDisplay combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>
@@ -56,13 +54,10 @@ export class BattleView {
         <div className={styles.menuViewsContainer} />
         </div>
       )
+};
 
-    }
-    scene.ui.create(<Ui/>, scene);
-
-
-        {/* background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
-        enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')"; */}
+        /* background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
+        enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')"; */
 
     // Menu Display (Dependency on Party Bar for Setting Active Cell);
     // party.members.forEach((member) => {
@@ -74,7 +69,6 @@ export class BattleView {
     //       'ACT',
     //     );
     //   });
-  }
 
 
 
@@ -240,8 +234,8 @@ export class BattleView {
   // updateAnimeText(value: string) {
   //   this.animeText.innerText = value;
   // }
-}
 
-function isAction(option: Option): option is Action {
-  return (option as Action).execute !== undefined;
-}
+
+// function isAction(option: Option): option is Action {
+//   return (option as Action).execute !== undefined;
+// }

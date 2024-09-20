@@ -10,7 +10,7 @@ export const slash: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
-  execute: (battleModel, targets) => {
+  execute: (targets) => {
     updateDamage(targets[0], 50);
   },
 };
@@ -25,7 +25,7 @@ export const slashAll: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Attacks everyone indiscriminately',
-  execute: (battleModel, targets) => {
+  execute: (targets) => {
     targets.forEach((target) => updateDamage(target, 50));
   },
 };
@@ -39,7 +39,7 @@ export const finisher: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Immediately applies all stacked damage',
-  execute: (battleModel, targets) => {
+  execute: (targets) => {
     const target = targets[0];
     if (target) {
       target.health = Math.max(0, target.health - target.stackedDamage);
@@ -57,7 +57,7 @@ export const assault: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, but hurts yourself',
-  execute: (battleModel, targets, source) => {
+  execute: (targets, source) => {
     updateDamage(targets[0], 50);
     updateDamage(source, 50);
   },
@@ -72,7 +72,7 @@ export const ankleSlice: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage and reduces stamina for target',
-  execute: (battleModel, targets) => {
+  execute: (targets) => {
     const target = targets[0];
     updateDamage(target, 50);
     updateStamina(target, -50);
@@ -88,7 +88,7 @@ export const drain: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Drains health',
-  execute: (battleModel, targets, source) => {
+  execute: (targets, source) => {
     const target = targets[0];
     updateDamage(target, 50);
     updateHealth(source, 25);
@@ -127,7 +127,7 @@ export const heal: Action = {
   imageKeyName: 'heal.gif',
 
   description: 'Restores health to target',
-  execute: (battleModel, targets) => {
+  execute: (targets) => {
     const HEALTH = 50;
     targets[0].health = Math.min(targets[0].maxHealth, (targets[0].health += HEALTH));
   },

@@ -1,4 +1,3 @@
-import { BattleModel } from './battleModel';
 import { Combatant } from './combatant';
 import { Option } from './party';
 
@@ -20,7 +19,7 @@ export enum TargetType {
 export type Action = Option & {
   description: string;
   staminaCost: number;
-  execute: (model: BattleModel, targets: Combatant[], source: Combatant) => void;
+  execute: (targets: Combatant[], source: Combatant) => void;
   tags: Set<ActionTags>;
   targetType: TargetType;
   soundKeyName?: string;

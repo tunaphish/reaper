@@ -107,7 +107,7 @@ export class Battle extends Phaser.Scene {
       this.battleStore.target = null;
     }
 
-    this.getCombatants().forEach((target) => {
+    [...this.battleStore.party.members, ...this.battleStore.enemies].forEach((target) => {
       this.updateStats(target, delta);
       // this.view.updateStats(this);
     });
@@ -160,22 +160,8 @@ export class Battle extends Phaser.Scene {
     return selectedBehavior || { action: idle, weight: 100, targetPriority: self }; // in case it doesn't pick anything
   }
 
-  getOptions(option: Option): Option[] {
-    const options = [...(option as Folder).options];
-    return options;
-  }
-
   setAction(action: Action): void {
     this.battleStore.action = action;
-  }
-
-  getCombatants(): Combatant[] {
-    return [...this.battleStore.party.members, ...this.battleStore.enemies];
-  }
-
-  gettarget(): Combatant[] {
-    const initialtarget = this.getCombatants().filter(isAlive);
-    return initialtarget;
   }
 
   settarget(combatant: Combatant): void {
@@ -187,7 +173,7 @@ export class Battle extends Phaser.Scene {
   }
 
   updateStats(combatant: Combatant, delta: number): void {
-    if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
+    if (combatant.status === Status.DEAD) return;
     if (combatant.stackedDamage > 0) {
       const DAMAGE_TICK_RATE = (delta / 1000) * 10;
       combatant.stackedDamage -= DAMAGE_TICK_RATE;
@@ -196,11 +182,6 @@ export class Battle extends Phaser.Scene {
     const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
-
-  getMemberStatus(memberIndex: number): Status {
-    return this.battleStore.party.members[memberIndex].status;
-  }
-
 
   playSong(songKey: string): void {
     this.music = this.sound.add(songKey, { loop: true });
@@ -222,5 +203,3 @@ export class Battle extends Phaser.Scene {
     this.sound.play('dialogue-advance');
   }
 }
-
-const isAlive = (combatant: Combatant) => combatant.health > 0;

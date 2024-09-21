@@ -57,17 +57,19 @@ export class BattleStore {
   }
 
   updateCombatantsState(): void {
-    [...this.party.members, ...this.enemies].forEach((member) => {
-      if (member.health <= 0) {
-        member.status = Status.DEAD;
-        this.caster = null;
-        this.menus = [];
-      } else if (member.stamina <= 0) {
-        member.status = Status.EXHAUSTED;
-      } else if (member.status === Status.BLOCKING) {
+    [...this.party.members, ...this.enemies].forEach((combatant) => {
+      if (combatant.health <= 0) {
+        combatant.status = Status.DEAD;
+        // if (combatant === this.caster) {
+        //   this.setCaster(null);
+        //   this.menus = [];
+        // }
+      } else if (combatant.stamina <= 0) {
+        combatant.status = Status.EXHAUSTED;
+      } else if (combatant.status === Status.BLOCKING) {
         // do nothing
       } else {
-        member.status = Status.NORMAL;
+        combatant.status = Status.NORMAL;
       }
     });
   }

@@ -30,6 +30,7 @@ export interface DialogueTrigger {
 export class BattleStore {
   enemies: Enemy[];
   party: Party;
+
   caster?: PartyMember;
   action?: Action;
   target?: Combatant;
@@ -97,20 +98,19 @@ export class Battle extends Phaser.Scene {
       console.log('ENEMIES DEAD');
     }
 
-    if (this.battleStore.action && this.battleStore.target) {
-      if (this.battleStore.caster.stamina < 0) {
-        this.sound.play('stamina-depleted');
-      } else {
-        console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target.name}`);
-        this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
-        this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
-        if (this.battleStore.action.soundKeyName) this.sound.play(this.battleStore.action.soundKeyName);
-        //if (this.battleStore.action.imageKeyName) this.displayEffect(this.battleStore.target, this.battleStore.action.imageKeyName);
-        //this.shakeTarget(this.battleStore.target, this.battleStore.action);
-      }
-
+    if (this.battleStore.caster && this.battleStore.action && this.battleStore.target) {
+      console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target.name}`);
+      this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
+      this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
+      
+      if (this.battleStore.action.soundKeyName) this.sound.play(this.battleStore.action.soundKeyName);
+      //if (this.battleStore.action.imageKeyName) this.displayEffect(this.battleStore.target, this.battleStore.action.imageKeyName);
+      //this.shakeTarget(this.battleStore.target, this.battleStore.action);
+    
+      this.battleStore.caster = null;
       this.battleStore.action = null;
       this.battleStore.target = null;
+      this.battleStore.menus = [];
     }
 
     this.battleStore.tickStats(this.updateStats, delta);
@@ -169,11 +169,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.action = action;
   }
 
-  settarget(combatant: Combatant): void {
-    if (this.battleStore.action.targetType === TargetType.SELF) {
-      this.battleStore.setTarget(this.battleStore.caster);
-      return;
-    }
+  setTarget(combatant: Combatant): void {
     this.battleStore.setTarget(combatant);    
   }
 

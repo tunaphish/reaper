@@ -10,8 +10,8 @@ export const slash: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
-  execute: (targets) => {
-    updateDamage(targets[0], 50);
+  execute: (target) => {
+    updateDamage(target, 50);
   },
 };
 
@@ -24,8 +24,7 @@ export const finisher: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Immediately applies all stacked damage',
-  execute: (targets) => {
-    const target = targets[0];
+  execute: (target) => {
     if (target) {
       target.health = Math.max(0, target.health - target.stackedDamage);
       target.stackedDamage = 0;
@@ -42,8 +41,8 @@ export const assault: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, but hurts yourself',
-  execute: (targets, source) => {
-    updateDamage(targets[0], 50);
+  execute: (target, source) => {
+    updateDamage(target, 50);
     updateDamage(source, 50);
   },
 };
@@ -57,8 +56,7 @@ export const ankleSlice: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage and reduces stamina for target',
-  execute: (targets) => {
-    const target = targets[0];
+  execute: (target) => {
     updateDamage(target, 50);
     updateStamina(target, -50);
   },
@@ -73,8 +71,7 @@ export const drain: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Drains health',
-  execute: (targets, source) => {
-    const target = targets[0];
+  execute: (target, source) => {
     updateDamage(target, 50);
     updateHealth(source, 25);
   },
@@ -112,9 +109,9 @@ export const heal: Action = {
   imageKeyName: 'heal.gif',
 
   description: 'Restores health to target',
-  execute: (targets) => {
+  execute: (target) => {
     const HEALTH = 50;
-    targets[0].health = Math.min(targets[0].maxHealth, (targets[0].health += HEALTH));
+    target.health = Math.min(target.maxHealth, (target.health += HEALTH));
   },
 };
 

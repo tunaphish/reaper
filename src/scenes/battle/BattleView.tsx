@@ -1,16 +1,11 @@
 import * as React from 'react';
-import { Scene } from 'phaser';
 import { observer } from 'mobx-react-lite';
 
-import { Combatant, Status } from '../../model/combatant';
-import { TargetType } from '../../model/action';
+import { Combatant } from '../../model/combatant';
 import { Option, PartyMember } from '../../model/party';
-import { Action } from '../../model/action';
 
 import styles from './battle.module.css';
-import { Battle, BattleStore } from './Battle';
-import { shakeElement } from '../../animations';
-
+import { Battle } from './Battle';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
   return (
@@ -23,7 +18,43 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
-export const BattleView = (props: { scene: Battle }) => {
+const MenuView = (props: {options: Option[], style: React.CSSProperties}) => {
+  const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => event.stopPropagation();
+
+  return (
+    <div className={styles.modalMenu} style={props.style} onClick={onClickMenu}>
+      <div className={styles.modalMenuHeader}>temp header</div>
+      {props.options.map((option) => (
+        <div key={option.name}>{option.name}</div>
+      ))}
+    </div>
+  );
+}
+
+const MenuContainer = observer((props: { menus, battleScene: Battle }) => {
+  const onClickModalContainer = () => props.battleScene.closeMenu();
+  return (
+    <div className={styles.menuViewsContainer}>
+      {props.menus.map((menu, idx) => {
+
+        const RIGHT_OFFSET = 50;
+        const BOTTOM_OFFSET = 150;
+        const style: React.CSSProperties = {
+          zIndex: 10 * idx,
+          right: 30 * (idx - 1) + RIGHT_OFFSET + 'px',
+          bottom: 30 * (idx - 1) + BOTTOM_OFFSET + 'px',
+        }
+
+        return (
+          <div className={styles.modalContainer} onClick={onClickModalContainer}>
+            <MenuView options={menu} key={idx} style={style} />
+          </div>
+      )})}
+    </div>
+  );
+}) 
+
+export const BattleView = (props: { scene: Battle }): JSX.Element => {
     const { enemies, party } = props.scene.battleStore;
     const onClickPartyMember = (member: PartyMember) => {
       props.scene.openInitialMenu(member);
@@ -51,172 +82,7 @@ export const BattleView = (props: { scene: Battle }) => {
               return <ResourceDisplay combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>
             })}
         </div>
-        <div className={styles.menuViewsContainer} />
+       <MenuContainer menus={props.scene.battleStore.menus} battleScene={props.scene}/>
         </div>
       )
 };
-
-        /* background.style.backgroundImage = "url('/reaper/assets/backgrounds/pikrepo.jpg')";
-        enemyPortrait.style.backgroundImage = "url('/reaper/assets/characters/eji.png')"; */
-
-  // // Handles All additional menus atm. (probably too much responsibility)
-  // addMenu(options: Option[], scene: Battle, header: string, isTargetMenu = false) {
-  //   const modalMenu = (
-  //     <div className={styles.modalMenu}>
-  //       <div className={styles.modalMenuHeader}> {header} </div>
-  //     </div>
-  //   );
-  //   modalMenu.addEventListener('click', (event) => {
-  //     event.stopPropagation();
-  //   });
-
-  //   options.forEach((option) => {
-  //     let modalMenuOption: Element;
-
-  //     // Target
-  //     if (isTargetMenu) {
-  //       modalMenuOption = <div className={styles.modalMenuOption}>{option.name}</div>;
-  //       modalMenuOption.addEventListener('click', () => {
-  //         scene.playButtonClickSound();
-  //         scene.setTargets(option.name);
-  //         this.closeMenus();
-  //         this.updatePartyMemberView(scene);
-  //         return;
-  //       });
-  //     }
-
-  //     // Action
-  //     else if (isAction(option)) {
-  //       const action = option as Action;
-  //       modalMenuOption = <div className={styles.modalMenuOption}>{`${option.name} - ${action.staminaCost}`}</div>;
-
-  //       modalMenuOption.addEventListener('click', () => {
-  //         scene.playButtonClickSound();
-  //         scene.setAction(action);
-  //         const targets = scene.getTargets();
-  //         if (action.targetType === TargetType.SELF || action.targetType === TargetType.ALL) {
-  //           this.closeMenus();
-  //           scene.setTargets(null);
-  //           return;
-  //         }
-
-  //         const IS_TARGET_MENU = true;
-  //         this.addMenu(
-  //           targets.map((target) => ({ name: target.name })),
-  //           scene,
-  //           'Targets',
-  //           IS_TARGET_MENU,
-  //         );
-
-  //         const attackDescription = <div className={styles.attackDescription}>{action.description}</div>;
-  //         this.menu.replaceChildren(attackDescription);
-
-  //         return;
-  //       });
-  //     } else {
-  //       // is option
-  //       modalMenuOption = <div className={styles.modalMenuOption}>{option.name}</div>;
-  //       modalMenuOption.addEventListener('click', () => {
-  //         scene.playButtonClickSound();
-  //         const newOptions = scene.getOptions(option);
-  //         this.addMenu(newOptions, scene, option.name);
-  //       });
-  //     }
-
-  //     modalMenuOption.setAttribute('data-text', modalMenuOption.innerHTML);
-  //     modalMenu.append(modalMenuOption);
-  //   });
-
-  //   const modalContainer = <div className={styles.modalContainer}>{modalMenu}</div>;
-
-  //   this.menuViews.push(modalContainer);
-
-  //   modalContainer.addEventListener('click', () => {
-  //     this.menuViewsContainer.removeChild(modalContainer);
-  //     this.menuViews.pop();
-  //     scene.playMenuCloseSound();
-  //     if (isTargetMenu) this.updatePartyMemberView(scene);
-  //   });
-
-  //   modalContainer.style.zIndex = 10 * this.menuViews.length;
-  //   const RIGHT_OFFSET = 10;
-  //   modalMenu.style.right = 30 * (this.menuViews.length - 1) + RIGHT_OFFSET + 'px';
-  //   const BOTTOM_OFFSET = 240;
-  //   modalMenu.style.bottom = 30 * (this.menuViews.length - 1) + BOTTOM_OFFSET + 'px';
-
-  //   this.menuViewsContainer.appendChild(modalContainer);
-  // }
-
-  // closeMenus(): void {
-  //   while (this.menuViews.length > 0) {
-  //     const menuView = this.menuViews.pop();
-  //     menuView.remove();
-  //   }
-  // }
-
-  // shakeEnemy(): void {
-  //   shakeElement(this.enemyPortrait);
-  // }
-
-  // shakePartyMember(partyMemberIndex: number): void {
-  //   shakeElement(this.partyMemberCells[partyMemberIndex]);
-  // }
-
-  // shakeText(element: Element) {
-  //   element.innerHTML = element.innerHTML
-  //     .split('')
-  //     .map(function (element) {
-  //       return '<div>' + element + '</div>';
-  //     })
-  //     .join('');
-  //   for (let i = 0; i < element.children.length; i++) {
-  //     const child: any = element.children[i];
-  //     child.style.display = 'inline-block';
-  //     shakeElement(child, Infinity, false);
-  //   }
-  // }
-
-  // setPartyMemberStatus(memberIndex: number, member: PartyMember) {
-  //   const cell = this.partyMemberCells[memberIndex];
-  //   switch (member.status) {
-  //     case Status.BLOCKING:
-  //       cell.style.border = '1px solid green';
-  //       cell.style.color = 'green';
-  //       break;
-  //     case Status.DEAD:
-  //       cell.style.border = '1px solid red';
-  //       cell.style.color = 'gray';
-  //       break;
-  //     case Status.EXHAUSTED:
-  //       cell.style.border = '1px solid purple';
-  //       cell.style.color = 'purple';
-  //       break;
-  //     default:
-  //       cell.style.border = '';
-  //       cell.style.color = '';
-  //       break;
-  //   }
-  // }
-
-  // displayEffectOnEnemy(effectKeyName: string): void {
-  //   const effect = <div className={styles.effect} />;
-  //   effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
-  //   // TODO: Multiple enemies
-  //   this.enemyCells[0].appendChild(effect);
-  //   setTimeout(function () {
-  //     effect.remove();
-  //   }, 1000);
-  // }
-
-  // displayEffectOnMember(partyMemberIndex: number, effectKeyName: string): void {
-  //   const effect = <div className={styles.effect} />;
-  //   effect.style.backgroundImage = `url("/reaper/assets/effects/${effectKeyName}")`;
-  //   this.partyMemberCells[partyMemberIndex].appendChild(effect);
-  //   setTimeout(function () {
-  //     effect.remove();
-  //   }, 1000);
-  // }
-
-// function isAction(option: Option): option is Action {
-//   return (option as Action).execute !== undefined;
-// }

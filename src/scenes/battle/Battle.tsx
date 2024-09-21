@@ -61,15 +61,15 @@ export class Battle extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  public init(data): void {
+  public init(): void {
     // Init Battle
     this.battleStore = new BattleStore([healieBoi], DefaultParty);
     this.ui.create(<BattleView scene={this}/>, this);
   }
 
-  update(time, delta: number): void {
+  update(time: number, delta: number): void {
     // Set Party Member Status
-    this.battleStore.party.members.forEach((member, idx) => {
+    this.battleStore.party.members.forEach((member) => {
       if (member.health <= 0) {
         member.status = Status.DEAD;
         this.battleStore.caster = null
@@ -82,7 +82,6 @@ export class Battle extends Phaser.Scene {
       } else {
         member.status = Status.NORMAL;
       }
-      // this.view.setPartyMemberStatus(idx, member);
     });
 
     if (this.battleStore.party.members.every((member) => member.status === Status.DEAD)) {
@@ -96,7 +95,7 @@ export class Battle extends Phaser.Scene {
       if (this.battleStore.caster.stamina < 0) {
         this.sound.play('stamina-depleted');
       } else {
-        console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target[0].name}`);
+        console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target.name}`);
         this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
         this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
         if (this.battleStore.action.soundKeyName) this.sound.play(this.battleStore.action.soundKeyName);
@@ -109,8 +108,7 @@ export class Battle extends Phaser.Scene {
     }
 
     this.getCombatants().forEach((target) => {
-      this.updateCombatantHealth(target, delta);
-      this.updateCombatantStamina(target, delta);
+      this.updateStats(target, delta);
       // this.view.updateStats(this);
     });
 
@@ -122,7 +120,7 @@ export class Battle extends Phaser.Scene {
 
   }
 
-  updateEnemies() {
+  updateEnemies(): void {
     this.battleStore.enemies.forEach((enemy) => {
       const selectedBehavior = this.selectBehavior(this.battleStore.enemies, this.battleStore.party, enemy);
       const target = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.party, enemy);
@@ -133,11 +131,6 @@ export class Battle extends Phaser.Scene {
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
       //if (selectedBehavior.action.imageKeyName) this.displayEffect(target, selectedBehavior.action.imageKeyName);
       //this.shakeTarget(target, selectedBehavior.action);
-      if (selectedBehavior.dialoguePool && Math.floor(Math.random() * 2) === 0) {
-        const randomActionDialogue =
-          selectedBehavior.dialoguePool[Math.floor(Math.random() * selectedBehavior.dialoguePool.length)];
-        // this.view.updateAnimeText(randomActionDialogue);
-      }
     });
   }
 
@@ -190,69 +183,43 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setTarget(this.battleStore.caster);
       return;
     }
-    this.battleStore.setTarget(combatant);
-
-
-    // if it contains commas... it's multiple target. (what about mass confusion)
-    
+    this.battleStore.setTarget(combatant);    
   }
 
-  updateCombatantHealth(combatant: Combatant, delta: number): void {
+  updateStats(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD || combatant.stackedDamage < 0) return;
-    const DAMAGE_TICK_RATE = (delta / 1000) * 10;
-    combatant.stackedDamage -= DAMAGE_TICK_RATE;
-    combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
-  }
-
-  updateCombatantStamina(combatant: Combatant, delta: number): void {
-    if (combatant.status === Status.DEAD) return;
+    if (combatant.stackedDamage > 0) {
+      const DAMAGE_TICK_RATE = (delta / 1000) * 10;
+      combatant.stackedDamage -= DAMAGE_TICK_RATE;
+      combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
+    }
     const regenPerTick = combatant.staminaRegenRate * (delta / 1000);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 
-  // shakeTarget(target: Combatant[], action: Action): void {
-  //   if (!action.tags.has(ActionTags.ATTACK)) return;
-  //   for (const target of target) {
-  //     for (let i = 0; i < this.battleStore.enemies.length; i++) {
-  //       //if (this.model.enemies[i] === target) 
-  //         // this.view.shakeEnemy();
-  //     }
-
-  //     for (let i = 0; i < this.battleStore.party.members.length; i++) {
-  //       //if (this.model.party.members[i] === target) this.view.shakePartyMember(i);
-  //     }
-  //   }
-  // }
-
-  getMemberStatus(memberIndex: number) {
+  getMemberStatus(memberIndex: number): Status {
     return this.battleStore.party.members[memberIndex].status;
   }
 
-  // displayEffect(target: Combatant[], effectKeyName: string): void {
-  //   for (const target of target) {
-  //     for (let i = 0; i < this.battleStore.enemies.length; i++) {
-  //       //if (this.model.enemies[i] === target) // this.view.displayEffectOnEnemy(effectKeyName);
-  //     }
-  //     for (let i = 0; i < this.battleStore.party.members.length; i++) {
-  //       //if (this.model.party.members[i] === target) // this.view.displayEffectOnMember(i, effectKeyName);
-  //     }
-  //   }
-  // }
 
   playSong(songKey: string): void {
     this.music = this.sound.add(songKey, { loop: true });
     this.music.play();
   }
 
-  openInitialMenu(member?: PartyMember) {
+  openInitialMenu(member?: PartyMember): void {
     if (member.status === Status.DEAD) {
       this.sound.play('stamina-depleted');
       return;
     }
-    this.sound.play('dialogue-advance');
+    this.sound.play('choice-select');
     this.battleStore.setCaster(member);
     this.battleStore.menus.push(member.options);
-    console.log(this.battleStore.menus)
+  }
+
+  closeMenu(): void {
+    this.battleStore.menus.pop();
+    this.sound.play('dialogue-advance');
   }
 }
 

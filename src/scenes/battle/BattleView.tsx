@@ -1,15 +1,26 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { Combatant } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 import { Option, PartyMember } from '../../model/party';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
+  const stateToStylesMap = {
+    [Status.NORMAL]: '',
+    [Status.DEAD]: styles.DEAD,
+    [Status.EXHAUSTED]: styles.EXHAUSTED,
+  }
+  const style = [
+    styles.characterCell,
+    stateToStylesMap[props.combatant.status]
+    // styles.shake,
+  ]
+
   return (
-    <div className={styles.characterCell} onClick={props.onClickCell}>
+    <div className={style.join(' ')} onClick={props.onClickCell}>
       <div>{props.combatant.name}</div>
       <div>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</div>
       <div>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</div>

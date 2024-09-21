@@ -98,6 +98,18 @@
   align-items: center;
 }
 
+.EXHAUSTED {
+  border: 1px solid yellow;
+  color: yellow;
+}
+
+.DEAD {
+  border: 1px solid red;
+  color: red;
+}
+
+
+
 .actorMessage {
   padding: 10px;
   text-align: left;
@@ -326,4 +338,16 @@
 .attackDescription {
   font-size: 24px;
   padding: 10px;
+}
+
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-10px, -10px); }
+  20%, 40%, 60%, 80% { transform: translate(10px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
 }

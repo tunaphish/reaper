@@ -15,7 +15,7 @@ export const Eji: PartyMember = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  stackedDamage: 0,
+  bleed: 0,
   stamina: 0,
   maxStamina: 400,
   magic: 100,
@@ -37,10 +37,10 @@ const keshiBerserkerFolder: Folder = {
 
 export const Keshi: PartyMember = {
   name: 'Keshi',
-  health: 0,
+  health: 100,
   maxHealth: 100,
-  stackedDamage: 0,
-  stamina: 0,
+  bleed: 0,
+  stamina: -10,
   maxStamina: 300,
   magic: 100,
   maxMagic: 100,
@@ -62,8 +62,8 @@ const eliseRestorationFolder: Folder = {
 
 export const Elise: PartyMember = {
   name: 'Elise',
-  health: 100,
-  stackedDamage: 0,
+  health: 0,
+  bleed: 0,
   maxHealth: 100,
   stamina: 0,
   maxStamina: 500,

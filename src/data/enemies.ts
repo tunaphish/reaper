@@ -9,7 +9,7 @@ export const healieBoi: Enemy = {
   name: 'Healie Boi',
   health: 200,
   maxHealth: 200,
-  stackedDamage: 0,
+  bleed: 0,
   stamina: 0,
   maxStamina: 800,
   magic: 100,

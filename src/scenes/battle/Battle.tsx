@@ -48,6 +48,28 @@ export class BattleStore {
   setTarget(member?: Combatant): void {
     this.target = member
   }
+
+  tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
+    [...this.party.members, ...this.enemies].forEach((combatant) => {
+      updateFunc(combatant, delta);
+    });
+  }
+
+  updateCombatantsState(): void {
+    [...this.party.members, ...this.enemies].forEach((member) => {
+      if (member.health <= 0) {
+        member.status = Status.DEAD;
+        this.caster = null;
+        this.menus = [];
+      } else if (member.stamina <= 0) {
+        member.status = Status.EXHAUSTED;
+      } else if (member.status === Status.BLOCKING) {
+        // do nothing
+      } else {
+        member.status = Status.NORMAL;
+      }
+    });
+  }
 }
 
 export class Battle extends Phaser.Scene {
@@ -68,26 +90,10 @@ export class Battle extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    // Set Party Member Status
-    this.battleStore.party.members.forEach((member) => {
-      if (member.health <= 0) {
-        member.status = Status.DEAD;
-        this.battleStore.caster = null
-        // signal caster changed
-        // signal menu closed
-      } else if (member.stamina <= 0) {
-        member.status = Status.EXHAUSTED;
-      } else if (member.status === Status.BLOCKING) {
-        // do nothing
-      } else {
-        member.status = Status.NORMAL;
-      }
-    });
-
     if (this.battleStore.party.members.every((member) => member.status === Status.DEAD)) {
       console.log('HEROES DEAD');
     }
-    if (this.battleStore.enemies.every((enemy) => enemy.health <= 0)) {
+    if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
       console.log('ENEMIES DEAD');
     }
 
@@ -107,15 +113,14 @@ export class Battle extends Phaser.Scene {
       this.battleStore.target = null;
     }
 
-    [...this.battleStore.party.members, ...this.battleStore.enemies].forEach((target) => {
-      this.updateStats(target, delta);
-      // this.view.updateStats(this);
-    });
+    this.battleStore.tickStats(this.updateStats, delta);
+    this.battleStore.updateCombatantsState();
 
+    // enemy AI
     this.lastCalculation += delta;
     if (this.lastCalculation > 2000) {
       this.lastCalculation = 0;
-      this.updateEnemies(); // behavior
+      this.updateEnemies(); 
     }
 
   }
@@ -174,9 +179,9 @@ export class Battle extends Phaser.Scene {
 
   updateStats(combatant: Combatant, delta: number): void {
     if (combatant.status === Status.DEAD) return;
-    if (combatant.stackedDamage > 0) {
+    if (combatant.bleed > 0) {
       const DAMAGE_TICK_RATE = (delta / 1000) * 10;
-      combatant.stackedDamage -= DAMAGE_TICK_RATE;
+      combatant.bleed -= DAMAGE_TICK_RATE;
       combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
     }
     const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);

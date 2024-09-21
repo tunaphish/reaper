@@ -26,8 +26,8 @@ export const finisher: Action = {
   description: 'Immediately applies all stacked damage',
   execute: (target) => {
     if (target) {
-      target.health = Math.max(0, target.health - target.stackedDamage);
-      target.stackedDamage = 0;
+      target.health = Math.max(0, target.health - target.bleed);
+      target.bleed = 0;
     }
   },
 };

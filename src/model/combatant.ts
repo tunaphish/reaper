@@ -11,7 +11,7 @@ export interface Combatant {
   name: string;
   health: number;
   maxHealth: number;
-  stackedDamage: number;
+  bleed: number;
   stamina: number;
   maxStamina: number;
   magic: number;
@@ -33,5 +33,5 @@ export const updateDamage = (target: Combatant, change: number): void => {
     target.health = Math.max(0, target.health - change);
     return;
   }
-  target.stackedDamage += change;
+  target.bleed += change;
 };

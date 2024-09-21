@@ -16,7 +16,7 @@ export interface Combatant {
   maxStamina: number;
   magic: number;
   maxMagic: number;
-  staminaRegenRate: number; // per second
+  staminaRegenRatePerSecond: number; 
   traits: Set<Trait>;
   status: Status;
 }

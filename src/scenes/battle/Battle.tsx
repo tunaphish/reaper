@@ -193,7 +193,7 @@ export class Battle extends Phaser.Scene {
       combatant.stackedDamage -= DAMAGE_TICK_RATE;
       combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
     }
-    const regenPerTick = combatant.staminaRegenRate * (delta / 1000);
+    const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
   }
 

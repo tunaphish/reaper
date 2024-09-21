@@ -46,8 +46,8 @@ const MenuContainer = observer((props: { menus, battleScene: Battle }) => {
         }
 
         return (
-          <div className={styles.modalContainer} onClick={onClickModalContainer}>
-            <MenuView options={menu} key={idx} style={style} />
+          <div key={idx} className={styles.modalContainer} onClick={onClickModalContainer}>
+            <MenuView options={menu} style={style} />
           </div>
       )})}
     </div>

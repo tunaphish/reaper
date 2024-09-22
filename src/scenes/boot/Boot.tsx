@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styles from './boot.module.css';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -20,22 +21,26 @@ export class Boot extends Phaser.Scene {
       const [fileKey, setFileKey] = React.useState<string>('');
 
       React.useEffect(() => {    
-        this.load.on('progress', (value) => (setPercent(value * 100)));
+        this.load.on('progress', (value) => (setPercent(Math.trunc(value * 100))));
         this.load.on('fileprogress', (file) => (setFileKey(file.key)));
       });
 
       return (
-          <div>
-            <div>{percent}%</div>
-            <div>{fileKey}</div>
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}>
+              <div className={styles.cube1}></div>
+              <div className={styles.cube2}></div>
+            </div>
+            <div className={styles.loadingText}>{percent}%</div>
+            <div className={styles.loadingText}>Loading: {fileKey}</div>
         </div>
       );
     }
     this.ui.create(<Ui/>, this);
 
-    this.load.on('complete', () => {
-      this.scene.start('MainMenu');
-    });
+    // this.load.on('complete', () => {
+    //   this.scene.start('MainMenu');
+    // });
 
     this.loadAssets();
   }

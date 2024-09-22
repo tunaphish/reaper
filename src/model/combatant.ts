@@ -1,4 +1,5 @@
 import { Trait } from './trait';
+import { Option } from './party';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -7,8 +8,7 @@ export enum Status {
   DEAD = 'DEAD',
 }
 
-export interface Combatant {
-  name: string;
+export type Combatant = Option & {
   health: number;
   maxHealth: number;
   bleed: number;

@@ -22,7 +22,7 @@ export const Eji: PartyMember = {
   maxMagic: 100,
   traits: new Set([]),
   staminaRegenRatePerSecond: 13,
-  options: [ejiAttackFolder, ejiThiefFolder],
+  options: [ejiAttackFolder, ejiThiefFolder, Actions.slash],
   status: Status.NORMAL,
 };
 

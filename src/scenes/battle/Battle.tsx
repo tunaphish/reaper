@@ -39,15 +39,19 @@ export class BattleStore {
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
     this.party = party;
-    makeAutoObservable(this)
+    makeAutoObservable(this);
   }
 
   setCaster(member?: PartyMember): void {
-    this.caster = member
+    this.caster = member;
   }
 
-  setTarget(member?: Combatant): void {
-    this.target = member
+  setTarget(target?: Combatant): void {
+    this.target = target;
+  }
+
+  setAction(action?: Action): void {
+    this.action = action;
   }
 
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
@@ -72,6 +76,15 @@ export class BattleStore {
         combatant.status = Status.NORMAL;
       }
     });
+  }
+
+  resetSelections(): void {
+    while (this.menus.length > 0) {
+      this.menus.pop();
+    }
+    this.setCaster(null);
+    this.setAction(null);
+    this.setTarget(null);
   }
 }
 
@@ -105,14 +118,11 @@ export class Battle extends Phaser.Scene {
       this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
       this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
       
-      if (this.battleStore.action.soundKeyName) this.sound.play(this.battleStore.action.soundKeyName);
-      //if (this.battleStore.action.imageKeyName) this.displayEffect(this.battleStore.target, this.battleStore.action.imageKeyName);
-      //this.shakeTarget(this.battleStore.target, this.battleStore.action);
-    
-      this.battleStore.caster = null;
-      this.battleStore.action = null;
-      this.battleStore.target = null;
-      this.battleStore.menus = [];
+      if (this.battleStore.action.soundKeyName) {
+        this.sound.play(this.battleStore.action.soundKeyName);
+      }
+
+      this.battleStore.resetSelections();
     }
 
     this.battleStore.tickStats(this.updateStats, delta);
@@ -192,7 +202,7 @@ export class Battle extends Phaser.Scene {
   }
 
   openInitialMenu(member?: PartyMember): void {
-    if (member.status === Status.DEAD) {
+    if (member.status === Status.DEAD || member.status === Status.EXHAUSTED ) {
       this.sound.play('stamina-depleted');
       return;
     }
@@ -204,5 +214,26 @@ export class Battle extends Phaser.Scene {
   closeMenu(): void {
     this.battleStore.menus.pop();
     this.sound.play('dialogue-advance');
+  }
+
+  selectOption(option: Option): void {
+    this.sound.play('choice-select');
+    if ('staminaCost' in option) { // is Action
+      const action = option as Action;
+      this.battleStore.setAction(action);
+      if (action.targetType === TargetType.SELF) {
+        this.battleStore.setTarget(this.battleStore.caster);
+      } else {
+        this.battleStore.menus.push([...this.battleStore.party.members, ...this.battleStore.enemies]);
+      }
+    }
+    else if ('staminaRegenRatePerSecond' in option) { // is Combatant
+      const combatant = option as Combatant;
+      this.battleStore.setTarget(combatant);
+    }
+    else if ('options' in option) { // is Folder
+      const folder = option as Folder;
+      this.battleStore.menus.push(folder.options);
+    }
   }
 }

@@ -9,10 +9,7 @@ export type Folder = Option & {
 };
 
 export type PartyMember = Combatant & {
-  // imageUrl: String;
   options: Option[];
-  // items
-  // equipment
 };
 
 export interface Party {

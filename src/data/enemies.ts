@@ -14,7 +14,7 @@ export const healieBoi: Enemy = {
   maxStamina: 800,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 100,
+  staminaRegenRatePerSecond: 10,
   traits: new Set([selfPreservation]),
   behaviors: [
     { action: slash, weight: 100, targetPriority: randomParty, dialoguePool: ['Suffer as I have', 'Eat shit'] },
@@ -22,4 +22,5 @@ export const healieBoi: Enemy = {
     { action: idle, weight: 100, targetPriority: self },
   ],
   status: Status.NORMAL,
+  imageUrl: '/reaper/assets/characters/eji.png',
 };

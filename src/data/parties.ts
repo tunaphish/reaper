@@ -26,6 +26,7 @@ export const Eji: PartyMember = {
   staminaRegenRatePerSecond: 13,
   folder: ejiFolder,
   status: Status.NORMAL,
+  takingDamage: false,
 };
 
 
@@ -52,6 +53,7 @@ export const Keshi: PartyMember = {
   traits: new Set([]),
   folder: keshiFolder,
   status: Status.NORMAL,
+  takingDamage: false,
 };
 
 const eliseRestorationFolder: Folder = {
@@ -77,6 +79,7 @@ export const Elise: PartyMember = {
   traits: new Set([]),
   folder: eliseFolder,
   status: Status.NORMAL,
+  takingDamage: false,
 };
 
 export const DefaultParty: Party = {

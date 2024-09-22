@@ -13,15 +13,16 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     [Status.NORMAL]: '',
     [Status.DEAD]: styles.DEAD,
     [Status.EXHAUSTED]: styles.EXHAUSTED,
-  }
+  };
   const style = [
     styles.characterCell,
-    statusToStylesMap[props.combatant.status]
-    // styles.shake,
-  ]
+    statusToStylesMap[props.combatant.status],
+    props.combatant.takingDamage ? styles.shake : '',
+  ];
+  const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell}>
+    <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
       <div>{props.combatant.name}</div>
       <div>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</div>
       <div>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</div>

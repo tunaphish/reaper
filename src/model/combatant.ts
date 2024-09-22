@@ -19,6 +19,7 @@ export type Combatant = Option & {
   staminaRegenRatePerSecond: number; 
   traits: Set<Trait>;
   status: Status;
+  takingDamage: boolean;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {
@@ -29,9 +30,6 @@ export const updateStamina = (target: Combatant, change: number): void => {
 };
 
 export const updateDamage = (target: Combatant, change: number): void => {
-  if (target.status === Status.EXHAUSTED) {
-    target.health = Math.max(0, target.health - change);
-    return;
-  }
   target.bleed += change;
+  target.takingDamage = true;
 };

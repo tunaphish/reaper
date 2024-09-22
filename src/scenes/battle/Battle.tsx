@@ -115,10 +115,10 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     if (this.battleStore.party.members.every((member) => member.status === Status.DEAD)) {
-      console.log('HEROES DEAD');
+      this.scene.start('World');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
-      console.log('ENEMIES DEAD');
+      this.scene.start('World');
     }
 
     if (this.battleStore.caster && this.battleStore.action && this.battleStore.target) {

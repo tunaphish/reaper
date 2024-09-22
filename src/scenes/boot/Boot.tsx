@@ -34,7 +34,7 @@ export class Boot extends Phaser.Scene {
     this.ui.create(<Ui/>, this);
 
     this.load.on('complete', () => {
-      this.scene.start('Battle');
+      this.scene.start('MainMenu');
     });
 
     this.loadAssets();

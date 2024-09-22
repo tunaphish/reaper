@@ -33,10 +33,19 @@ export class MainMenu extends Phaser.Scene {
         this.scene.start('World');
       };
 
+      const onClickDialogueList = () => {
+        this.menuMusic.stop();
+        this.choiceSelectSound.play();
+        this.scene.start('DialogueList');
+      };
+
       return (
         <div>
           <div className={styles.mainMenuButton} onClick={onClickStart}>
             start game
+          </div>
+          <div className={styles.mainMenuButton} onClick={onClickDialogueList}>
+            show dialogue list
           </div>
         </div>
       )

@@ -25,13 +25,33 @@ export class PauseMenu extends Phaser.Scene {
       this.scene.resume('World');
     };
 
+    const onClickBattle = () => {
+      this.choiceSelectSound.play();
+      this.scene.manager.getScenes(false).forEach(scene => {
+        this.scene.stop(scene.scene.key);  
+      });
+      this.scene.start('Battle');
+      console.log(this.scene);
+    };
+
+    const onClickExit = () => {
+      this.choiceSelectSound.play();
+      this.scene.manager.getScenes(false).forEach(scene => {
+        this.scene.stop(scene.scene.key);  
+      });
+      this.scene.start('MainMenu');
+    };
+
     const Ui = () => {
       return (
         <div>
           <div className={styles.pauseMenuButton} onClick={onClickContinue}>
             continue
           </div>
-          <div className={styles.pauseMenuButton}>
+          <div className={styles.pauseMenuButton} onClick={onClickBattle}>
+            enter battle
+          </div>
+          <div className={styles.pauseMenuButton} onClick={onClickExit}>
             exit to main menu
           </div>
         </div>

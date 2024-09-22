@@ -92,7 +92,7 @@ export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private lastCalculation = 0;
   private music: Phaser.Sound.BaseSound;
-  backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
+  backgroundImageUrl: string;
 
   battleStore: BattleStore;
 
@@ -101,8 +101,8 @@ export class Battle extends Phaser.Scene {
   }
 
   public init(): void {
-    // Init Battle
     this.battleStore = new BattleStore([healieBoi], DefaultParty);
+    this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.ui.create(<BattleView scene={this}/>, this);
   }
 

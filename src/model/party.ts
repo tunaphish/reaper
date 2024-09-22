@@ -1,8 +1,5 @@
 import { Combatant } from './combatant';
-
-export interface Option {
-  name: string;
-}
+import { Option } from './option';
 
 export type Folder = Option & {
   options: Option[];

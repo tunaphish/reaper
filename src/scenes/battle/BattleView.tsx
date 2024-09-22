@@ -2,7 +2,8 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { Combatant, Status } from '../../model/combatant';
-import { PartyMember, Folder, Option } from '../../model/party';
+import { PartyMember, Folder } from '../../model/party';
+import { Option } from '../../model/option';
 import { Action } from '../../model/action';
 
 import styles from './battle.module.css';

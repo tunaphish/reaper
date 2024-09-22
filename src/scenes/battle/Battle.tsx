@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { makeAutoObservable, toJS } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { Behavior, Enemy } from '../../model/enemy';
-import { Party, PartyMember, Option, Folder } from '../../model/party';
+import { Option } from '../../model/option';
+import { Party, PartyMember, Folder } from '../../model/party';
 import { Action, ActionTags, TargetType } from '../../model/action';
 import { Status } from '../../model/combatant';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
@@ -64,10 +65,6 @@ export class BattleStore {
     [...this.party.members, ...this.enemies].forEach((combatant) => {
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
-        // if (combatant === this.caster) {
-        //   this.setCaster(null);
-        //   this.menus = [];
-        // }
       } else if (combatant.stamina <= 0) {
         combatant.status = Status.EXHAUSTED;
       } else if (combatant.status === Status.BLOCKING) {
@@ -78,10 +75,15 @@ export class BattleStore {
     });
   }
 
-  resetSelections(): void {
+  // Not sure why, setting menu to empty array does not trigger observerable changes
+  emptyMenu(): void {
     while (this.menus.length > 0) {
       this.menus.pop();
     }
+  }
+
+  resetSelections(): void {
+    this.emptyMenu();
     this.setCaster(null);
     this.setAction(null);
     this.setTarget(null);
@@ -128,6 +130,10 @@ export class Battle extends Phaser.Scene {
 
     this.battleStore.tickStats(this.updateStats, delta);
     this.battleStore.updateCombatantsState();
+    if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {
+        this.battleStore.setCaster(null);
+        this.battleStore.emptyMenu();
+    }
 
     // enemy AI
     this.lastCalculation += delta;

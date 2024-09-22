@@ -1,5 +1,5 @@
 import { Combatant } from './combatant';
-import { Option } from './party';
+import { Option } from './option';
 
 export enum ActionTags {
   HEAL,

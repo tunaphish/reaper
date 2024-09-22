@@ -1,5 +1,5 @@
 import { Trait } from './trait';
-import { Option } from './party';
+import { Option } from './option';
 
 export enum Status {
   NORMAL = 'NORMAL',

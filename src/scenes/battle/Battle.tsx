@@ -34,7 +34,7 @@ export class BattleStore {
   caster?: PartyMember;
   action?: Action;
   target?: Combatant;
-  menus: Option[][] = [];
+  menus: Folder[] = [];
 
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
@@ -209,7 +209,7 @@ export class Battle extends Phaser.Scene {
     }
     this.sound.play('choice-select');
     this.battleStore.setCaster(member);
-    this.battleStore.menus.push(member.options);
+    this.battleStore.menus.push(member.folder);
   }
 
   closeMenu(): void {
@@ -229,7 +229,8 @@ export class Battle extends Phaser.Scene {
       if (action.targetType === TargetType.SELF) {
         this.battleStore.setTarget(this.battleStore.caster);
       } else {
-        this.battleStore.menus.push([...this.battleStore.party.members, ...this.battleStore.enemies]);
+        const targetFolder: Folder = { name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
+        this.battleStore.menus.push(targetFolder);
       }
     }
     else if ('staminaRegenRatePerSecond' in option) { // is Combatant
@@ -238,7 +239,7 @@ export class Battle extends Phaser.Scene {
     }
     else if ('options' in option) { // is Folder
       const folder = option as Folder;
-      this.battleStore.menus.push(folder.options);
+      this.battleStore.menus.push(folder);
     }
   }
 }

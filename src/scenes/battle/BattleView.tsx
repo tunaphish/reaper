@@ -30,16 +30,17 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
-type MenuOptions = Folder | Combatant | Action | Option
-const MenuView = (props: {options: MenuOptions[], style: React.CSSProperties, battleScene: Battle }) => {
+type MenuOption = Folder | Combatant | Action | Option
+const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
 
   return (
     <div className={styles.modalMenu} style={props.style} onClick={onClickMenu}>
-      <div className={styles.modalMenuHeader}>temp header</div>
-      {props.options.map((option) => {
+      <div className={styles.modalMenuHeader}>{props.folder.name}</div>
+      <hr/>
+      {props.folder.options.map((option: MenuOption) => {
         const optionText = 'staminaCost' in option ? option.name + ' - ' + option.staminaCost : option.name;
         const onClickOption = () => props.battleScene.selectOption(option);
         return (
@@ -50,7 +51,7 @@ const MenuView = (props: {options: MenuOptions[], style: React.CSSProperties, ba
   );
 }
 
-const MenuContainer = observer((props: { menus: Option[][], battleScene: Battle }) => {
+const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle }) => {
   const onClickModalContainer = () => props.battleScene.closeMenu();
   return (
     <div className={styles.menuViewsContainer}>
@@ -66,7 +67,7 @@ const MenuContainer = observer((props: { menus: Option[][], battleScene: Battle 
 
         return (
           <div key={idx} className={styles.modalContainer} onClick={onClickModalContainer}>
-            <MenuView options={menu} style={style} battleScene={props.battleScene}/>
+            <MenuView folder={menu} style={style} battleScene={props.battleScene}/>
           </div>
       )})}
     </div>

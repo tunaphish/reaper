@@ -9,7 +9,7 @@ export type Folder = Option & {
 };
 
 export type PartyMember = Combatant & {
-  options: Option[];
+  folder: Folder;
 };
 
 export interface Party {

@@ -2,14 +2,16 @@ import { PartyMember, Party, Folder } from '../model/party';
 import { Status } from '../model/combatant';
 import * as Actions from './actions';
 
-const ejiAttackFolder: Folder = {
-  name: 'Attack',
-  options: [Actions.slash],
-};
+
 const ejiThiefFolder: Folder = {
   name: 'Thief',
   options: [Actions.drain],
 };
+
+const ejiFolder: Folder = {
+  name: 'Eji',
+  options: [ejiThiefFolder, Actions.slash],
+}
 
 export const Eji: PartyMember = {
   name: 'Eji',
@@ -22,18 +24,20 @@ export const Eji: PartyMember = {
   maxMagic: 100,
   traits: new Set([]),
   staminaRegenRatePerSecond: 13,
-  options: [ejiAttackFolder, ejiThiefFolder, Actions.slash],
+  folder: ejiFolder,
   status: Status.NORMAL,
 };
 
-const keshiAttackFolder: Folder = {
-  name: 'Attack',
-  options: [Actions.slash],
-};
+
 const keshiBerserkerFolder: Folder = {
   name: 'Berserker',
   options: [Actions.assault, Actions.ankleSlice, Actions.finisher],
 };
+
+const keshiFolder: Folder = {
+  name: 'Keshi',
+  options: [keshiBerserkerFolder, Actions.slash],
+}
 
 export const Keshi: PartyMember = {
   name: 'Keshi',
@@ -46,18 +50,18 @@ export const Keshi: PartyMember = {
   maxMagic: 100,
   staminaRegenRatePerSecond: 15,
   traits: new Set([]),
-  options: [keshiAttackFolder, keshiBerserkerFolder],
+  folder: keshiFolder,
   status: Status.NORMAL,
-};
-
-const eliseAttackFolder: Folder = {
-  name: 'Attack',
-  options: [Actions.slash],
 };
 
 const eliseRestorationFolder: Folder = {
   name: 'Restoration',
   options: [Actions.heal],
+};
+
+const eliseFolder: Folder = {
+  name: 'Attack',
+  options: [Actions.slash, eliseRestorationFolder],
 };
 
 export const Elise: PartyMember = {
@@ -71,7 +75,7 @@ export const Elise: PartyMember = {
   maxMagic: 100,
   staminaRegenRatePerSecond: 10,
   traits: new Set([]),
-  options: [eliseAttackFolder, eliseRestorationFolder],
+  folder: eliseFolder,
   status: Status.NORMAL,
 };
 

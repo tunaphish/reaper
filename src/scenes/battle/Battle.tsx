@@ -147,8 +147,6 @@ export class Battle extends Phaser.Scene {
       enemy.stamina -= selectedBehavior.action.staminaCost;
       selectedBehavior.action.execute(target, enemy);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
-      //if (selectedBehavior.action.imageKeyName) this.displayEffect(target, selectedBehavior.action.imageKeyName);
-      //this.shakeTarget(target, selectedBehavior.action);
     });
   }
 

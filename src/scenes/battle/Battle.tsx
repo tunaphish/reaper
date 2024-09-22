@@ -105,7 +105,12 @@ export class Battle extends Phaser.Scene {
   public init(): void {
     this.battleStore = new BattleStore([healieBoi], DefaultParty);
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
+    this.music = this.sound.add('knight', {
+      loop: true,  // Enable looping
+      volume: 0.5  // Set volume (optional)
+    });
     this.ui.create(<BattleView scene={this}/>, this);
+    //this.music.play();
   }
 
   update(time: number, delta: number): void {

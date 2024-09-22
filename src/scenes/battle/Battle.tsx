@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { Behavior, Enemy } from '../../model/enemy';
 import { Party, PartyMember, Option, Folder } from '../../model/party';
 import { Action, ActionTags, TargetType } from '../../model/action';
@@ -213,6 +213,10 @@ export class Battle extends Phaser.Scene {
 
   closeMenu(): void {
     this.battleStore.menus.pop();
+    this.battleStore.setAction(null); // hacky way of resetting action 
+    if (this.battleStore.menus.length === 0) {
+      this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
+    }
     this.sound.play('dialogue-advance');
   }
 

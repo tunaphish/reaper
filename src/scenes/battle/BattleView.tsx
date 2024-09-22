@@ -78,6 +78,14 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
     const onClickPartyMember = (member: PartyMember) => {
       props.scene.openInitialMenu(member);
     }
+    // TODO: update for multiple enemies
+    const enemyPortaitStyle: React.CSSProperties = {
+      backgroundImage: `url(${enemies[0].imageUrl})`
+    }
+    const backgroundImageStyle: React.CSSProperties = {
+      backgroundImage: `url(${props.scene.backgroundImageUrl})`
+    }
+
     return (
         <div className={styles.container}>
           <div className={styles.partyBar}>
@@ -89,8 +97,8 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
           <div className={styles.tvContainer}>
             <div className={styles.staticEffect}>
               <div className={styles.oldTvContent}>
-              <div className={styles.background} />
-                <div className={styles.enemyPortait} />
+              <div className={styles.background} style={backgroundImageStyle}/>
+                <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
                 <p className={styles.animeText} />
               </div>
             </div>

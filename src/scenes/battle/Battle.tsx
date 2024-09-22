@@ -89,9 +89,10 @@ export class BattleStore {
 }
 
 export class Battle extends Phaser.Scene {
-  ui: UiOverlayPlugin;
+  private ui: UiOverlayPlugin;
   private lastCalculation = 0;
   private music: Phaser.Sound.BaseSound;
+  backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
 
   battleStore: BattleStore;
 

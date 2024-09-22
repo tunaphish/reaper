@@ -25,9 +25,10 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   return (
     <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
       <div>{props.combatant.name}</div>
-      <div>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</div>
-      <div>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</div>
-      <div>🌙 {Math.ceil(props.combatant.magic)}/ {props.combatant.maxMagic}</div>
+      <span>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</span>
+      <meter className={styles.healthMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+      <span>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</span>
+      <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
     </div>
   )
 });

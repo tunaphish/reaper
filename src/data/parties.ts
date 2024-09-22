@@ -42,9 +42,9 @@ const keshiFolder: Folder = {
 
 export const Keshi: PartyMember = {
   name: 'Keshi',
-  health: 10,
+  health: 100,
   maxHealth: 100,
-  bleed: 100,
+  bleed: 50,
   stamina: 5,
   maxStamina: 300,
   magic: 100,

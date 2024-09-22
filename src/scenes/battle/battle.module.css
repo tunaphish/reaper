@@ -351,3 +351,19 @@
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
+meter {
+  appearance: none;
+}
+
+.healthMeter {
+  /* background: transparent; */
+}
+
+.healthMeter:-moz-meter-optimum::-moz-meter-bar, .healthMeter::-webkit-meter-optimum-value {
+  background: red;
+}
+
+.staminaMeter:-moz-meter-optimum::-moz-meter-bar, .staminaMeter::-webkit-meter-optimum-value {
+  background: green;
+}

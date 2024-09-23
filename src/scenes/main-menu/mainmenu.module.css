@@ -1,6 +1,14 @@
-.mainMenuButton {
+.title {
   font-size: 32px;
-  letter-spacing: 5px;
+  letter-spacing: 2.5px;
+  text-align: center;
+  margin: 10px;
+  margin-top: 24px;
+}
+
+.mainMenuButton {
+  font-size: 24px;
+  letter-spacing: 2.5px;
   text-align: center;
   margin: 10px;
 }

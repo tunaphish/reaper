@@ -92,11 +92,13 @@ export class BattleStore {
 
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
-  private lastCalculation = 0;
   private music: Phaser.Sound.BaseSound;
   backgroundImageUrl: string;
 
   battleStore: BattleStore;
+
+  private lastCalculation = 0;
+  private battleStarted = false;
 
   constructor() {
     super(sceneConfig);
@@ -114,6 +116,8 @@ export class Battle extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    if (!this.battleStarted) return;
+
     if (this.battleStore.party.members.every((member) => member.status === Status.DEAD)) {
       this.scene.start('World');
     }
@@ -250,5 +254,9 @@ export class Battle extends Phaser.Scene {
       const folder = option as Folder;
       this.battleStore.menus.push(folder);
     }
+  }
+
+  startBattle() {
+    this.battleStarted = true;
   }
 }

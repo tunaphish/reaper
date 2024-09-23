@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
+import { motion } from 'framer-motion';
 
 import { Combatant, Status } from '../../model/combatant';
 import { PartyMember, Folder } from '../../model/party';
@@ -82,6 +83,9 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
     const onClickPartyMember = (member: PartyMember) => {
       props.scene.openInitialMenu(member);
     }
+    const onAnimationEnd = () => {
+      props.scene.startBattle();
+    }
     // TODO: update for multiple enemies
     const enemyPortaitStyle: React.CSSProperties = {
       backgroundImage: `url(${enemies[0].imageUrl})`
@@ -97,17 +101,27 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
               return <ResourceDisplay combatant={enemy} key={enemy.name} />
             })}
          </div>
-  
-          <div className={styles.tvContainer}>
-            <div className={styles.staticEffect}>
-              <div className={styles.oldTvContent}>
-              <div className={styles.background} style={backgroundImageStyle}/>
-                <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
-                <p className={styles.animeText} />
+         <motion.div
+            style={{
+              width: '100%',
+              height: '100%',
+              flex: 4,
+            }}
+            initial={{ scaleY: 0 }} 
+            animate={{ scaleY: 1 }} 
+            transition={{ duration: .3, ease: 'easeOut' }} 
+            onAnimationComplete={onAnimationEnd} 
+          >
+            <div className={styles.tvContainer}>
+              <div className={styles.staticEffect}>
+                <div className={styles.oldTvContent}>
+                <div className={styles.background} style={backgroundImageStyle}/>
+                  <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
+                  <p className={styles.animeText} />
+                </div>
               </div>
             </div>
-          </div>
-    
+          </motion.div>
           <div className={styles.partyBar}>
               {party.members.map((member) => {
                 return <ResourceDisplay combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>

@@ -7,9 +7,9 @@ import { selfPreservation } from './traits';
 
 export const healieBoi: Enemy = {
   name: 'Healie Boi',
-  health: 10,
+  health: 25,
   maxHealth: 200,
-  bleed: 10,
+  bleed: 0,
   stamina: 0,
   maxStamina: 800,
   magic: 100,

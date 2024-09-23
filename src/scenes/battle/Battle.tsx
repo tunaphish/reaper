@@ -256,7 +256,7 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  startBattle() {
+  startBattle(): void {
     this.battleStarted = true;
   }
 }

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { motion } from 'framer-motion';
+
 import styles from './boot.module.css';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
@@ -19,28 +21,26 @@ export class Boot extends Phaser.Scene {
     const Ui = () => {
       const [percent, setPercent] = React.useState<number>(0);
       const [fileKey, setFileKey] = React.useState<string>('');
+      const [opacity, setOpacity]  = React.useState<number>(1);
 
       React.useEffect(() => {    
         this.load.on('progress', (value) => (setPercent(Math.trunc(value * 100))));
         this.load.on('fileprogress', (file) => (setFileKey(file.key)));
+        this.load.on('complete', () => setOpacity(0));
       });
 
       return (
-          <div className={styles.loadingContainer}>
+          <motion.div animate={{opacity}} transition={{ duration: 1.5 }} className={styles.loadingContainer} onAnimationComplete={(definition: { opacity: number }) => {  if(definition.opacity === 0) this.scene.start('MainMenu')}}>
             <div className={styles.spinner}>
               <div className={styles.cube1}></div>
               <div className={styles.cube2}></div>
             </div>
             <div className={styles.loadingText}>{percent}%</div>
             <div className={styles.loadingText}>Loading: {fileKey}</div>
-        </div>
+        </motion.div>
       );
     }
     this.ui.create(<Ui/>, this);
-
-    this.load.on('complete', () => {
-      this.scene.start('Battle');
-    });
 
     this.loadAssets();
   }

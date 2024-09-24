@@ -30,6 +30,8 @@ export class World extends Phaser.Scene {
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
 
+    this.cameras.main.fadeIn(1200);
+
     const Ui = () => {
       const onClickPause = () => {
         this.scene.pause();

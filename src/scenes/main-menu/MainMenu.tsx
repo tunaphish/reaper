@@ -30,13 +30,30 @@ export class MainMenu extends Phaser.Scene {
     this.menuMusic.play();
 
     const Ui = () => {
-      const [opacity, setOpacity] = React.useState(0);
+      const [opacity, setOpacity] = React.useState(0.001);
 
       const onClickStart = () => {
-        this.menuMusic.stop();
+        this.tweens.add({
+          targets: this.backgroundImage,   
+          alpha: 0,         
+          duration: 1000,   
+          ease: 'Linear',   
+        });
+        this.tweens.add({
+          targets:  this.menuMusic,
+          volume:   0,
+          duration: 500
+        });
+        setOpacity(0);
         this.choiceSelectSound.play();
-        this.scene.start('World');
       };
+
+      const onAnimationComplete = ((definition: { opacity }) => {
+        if (definition.opacity === 0) {
+          this.menuMusic.stop();
+          this.scene.start('World');
+        }
+      })
 
       const onClickDialogueList = () => {
         this.menuMusic.stop();
@@ -50,9 +67,10 @@ export class MainMenu extends Phaser.Scene {
 
       return (
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={{ opacity }}
           animate={{ opacity }}     
           transition={{ duration: 1 }} 
+          onAnimationComplete={onAnimationComplete}
         >
           <h1 className={styles.title}>
             r e a p e r

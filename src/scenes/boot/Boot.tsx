@@ -30,7 +30,14 @@ export class Boot extends Phaser.Scene {
       });
 
       return (
-          <motion.div animate={{opacity}} transition={{ duration: 1.5 }} className={styles.loadingContainer} onAnimationComplete={(definition: { opacity: number }) => {  if(definition.opacity === 0) this.scene.start('MainMenu')}}>
+          <motion.div 
+            animate={{opacity}} 
+            transition={{ duration: 1.5 }} 
+            className={styles.loadingContainer} 
+            onAnimationComplete={(definition: { opacity: number }) => {  
+              if (definition.opacity === 0) this.scene.start('Dialogue')
+            }}
+          >
             <div className={styles.spinner}>
               <div className={styles.cube1}></div>
               <div className={styles.cube2}></div>

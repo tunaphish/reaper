@@ -16,6 +16,7 @@ const DIALOGUE_TEXT_ARRAY = [
   'Hello, how are you?',
 ];
 
+const TEXT_SPEED = 25;
 export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex;
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
@@ -31,17 +32,43 @@ export class Dialogue extends Phaser.Scene {
     this.dialogueAdvanceSound.play();
     this.dialogueTextIndex = 0;
 
-
     const Ui = () => {
       const [dialogueText, setDialogueText] = React.useState<string>(DIALOGUE_TEXT_ARRAY[0])
-      const onClick = () => {
-        this.dialogueTextIndex++;
-        if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
-          this.scene.start('World');
+      const [displayedText, setDisplayedText] = React.useState('');
+      const [displayIndex, setDisplayIndex] = React.useState(0);
+      const [isTyping, setIsTyping] = React.useState(true);
+
+      React.useEffect(() => {
+        if (!isTyping) {
+          setDisplayedText(dialogueText);
           return;
         }
-        this.dialogueAdvanceSound.play();
-        setDialogueText(DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex]);
+        if (displayIndex < dialogueText.length) {
+          const timeout = setTimeout(() => {
+            setDisplayedText((prev) => prev + dialogueText[displayIndex]);
+            setDisplayIndex((prev) => prev + 1);
+          }, TEXT_SPEED);
+    
+          return () => clearTimeout(timeout); 
+        } 
+        setIsTyping(false);
+      }, [displayIndex, dialogueText]);
+
+      const onClick = () => {
+        if (isTyping) {
+          setIsTyping(false);
+        } else {
+          this.dialogueTextIndex++;
+          if (this.dialogueTextIndex >= DIALOGUE_TEXT_ARRAY.length) {
+            this.scene.start('World');
+            return;
+          }
+          this.dialogueAdvanceSound.play();
+          setIsTyping(true);
+          setDisplayedText('');
+          setDisplayIndex(0);
+          setDialogueText(DIALOGUE_TEXT_ARRAY[this.dialogueTextIndex]);
+        }
       }
 
       return (
@@ -52,7 +79,9 @@ export class Dialogue extends Phaser.Scene {
               <img src={'/reaper/assets/characters/rise.png'}></img>
             </div>
             <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
-            <div onClick={onClick} className={styles.dialogueText}>{dialogueText}</div>
+            <div onClick={onClick} className={styles.dialogueText}>
+              <div>{displayedText}</div>
+            </div>
           </div>
         </div>
       )

@@ -108,8 +108,8 @@ export class Battle extends Phaser.Scene {
     this.battleStore = new BattleStore([healieBoi], DefaultParty);
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
-      loop: true,  // Enable looping
-      volume: 0.5  // Set volume (optional)
+      loop: true,  
+      volume: 0.5  
     });
     this.ui.create(<BattleView scene={this}/>, this);
     //this.music.play();
@@ -126,14 +126,7 @@ export class Battle extends Phaser.Scene {
     }
 
     if (this.battleStore.caster && this.battleStore.action && this.battleStore.target) {
-      console.log(`${this.battleStore.caster.name} used ${this.battleStore.action.name} on ${this.battleStore.target.name}`);
-      this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
-      this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
-      
-      if (this.battleStore.action.soundKeyName) {
-        this.sound.play(this.battleStore.action.soundKeyName);
-      }
-
+      this.queueAction();
       this.battleStore.resetSelections();
     }
 
@@ -151,6 +144,15 @@ export class Battle extends Phaser.Scene {
       this.updateEnemies(); 
     }
 
+  }
+
+  queueAction(): void {
+    this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
+    this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
+    
+    if (this.battleStore.action.soundKeyName) {
+      this.sound.play(this.battleStore.action.soundKeyName);
+    }
   }
 
   updateEnemies(): void {

@@ -45,7 +45,7 @@ export const Keshi: PartyMember = {
   health: 100,
   maxHealth: 100,
   bleed: 50,
-  stamina: 5,
+  stamina: -100,
   maxStamina: 300,
   magic: 100,
   maxMagic: 100,

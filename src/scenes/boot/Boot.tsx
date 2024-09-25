@@ -35,7 +35,7 @@ export class Boot extends Phaser.Scene {
             transition={{ duration: 1 }} 
             className={styles.loadingContainer} 
             onAnimationComplete={(definition: { opacity: number }) => {  
-              if (definition.opacity === 0) this.scene.start('MainMenu')
+              if (definition.opacity === 0) this.scene.start('Battle')
             }}
           >
             <div className={styles.spinner}>

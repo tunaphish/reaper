@@ -1,5 +1,18 @@
 import { Action, ActionTags, TargetType } from '../model/action';
-import { updateDamage, updateStamina, updateHealth } from '../model/combatant';
+import { Combatant } from '../model/combatant';
+
+export const updateHealth = (target: Combatant, change: number): void => {
+  target.health = Math.min(target.maxHealth, target.health + change);
+};
+
+export const updateStamina = (target: Combatant, change: number): void => {
+  target.stamina = Math.min(target.maxStamina, target.stamina + change);
+};
+
+export const updateDamage = (target: Combatant, change: number): void => {
+  target.bleed += change;
+  target.takingDamage = true;
+};
 
 export const slash: Action = {
   name: 'Slash',

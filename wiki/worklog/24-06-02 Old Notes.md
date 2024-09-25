@@ -379,3 +379,86 @@ disgust - increase ticks (hard to convey)
 - [ ] high confusion - shuffle letters : D
 - [ ] high confusion - aoe shuffle
 - [ ] add ways to inflict emotions 
+
+
+# Dropped Mechanic - Damage Types
+- Goals
+    - New 'status effects'
+    - Something integrated with current system
+    - Introduce diversity into combat systeem
+- Damage types -> new status effects?
+    - Damage types are on health bar (similar to temp damage mechanic)
+    - Types cause different effects
+    - Player's should be able to play around effects
+- Effect Types
+    - Freeze: Opening menu lowers stamina
+    - Burn: Opening menu lowers health
+    - Shocked: Opening menu lowers magic
+    - Holy: Incoming Damage/Health is Reversed
+        - Attacks that mix damage types
+    - Vuln: Take Additional Damage
+    - Stun: Cannot Activate, Cancels Menu (too op?)
+    - Explosion: auto cuts HP if does enough
+- Interactions with Other Systems
+    - Infect: Deal poison on self as AOE poison damage
+- Difference with Curses
+    - You cannot work around curses
+    - they are permanent?
+    - Curses start out less severe?
+
+# Dropped Mechanic - Feats
+- Trigger
+    - Low Health
+    - Deal Damage
+    - Have 3 active covenants
+    - Have maxed curse active
+    - Die
+    - Attack Teammates
+    - Exhaust mana/stamina
+    - Do not open menu for 1 minute
+    - Perform 5 Feats?
+    - Convert stamina bar to entirely defense
+    - Break Six Vows
+- Examples
+    - Soldier
+        - Use 3 Novice Abilities
+    - Veteren
+        - Use 6 Soldier Abilities
+
+- maybe more strict evolutions
+	- you use these types of skills and evolve in this way
+
+# Dropped Mechanic - Defensive Options
+- https://www.reddit.com/r/JRPG/comments/1do7wxc/would_you_like_to_see_more_defense_possibilities/
+- shields
+- stances 
+- defensive stats
+- on slide to defend
+	- how do enemies defend
+
+# Dropped Mechanic - Edicts
+- This world will know pain
+- - Edicts
+        - Only one of us leaves alive.
+        - attacks are reversed...
+
+# Dropped Mechanic - Casting Effects
+
+- Casting Effects
+    - interactions with casting time effects
+    - (chase effects?)
+    - counters?
+    - dodges
+    - I think I moved away from states. but you can use a shit to of stamina and magic to get reflects and counters?
+    - Dodge
+    - Counter
+    - Reflect
+    - Chase
+    - Redirect
+    - Chain or fate
+        - AOE - need to attack teammates to minimize damage
+    - increase cast time for damage - aim. potential effect?
+
+# Cast Effects
+- slow, haste, stop
+- Flash - Dodge Attack

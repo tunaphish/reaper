@@ -79,9 +79,10 @@ export class Dialogue extends Phaser.Scene {
               <img src={'/reaper/assets/characters/rise.png'}></img>
             </div>
             <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
-            <div onClick={onClick} className={styles.dialogueText}>
-              <div>{displayedText}</div>
-            </div>
+            <span onClick={onClick} className={styles.dialogueText}>
+              {displayedText}
+              { !isTyping && <span className={styles.dialogueTextIndicator} />}
+            </span>
           </div>
         </div>
       )

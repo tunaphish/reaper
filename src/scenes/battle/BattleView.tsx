@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Combatant, Status } from '../../model/combatant';
 import { PartyMember, Folder } from '../../model/party';
@@ -56,24 +56,51 @@ const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScen
 }
 
 const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle }) => {
-  const onClickModalContainer = () => props.battleScene.closeMenu();
+  const onClickModalContainer = () => {
+    props.battleScene.closeMenu();
+  }
+  const variants = {
+    initial: { opacity: 0, x: "5%" },
+    animate: { opacity: 1, x: 0 },
+    exit: ({idx, total}) => ({
+      opacity: 0,
+      x: "-5%",
+      transition: {
+        delay: (total-idx-1) * 0.1,
+      },
+    }),
+    
+  }
+
   return (
     <div className={styles.menuViewsContainer}>
-      {props.menus.map((menu, idx) => {
-
-        const RIGHT_OFFSET = 50;
-        const BOTTOM_OFFSET = 150;
-        const style: React.CSSProperties = {
-          zIndex: 10 * idx,
-          right: 30 * (idx - 1) + RIGHT_OFFSET + 'px',
-          bottom: 30 * (idx - 1) + BOTTOM_OFFSET + 'px',
-        }
-
-        return (
-          <div key={idx} className={styles.modalContainer} onClick={onClickModalContainer}>
+      <AnimatePresence>
+        {
+          props.menus.map((menu, idx) => {
+          const RIGHT_OFFSET = 50;
+          const BOTTOM_OFFSET = 150;
+          const style: React.CSSProperties = {
+            zIndex: 10 * idx,
+            right: 30 * (idx - 1) + RIGHT_OFFSET + 'px',
+            bottom: 30 * (idx - 1) + BOTTOM_OFFSET + 'px',
+          }
+          return (
+            <motion.div 
+              custom={{idx, total: props.menus.length}}
+              className={styles.modalContainer} 
+              onClick={onClickModalContainer}
+              variants={variants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              key={idx}
+            >
             <MenuView folder={menu} style={style} battleScene={props.battleScene}/>
-          </div>
-      )})}
+          </motion.div>        
+          )
+          })
+        }
+      </AnimatePresence>
     </div>
   );
 }) 

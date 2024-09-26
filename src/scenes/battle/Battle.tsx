@@ -75,11 +75,8 @@ export class BattleStore {
     });
   }
 
-  // Not sure why, setting menu to empty array does not trigger observerable changes
   emptyMenu(): void {
-    while (this.menus.length > 0) {
-      this.menus.pop();
-    }
+    this.menus.splice(0, this.menus.length);
   }
 
   resetSelections(): void {

@@ -59,17 +59,16 @@ const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle })
   const onClickModalContainer = () => {
     props.battleScene.closeMenu();
   }
-  const variants = {
+  const variants: Variants = {
     initial: { opacity: 0, x: "5%" },
     animate: { opacity: 1, x: 0 },
     exit: ({idx, total}) => ({
       opacity: 0,
       x: "-5%",
       transition: {
-        delay: (total-idx-1) * 0.1,
+        delay: (total-idx-1) * 0.05,
       },
-    }),
-    
+    }),    
   }
 
   return (

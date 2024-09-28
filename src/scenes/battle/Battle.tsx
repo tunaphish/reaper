@@ -136,10 +136,10 @@ export class Battle extends Phaser.Scene {
 
     // enemy AI
     this.lastCalculation += delta;
-    if (this.lastCalculation > 2000) {
-      this.lastCalculation = 0;
-      this.updateEnemies(); 
-    }
+    // if (this.lastCalculation > 2000) {
+    //   this.lastCalculation = 0;
+    //   this.updateEnemies(); 
+    // }
 
   }
 

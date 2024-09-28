@@ -32,7 +32,7 @@ export class Boot extends Phaser.Scene {
       return (
           <motion.div 
             animate={{opacity}} 
-            transition={{ duration: 1 }} 
+            transition={{ duration: .5 }} 
             className={styles.loadingContainer} 
             onAnimationComplete={(definition: { opacity: number }) => {  
               if (definition.opacity === 0) this.scene.start('Battle')

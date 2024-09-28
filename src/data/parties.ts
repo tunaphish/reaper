@@ -44,7 +44,7 @@ export const Keshi: PartyMember = {
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
-  bleed: 50,
+  bleed: 100,
   stamina: 100,
   maxStamina: 300,
   magic: 100,

@@ -14,9 +14,12 @@ export const updateDamage = (target: Combatant, change: number): void => {
     target.takingDamage = true;
   }
   if (target.status === Status.EXHAUSTED) {
-    change *=2;
+    change *= 2;
   }
-  target.bleed += change;
+  if (change + target.bleed > target.health) {
+    target.health = Math.max(0, (change+target.bleed) - target.health);
+  }
+  target.bleed += Math.min(change+target.bleed, 0);
 };
 
 export const slash: Action = {

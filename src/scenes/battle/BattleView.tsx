@@ -10,6 +10,15 @@ import { Action } from '../../model/action';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 
+const ICON_MAP ={
+  attack: '/reaper/assets/ui/icons/attack.png',
+  magic: '/reaper/assets/ui/icons/magic.png',
+  item: '/reaper/assets/ui/icons/item.png',
+  folder: '/reaper/assets/ui/icons/folder.png',
+  ally: '/reaper/assets/ui/icons/ally.png',
+  enemy: '/reaper/assets/ui/icons/enemy.png',
+}
+
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
@@ -43,15 +52,34 @@ const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScen
     event.stopPropagation();
   }
 
+
+
   return (
     <div className={styles.modalMenu} style={props.style} onClick={onClickMenu}>
       <div className={styles.modalMenuHeader}>{props.folder.name}</div>
-      <hr/>
+      <hr style={{ marginBottom: 4 }}/>
       {props.folder.options.map((option: MenuOption) => {
-        const optionText = 'staminaCost' in option ? option.name + ' - ' + option.staminaCost : option.name;
         const onClickOption = () => props.battleScene.selectOption(option);
+        
+        let iconMapKey = 'folder';
+        if ('staminaCost' in option) {
+          iconMapKey = 'attack';
+        } else if ('behaviors' in option) {
+          iconMapKey = 'enemy';
+        } else if ('folder' in option) {
+          iconMapKey = 'ally';
+        }
+
         return (
-          <div key={option.name} onClick={onClickOption}>{optionText}</div>
+          <div key={option.name} onClick={onClickOption} className={styles.menuOption}>
+            <img
+              src={ICON_MAP[iconMapKey]}
+              alt="Icon"
+              style={{ width: '18px', height: '18px', marginRight: '4px' }} 
+            />
+          <div>{option.name}</div>
+          { 'staminaCost' in option && <div className={styles.optionCost}>{option.staminaCost}</div>}
+        </div>
         )
       })}
     </div>

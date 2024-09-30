@@ -19,7 +19,7 @@ const ICON_MAP ={
   enemy: '/reaper/assets/ui/icons/enemy.png',
 }
 
-const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
+const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: styles.DEAD,
@@ -31,17 +31,30 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     props.combatant.takingDamage ? styles.shake : '',
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
+  const onCastingWindowAnimationComplete = (definition: { height?: string }) => {
+    if (definition?.height === "100%") {
+      props.battleScene.executeAction(props.combatant);
+    }
+  } 
 
   return (
     <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
-      <div>{props.combatant.name}</div>
-      <span>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</span>
-      <div className={styles.healthMeterContainer}>
-        <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
-        <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+      <motion.div 
+        className={styles.castingWindow}
+        animate={{ height: props.combatant?.queuedAction != null ? "100%" : 0  }}
+        transition={{ duration: props.combatant?.queuedAction != null ? 1 : 0 }}
+        onAnimationComplete={onCastingWindowAnimationComplete}
+       />
+      <div className={styles.resourceContainer}>
+        <div>{props.combatant.name}</div>
+        <span>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</span>
+        <div className={styles.healthMeterContainer}>
+          <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
+          <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+        </div>
+        <span>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</span>
+        <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
       </div>
-      <span>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</span>
-      <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
     </div>
   )
 });
@@ -155,7 +168,7 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
         <div className={styles.container}>
           <div className={styles.partyBar}>
             {enemies.map((enemy) => {
-              return <ResourceDisplay combatant={enemy} key={enemy.name} />
+              return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
          </div>
          <motion.div
@@ -181,7 +194,7 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
           </motion.div>
           <div className={styles.partyBar}>
               {party.members.map((member) => {
-                return <ResourceDisplay combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>
+                return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>
               })}
           </div>
           <MenuContainer menus={props.scene.battleStore.menus} battleScene={props.scene}/>

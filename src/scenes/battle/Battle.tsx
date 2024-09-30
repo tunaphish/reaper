@@ -69,7 +69,7 @@ export class BattleStore {
         combatant.status = Status.EXHAUSTED;
       } else if (combatant.status === Status.BLOCKING) {
         // do nothing
-      } else {
+      } else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
         combatant.status = Status.NORMAL;
       }
     });
@@ -143,13 +143,21 @@ export class Battle extends Phaser.Scene {
 
   }
 
-  queueAction(): void {
-    this.battleStore.caster.stamina -= this.battleStore.action.staminaCost;
-    this.battleStore.action.execute(this.battleStore.target, this.battleStore.caster);
-    
-    if (this.battleStore.action.soundKeyName) {
-      this.sound.play(this.battleStore.action.soundKeyName);
+  queueAction(): void{
+    this.battleStore.caster.status = Status.CASTING;
+    this.battleStore.caster.queuedAction = this.battleStore.action;
+    this.battleStore.caster.queuedTarget = this.battleStore.target;
+  }
+
+  executeAction(combatant: Combatant): void {
+    combatant.stamina -= combatant.queuedAction.staminaCost;
+    combatant.queuedAction.execute(combatant.queuedTarget, combatant);
+    if (combatant.queuedAction.soundKeyName) {
+      this.sound.play(combatant.queuedAction.soundKeyName);
     }
+    combatant.status = Status.NORMAL;
+    combatant.queuedAction = null;
+    combatant.queuedTarget = null;
   }
 
   updateEnemies(): void {

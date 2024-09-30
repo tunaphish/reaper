@@ -44,7 +44,7 @@ export const Keshi: PartyMember = {
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
-  bleed: 100,
+  bleed: 0,
   stamina: 100,
   maxStamina: 300,
   magic: 100,
@@ -68,7 +68,7 @@ const eliseFolder: Folder = {
 
 export const Elise: PartyMember = {
   name: 'Elise',
-  health: 0,
+  health: 100,
   bleed: 0,
   maxHealth: 100,
   stamina: 0,

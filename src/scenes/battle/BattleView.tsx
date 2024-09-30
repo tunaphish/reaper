@@ -54,6 +54,11 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
         </div>
         <span>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</span>
         <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
+        <span>🌙 {Math.ceil(props.combatant.magic)}/ {props.combatant.maxMagic}</span>
+        <div className={styles.magicMeterContainer}>
+          <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
+          <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
+        </div>
       </div>
     </div>
   )

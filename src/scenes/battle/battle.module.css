@@ -373,21 +373,18 @@ meter {
   appearance: none;
 }
 
-.healthMeter {
-  background: transparent;
-}
-
-.healthMeterContainer {
+.healthMeterContainer, .magicMeterContainer {
   display: grid;
   grid-template-columns: 1fr; 
   grid-template-rows: 1fr;    
 }
 
-.healthMeter {
+.healthMeter, .flowMeter {
   z-index: 2;
+  background: transparent;
 }
 
-.healthMeter, .bleedMeter {
+.healthMeter, .bleedMeter, .magicMeter, .flowMeter {
   grid-column: 1;
   grid-row: 1;
 }
@@ -402,6 +399,14 @@ meter {
 
 .staminaMeter:-moz-meter-optimum::-moz-meter-bar, .staminaMeter::-webkit-meter-optimum-value {
   background: green;
+}
+
+.flowMeter:-moz-meter-optimum::-moz-meter-bar, .flowMeter::-webkit-meter-optimum-value {
+  background: turquoise;
+}
+
+.magicMeter:-moz-meter-optimum::-moz-meter-bar, .magicMeter::-webkit-meter-optimum-value {
+  background: blue;
 }
 
 .menuOption {

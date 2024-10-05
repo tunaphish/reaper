@@ -280,7 +280,7 @@ export class Battle extends Phaser.Scene {
 
 export const updateHealth = (target: Combatant, change: number): void => {
   if (target.health + change > target.maxHealth) {
-    target.bleed -= target.maxHealth - (target.health + change);
+    target.bleed -= (target.health + change) -  target.maxHealth;
   }
   target.health = Math.min(target.maxHealth, target.health + change);  
 };
@@ -303,5 +303,5 @@ export const updateDamage = (target: Combatant, change: number): void => {
   if (change + target.bleed > target.health) {
     target.health = Math.max(0, (change+target.bleed) - target.health);
   }
-  target.bleed += Math.min(change+target.bleed, target.maxHealth);
+  target.bleed += Math.min(change+target.bleed, target.health);
 };

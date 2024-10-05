@@ -1,26 +1,6 @@
-import { Action, ActionTags, TargetType } from '../model/action';
-import { Combatant, Status } from '../model/combatant';
-
-export const updateHealth = (target: Combatant, change: number): void => {
-  target.health = Math.min(target.maxHealth, target.health + change);
-};
-
-export const updateStamina = (target: Combatant, change: number): void => {
-  target.stamina = Math.min(target.maxStamina, target.stamina + change);
-};
-
-export const updateDamage = (target: Combatant, change: number): void => {
-  if (change > 0) {
-    target.takingDamage = true;
-  }
-  if (target.status === Status.EXHAUSTED) {
-    change *= 2;
-  }
-  if (change + target.bleed > target.health) {
-    target.health = Math.max(0, (change+target.bleed) - target.health);
-  }
-  target.bleed += Math.min(change+target.bleed, target.maxHealth);
-};
+import { Action, ActionTags } from '../model/action';
+import { TargetType } from '../model/targetType';
+import { updateDamage, updateHealth, updateStamina } from '../scenes/battle/Battle';
 
 export const slash: Action = {
   name: 'Slash',

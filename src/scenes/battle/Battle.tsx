@@ -1,21 +1,24 @@
 import * as React from 'react';
 import { makeAutoObservable } from 'mobx';
+
 import { Behavior, Enemy } from '../../model/enemy';
 import { Option } from '../../model/option';
 import { Party, PartyMember, Folder } from '../../model/party';
-import { Action, ActionTags, TargetType } from '../../model/action';
+import { Action, ActionTags } from '../../model/action';
+import { TargetType } from '../../model/targetType';
 import { Status } from '../../model/combatant';
-import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
+import { self } from '../../model/targetPriorities';
+import { Combatant } from '../../model/combatant';
 
 import { DefaultParty } from '../../data/parties';
 import { healieBoi } from '../../data/enemies';
-import { self } from '../../model/targetPriorities';
 
 import { getRandomInt } from '../../util/random';
+import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
 import { BattleView } from './BattleView';
-import { Combatant } from '../../model/combatant';
 import { idle } from '../../data/actions';
+import { Item } from '../../model/item';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -28,12 +31,14 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
+type Executable = Action | Item;
+
 export class BattleStore {
   enemies: Enemy[];
   party: Party;
 
   caster?: PartyMember;
-  action?: Action;
+  executable?: Executable;
   target?: Combatant;
   menus: Folder[] = [];
 
@@ -51,8 +56,8 @@ export class BattleStore {
     this.target = target;
   }
 
-  setAction(action?: Action): void {
-    this.action = action;
+  setExecutable(executable?: Executable): void {
+    this.executable = executable;
   }
 
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
@@ -82,7 +87,7 @@ export class BattleStore {
   resetSelections(): void {
     this.emptyMenu();
     this.setCaster(null);
-    this.setAction(null);
+    this.setExecutable(null);
     this.setTarget(null);
   }
 }
@@ -122,7 +127,7 @@ export class Battle extends Phaser.Scene {
       this.scene.start('World');
     }
 
-    if (this.battleStore.caster && this.battleStore.action && this.battleStore.target) {
+    if (this.battleStore.caster && this.battleStore.executable && this.battleStore.target) {
       this.queueAction();
       this.battleStore.resetSelections();
     }
@@ -145,18 +150,23 @@ export class Battle extends Phaser.Scene {
 
   queueAction(): void{
     this.battleStore.caster.status = Status.CASTING;
-    this.battleStore.caster.queuedAction = this.battleStore.action;
+    this.battleStore.caster.queuedOption = this.battleStore.executable;
     this.battleStore.caster.queuedTarget = this.battleStore.target;
   }
 
-  executeAction(combatant: Combatant): void {
-    combatant.stamina -= combatant.queuedAction.staminaCost;
-    combatant.queuedAction.execute(combatant.queuedTarget, combatant);
-    if (combatant.queuedAction.soundKeyName) {
-      this.sound.play(combatant.queuedAction.soundKeyName);
+  execute(combatant: Combatant): void {
+    if ("staminaCost" in combatant.queuedOption) {
+      combatant.stamina -= combatant.queuedOption.staminaCost;
+    }
+    if ("charges" in combatant.queuedOption) {
+      combatant.queuedOption.charges -= 1;
+    }
+    combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    if (combatant.queuedOption.soundKeyName) {
+      this.sound.play(combatant.queuedOption.soundKeyName);
     }
     combatant.status = Status.NORMAL;
-    combatant.queuedAction = null;
+    combatant.queuedOption = null;
     combatant.queuedTarget = null;
   }
 
@@ -198,8 +208,8 @@ export class Battle extends Phaser.Scene {
     return selectedBehavior || { action: idle, weight: 100, targetPriority: self }; // in case it doesn't pick anything
   }
 
-  setAction(action: Action): void {
-    this.battleStore.action = action;
+  setExecutable(executable: Executable): void {
+    this.battleStore.executable = executable;
   }
 
   setTarget(combatant: Combatant): void {
@@ -234,7 +244,7 @@ export class Battle extends Phaser.Scene {
 
   closeMenu(): void {
     this.battleStore.menus.pop();
-    this.battleStore.setAction(null); // hacky way of resetting action 
+    this.battleStore.setExecutable(null); // hacky way of resetting action 
     if (this.battleStore.menus.length === 0) {
       this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
     }
@@ -243,21 +253,21 @@ export class Battle extends Phaser.Scene {
 
   selectOption(option: Option): void {
     this.sound.play('choice-select');
-    if ('staminaCost' in option) { // is Action
-      const action = option as Action;
-      this.battleStore.setAction(action);
-      if (action.targetType === TargetType.SELF) {
+    if ('execute' in option) { 
+      const executable = option as Executable;
+      this.battleStore.setExecutable(executable);
+      if (executable.targetType === TargetType.SELF) {
         this.battleStore.setTarget(this.battleStore.caster);
       } else {
         const targetFolder: Folder = { name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
         this.battleStore.menus.push(targetFolder);
       }
     }
-    else if ('staminaRegenRatePerSecond' in option) { // is Combatant
+    else if ('staminaRegenRatePerSecond' in option) { 
       const combatant = option as Combatant;
       this.battleStore.setTarget(combatant);
     }
-    else if ('options' in option) { // is Folder
+    else if ('options' in option) { 
       const folder = option as Folder;
       this.battleStore.menus.push(folder);
     }
@@ -267,3 +277,31 @@ export class Battle extends Phaser.Scene {
     this.battleStarted = true;
   }
 }
+
+export const updateHealth = (target: Combatant, change: number): void => {
+  if (target.health + change > target.maxHealth) {
+    target.bleed -= target.maxHealth - (target.health + change);
+  }
+  target.health = Math.min(target.maxHealth, target.health + change);  
+};
+
+export const updateBleed = (target: Combatant, change: number): void => {
+  target.bleed = Math.max(0, target.bleed - change);  
+};
+
+export const updateStamina = (target: Combatant, change: number): void => {
+  target.stamina = Math.min(target.maxStamina, target.stamina + change);
+};
+
+export const updateDamage = (target: Combatant, change: number): void => {
+  if (change > 0) {
+    target.takingDamage = true;
+  }
+  if (target.status === Status.EXHAUSTED) {
+    change *= 2;
+  }
+  if (change + target.bleed > target.health) {
+    target.health = Math.max(0, (change+target.bleed) - target.health);
+  }
+  target.bleed += Math.min(change+target.bleed, target.maxHealth);
+};

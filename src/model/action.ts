@@ -1,5 +1,6 @@
 import { Combatant } from './combatant';
 import { Option } from './option';
+import { TargetType } from "./targetType";
 
 export enum ActionTags {
   HEAL,
@@ -7,11 +8,6 @@ export enum ActionTags {
   DEFEND,
   DEBUFF,
   BUFF,
-}
-
-export enum TargetType {
-  SELF = 'SElF',
-  SINGLE_TARGET = 'SINGLE_TARGET',
 }
 
 export type Action = Option & {

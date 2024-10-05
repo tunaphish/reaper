@@ -9,6 +9,7 @@ import { Action } from '../../model/action';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
+import { Item } from '../../model/item';
 
 const ICON_MAP ={
   attack: '/reaper/assets/ui/icons/attack.png',
@@ -33,7 +34,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
   const onCastingWindowAnimationComplete = (definition: { height?: string }) => {
     if (definition?.height === "100%") {
-      props.battleScene.executeAction(props.combatant);
+      props.battleScene.execute(props.combatant);
     }
   } 
 
@@ -41,8 +42,8 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
       <motion.div 
         className={styles.castingWindow}
-        animate={{ height: props.combatant?.queuedAction != null ? "100%" : 0  }}
-        transition={{ duration: props.combatant?.queuedAction != null ? 1 : 0 }}
+        animate={{ height: props.combatant?.queuedOption != null ? "100%" : 0  }}
+        transition={{ duration: props.combatant?.queuedOption != null ? 1 : 0 }}
         onAnimationComplete={onCastingWindowAnimationComplete}
        />
       <div className={styles.resourceContainer}>
@@ -64,13 +65,11 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
-type MenuOption = Folder | Combatant | Action | Option
+type MenuOption = Folder | Combatant | Action | Option | Item
 const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
-
-
 
   return (
     <div className={styles.modalMenu} style={props.style} onClick={onClickMenu}>
@@ -86,18 +85,23 @@ const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScen
           iconMapKey = 'enemy';
         } else if ('folder' in option) {
           iconMapKey = 'ally';
+        } else if ('charges' in option) {
+          iconMapKey = 'item';
         }
 
-        return (
-          <div key={option.name} onClick={onClickOption} className={styles.menuOption}>
+        {/* @ts-ignore */}
+        return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={"charges" in option && option.charges === 0}>
             <img
               src={ICON_MAP[iconMapKey]}
               alt="Icon"
               style={{ width: '18px', height: '18px', marginRight: '4px' }} 
             />
           <div>{option.name}</div>
+          {/* @ts-ignore */}
           { 'staminaCost' in option && <div className={styles.optionCost}>{option.staminaCost}</div>}
-        </div>
+          {/* @ts-ignore */}
+          { 'charges' in option && 'maxCharges' in option && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+        </button>
         )
       })}
     </div>

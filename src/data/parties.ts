@@ -1,7 +1,8 @@
 import { PartyMember, Party, Folder } from '../model/party';
 import { Status } from '../model/combatant';
-import * as Actions from './actions';
 
+import * as Actions from './actions';
+import { bomb, potion } from './items';
 
 const ejiThiefFolder: Folder = {
   name: 'Thief',
@@ -10,7 +11,7 @@ const ejiThiefFolder: Folder = {
 
 const ejiFolder: Folder = {
   name: 'Eji',
-  options: [ejiThiefFolder, Actions.slash],
+  options: [ejiThiefFolder, Actions.slash, bomb, potion],
 }
 
 export const Eji: PartyMember = {
@@ -71,7 +72,7 @@ const eliseFolder: Folder = {
 export const Elise: PartyMember = {
   name: 'Elise',
   health: 100,
-  bleed: 0,
+  bleed: 100,
   maxHealth: 100,
   stamina: 0,
   maxStamina: 500,

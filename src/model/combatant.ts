@@ -1,6 +1,7 @@
 import { Trait } from './trait';
 import { Option } from './option';
 import { Action } from './action';
+import { Item } from './item';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -25,6 +26,6 @@ export type Combatant = Option & {
   traits: Set<Trait>;
   status: Status;
   takingDamage: boolean;
-  queuedAction?: Action;
+  queuedOption?: Action | Item;
   queuedTarget?: Combatant;
 }

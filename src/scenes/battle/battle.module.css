@@ -410,12 +410,41 @@ meter {
 }
 
 .menuOption {
+  all: unset;
+  
   display: flex;
   align-items: center;
   padding-bottom: 4px;
+  width: 100%;
 }
+
+.menuOption:disabled {
+  color: gray;
+}
+
 
 .optionCost {
   text-align: end;
   flex: 1;
+}
+
+.fraction {
+  display: inline-flex;
+  align-items: center;
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.numerator {
+  display: inline-block;
+  transform: translateY(-0.3em);
+}
+
+.denominator {
+  display: inline-block;
+  transform: translateY(0.3em);
+}
+
+.slash {
+  margin: 0 4px;
 }

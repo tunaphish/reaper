@@ -97,6 +97,16 @@
   flex: 1;
 }
 
+.attackWindow {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  z-index: 10;
+}
+
 .castingWindow {
   height: 0;
   width: 100%;
@@ -293,9 +303,6 @@
     top: 100%;
     opacity: 0;
   }
-}
-
-.menuViewsContainer {
 }
 
 .modalContainer {

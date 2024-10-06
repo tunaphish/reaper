@@ -15,6 +15,7 @@ export const healieBoi: Enemy = {
   magic: 100,
   maxMagic: 100,
   flow: 0,
+  flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 10,
   traits: new Set([selfPreservation]),
   behaviors: [

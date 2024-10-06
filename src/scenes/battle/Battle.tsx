@@ -149,9 +149,20 @@ export class Battle extends Phaser.Scene {
   }
 
   queueAction(): void{
+    for (const member of this.battleStore.party.members) {
+      if (member.status === Status.ATTACKING) {
+        this.battleStore.caster.flow = Math.min(this.battleStore.caster.maxMagic, this.battleStore.caster.flow+25);
+        member.flow = Math.min(member.maxMagic, member.flow+25);
+        this.sound.play("smirk");
+      }
+    }
     this.battleStore.caster.status = Status.CASTING;
     this.battleStore.caster.queuedOption = this.battleStore.executable;
     this.battleStore.caster.queuedTarget = this.battleStore.target;
+  }
+
+  setCombatantAttacking(combatant: Combatant) {
+    combatant.status = Status.ATTACKING;
   }
 
   execute(combatant: Combatant): void {
@@ -225,6 +236,8 @@ export class Battle extends Phaser.Scene {
     }
     const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
     combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+    const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
+    combatant.flow = Math.max(0, combatant.flow-decayPerTick);
   }
 
   playSong(songKey: string): void {

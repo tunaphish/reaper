@@ -21,6 +21,7 @@ export type Combatant = Option & {
   magic: number;
   maxMagic: number;
   flow: number;
+  flowDecayRatePerSecond: number;
 
   staminaRegenRatePerSecond: number; 
   traits: Set<Trait>;

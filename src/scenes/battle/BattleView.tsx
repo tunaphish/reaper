@@ -54,17 +54,28 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
        />
       <div className={styles.resourceContainer}>
         <div>{props.combatant.name}</div>
-        <span>❤️ {Math.ceil(props.combatant.health)}/ {props.combatant.maxHealth}</span>
-        <div className={styles.healthMeterContainer}>
-          <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
-          <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+        <div className={styles.statContainer}>
+          <div>❤️ </div>
+          <div className={styles.meterContainer}>
+            <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+            <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
+            <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
+          </div>
         </div>
-        <span>☀️ {Math.ceil(props.combatant.stamina)}/ {props.combatant.maxStamina}</span>
-        <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
-        <span>🌙 {Math.ceil(props.combatant.magic)}/ {props.combatant.maxMagic}</span>
-        <div className={styles.magicMeterContainer}>
-          <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
-          <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
+        <div className={styles.statContainer}>
+          <div>☀️ </div>
+          <div className={styles.meterContainer}>
+            <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
+            <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
+          </div>
+        </div>
+        <div className={styles.statContainer}>
+          <div>🌙 </div>
+          <div className={styles.meterContainer}>
+            <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
+            <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
+            <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
+          </div>
         </div>
       </div>
       <motion.div 

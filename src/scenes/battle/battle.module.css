@@ -124,6 +124,10 @@
   align-items: center;
 }
 
+.statContainer {
+  display: flex;
+}
+
 .EXHAUSTED {
   border: 1px solid yellow;
   color: yellow;
@@ -380,18 +384,17 @@ meter {
   appearance: none;
 }
 
-.healthMeterContainer, .magicMeterContainer {
+.meterContainer {
   display: grid;
   grid-template-columns: 1fr; 
   grid-template-rows: 1fr;    
 }
 
 .healthMeter, .flowMeter {
-  z-index: 2;
   background: transparent;
 }
 
-.healthMeter, .bleedMeter, .magicMeter, .flowMeter {
+.healthMeter, .bleedMeter, .magicMeter, .flowMeter, .staminaMeter, .meterNumber {
   grid-column: 1;
   grid-row: 1;
 }
@@ -414,6 +417,11 @@ meter {
 
 .magicMeter:-moz-meter-optimum::-moz-meter-bar, .magicMeter::-webkit-meter-optimum-value {
   background: blue;
+}
+
+.meterNumber {
+  text-align: right;
+  padding-right: 5px;
 }
 
 .menuOption {

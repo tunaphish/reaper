@@ -78,13 +78,20 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 });
 
 type MenuOption = Folder | Combatant | Action | Option | Item
-const MenuView = (props: {folder: Folder, style: React.CSSProperties, battleScene: Battle }) => {
+const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
 
+  const RIGHT_OFFSET = 50;
+  const BOTTOM_OFFSET = 150;
+  const style: React.CSSProperties = {
+    right: 30 * (props.idx - 1) + RIGHT_OFFSET + 'px',
+    bottom: 30 * (props.idx - 1) + BOTTOM_OFFSET + 'px',
+  }
+
   return (
-    <div className={styles.modalMenu} style={props.style} onClick={onClickMenu}>
+    <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
       <div className={styles.modalMenuHeader}>{props.folder.name}</div>
       <hr style={{ marginBottom: 4 }}/>
       {props.folder.options.map((option: MenuOption) => {
@@ -141,13 +148,6 @@ const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle })
       <AnimatePresence>
         {
           props.menus.map((menu, idx) => {
-          const RIGHT_OFFSET = 50;
-          const BOTTOM_OFFSET = 150;
-          const style: React.CSSProperties = {
-            zIndex: 10 * idx,
-            right: 30 * (idx - 1) + RIGHT_OFFSET + 'px',
-            bottom: 30 * (idx - 1) + BOTTOM_OFFSET + 'px',
-          }
           return (
             <motion.div 
               custom={{idx, total: props.menus.length}}
@@ -158,8 +158,9 @@ const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle })
               animate="animate"
               exit="exit"
               key={idx}
+              style={{ zIndex: 10 * (idx + 1) }}
             >
-            <MenuView folder={menu} style={style} battleScene={props.battleScene}/>
+            <MenuView folder={menu} idx={idx} battleScene={props.battleScene}/>
           </motion.div>        
           )
           })

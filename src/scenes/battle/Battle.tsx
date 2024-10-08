@@ -234,8 +234,12 @@ export class Battle extends Phaser.Scene {
       combatant.bleed -= DAMAGE_TICK_RATE;
       combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
     }
-    const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-    combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+    
+    if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+        const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
+        combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+    }
+
     const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
     combatant.flow = Math.max(0, combatant.flow-decayPerTick);
   }

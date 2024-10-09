@@ -126,6 +126,7 @@
 
 .statContainer {
   display: flex;
+  margin-top: 5px;
 }
 
 .EXHAUSTED {
@@ -382,6 +383,7 @@
 
 meter {
   appearance: none;
+  border-radius: 5px;
 }
 
 .meterContainer {

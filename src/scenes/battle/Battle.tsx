@@ -249,8 +249,9 @@ export class Battle extends Phaser.Scene {
     this.music.play();
   }
 
-  openInitialMenu(member?: PartyMember): void {
-    if (member.status === Status.DEAD || member.status === Status.EXHAUSTED ) {
+  openInitialMenu(member: PartyMember): void {
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING, Status.ATTACKING]
+    if (CANNOT_OPEN_STATUS.includes(member.status)) {
       this.sound.play('stamina-depleted');
       return;
     }

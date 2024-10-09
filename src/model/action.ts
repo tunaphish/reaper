@@ -1,5 +1,5 @@
-import { Combatant } from './combatant';
-import { Option } from './option';
+import { Combatant } from "./combatant";
+import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 
 export enum ActionTags {
@@ -11,11 +11,12 @@ export enum ActionTags {
 }
 
 export type Action = Option & {
-  description: string;
-  staminaCost: number;
-  execute: (target: Combatant, source: Combatant) => void;
-  tags: Set<ActionTags>;
-  targetType: TargetType;
-  soundKeyName?: string;
-  imageKeyName?: string;
-};
+    type: OptionType.ACTION;
+    staminaCost: number;
+    tags: Set<ActionTags>;
+    description: string;
+    execute: (target: Combatant, source: Combatant) => void;
+    targetType: TargetType;
+    soundKeyName?: string;
+    imageKeyName?: string;
+}

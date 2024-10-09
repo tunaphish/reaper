@@ -2,6 +2,7 @@ import { Trait } from './trait';
 import { Option } from './option';
 import { Action } from './action';
 import { Item } from './item';
+import { Spell } from './spell';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -22,11 +23,13 @@ export type Combatant = Option & {
   maxMagic: number;
   flow: number;
   flowDecayRatePerSecond: number;
-
   staminaRegenRatePerSecond: number; 
+  
   traits: Set<Trait>;
   status: Status;
   takingDamage: boolean;
-  queuedOption?: Action | Item;
+  queuedOption?: Action | Item | Spell;
   queuedTarget?: Combatant;
+
+  activeSpells: Set<Spell>;
 }

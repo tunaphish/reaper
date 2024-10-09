@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 
 import { Behavior, Enemy } from '../../model/enemy';
-import { Option } from '../../model/option';
+import { Option, OptionType } from '../../model/option';
 import { Party, PartyMember, Folder } from '../../model/party';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
@@ -16,9 +16,10 @@ import { healieBoi } from '../../data/enemies';
 import { getRandomInt } from '../../util/random';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 
-import { BattleView } from './BattleView';
+import { BattleView, MenuOption } from './BattleView';
 import { idle } from '../../data/actions';
 import { Item } from '../../model/item';
+import { Spell } from '../../model/spell';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -31,7 +32,7 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
-type Executable = Action | Item;
+type Executable = Action | Item | Spell;
 
 export class BattleStore {
   enemies: Enemy[];
@@ -166,13 +167,18 @@ export class Battle extends Phaser.Scene {
   }
 
   execute(combatant: Combatant): void {
-    if ("staminaCost" in combatant.queuedOption) {
+    if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
     }
-    if ("charges" in combatant.queuedOption) {
+    if (combatant.queuedOption.type === OptionType.ITEM) {
       combatant.queuedOption.charges -= 1;
     }
-    combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    if (combatant.queuedOption.type === OptionType.ACTION || combatant.queuedOption.type === OptionType.ITEM) {
+      combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    }
+    if (combatant.queuedOption.type === OptionType.SPELL) {
+      toggleActiveSpell(combatant, combatant.queuedOption);
+    }
     if (combatant.queuedOption.soundKeyName) {
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
@@ -269,15 +275,15 @@ export class Battle extends Phaser.Scene {
     this.sound.play('dialogue-advance');
   }
 
-  selectOption(option: Option): void {
+  selectOption(option: MenuOption): void {
     this.sound.play('choice-select');
-    if ('execute' in option) { 
+    if (option.type === OptionType.ITEM || option.type === OptionType.ACTION || option.type === OptionType.SPELL) { 
       const executable = option as Executable;
       this.battleStore.setExecutable(executable);
       if (executable.targetType === TargetType.SELF) {
         this.battleStore.setTarget(this.battleStore.caster);
       } else {
-        const targetFolder: Folder = { name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
+        const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
         this.battleStore.menus.push(targetFolder);
       }
     }
@@ -323,3 +329,22 @@ export const updateDamage = (target: Combatant, change: number): void => {
   }
   target.bleed += Math.min(change+target.bleed, target.health);
 };
+
+export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
+  if (target.activeSpells.has(spell)) {
+    target.activeSpells.delete(spell);
+    return;
+  }
+  const flowCost = Math.min(spell.magicCost, target.flow);
+  const magicCost = clamp(0, spell.magicCost - target.flow, target.magic);
+  const healthCost = clamp(0, spell.magicCost - (target.flow + target.magic), target.health)
+  target.flow -= flowCost;
+  target.magic -= magicCost;
+  target.health -= healthCost;
+  
+  target.activeSpells.add(spell);
+}
+
+const clamp = (min: number, val: number, max: number): number => {
+  return Math.min(Math.max(val, min), max);
+}

@@ -4,12 +4,14 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Combatant, Status } from '../../model/combatant';
 import { PartyMember, Folder } from '../../model/party';
-import { Option } from '../../model/option';
+import { OptionType } from '../../model/option';
 import { Action } from '../../model/action';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Item } from '../../model/item';
+import { Spell } from '../../model/spell';
+import { Enemy } from '../../model/enemy';
 
 const ICON_MAP ={
   attack: '/reaper/assets/ui/icons/attack.png',
@@ -88,7 +90,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
-type MenuOption = Folder | Combatant | Action | Option | Item
+export type MenuOption = Folder | Enemy | PartyMember | Action | Item | Spell;
 const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -108,29 +110,42 @@ const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) =>
       {props.folder.options.map((option: MenuOption) => {
         const onClickOption = () => props.battleScene.selectOption(option);
         
-        let iconMapKey = 'folder';
-        if ('staminaCost' in option) {
-          iconMapKey = 'attack';
-        } else if ('behaviors' in option) {
-          iconMapKey = 'enemy';
-        } else if ('folder' in option) {
-          iconMapKey = 'ally';
-        } else if ('charges' in option) {
-          iconMapKey = 'item';
+        function getFolderKey(option: MenuOption) {
+          switch(option.type) {
+            case OptionType.FOLDER:
+              return'folder';
+            case OptionType.ENEMY:
+              return'enemy';
+            case OptionType.MEMBER:
+              return'ally';
+            case OptionType.ACTION:
+              return'attack';
+            case OptionType.ITEM:
+              return'item';
+            case OptionType.SPELL:
+              return'magic';
+            default:
+              return'folder';
+          }
         }
+        const iconMapKey = getFolderKey(option);
 
-        {/* @ts-ignore */}
-        return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={"charges" in option && option.charges === 0}>
+        return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
             <img
               src={ICON_MAP[iconMapKey]}
               alt="Icon"
               style={{ width: '18px', height: '18px', marginRight: '4px' }} 
             />
           <div>{option.name}</div>
-          {/* @ts-ignore */}
-          { 'staminaCost' in option && <div className={styles.optionCost}>{option.staminaCost}</div>}
-          {/* @ts-ignore */}
-          { 'charges' in option && 'maxCharges' in option && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+          { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+          { option.type === OptionType.SPELL && (
+              <>
+                <div className={styles.magicCost}>{option.magicCost}</div>
+                <input type="checkbox" checked={props.battleScene.battleStore?.caster.activeSpells.has(option)} disabled/>
+              </>
+            )
+          }
+          { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
         </button>
         )
       })}

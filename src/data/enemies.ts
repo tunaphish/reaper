@@ -4,8 +4,10 @@ import { randomEnemy, randomParty, self } from '../model/targetPriorities';
 
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
+import { OptionType } from '../model/option';
 
 export const healieBoi: Enemy = {
+  type: OptionType.ENEMY,
   name: 'Healie Boi',
   health: 200,
   maxHealth: 200,
@@ -26,4 +28,5 @@ export const healieBoi: Enemy = {
   status: Status.NORMAL,
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
+  activeSpells: new Set(),
 };

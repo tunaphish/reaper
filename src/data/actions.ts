@@ -1,8 +1,10 @@
 import { Action, ActionTags } from '../model/action';
+import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateHealth, updateStamina } from '../scenes/battle/Battle';
 
 export const slash: Action = {
+  type: OptionType.ACTION,
   name: 'Slash',
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
@@ -17,6 +19,7 @@ export const slash: Action = {
 };
 
 export const finisher: Action = {
+  type: OptionType.ACTION,
   name: 'Finisher',
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
@@ -34,6 +37,7 @@ export const finisher: Action = {
 };
 
 export const assault: Action = {
+  type: OptionType.ACTION,
   name: 'Assault',
   staminaCost: 100,
   tags: new Set([ActionTags.ATTACK]),
@@ -49,6 +53,7 @@ export const assault: Action = {
 };
 
 export const ankleSlice: Action = {
+  type: OptionType.ACTION,
   name: 'Ankle Slice',
   staminaCost: 150,
   tags: new Set([ActionTags.ATTACK]),
@@ -64,6 +69,7 @@ export const ankleSlice: Action = {
 };
 
 export const drain: Action = {
+  type: OptionType.ACTION,
   name: 'Drain',
   staminaCost: 150,
   tags: new Set([ActionTags.ATTACK]),
@@ -79,6 +85,7 @@ export const drain: Action = {
 };
 
 export const block: Action = {
+  type: OptionType.ACTION,
   name: 'Block',
   staminaCost: 50,
   tags: new Set([ActionTags.DEFEND]),
@@ -91,6 +98,7 @@ export const block: Action = {
 };
 
 export const idle: Action = {
+  type: OptionType.ACTION,
   name: 'Idle',
   staminaCost: 0,
   tags: new Set([ActionTags.DEFEND]),
@@ -102,6 +110,7 @@ export const idle: Action = {
 };
 
 export const heal: Action = {
+  type: OptionType.ACTION,
   name: 'Heal',
   staminaCost: 100,
   tags: new Set([ActionTags.HEAL]),

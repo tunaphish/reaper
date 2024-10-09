@@ -1,8 +1,9 @@
 import { Combatant } from "./combatant";
-import { Option } from "./option";
+import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 
 export type Item = Option & {
+    type: OptionType.ITEM;
     description: string;
     execute: (target: Combatant, source: Combatant) => void;
     targetType: TargetType;

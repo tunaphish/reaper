@@ -11,4 +11,5 @@ export type Item = Option & {
     imageKeyName?: string;
     charges: number;
     maxCharges: number;
+    castTimeInMs: number;
 }

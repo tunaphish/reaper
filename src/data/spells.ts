@@ -10,4 +10,5 @@ export const sadist: Spell = {
     soundKeyName: 'attack',
     imageKeyName: 'attack.gif',
     description: 'Actions that hurt target now heal bleed',
+    castTimeInMs: 250,
 };

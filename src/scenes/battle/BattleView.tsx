@@ -51,7 +51,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
       <motion.div 
         className={styles.castingWindow}
         animate={{ height: props.combatant?.queuedOption != null ? "100%" : 0  }}
-        transition={{ duration: props.combatant?.queuedOption != null ? 2 : 0 }}
+        transition={{ duration: props.combatant?.queuedOption != null ? (props.combatant.queuedOption.castTimeInMs / 1000) : 0 }}
         onAnimationComplete={onCastingWindowAnimationComplete}
        />
       <div className={styles.resourceContainer}>

@@ -19,4 +19,5 @@ export type Action = Option & {
     targetType: TargetType;
     soundKeyName?: string;
     imageKeyName?: string;
+    castTimeInMs: number;
 }

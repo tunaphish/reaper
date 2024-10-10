@@ -9,4 +9,5 @@ export type Spell = Option & {
 
   type: OptionType.SPELL;
   magicCost: number;
+  castTimeInMs: number;
 };

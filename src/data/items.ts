@@ -15,6 +15,7 @@ export const bomb: Item = {
   },
   charges: 0,
   maxCharges: 3,
+  castTimeInMs: 250,
 };
 
 export const potion: Item = {
@@ -29,4 +30,5 @@ export const potion: Item = {
   },
   charges: 3,
   maxCharges: 3,
+  castTimeInMs: 250,
 };

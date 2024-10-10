@@ -2,9 +2,9 @@ import { PartyMember, Party, Folder } from '../model/party';
 import { Status } from '../model/combatant';
 
 import * as Actions from './actions';
+import * as Spells from './spells';
 import { bomb, potion } from './items';
 import { OptionType } from '../model/option';
-import { sadist } from './spells';
 
 const ejiThiefFolder: Folder = {
   type: OptionType.FOLDER,
@@ -20,7 +20,7 @@ const ejiFolder: Folder = {
 
 export const Eji: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: new Set(),
+  activeSpells: [],
   name: 'Eji',
   health: 100,
   maxHealth: 100,
@@ -53,11 +53,11 @@ const keshiFolder: Folder = {
 
 export const Keshi: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: new Set(),
+  activeSpells: [],
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
-  bleed: 0,
+  bleed: 100,
   stamina: 100,
   maxStamina: 300,
   magic: 100,
@@ -80,12 +80,12 @@ const eliseRestorationFolder: Folder = {
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Attack',
-  options: [Actions.slash, eliseRestorationFolder, sadist],
+  options: [Actions.slash, eliseRestorationFolder, Spells.SADIST],
 };
 
 export const Elise: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: new Set(),
+  activeSpells: [Spells.SADIST],
   name: 'Elise',
   health: 100,
   bleed: 0,

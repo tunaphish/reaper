@@ -14,8 +14,8 @@ export const slash: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
-  execute: (target) => {
-    updateDamage(target, 50);
+  execute: (target, source) => {
+    updateDamage(target, 50, source);
   },
 };
 
@@ -50,8 +50,8 @@ export const assault: Action = {
 
   description: 'Deals double damage, but hurts yourself',
   execute: (target, source) => {
-    updateDamage(target, 50);
-    updateDamage(source, 50);
+    updateDamage(target, 50, source);
+    updateDamage(source, 50, source);
   },
 };
 
@@ -66,8 +66,8 @@ export const ankleSlice: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage and reduces stamina for target',
-  execute: (target) => {
-    updateDamage(target, 50);
+  execute: (target, source) => {
+    updateDamage(target, 50, source);
     updateStamina(target, -50);
   },
 };
@@ -84,7 +84,7 @@ export const drain: Action = {
 
   description: 'Drains health',
   execute: (target, source) => {
-    updateDamage(target, 50);
+    updateDamage(target, 50, source);
     updateHealth(source, 25);
   },
 };
@@ -132,5 +132,3 @@ export const heal: Action = {
     target.health = Math.min(target.maxHealth, (target.health += HEALTH));
   },
 };
-
-export const ACTION_SET: Set<Action> = new Set([slash, finisher, ankleSlice, block, idle, heal]);

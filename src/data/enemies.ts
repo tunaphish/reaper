@@ -28,5 +28,5 @@ export const healieBoi: Enemy = {
   status: Status.NORMAL,
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
-  activeSpells: new Set(),
+  activeSpells: [],
 };

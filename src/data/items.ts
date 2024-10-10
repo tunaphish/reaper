@@ -10,8 +10,8 @@ export const bomb: Item = {
   soundKeyName: 'attack',
   imageKeyName: 'attack.gif',
   description: 'Deals damage to target',
-  execute: (target) => {
-    updateDamage(target, 50);
+  execute: (target, source) => {
+    updateDamage(target, 50, source);
   },
   charges: 0,
   maxCharges: 3,

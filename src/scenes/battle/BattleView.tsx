@@ -141,7 +141,7 @@ const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) =>
           { option.type === OptionType.SPELL && (
               <>
                 <div className={styles.magicCost}>{option.magicCost}</div>
-                <input type="checkbox" checked={props.battleScene.battleStore?.caster.activeSpells.has(option)} disabled/>
+                <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
               </>
             )
           }

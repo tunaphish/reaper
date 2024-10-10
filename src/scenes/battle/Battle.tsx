@@ -2,24 +2,25 @@ import * as React from 'react';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Behavior, Enemy } from '../../model/enemy';
-import { Option, OptionType } from '../../model/option';
+import { OptionType } from '../../model/option';
 import { Party, PartyMember, Folder } from '../../model/party';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
 import { Status } from '../../model/combatant';
 import { self } from '../../model/targetPriorities';
 import { Combatant } from '../../model/combatant';
+import { Item } from '../../model/item';
+import { Spell } from '../../model/spell';
 
 import { DefaultParty } from '../../data/parties';
 import { healieBoi } from '../../data/enemies';
+import { idle } from '../../data/actions';
+import * as Spells from '../../data/spells';
 
 import { getRandomInt } from '../../util/random';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
-
 import { BattleView, MenuOption } from './BattleView';
-import { idle } from '../../data/actions';
-import { Item } from '../../model/item';
-import { Spell } from '../../model/spell';
+
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -317,13 +318,20 @@ export const updateStamina = (target: Combatant, change: number): void => {
   target.stamina = Math.min(target.maxStamina, target.stamina + change);
 };
 
-export const updateDamage = (target: Combatant, change: number): void => {
+export const updateDamage = (target: Combatant, change: number, source: Combatant): void => {
   if (change > 0) {
     target.takingDamage = true;
   }
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
   }
+
+  if (source.activeSpells.find((spell) => spell.name === Spells.SADIST.name)) {
+    const bleedHeal = Math.max(target.bleed, change);
+    target.bleed -= bleedHeal;
+    return;
+  }
+
   if (change + target.bleed > target.health) {
     target.health = Math.max(0, (change+target.bleed) - target.health);
   }
@@ -331,10 +339,13 @@ export const updateDamage = (target: Combatant, change: number): void => {
 };
 
 export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
-  if (target.activeSpells.has(spell)) {
-    target.activeSpells.delete(spell);
+  const foundSpell: Spell = target.activeSpells.find((activeSpell) => activeSpell.name === spell.name)
+  if (!!foundSpell) {
+    const idx = target.activeSpells.indexOf(foundSpell);
+    target.activeSpells.splice(idx,1);
     return;
   }
+
   const flowCost = Math.min(spell.magicCost, target.flow);
   const magicCost = clamp(0, spell.magicCost - target.flow, target.magic);
   const healthCost = clamp(0, spell.magicCost - (target.flow + target.magic), target.health)
@@ -342,8 +353,9 @@ export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
   target.magic -= magicCost;
   target.health -= healthCost;
   
-  target.activeSpells.add(spell);
+  target.activeSpells.includes(spell);
 }
+
 
 const clamp = (min: number, val: number, max: number): number => {
   return Math.min(Math.max(val, min), max);

@@ -31,5 +31,5 @@ export type Combatant = Option & {
   queuedOption?: Action | Item | Spell;
   queuedTarget?: Combatant;
 
-  activeSpells: Set<Spell>;
+  activeSpells: Spell[];
 }

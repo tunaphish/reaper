@@ -11,6 +11,7 @@ export const SADIST: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions that hurt target now heal bleed',
     castTimeInMs: 250,
+    isMenuSpell: false,
 };
 
 export const ZANTETSUKEN: Spell = {
@@ -22,6 +23,7 @@ export const ZANTETSUKEN: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions scale in potency the faster they are selected one menu is opened',
     castTimeInMs: 250,
+    isMenuSpell: false,
 };
 
 // Post Selection Menus
@@ -34,6 +36,7 @@ export const DUAL: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions strike twice at 0.5X potency',
     castTimeInMs: 250,
+    isMenuSpell: true,
 };
 
 export const CLEAVE: Spell = {
@@ -45,6 +48,7 @@ export const CLEAVE: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions strike everyone on targets side at 0.5X potency',
     castTimeInMs: 250,
+    isMenuSpell: true,
 };
 
 export const CHARGE: Spell = {
@@ -56,6 +60,7 @@ export const CHARGE: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions can use stamina to multiply potency',
     castTimeInMs: 250,
+    isMenuSpell: true,
 };
 
 export const JANKENBO: Spell = {
@@ -67,4 +72,5 @@ export const JANKENBO: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Can play JANKENBO with target to double or nullify potency',
     castTimeInMs: 250,
+    isMenuSpell: true,
 };

@@ -1,5 +1,5 @@
 import { Enemy } from '../model/enemy';
-import { Status } from '../model/combatant';
+import { JankenboBehavior, Status } from '../model/combatant';
 import { randomEnemy, randomParty, self } from '../model/targetPriorities';
 
 import { slash, idle, heal } from './actions';
@@ -29,4 +29,5 @@ export const healieBoi: Enemy = {
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
   activeSpells: [],
+  jankenboBehavior: JankenboBehavior.RANDOM,
 };

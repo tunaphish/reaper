@@ -3,15 +3,14 @@ import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Combatant, Status } from '../../model/combatant';
-import { PartyMember, Folder } from '../../model/party';
+import { PartyMember } from '../../model/party';
 import { OptionType } from '../../model/option';
-import { Action } from '../../model/action';
+import { MenuContent } from '../../model/menuContent';
+import { MenuOption } from '../../model/menuOption';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
-import { Item } from '../../model/item';
-import { Spell } from '../../model/spell';
-import { Enemy } from '../../model/enemy';
+
 
 const ICON_MAP ={
   attack: '/reaper/assets/ui/icons/attack.png',
@@ -90,8 +89,8 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
-export type MenuOption = Folder | Enemy | PartyMember | Action | Item | Spell;
-const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) => {
+
+const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
@@ -103,57 +102,83 @@ const MenuView = (props: {folder: Folder, idx: number, battleScene: Battle }) =>
     bottom: 30 * (props.idx - 1) + BOTTOM_OFFSET + 'px',
   }
 
-  return (
-    <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
-      <div className={styles.modalMenuHeader}>{props.folder.name}</div>
-      <hr style={{ marginBottom: 4 }}/>
-      {props.folder.options.map((option: MenuOption) => {
-        const onClickOption = () => props.battleScene.selectOption(option);
-        
-        function getFolderKey(option: MenuOption) {
-          switch(option.type) {
-            case OptionType.FOLDER:
-              return'folder';
-            case OptionType.ENEMY:
-              return'enemy';
-            case OptionType.MEMBER:
-              return'ally';
-            case OptionType.ACTION:
-              return'attack';
-            case OptionType.ITEM:
-              return'item';
-            case OptionType.SPELL:
-              return'magic';
-            default:
-              return'folder';
+  if (props.menuContent.type === OptionType.FOLDER) {
+    return (
+      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+        <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
+        <hr style={{ marginBottom: 4 }}/>
+        {props.menuContent.options.map((option: MenuOption) => {
+          const onClickOption = () => props.battleScene.selectOption(option);
+          
+          function getFolderKey(option: MenuOption) {
+            switch(option.type) {
+              case OptionType.FOLDER:
+                return'folder';
+              case OptionType.ENEMY:
+                return'enemy';
+              case OptionType.MEMBER:
+                return'ally';
+              case OptionType.ACTION:
+                return'attack';
+              case OptionType.ITEM:
+                return'item';
+              case OptionType.SPELL:
+                return'magic';
+              default:
+                return'folder';
+            }
           }
-        }
-        const iconMapKey = getFolderKey(option);
+          const iconMapKey = getFolderKey(option);
+  
+          return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+              <img
+                src={ICON_MAP[iconMapKey]}
+                alt="Icon"
+                style={{ width: '18px', height: '18px', marginRight: '4px' }} 
+              />
+            <div>{option.name}</div>
+            { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+            { option.type === OptionType.SPELL && (
+                <>
+                  <div className={styles.magicCost}>{option.magicCost}</div>
+                  <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                </>
+              )
+            }
+            { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+          </button>
+          )
+        })}
+      </div>
+    );    
+  }
 
-        return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-            <img
-              src={ICON_MAP[iconMapKey]}
-              alt="Icon"
-              style={{ width: '18px', height: '18px', marginRight: '4px' }} 
-            />
-          <div>{option.name}</div>
-          { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-          { option.type === OptionType.SPELL && (
-              <>
-                <div className={styles.magicCost}>{option.magicCost}</div>
-                <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-              </>
-            )
-          }
-          { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-        </button>
-        )
-      })}
-    </div>
-  );
+  const Cleave = () => {
+    const [value, setValue] = React.useState('0')
+    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+      setValue(e.currentTarget.value);
+      if (e.currentTarget.value === "100") {
+        props.battleScene.advanceSpell();
+      }
+    }
+    return (
+      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+        <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
+        <input type="range" min="0" max="100" value={value} onChange={onChange}/>
+      </div>
+    )
+  }
+
+  if (props.menuContent.type === OptionType.SPELL) {
+    return (
+      <Cleave />
+    )
+  }
 }
 
-const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle }) => {
+
+
+const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Battle }) => {
   const onClickModalContainer = () => {
     props.battleScene.closeMenu();
   }
@@ -186,7 +211,7 @@ const MenuContainer = observer((props: { menus: Folder[], battleScene: Battle })
               key={idx}
               style={{ zIndex: 10 * (idx + 1) }}
             >
-            <MenuView folder={menu} idx={idx} battleScene={props.battleScene}/>
+            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene}/>
           </motion.div>        
           )
           })

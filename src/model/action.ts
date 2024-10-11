@@ -20,4 +20,5 @@ export type Action = Option & {
     soundKeyName?: string;
     imageKeyName?: string;
     castTimeInMs: number;
+    potency: number;
 }

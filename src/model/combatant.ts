@@ -3,6 +3,8 @@ import { Option } from './option';
 import { Action } from './action';
 import { Item } from './item';
 import { Spell } from './spell';
+import { Enemy } from './enemy';
+import { PartyMember } from './party';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -11,6 +13,18 @@ export enum Status {
   DEAD = 'DEAD',
   CASTING = 'CASTING',
   ATTACKING = 'ATTACKING',
+}
+
+export enum JankenboBehavior {
+  RANDOM,
+  CYCLE,
+  ALWAYS_ROCK,
+}
+
+export enum JankenbowThrow {
+  ROCK,
+  PAPER,
+  SCISSORS,
 }
 
 export type Combatant = Option & {
@@ -29,7 +43,10 @@ export type Combatant = Option & {
   status: Status;
   takingDamage: boolean;
   queuedOption?: Action | Item | Spell;
-  queuedTarget?: Combatant;
+  queuedTarget?: Enemy | PartyMember;
 
   activeSpells: Spell[];
+
+  jankenboBehavior: JankenboBehavior;
+  previousJankenboThrow?: JankenbowThrow;
 }

@@ -11,6 +11,8 @@ import { self } from '../../model/targetPriorities';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
+import { MenuContent } from '../../model/menuContent';
+import { MenuOption } from '../../model/menuOption';
 
 import { DefaultParty } from '../../data/parties';
 import { healieBoi } from '../../data/enemies';
@@ -19,7 +21,7 @@ import * as Spells from '../../data/spells';
 
 import { getRandomInt } from '../../util/random';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
-import { BattleView, MenuOption } from './BattleView';
+import { BattleView } from './BattleView';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -35,14 +37,22 @@ export interface DialogueTrigger {
 
 type Executable = Action | Item | Spell;
 
+type ActionModifier = {
+  targets: Combatant[];
+  potency: number;
+  multiplier: number;
+}
+
 export class BattleStore {
   enemies: Enemy[];
   party: Party;
 
   caster?: PartyMember;
   executable?: Executable;
-  target?: Combatant;
-  menus: Folder[] = [];
+  target?: Enemy | PartyMember;
+  menus: MenuContent[] = [];
+  spells?: Spell[] = null;
+  // actionModifier?: ActionModifier;
 
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
@@ -50,11 +60,15 @@ export class BattleStore {
     makeAutoObservable(this);
   }
 
+  setSpells(spells?: Spell[]): void {
+    this.spells = spells;
+  }
+
   setCaster(member?: PartyMember): void {
     this.caster = member;
   }
 
-  setTarget(target?: Combatant): void {
+  setTarget(target?: Enemy | PartyMember): void {
     this.target = target;
   }
 
@@ -129,9 +143,12 @@ export class Battle extends Phaser.Scene {
       this.scene.start('World');
     }
 
-    if (this.battleStore.caster && this.battleStore.executable && this.battleStore.target) {
-      this.queueAction();
-      this.battleStore.resetSelections();
+    if (this.battleStore.caster && 
+      this.battleStore.executable && 
+      this.battleStore.target &&
+      this.battleStore.spells === null
+    ) {
+      this.queueAction(); 
     }
 
     this.battleStore.tickStats(this.updateStats, delta);
@@ -161,28 +178,58 @@ export class Battle extends Phaser.Scene {
     this.battleStore.caster.status = Status.CASTING;
     this.battleStore.caster.queuedOption = this.battleStore.executable;
     this.battleStore.caster.queuedTarget = this.battleStore.target;
+    this.battleStore.resetSelections();
   }
 
-  setCombatantAttacking(combatant: Combatant) {
+  setCombatantAttacking(combatant: Combatant): void {
     combatant.status = Status.ATTACKING;
   }
 
-  execute(combatant: Combatant): void {
-    if (combatant.queuedOption.type === OptionType.ACTION) {
-      combatant.stamina -= combatant.queuedOption.staminaCost;
-    }
+  async execute(combatant: Combatant): Promise<void> {
     if (combatant.queuedOption.type === OptionType.ITEM) {
       combatant.queuedOption.charges -= 1;
-    }
-    if (combatant.queuedOption.type === OptionType.ACTION || combatant.queuedOption.type === OptionType.ITEM) {
       combatant.queuedOption.execute(combatant.queuedTarget, combatant);
-    }
-    if (combatant.queuedOption.type === OptionType.SPELL) {
-      toggleActiveSpell(combatant, combatant.queuedOption);
-    }
-    if (combatant.queuedOption.soundKeyName) {
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
+    
+    if (combatant.queuedOption.type === OptionType.ACTION) {
+      combatant.stamina -= combatant.queuedOption.staminaCost;
+      
+      const actionModifier: ActionModifier = {
+        targets: [combatant.queuedTarget],
+        potency: combatant.queuedOption.potency,
+        multiplier: 1,
+      }
+      const spells = combatant.activeSpells.filter(activeSpell => activeSpell.isMenuSpell);
+
+      // Apply Effects
+      if (spells.find(containsSpell(Spells.CLEAVE))) {
+        if (combatant.queuedTarget.type === OptionType.MEMBER) {
+          actionModifier.targets = this.battleStore.party.members;
+        } else {
+          actionModifier.targets = this.battleStore.enemies;
+        }
+      }
+      
+      // dual strike
+      // dual strike potency, cleave potency, charge multi, jankenbo multi, zantetsuken, 
+
+      for (const target of actionModifier.targets) {
+        combatant.queuedOption.execute(target, combatant);
+      
+        if (combatant.queuedOption.soundKeyName) {
+          this.sound.play(combatant.queuedOption.soundKeyName);
+        }
+        await wait(150);
+      }
+    }
+    
+    if (combatant.queuedOption.type === OptionType.SPELL) {
+      toggleActiveSpell(combatant, combatant.queuedOption);
+      this.sound.play(combatant.queuedOption.soundKeyName);
+    }
+
+
     combatant.status = Status.NORMAL;
     combatant.queuedOption = null;
     combatant.queuedTarget = null;
@@ -230,7 +277,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.executable = executable;
   }
 
-  setTarget(combatant: Combatant): void {
+  setTarget(combatant: Enemy | PartyMember): void {
     this.battleStore.setTarget(combatant);    
   }
 
@@ -278,28 +325,48 @@ export class Battle extends Phaser.Scene {
 
   selectOption(option: MenuOption): void {
     this.sound.play('choice-select');
-    if (option.type === OptionType.ITEM || option.type === OptionType.ACTION || option.type === OptionType.SPELL) { 
-      const executable = option as Executable;
-      this.battleStore.setExecutable(executable);
-      if (executable.targetType === TargetType.SELF) {
-        this.battleStore.setTarget(this.battleStore.caster);
-      } else {
-        const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
-        this.battleStore.menus.push(targetFolder);
-      }
-    }
-    else if ('staminaRegenRatePerSecond' in option) { 
-      const combatant = option as Combatant;
-      this.battleStore.setTarget(combatant);
-    }
-    else if ('options' in option) { 
-      const folder = option as Folder;
-      this.battleStore.menus.push(folder);
+    switch(option.type) {
+      case OptionType.ITEM:
+      case OptionType.ACTION:
+      case OptionType.SPELL:
+        const executable = option as Executable;
+        this.battleStore.setExecutable(executable);
+        if (executable.targetType === TargetType.SELF) {
+          this.battleStore.setTarget(this.battleStore.caster);
+        } else {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
+          this.battleStore.menus.push(targetFolder);
+        }
+        break;
+      case OptionType.ENEMY:
+      case OptionType.MEMBER:
+        const combatant = option;
+        this.battleStore.setTarget(combatant);
+        this.battleStore.setSpells(this.battleStore.caster.activeSpells.filter(activeSpell => activeSpell.isMenuSpell)); 
+        if (this.battleStore.spells.length > 0) {
+          this.battleStore.menus.push(this.battleStore.spells.shift());
+        } else {
+          this.battleStore.setSpells(null);
+        }
+        break;
+      case OptionType.FOLDER:
+        const folder = option as Folder;
+        this.battleStore.menus.push(folder);
+        break;
     }
   }
 
   startBattle(): void {
     this.battleStarted = true;
+  }
+
+  advanceSpell(): void {
+    this.sound.play('choice-select');
+    if (this.battleStore.spells.length === 0) {
+      this.battleStore.spells = null;
+      return;
+    }
+    this.battleStore.menus.push(this.battleStore.spells.shift());
   }
 }
 
@@ -326,20 +393,21 @@ export const updateDamage = (target: Combatant, change: number, source: Combatan
     change *= 2;
   }
 
-  if (source.activeSpells.find((spell) => spell.name === Spells.SADIST.name)) {
-    const bleedHeal = Math.max(target.bleed, change);
-    target.bleed -= bleedHeal;
+  if (source.activeSpells.find(containsSpell(Spells.SADIST))) {
+    const newBleed = target.bleed-change;
+    target.bleed = clamp(0, newBleed, target.health);
     return;
   }
 
-  if (change + target.bleed > target.health) {
-    target.health = Math.max(0, (change+target.bleed) - target.health);
-  }
-  target.bleed += Math.min(change+target.bleed, target.health);
+  const newBleed = target.bleed+change;
+  const newHealth = target.health - (target.bleed+change - target.health);
+  target.bleed = clamp(0, newBleed, target.health);
+  target.health = clamp(0, newHealth, target.maxHealth);
+
 };
 
 export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
-  const foundSpell: Spell = target.activeSpells.find((activeSpell) => activeSpell.name === spell.name)
+  const foundSpell: Spell = target.activeSpells.find(containsSpell(spell));
   if (!!foundSpell) {
     const idx = target.activeSpells.indexOf(foundSpell);
     target.activeSpells.splice(idx,1);
@@ -353,10 +421,16 @@ export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
   target.magic -= magicCost;
   target.health -= healthCost;
   
-  target.activeSpells.includes(spell);
+  target.activeSpells.push(spell);
 }
 
 
 const clamp = (min: number, val: number, max: number): number => {
   return Math.min(Math.max(val, min), max);
+}
+
+const containsSpell = (spell: Spell) => (activeSpell: Spell) => activeSpell.name === spell.name;
+
+const wait = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

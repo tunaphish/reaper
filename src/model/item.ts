@@ -7,7 +7,7 @@ export type Item = Option & {
     description: string;
     execute: (target: Combatant, source: Combatant) => void;
     targetType: TargetType;
-    soundKeyName?: string;
+    soundKeyName: string;
     imageKeyName?: string;
     charges: number;
     maxCharges: number;

@@ -15,8 +15,8 @@ export const slash: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
-  execute: (target, source) => {
-    updateDamage(target, 50, source);
+  execute: (target, source, potency) => {
+    updateDamage(target, potency, source);
   },
 };
 
@@ -52,9 +52,9 @@ export const assault: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, but hurts yourself',
-  execute: (target, source) => {
-    updateDamage(target, 50, source);
-    updateDamage(source, 50, source);
+  execute: (target, source, potency) => {
+    updateDamage(target, potency, source);
+    updateDamage(source, potency, source);
   },
 };
 
@@ -70,9 +70,9 @@ export const ankleSlice: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Deals damage and reduces stamina for target',
-  execute: (target, source) => {
-    updateDamage(target, 50, source);
-    updateStamina(target, -50);
+  execute: (target, source, potency) => {
+    updateDamage(target, potency, source);
+    updateStamina(target, -potency);
   },
 };
 
@@ -88,9 +88,9 @@ export const drain: Action = {
   imageKeyName: 'attack.gif',
 
   description: 'Drains health',
-  execute: (target, source) => {
-    updateDamage(target, 50, source);
-    updateHealth(source, 25);
+  execute: (target, source, potency) => {
+    updateDamage(target, potency, source);
+    updateHealth(source, potency);
   },
 };
 
@@ -135,8 +135,7 @@ export const heal: Action = {
   imageKeyName: 'heal.gif',
 
   description: 'Restores health to target',
-  execute: (target) => {
-    const HEALTH = 50;
-    target.health = Math.min(target.maxHealth, (target.health += HEALTH));
+  execute: (target, source, potency) => {
+    target.health = Math.min(target.maxHealth, (target.health += potency));
   },
 };

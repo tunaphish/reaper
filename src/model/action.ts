@@ -15,7 +15,7 @@ export type Action = Option & {
     staminaCost: number;
     tags: Set<ActionTags>;
     description: string;
-    execute: (target: Combatant, source: Combatant) => void;
+    execute: (target: Combatant, source: Combatant, potency: number) => void;
     targetType: TargetType;
     soundKeyName?: string;
     imageKeyName?: string;

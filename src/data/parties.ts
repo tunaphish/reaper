@@ -49,12 +49,12 @@ const keshiBerserkerFolder: Folder = {
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
-  options: [keshiBerserkerFolder, Actions.slash],
+  options: [keshiBerserkerFolder, Actions.slash, Spells.DUAL],
 }
 
 export const Keshi: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [],
+  activeSpells: [Spells.DUAL],
   name: 'Keshi',
   health: 100,
   maxHealth: 100,

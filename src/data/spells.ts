@@ -36,7 +36,7 @@ export const DUAL: Spell = {
     imageKeyName: 'attack.gif',
     description: 'Actions strike twice at 0.5X potency',
     castTimeInMs: 250,
-    isMenuSpell: true,
+    isMenuSpell: false,
 };
 
 export const CLEAVE: Spell = {

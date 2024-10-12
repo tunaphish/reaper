@@ -200,9 +200,14 @@ export class Battle extends Phaser.Scene {
         potency: combatant.queuedOption.potency,
         multiplier: 1,
       }
-      const spells = combatant.activeSpells.filter(activeSpell => activeSpell.isMenuSpell);
+      const spells = combatant.activeSpells;
 
       // Apply Effects
+      if (spells.find(containsSpell(Spells.DUAL))) {
+        actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
+        actionModifier.multiplier *= 0.5;
+      }
+
       if (spells.find(containsSpell(Spells.CLEAVE))) {
         if (combatant.queuedTarget.type === OptionType.MEMBER) {
           actionModifier.targets = this.battleStore.party.members;
@@ -211,11 +216,10 @@ export class Battle extends Phaser.Scene {
         }
       }
       
-      // dual strike
       // dual strike potency, cleave potency, charge multi, jankenbo multi, zantetsuken, 
-
+      const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
-        combatant.queuedOption.execute(target, combatant);
+        combatant.queuedOption.execute(target, combatant, potency);
       
         if (combatant.queuedOption.soundKeyName) {
           this.sound.play(combatant.queuedOption.soundKeyName);
@@ -242,7 +246,7 @@ export class Battle extends Phaser.Scene {
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(target, enemy);
+      selectedBehavior.action.execute(target, enemy, selectedBehavior.action.potency);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
     });
   }
@@ -378,7 +382,8 @@ export const updateHealth = (target: Combatant, change: number): void => {
 };
 
 export const updateBleed = (target: Combatant, change: number): void => {
-  target.bleed = Math.max(0, target.bleed - change);  
+  const newBleed = target.bleed-change;
+  target.bleed = clamp(0, newBleed, target.health);
 };
 
 export const updateStamina = (target: Combatant, change: number): void => {
@@ -389,13 +394,13 @@ export const updateDamage = (target: Combatant, change: number, source: Combatan
   if (change > 0) {
     target.takingDamage = true;
   }
+  
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
   }
 
   if (source.activeSpells.find(containsSpell(Spells.SADIST))) {
-    const newBleed = target.bleed-change;
-    target.bleed = clamp(0, newBleed, target.health);
+    updateBleed(target, change);
     return;
   }
 

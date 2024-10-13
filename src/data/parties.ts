@@ -20,7 +20,7 @@ const ejiFolder: Folder = {
 
 export const Eji: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.CLEAVE, Spells.DUAL],
+  activeSpells: [Spells.CLEAVE, Spells.DUAL, Spells.CHARGE],
   name: 'Eji',
   health: 100,
   maxHealth: 100,
@@ -82,17 +82,17 @@ const eliseRestorationFolder: Folder = {
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Attack',
-  options: [Actions.slash, eliseRestorationFolder, Spells.SADIST],
+  options: [Actions.slash, eliseRestorationFolder, Spells.SADIST, Spells.CHARGE],
 };
 
 export const Elise: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.SADIST],
+  activeSpells: [Spells.CHARGE],
   name: 'Elise',
   health: 100,
   bleed: 0,
   maxHealth: 100,
-  stamina: 0,
+  stamina: 500,
   maxStamina: 500,
   magic: 10,
   maxMagic: 100,

@@ -8,8 +8,11 @@ import { OptionType } from '../../model/option';
 import { MenuContent } from '../../model/menuContent';
 import { MenuOption } from '../../model/menuOption';
 
+import * as Spells from '../../data/spells';
+
 import styles from './battle.module.css';
 import { Battle } from './Battle';
+import { observable, toJS } from 'mobx';
 
 
 const ICON_MAP ={
@@ -169,12 +172,43 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
     )
   }
 
-  if (props.menuContent.type === OptionType.SPELL) {
+  const Charge = observer(() => {
+    const onChargeStart = () => {
+      props.battleScene.setCasterCharging();
+      console.log(toJS(props.battleScene))
+    }
+    const onChargeEnd = () => {
+      props.battleScene.setCasterNormal();
+      props.battleScene.advanceSpell();
+    }
+
+    return (
+      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+        <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
+        <button 
+          onMouseDown={onChargeStart}
+          onMouseUp={onChargeEnd}
+          onTouchStart={onChargeStart} 
+          onTouchEnd={onChargeEnd}>
+            CHARGE!!! {props.battleScene.battleStore.chargeMultiplier.toFixed(2)}X
+      </button>
+      </div>
+    )
+  });
+
+  if (props.menuContent.name === Spells.CLEAVE.name) {
     return (
       <Cleave />
     )
   }
+
+  if (props.menuContent.name === Spells.CHARGE.name) {
+    return (
+      <Charge />
+    )
+  }
 }
+
 
 
 

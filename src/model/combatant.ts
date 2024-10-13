@@ -13,6 +13,7 @@ export enum Status {
   DEAD = 'DEAD',
   CASTING = 'CASTING',
   ATTACKING = 'ATTACKING',
+  CHARGING = 'CHARGING',
 }
 
 export enum JankenboBehavior {

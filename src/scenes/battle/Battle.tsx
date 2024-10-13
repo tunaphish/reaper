@@ -44,15 +44,19 @@ type ActionModifier = {
 }
 
 export class BattleStore {
+  // battle vars
   enemies: Enemy[];
   party: Party;
 
+  // menu vars
   caster?: PartyMember;
   executable?: Executable;
   target?: Enemy | PartyMember;
   menus: MenuContent[] = [];
   spells?: Spell[] = null;
-  // actionModifier?: ActionModifier;
+  
+  // spell vars
+  chargeMultiplier = 1;
 
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
@@ -76,6 +80,10 @@ export class BattleStore {
     this.executable = executable;
   }
 
+  setChargeMultipler(chargeMultiplier: number): void {
+    this.chargeMultiplier = chargeMultiplier;
+  }
+
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
     [...this.party.members, ...this.enemies].forEach((combatant) => {
       updateFunc(combatant, delta);
@@ -90,7 +98,7 @@ export class BattleStore {
         combatant.status = Status.EXHAUSTED;
       } else if (combatant.status === Status.BLOCKING) {
         // do nothing
-      } else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+      } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
         combatant.status = Status.NORMAL;
       }
     });
@@ -157,6 +165,10 @@ export class Battle extends Phaser.Scene {
         this.battleStore.setCaster(null);
         this.battleStore.emptyMenu();
     }
+    const CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING = 1;
+    if (this.battleStore.caster && this.battleStore.caster.status === Status.CHARGING) {
+      this.battleStore.setChargeMultipler(this.battleStore.chargeMultiplier +CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
+    }
 
     // enemy AI
     this.lastCalculation += delta;
@@ -183,6 +195,14 @@ export class Battle extends Phaser.Scene {
 
   setCombatantAttacking(combatant: Combatant): void {
     combatant.status = Status.ATTACKING;
+  }
+
+  setCasterCharging(): void {
+    this.battleStore.caster.status = Status.CHARGING;
+  }
+
+  setCasterNormal(): void {
+    this.battleStore.caster.status = Status.NORMAL;
   }
 
   async execute(combatant: Combatant): Promise<void> {
@@ -215,6 +235,11 @@ export class Battle extends Phaser.Scene {
       if (spells.find(containsSpell(Spells.DUAL))) {
         actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
         actionModifier.multiplier *= 0.5;
+      }
+
+      if (spells.find(containsSpell(Spells.CHARGE))) {
+        actionModifier.multiplier *= this.battleStore.chargeMultiplier;
+        this.battleStore.setChargeMultipler(1);
       }
       
       // charge multi, jankenbo multi, zantetsuken, 
@@ -294,7 +319,11 @@ export class Battle extends Phaser.Scene {
       combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
     }
     
-    if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+    const STAMINA_LOSS_PER_SECOND_WHILE_CHARGING = 100;
+    if (combatant.status === Status.CHARGING) {
+      combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
+    }
+    else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
         const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
         combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
     }
@@ -320,8 +349,13 @@ export class Battle extends Phaser.Scene {
   }
 
   closeMenu(): void {
-    this.battleStore.menus.pop();
-    this.battleStore.setExecutable(null); // hacky way of resetting action 
+    const menuContent = this.battleStore.menus.pop();
+    if (menuContent && menuContent.name === Spells.CHARGE.name) {
+      this.battleStore.setChargeMultipler(1);
+    }
+    if (menuContent.type !== OptionType.SPELL) {
+      this.battleStore.setExecutable(null); // hacky way of resetting action 
+    }
     if (this.battleStore.menus.length === 0) {
       this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
     }

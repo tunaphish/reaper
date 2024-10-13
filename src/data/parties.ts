@@ -20,7 +20,7 @@ const ejiFolder: Folder = {
 
 export const Eji: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.CLEAVE],
+  activeSpells: [Spells.CLEAVE, Spells.DUAL],
   name: 'Eji',
   health: 100,
   maxHealth: 100,

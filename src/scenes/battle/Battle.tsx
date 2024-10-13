@@ -203,20 +203,21 @@ export class Battle extends Phaser.Scene {
       const spells = combatant.activeSpells;
 
       // Apply Effects
-      if (spells.find(containsSpell(Spells.DUAL))) {
-        actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
-        actionModifier.multiplier *= 0.5;
-      }
-
       if (spells.find(containsSpell(Spells.CLEAVE))) {
         if (combatant.queuedTarget.type === OptionType.MEMBER) {
           actionModifier.targets = this.battleStore.party.members;
         } else {
           actionModifier.targets = this.battleStore.enemies;
         }
+        actionModifier.multiplier *= 0.5;
+      }
+
+      if (spells.find(containsSpell(Spells.DUAL))) {
+        actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
+        actionModifier.multiplier *= 0.5;
       }
       
-      // dual strike potency, cleave potency, charge multi, jankenbo multi, zantetsuken, 
+      // charge multi, jankenbo multi, zantetsuken, 
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
         combatant.queuedOption.execute(target, combatant, potency);
@@ -394,7 +395,7 @@ export const updateDamage = (target: Combatant, change: number, source: Combatan
   if (change > 0) {
     target.takingDamage = true;
   }
-  
+
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
   }
@@ -403,12 +404,10 @@ export const updateDamage = (target: Combatant, change: number, source: Combatan
     updateBleed(target, change);
     return;
   }
-
   const newBleed = target.bleed+change;
-  const newHealth = target.health - (target.bleed+change - target.health);
+  // const newHealth = target.health - (target.bleed+change - target.health);
   target.bleed = clamp(0, newBleed, target.health);
-  target.health = clamp(0, newHealth, target.maxHealth);
-
+  // target.health = clamp(0, newHealth, target.maxHealth);
 };
 
 export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {

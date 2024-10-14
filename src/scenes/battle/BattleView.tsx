@@ -94,6 +94,14 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 
 
 const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Battle }) => {
+  const Zantetsuken = observer(() => {
+    return (
+        props.idx === 0 && 
+        props.battleScene?.battleStore.caster.activeSpells.find(activeSpell => activeSpell.name === Spells.ZANTETSUKEN.name) &&
+        <div className={styles.menu}>ZANTETSUKEN {props.battleScene.battleStore.zantetsukenMultiplier.toFixed(2)}X</div>
+    )
+  });
+  
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
@@ -104,55 +112,59 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
     right: 30 * (props.idx - 1) + RIGHT_OFFSET + 'px',
     bottom: 30 * (props.idx - 1) + BOTTOM_OFFSET + 'px',
   }
-
   if (props.menuContent.type === OptionType.FOLDER) {
     return (
-      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
-        <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
-        <hr style={{ marginBottom: 4 }}/>
-        {props.menuContent.options.map((option: MenuOption) => {
-          const onClickOption = () => props.battleScene.selectOption(option);
-          
-          function getFolderKey(option: MenuOption) {
-            switch(option.type) {
-              case OptionType.FOLDER:
-                return'folder';
-              case OptionType.ENEMY:
-                return'enemy';
-              case OptionType.MEMBER:
-                return'ally';
-              case OptionType.ACTION:
-                return'attack';
-              case OptionType.ITEM:
-                return'item';
-              case OptionType.SPELL:
-                return'magic';
-              default:
-                return'folder';
+        <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+          <div className={styles.menu}>
+          <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
+          <hr style={{ marginBottom: 4 }}/>
+          {props.menuContent.options.map((option: MenuOption) => {
+            const onClickOption = () => props.battleScene.selectOption(option);
+            
+            function getFolderKey(option: MenuOption) {
+              switch(option.type) {
+                case OptionType.FOLDER:
+                  return'folder';
+                case OptionType.ENEMY:
+                  return'enemy';
+                case OptionType.MEMBER:
+                  return'ally';
+                case OptionType.ACTION:
+                  return'attack';
+                case OptionType.ITEM:
+                  return'item';
+                case OptionType.SPELL:
+                  return'magic';
+                default:
+                  return'folder';
+              }
             }
-          }
-          const iconMapKey = getFolderKey(option);
-  
-          return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-              <img
-                src={ICON_MAP[iconMapKey]}
-                alt="Icon"
-                style={{ width: '18px', height: '18px', marginRight: '4px' }} 
-              />
-            <div>{option.name}</div>
-            { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-            { option.type === OptionType.SPELL && (
-                <>
-                  <div className={styles.magicCost}>{option.magicCost}</div>
-                  <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-                </>
-              )
-            }
-            { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-          </button>
-          )
-        })}
+            const iconMapKey = getFolderKey(option);
+    
+            return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+                <img
+                  src={ICON_MAP[iconMapKey]}
+                  alt="Icon"
+                  style={{ width: '18px', height: '18px', marginRight: '4px' }} 
+                />
+              <div>{option.name}</div>
+              { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+              { option.type === OptionType.SPELL && (
+                  <>
+                    <div className={styles.magicCost}>{option.magicCost}</div>
+                    <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                  </>
+                )
+              }
+              { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+            </button>
+            )
+          })}
+        </div>
+        <Zantetsuken />
       </div>
+
+
     );    
   }
 
@@ -175,7 +187,6 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
   const Charge = observer(() => {
     const onChargeStart = () => {
       props.battleScene.setCasterCharging();
-      console.log(toJS(props.battleScene))
     }
     const onChargeEnd = () => {
       props.battleScene.setCasterNormal();

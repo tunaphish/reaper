@@ -57,6 +57,7 @@ export class BattleStore {
   
   // spell vars
   chargeMultiplier = 1;
+  zantetsukenMultiplier = 3.5;
 
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
@@ -82,6 +83,10 @@ export class BattleStore {
 
   setChargeMultipler(chargeMultiplier: number): void {
     this.chargeMultiplier = chargeMultiplier;
+  }
+
+  setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
+    this.zantetsukenMultiplier = zantetsukenMultiplier;
   }
 
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
@@ -165,9 +170,15 @@ export class Battle extends Phaser.Scene {
         this.battleStore.setCaster(null);
         this.battleStore.emptyMenu();
     }
+
     const CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING = 1;
     if (this.battleStore.caster && this.battleStore.caster.status === Status.CHARGING) {
-      this.battleStore.setChargeMultipler(this.battleStore.chargeMultiplier +CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
+      this.battleStore.setChargeMultipler(this.battleStore.chargeMultiplier + CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
+    }
+    const ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING = 1;
+    if (this.battleStore?.caster && this.battleStore.caster.activeSpells.find(containsSpell(Spells.ZANTETSUKEN))) {
+      const zantetsukenMultiplier = Math.max(.5, this.battleStore.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
+      this.battleStore.setZantetsukenMultiplier(zantetsukenMultiplier);
     }
 
     // enemy AI
@@ -241,8 +252,12 @@ export class Battle extends Phaser.Scene {
         actionModifier.multiplier *= this.battleStore.chargeMultiplier;
         this.battleStore.setChargeMultipler(1);
       }
+
+      if (spells.find(containsSpell(Spells.ZANTETSUKEN))) {
+        actionModifier.multiplier *= this.battleStore.zantetsukenMultiplier;
+        this.battleStore.setZantetsukenMultiplier(3.5);
+      }
       
-      // charge multi, jankenbo multi, zantetsuken, 
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
         combatant.queuedOption.execute(target, combatant, potency);
@@ -343,6 +358,9 @@ export class Battle extends Phaser.Scene {
       this.sound.play('stamina-depleted');
       return;
     }
+
+    this.battleStore.zantetsukenMultiplier = 3.5;
+
     this.sound.play('choice-select');
     this.battleStore.setCaster(member);
     this.battleStore.menus.push(member.folder);

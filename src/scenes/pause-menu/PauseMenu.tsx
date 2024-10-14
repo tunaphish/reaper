@@ -31,7 +31,6 @@ export class PauseMenu extends Phaser.Scene {
         this.scene.stop(scene.scene.key);  
       });
       this.scene.start('Battle');
-      console.log(this.scene);
     };
 
     const onClickExit = () => {

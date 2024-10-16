@@ -1,6 +1,7 @@
 import { PartyMember, Party, Folder } from '../model/party';
-import { JankenboBehavior, Status } from '../model/combatant';
+import { Status } from '../model/combatant';
 
+import * as JankenboBehaviors from './jankenboBehaviors';
 import * as Actions from './actions';
 import * as Spells from './spells';
 import { bomb, potion } from './items';
@@ -20,7 +21,7 @@ const ejiFolder: Folder = {
 
 export const Eji: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.CLEAVE, Spells.DUAL, Spells.CHARGE],
+  activeSpells: [Spells.CLEAVE],
   name: 'Eji',
   health: 100,
   maxHealth: 100,
@@ -36,7 +37,7 @@ export const Eji: PartyMember = {
   folder: ejiFolder,
   status: Status.NORMAL,
   takingDamage: false,
-  jankenboBehavior: JankenboBehavior.CYCLE,
+  jankenboThrow: JankenboBehaviors.cycle,
 };
 
 
@@ -70,7 +71,7 @@ export const Keshi: PartyMember = {
   folder: keshiFolder,
   status: Status.NORMAL,
   takingDamage: false,
-  jankenboBehavior: JankenboBehavior.RANDOM,
+  jankenboThrow: JankenboBehaviors.random,
 };
 
 const eliseRestorationFolder: Folder = {
@@ -103,7 +104,7 @@ export const Elise: PartyMember = {
   folder: eliseFolder,
   status: Status.NORMAL,
   takingDamage: false,
-  jankenboBehavior: JankenboBehavior.ALWAYS_ROCK,
+  jankenboThrow: JankenboBehaviors.alwaysRock,
 };
 
 export const DefaultParty: Party = {

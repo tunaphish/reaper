@@ -176,7 +176,7 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setChargeMultipler(this.battleStore.chargeMultiplier + CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
     }
     const ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING = 1;
-    if (this.battleStore?.caster && this.battleStore.caster.activeSpells.find(containsSpell(Spells.ZANTETSUKEN))) {
+    if (this.battleStore.caster && this.battleStore.caster.activeSpells.find(containsSpell(Spells.ZANTETSUKEN))) {
       const zantetsukenMultiplier = Math.max(.5, this.battleStore.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
       this.battleStore.setZantetsukenMultiplier(zantetsukenMultiplier);
     }
@@ -257,11 +257,16 @@ export class Battle extends Phaser.Scene {
         actionModifier.multiplier *= this.battleStore.zantetsukenMultiplier;
         this.battleStore.setZantetsukenMultiplier(3.5);
       }
+
       
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
         combatant.queuedOption.execute(target, combatant, potency);
-      
+        
+        const jankenboThrow = target.jankenboThrow(target);
+        target.previousJankenboThrow = jankenboThrow;
+        console.log(target.previousJankenboThrow);
+
         if (combatant.queuedOption.soundKeyName) {
           this.sound.play(combatant.queuedOption.soundKeyName);
         }

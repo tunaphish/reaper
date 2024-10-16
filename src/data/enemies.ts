@@ -1,10 +1,12 @@
 import { Enemy } from '../model/enemy';
-import { JankenboBehavior, Status } from '../model/combatant';
+import { Status } from '../model/combatant';
 import { randomEnemy, randomParty, self } from '../model/targetPriorities';
+import { OptionType } from '../model/option';
 
+import * as JankenboBehaviors from './jankenboBehaviors';
 import { slash, idle, heal } from './actions';
 import { selfPreservation } from './traits';
-import { OptionType } from '../model/option';
+
 
 export const healieBoi: Enemy = {
   type: OptionType.ENEMY,
@@ -29,5 +31,5 @@ export const healieBoi: Enemy = {
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
   activeSpells: [],
-  jankenboBehavior: JankenboBehavior.RANDOM,
+  jankenboThrow: JankenboBehaviors.cycle,
 };

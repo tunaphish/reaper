@@ -16,16 +16,10 @@ export enum Status {
   CHARGING = 'CHARGING',
 }
 
-export enum JankenboBehavior {
-  RANDOM,
-  CYCLE,
-  ALWAYS_ROCK,
-}
-
 export enum JankenbowThrow {
-  ROCK,
-  PAPER,
-  SCISSORS,
+  ROCK = "ROCK",
+  PAPER = "PAPER",
+  SCISSORS = "SCISSORS",
 }
 
 export type Combatant = Option & {
@@ -48,6 +42,6 @@ export type Combatant = Option & {
 
   activeSpells: Spell[];
 
-  jankenboBehavior: JankenboBehavior;
+  jankenboThrow: (combatant: Combatant) => JankenbowThrow;
   previousJankenboThrow?: JankenbowThrow;
 }

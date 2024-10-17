@@ -55,7 +55,7 @@ const keshiFolder: Folder = {
 
 export const Keshi: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.ZANTETSUKEN],
+  activeSpells: [Spells.JANKENBO],
   name: 'Keshi',
   health: 100,
   maxHealth: 100,

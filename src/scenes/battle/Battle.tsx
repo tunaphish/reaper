@@ -6,7 +6,7 @@ import { OptionType } from '../../model/option';
 import { Party, PartyMember, Folder } from '../../model/party';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { Status } from '../../model/combatant';
+import { JankenbowThrow, Status } from '../../model/combatant';
 import { self } from '../../model/targetPriorities';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
@@ -58,6 +58,9 @@ export class BattleStore {
   // spell vars
   chargeMultiplier = 1;
   zantetsukenMultiplier = 3.5;
+  jankenboThrow?: JankenbowThrow = null;
+
+  stageText = "*the wind is howling*"
 
   constructor(enemies: Enemy[], party: Party) {
     this.enemies = enemies;
@@ -88,6 +91,11 @@ export class BattleStore {
   setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
     this.zantetsukenMultiplier = zantetsukenMultiplier;
   }
+
+  setStageText(stageText: string): void {
+    this.stageText = stageText;
+  }
+
 
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
     [...this.party.members, ...this.enemies].forEach((combatant) => {
@@ -250,22 +258,37 @@ export class Battle extends Phaser.Scene {
 
       if (spells.find(containsSpell(Spells.CHARGE))) {
         actionModifier.multiplier *= this.battleStore.chargeMultiplier;
-        this.battleStore.setChargeMultipler(1);
       }
 
       if (spells.find(containsSpell(Spells.ZANTETSUKEN))) {
         actionModifier.multiplier *= this.battleStore.zantetsukenMultiplier;
-        this.battleStore.setZantetsukenMultiplier(3.5);
       }
 
+      if (spells.find(containsSpell(Spells.JANKENBO))) {
+        const jankenboThrow = combatant.queuedTarget.jankenboThrow(combatant.queuedTarget);
+        combatant.queuedTarget.previousJankenboThrow = jankenboThrow;
+
+        if (this.battleStore.jankenboThrow) {
+          if (this.battleStore.jankenboThrow === combatant.queuedTarget.previousJankenboThrow) {
+            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU TIE");
+          } else if (
+            this.battleStore.jankenboThrow === JankenbowThrow.ROCK && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.SCISSORS ||
+            this.battleStore.jankenboThrow === JankenbowThrow.SCISSORS && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.PAPER ||
+            this.battleStore.jankenboThrow === JankenbowThrow.PAPER && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.ROCK
+          ) {
+            actionModifier.potency *= 2;
+            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU WIN");
+          } else {
+            actionModifier.potency = 0;
+            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU LOSE");
+          }
+        }
+      }
       
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
         combatant.queuedOption.execute(target, combatant, potency);
         
-        const jankenboThrow = target.jankenboThrow(target);
-        target.previousJankenboThrow = jankenboThrow;
-        console.log(target.previousJankenboThrow);
 
         if (combatant.queuedOption.soundKeyName) {
           this.sound.play(combatant.queuedOption.soundKeyName);
@@ -364,7 +387,11 @@ export class Battle extends Phaser.Scene {
       return;
     }
 
+    // reset spells
     this.battleStore.zantetsukenMultiplier = 3.5;
+    this.battleStore.jankenboThrow = null;
+    this.battleStore.setChargeMultipler(1);
+    this.battleStore.setSpells([]);
 
     this.sound.play('choice-select');
     this.battleStore.setCaster(member);
@@ -376,6 +403,7 @@ export class Battle extends Phaser.Scene {
     if (menuContent && menuContent.name === Spells.CHARGE.name) {
       this.battleStore.setChargeMultipler(1);
     }
+
     if (menuContent.type !== OptionType.SPELL) {
       this.battleStore.setExecutable(null); // hacky way of resetting action 
     }
@@ -429,6 +457,10 @@ export class Battle extends Phaser.Scene {
       return;
     }
     this.battleStore.menus.push(this.battleStore.spells.shift());
+  }
+
+  setJankenboThrow(jankenboThrow: JankenbowThrow): void {
+    this.battleStore.jankenboThrow = jankenboThrow;
   }
 }
 

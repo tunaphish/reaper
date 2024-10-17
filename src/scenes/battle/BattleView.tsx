@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 
-import { Combatant, Status } from '../../model/combatant';
+import { Combatant, JankenbowThrow, Status } from '../../model/combatant';
 import { PartyMember } from '../../model/party';
 import { OptionType } from '../../model/option';
 import { MenuContent } from '../../model/menuContent';
@@ -184,6 +184,22 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
     )
   }
 
+  const Jankenbo = () => {
+    const setJankenboThrow = (jankenboThrow: JankenbowThrow) => {
+      props.battleScene.setJankenboThrow(jankenboThrow);
+      props.battleScene.advanceSpell();
+    }
+
+    return (
+      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+        <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
+        <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.ROCK)}>ROCK</div>
+        <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.PAPER)}>PAPER</div>
+        <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.SCISSORS)}>SCISSORS</div>
+      </div>
+    )
+  };
+
   const Charge = observer(() => {
     const onChargeStart = () => {
       props.battleScene.setCasterCharging();
@@ -216,6 +232,12 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
   if (props.menuContent.name === Spells.CHARGE.name) {
     return (
       <Charge />
+    )
+  }
+
+  if (props.menuContent.name === Spells.JANKENBO.name) {
+    return (
+      <Jankenbo />
     )
   }
 }
@@ -266,7 +288,7 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
   );
 }) 
 
-export const BattleView = (props: { scene: Battle }): JSX.Element => {
+export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
     const { enemies, party } = props.scene.battleStore;
     const onClickPartyMember = (member: PartyMember) => {
       props.scene.openInitialMenu(member);
@@ -305,7 +327,7 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
                 <div className={styles.oldTvContent}>
                 <div className={styles.background} style={backgroundImageStyle}/>
                   <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
-                  <p className={styles.animeText} />
+                  <p className={styles.animeText}>{props.scene.battleStore.stageText}</p>
                 </div>
               </div>
             </div>
@@ -318,4 +340,4 @@ export const BattleView = (props: { scene: Battle }): JSX.Element => {
           <MenuContainer menus={props.scene.battleStore.menus} battleScene={props.scene}/>
         </div>
       )
-};
+});

@@ -391,7 +391,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.zantetsukenMultiplier = 3.5;
     this.battleStore.jankenboThrow = null;
     this.battleStore.setChargeMultipler(1);
-    this.battleStore.setSpells([]);
+    this.battleStore.setSpells(null);
 
     this.sound.play('choice-select');
     this.battleStore.setCaster(member);
@@ -404,7 +404,7 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setChargeMultipler(1);
     }
 
-    if (menuContent.type !== OptionType.SPELL) {
+    if (menuContent && menuContent.type !== OptionType.SPELL) {
       this.battleStore.setExecutable(null); // hacky way of resetting action 
     }
     if (this.battleStore.menus.length === 0) {

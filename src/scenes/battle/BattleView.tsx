@@ -240,18 +240,14 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
   const variants: Variants = {
     initial: { opacity: 0, x: "5%" },
     animate: { opacity: 1, x: 0 },
-    exit: ({idx, total}) => ({
+    exit: {
       opacity: 0,
       x: "-5%",
-      transition: {
-        delay: (total-idx-1) * 0.05,
-      },
-    }),    
+    },    
   }
 
   return (
     <div className={styles.menuViewsContainer}>
-      <AnimatePresence>
         {
           props.menus.map((menu, idx) => {
           return (
@@ -271,7 +267,6 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
           )
           })
         }
-      </AnimatePresence>
     </div>
   );
 }) 

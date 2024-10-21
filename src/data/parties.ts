@@ -7,21 +7,17 @@ import * as Spells from './spells';
 import { bomb, potion } from './items';
 import { OptionType } from '../model/option';
 
-const ejiThiefFolder: Folder = {
-  type: OptionType.FOLDER,
-  name: 'Thief',
-  options: [Actions.drain],
-};
+
 
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
-  options: [ejiThiefFolder, Actions.slash, bomb, potion, Spells.CLEAVE],
+  options: [Actions.attack, bomb, potion, Spells.CLEAVE, Actions.ambush],
 }
 
 export const Eji: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.CLEAVE],
+  activeSpells: [],
   name: 'Eji',
   health: 100,
   maxHealth: 100,
@@ -41,21 +37,15 @@ export const Eji: PartyMember = {
 };
 
 
-const keshiBerserkerFolder: Folder = {
-  type: OptionType.FOLDER,
-  name: 'Berserker',
-  options: [Actions.assault, Actions.ankleSlice, Actions.finisher],
-};
-
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
-  options: [keshiBerserkerFolder, Actions.slash, Spells.DUAL, Spells.ZANTETSUKEN],
+  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN],
 }
 
 export const Keshi: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.JANKENBO],
+  activeSpells: [],
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
@@ -74,21 +64,15 @@ export const Keshi: PartyMember = {
   jankenboThrow: JankenboBehaviors.random,
 };
 
-const eliseRestorationFolder: Folder = {
-  type: OptionType.FOLDER,
-  name: 'Restoration',
-  options: [Actions.heal],
-};
-
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Attack',
-  options: [Actions.slash, eliseRestorationFolder, Spells.SADIST, Spells.CHARGE],
+  options: [Actions.attack, Spells.SADIST, Spells.CHARGE],
 };
 
 export const Elise: PartyMember = {
   type: OptionType.MEMBER,
-  activeSpells: [Spells.CHARGE],
+  activeSpells: [],
   name: 'Elise',
   health: 100,
   bleed: 0,

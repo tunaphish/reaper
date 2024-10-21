@@ -139,6 +139,9 @@ export class Battle extends Phaser.Scene {
   private lastCalculation = 0;
   private battleStarted = false;
 
+  // restriction vars
+  firstActionTaken = false;
+
   constructor() {
     super(sceneConfig);
   }
@@ -225,6 +228,7 @@ export class Battle extends Phaser.Scene {
   }
 
   async execute(combatant: Combatant): Promise<void> {
+
     if (combatant.queuedOption.type === OptionType.ITEM) {
       combatant.queuedOption.charges -= 1;
       combatant.queuedOption.execute(combatant.queuedTarget, combatant);
@@ -234,6 +238,14 @@ export class Battle extends Phaser.Scene {
     if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
+      if (combatant.queuedOption.isRestricted(combatant.queuedTarget, combatant, this)) {
+        combatant.status = Status.NORMAL;
+        combatant.queuedOption = null;
+        combatant.queuedTarget = null;
+        this.sound.play('stamina-depleted');
+        return;
+      }
+
       const actionModifier: ActionModifier = {
         targets: [combatant.queuedTarget],
         potency: combatant.queuedOption.potency,
@@ -284,6 +296,9 @@ export class Battle extends Phaser.Scene {
           }
         }
       }
+
+      // Restrictions
+      if (!this.firstActionTaken) this.firstActionTaken = true;
       
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {

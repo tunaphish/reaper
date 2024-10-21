@@ -302,7 +302,7 @@ export class Battle extends Phaser.Scene {
       
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
-        combatant.queuedOption.execute(target, combatant, potency);
+        combatant.queuedOption.execute(target, combatant, potency, this);
         
 
         if (combatant.queuedOption.soundKeyName) {
@@ -330,7 +330,7 @@ export class Battle extends Phaser.Scene {
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
-      selectedBehavior.action.execute(target, enemy, selectedBehavior.action.potency);
+      selectedBehavior.action.execute(target, enemy, selectedBehavior.action.potency, this);
       if (selectedBehavior.action.soundKeyName) this.sound.play(selectedBehavior.action.soundKeyName);
     });
   }
@@ -476,6 +476,10 @@ export class Battle extends Phaser.Scene {
 
   setJankenboThrow(jankenboThrow: JankenbowThrow): void {
     this.battleStore.jankenboThrow = jankenboThrow;
+  }
+
+  getCombatants(): Combatant[] {
+    return [...this.battleStore.enemies, ...this.battleStore.party.members]
   }
 }
 

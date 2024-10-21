@@ -21,7 +21,7 @@ export const Eji: PartyMember = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  bleed: 0,
+  bleed: 75,
   stamina: 0,
   maxStamina: 400,
   magic: 100,
@@ -40,7 +40,7 @@ export const Eji: PartyMember = {
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
-  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN],
+  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN, Actions.bloodlust, Actions.debilitate, Actions.engage, Actions.flank],
 }
 
 export const Keshi: PartyMember = {
@@ -67,7 +67,7 @@ export const Keshi: PartyMember = {
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Attack',
-  options: [Actions.attack, Spells.SADIST, Spells.CHARGE],
+  options: [Actions.attack, Spells.SADIST, Spells.CHARGE, Actions.bandage],
 };
 
 export const Elise: PartyMember = {

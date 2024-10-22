@@ -1,5 +1,3 @@
-export const getRandomInt = (max: number): number => Math.floor(Math.random() * max);
-
 export const shuffle = (array: []): [] => {
   let currentIndex = array.length,
     randomIndex;

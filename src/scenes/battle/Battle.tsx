@@ -1,30 +1,25 @@
 import * as React from 'react';
-import { makeAutoObservable, toJS } from 'mobx';
 
-import { Behavior, Enemy } from '../../model/enemy';
+import { Enemy, selectBehavior } from '../../model/enemy';
 import { isSameOption, OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
-import { Action, ActionTags } from '../../model/action';
+import { Action, } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenboThrow, Status, toggleActiveSpell } from '../../model/combatant';
-import { self } from '../../model/targetPriorities';
+import { JankenboThrow, Status, toggleActiveSpell, updateStats } from '../../model/combatant';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
-import { MenuContent } from '../../model/menuContent';
 import { MenuOption } from '../../model/menuOption';
 
 import { DefaultAllies } from '../../data/allies';
 import { healieBoi } from '../../data/enemies';
-import { idle } from '../../data/actions';
 import * as Actions from '../../data/actions';
 import * as Spells from '../../data/spells';
 
-import { getRandomInt } from '../../util/random';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import { BattleView } from './BattleView';
-import { ActionModifier } from '../../model/ActionModifier';
+import { BattleStore } from './BattleStore';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -38,97 +33,7 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
-type Executable = Action | Item | Spell;
-
-export class BattleStore {
-  // battle vars
-  enemies: Enemy[];
-  allies: Allies;
-
-  // menu vars
-  caster?: Ally;
-  executable?: Executable;
-  target?: Enemy | Ally;
-  menus: MenuContent[] = [];
-  spells?: Spell[] = null;
-  
-  // spell vars
-  chargeMultiplier = 1;
-  zantetsukenMultiplier = 3.5;
-  jankenboThrow?: JankenboThrow = null;
-
-  stageText = "*the wind is howling*"
-
-  constructor(enemies: Enemy[], allies: Allies) {
-    this.enemies = enemies;
-    this.allies = allies;
-    makeAutoObservable(this);
-  }
-
-  setSpells(spells?: Spell[]): void {
-    this.spells = spells;
-  }
-
-  setCaster(member?: Ally): void {
-    this.caster = member;
-  }
-
-  setTarget(target?: Enemy | Ally): void {
-    this.target = target;
-  }
-
-  setExecutable(executable?: Executable): void {
-    this.executable = executable;
-  }
-
-  setChargeMultipler(chargeMultiplier: number): void {
-    this.chargeMultiplier = chargeMultiplier;
-  }
-
-  setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
-    this.zantetsukenMultiplier = zantetsukenMultiplier;
-  }
-
-  setStageText(stageText: string): void {
-    this.stageText = stageText;
-  }
-
-
-  tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
-    [...this.allies, ...this.enemies].forEach((combatant) => {
-      updateFunc(combatant, delta);
-    });
-  }
-
-  updateCombatantsState(): void {
-    [...this.allies, ...this.enemies].forEach((combatant) => {
-      if (combatant.health <= 0) {
-        combatant.status = Status.DEAD;
-      } else if (combatant.stamina <= 0) {
-        combatant.status = Status.EXHAUSTED;
-      } else if (combatant.status === Status.BLOCKING) {
-        // do nothing
-      } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
-        combatant.status = Status.NORMAL;
-      }
-    });
-  }
-
-  emptyMenu(): void {
-    this.menus.splice(0, this.menus.length);
-  }
-
-  resetSelections(): void {
-    this.emptyMenu();
-    this.setCaster(null);
-    this.setExecutable(null);
-    this.setTarget(null);
-  }
-
-  getCombatants(): Combatant[] {
-    return [...this.enemies, ...this.allies]
-  }
-}
+export type Executable = Action | Item | Spell;
 
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
@@ -177,7 +82,7 @@ export class Battle extends Phaser.Scene {
       this.queueAction(); 
     }
 
-    this.battleStore.tickStats(this.updateStats, delta);
+    this.battleStore.tickStats(updateStats, delta);
     this.battleStore.updateCombatantsState();
     if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {
         this.battleStore.setCaster(null);
@@ -248,14 +153,13 @@ export class Battle extends Phaser.Scene {
         return;
       }
 
-      const initActionModifier: ActionModifier = {
-        targets: [combatant.queuedTarget],
-        potency: combatant.queuedOption.potency,
-        multiplier: 1,
-      }
       const actionModifier = combatant.activeSpells.reduce(
         (accumulatedActionModifier, spell) => { return spell.modifyAction(accumulatedActionModifier, this, combatant) },
-        initActionModifier
+        {
+          targets: [combatant.queuedTarget],
+          potency: combatant.queuedOption.potency,
+          multiplier: 1,
+        }
       )
 
       // Restrictions
@@ -265,8 +169,6 @@ export class Battle extends Phaser.Scene {
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {
         combatant.queuedOption.execute(target, combatant, potency, this);
-        
-
         if (combatant.queuedOption.soundKeyName) {
           this.sound.play(combatant.queuedOption.soundKeyName);
         }
@@ -278,8 +180,7 @@ export class Battle extends Phaser.Scene {
       toggleActiveSpell(combatant, combatant.queuedOption);
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
-
-
+    
     combatant.status = Status.NORMAL;
     combatant.queuedOption = null;
     combatant.queuedTarget = null;
@@ -287,7 +188,7 @@ export class Battle extends Phaser.Scene {
 
   updateEnemies(): void {
     this.battleStore.enemies.forEach((enemy) => {
-      const selectedBehavior = this.selectBehavior(this.battleStore.enemies, this.battleStore.allies, enemy);
+      const selectedBehavior = selectBehavior(enemy);
       const target = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.allies, enemy);
 
       //Side Effects
@@ -297,31 +198,7 @@ export class Battle extends Phaser.Scene {
     });
   }
 
-  selectBehavior(enemies: Enemy[], allies: Allies, enemy: Enemy): Behavior {
-    // Baseline Behavior Filter
-    const filteredBehaviors = enemy.behaviors.filter((behavior) => {
-      if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
-      if (enemy.stamina < behavior.action.staminaCost) return false;
-      if (enemy.health === enemy.maxHealth && behavior.action.tags.has(ActionTags.HEAL)) return false;
-      return true;
-    });
 
-    // Apply Traits
-    let traitedBehaviors = filteredBehaviors;
-    enemy.traits.forEach((trait) => {
-      if (trait.onUpdate) traitedBehaviors = trait.onUpdate(enemies, allies, traitedBehaviors);
-    });
-
-    // Randomly Select Behavior Based on Weight
-    const summedWeights = filteredBehaviors.reduce((runningSum, behavior) => runningSum + behavior.weight, 0);
-    const randomInt = getRandomInt(summedWeights);
-    let runningSum = 0;
-    const selectedBehavior = filteredBehaviors.find((behavior) => {
-      runningSum += behavior.weight;
-      return runningSum > randomInt;
-    });
-    return selectedBehavior || { action: idle, weight: 100, targetPriority: self }; // in case it doesn't pick anything
-  }
 
   setExecutable(executable: Executable): void {
     this.battleStore.executable = executable;
@@ -329,27 +206,6 @@ export class Battle extends Phaser.Scene {
 
   setTarget(combatant: Enemy | Ally): void {
     this.battleStore.setTarget(combatant);    
-  }
-
-  updateStats(combatant: Combatant, delta: number): void {
-    if (combatant.status === Status.DEAD) return;
-    if (combatant.bleed > 0) {
-      const DAMAGE_TICK_RATE = (delta / 1000) * 10;
-      combatant.bleed -= DAMAGE_TICK_RATE;
-      combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
-    }
-    
-    const STAMINA_LOSS_PER_SECOND_WHILE_CHARGING = 100;
-    if (combatant.status === Status.CHARGING) {
-      combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
-    }
-    else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
-        const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-        combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
-    }
-
-    const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
-    combatant.flow = Math.max(0, combatant.flow-decayPerTick);
   }
 
   playSong(songKey: string): void {

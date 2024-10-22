@@ -1,6 +1,6 @@
 import { Enemy } from '../model/enemy';
 import { Status } from '../model/combatant';
-import { randomEnemy, randomParty, self } from '../model/targetPriorities';
+import { randomEnemy, randomAlly, self } from '../model/targetPriorities';
 import { OptionType } from '../model/option';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
@@ -23,7 +23,7 @@ export const healieBoi: Enemy = {
   staminaRegenRatePerSecond: 10,
   traits: new Set([selfPreservation]),
   behaviors: [
-    { action: attack, weight: 100, targetPriority: randomParty, dialoguePool: ['Suffer as I have', 'Eat shit'] },
+    { action: attack, weight: 100, targetPriority: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
     { action: idle, weight: 100, targetPriority: self },
   ],
   status: Status.NORMAL,

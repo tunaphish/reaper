@@ -1,7 +1,7 @@
 export enum OptionType {
     FOLDER = "folder",
     ENEMY = "enemy",
-    MEMBER = "member",
+    ALLY = "ally",
     ITEM = "item",
     ACTION = "action",
     SPELL = "spell",

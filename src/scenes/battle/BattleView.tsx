@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Combatant, JankenbowThrow, Status } from '../../model/combatant';
-import { PartyMember } from '../../model/party';
+import { Ally } from '../../model/ally';
 import { OptionType } from '../../model/option';
 import { MenuContent } from '../../model/menuContent';
 import { MenuOption } from '../../model/menuOption';
@@ -177,7 +177,7 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
                     return'folder';
                   case OptionType.ENEMY:
                     return'enemy';
-                  case OptionType.MEMBER:
+                  case OptionType.ALLY:
                     return'ally';
                   case OptionType.ACTION:
                     return'attack';
@@ -272,8 +272,8 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
 }) 
 
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { enemies, party } = props.scene.battleStore;
-    const onClickPartyMember = (member: PartyMember) => {
+    const { enemies, allies } = props.scene.battleStore;
+    const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
     }
     const onAnimationEnd = () => {
@@ -289,7 +289,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
-          <div className={styles.partyBar}>
+          <div className={styles.alliesBar}>
             {enemies.map((enemy) => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
@@ -315,9 +315,9 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               </div>
             </div>
           </motion.div>
-          <div className={styles.partyBar}>
-              {party.members.map((member) => {
-                return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickPartyMember(member)} key={member.name}/>
+          <div className={styles.alliesBar}>
+              {allies.map((member) => {
+                return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
               })}
           </div>
           <MenuContainer menus={props.scene.battleStore.menus} battleScene={props.scene}/>

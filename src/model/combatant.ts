@@ -4,7 +4,7 @@ import { Action } from './action';
 import { Item } from './item';
 import { Spell } from './spell';
 import { Enemy } from './enemy';
-import { PartyMember } from './party';
+import { Ally } from './ally';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -38,7 +38,7 @@ export type Combatant = Option & {
   status: Status;
   takingDamage: boolean;
   queuedOption?: Action | Item | Spell;
-  queuedTarget?: Enemy | PartyMember;
+  queuedTarget?: Enemy | Ally;
 
   activeSpells: Spell[];
 

@@ -1,8 +1,8 @@
-import { Folder } from "./party";
+import { Folder } from "./folder";
 import { Spell } from "./spell";
 import { Enemy } from "./enemy";
-import { PartyMember } from "./party";
+import { Ally } from "./ally";
 import { Action } from "./action";
 import { Item } from "./item";
 
-export type MenuOption = Folder | Enemy | PartyMember | Action | Item | Spell;
+export type MenuOption = Folder | Enemy | Ally | Action | Item | Spell;

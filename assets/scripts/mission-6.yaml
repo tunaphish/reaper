@@ -35,7 +35,7 @@ post_mock_fight:
   - announce | In second arc, prior to the final mission, you stage a mock battle between you and Elise to train against the fight with Sei.
   - announce | You don't really have tools to embolden enemies while Elise and Ava do so there's no need to see what happens if you embolden girl.
   - announce | She's the one who helps you do that against Sei.
-  - announce | You win and depress her and that's the catalyst for why she leaves the party and you decide to go fight Sei by yourself.
+  - announce | You win and depress her and that's the catalyst for why she leaves the allies and you decide to go fight Sei by yourself.
   - display | Why
   - display | Why?
   - display | Why why why why why why

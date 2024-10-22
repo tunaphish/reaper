@@ -7,7 +7,7 @@ import { self } from '../model/targetPriorities';
 export const selfPreservation: Trait = {
   name: 'Self Preservation',
   description: 'Prioritizes Healing when Low on Health',
-  onUpdate: (enemies, party, behaviors) => {
+  onUpdate: (enemies, allies, behaviors) => {
     const newBehaviors = behaviors.map((behavior: Behavior) => {
       if (!behavior.action.tags.has(ActionTags.HEAL)) return behavior;
       return {
@@ -23,19 +23,19 @@ export const selfPreservation: Trait = {
 export const headstrong: Trait = {
   name: 'Headstrong',
   description: 'Easily angered',
-  onUpdate: (enemies, party, behaviors) => behaviors,
+  onUpdate: (enemies, allies, behaviors) => behaviors,
 };
 
 export const misogynist: Trait = {
   name: 'Misogynist',
   description: 'Targets women with Higher Priority',
-  onUpdate: (enemies, party, behaviors) => behaviors,
+  onUpdate: (enemies, allies, behaviors) => behaviors,
 };
 
 export const motherlyInstinct: Trait = {
   name: 'Motherly Instinct',
   description: 'Prioritizes Healing Children',
-  onUpdate: (enemies, party, behaviors) => behaviors,
+  onUpdate: (enemies, allies, behaviors) => behaviors,
 };
 
 export const vindictive: Trait = {
@@ -43,7 +43,7 @@ export const vindictive: Trait = {
   description: 'Prioritizes Enemy who Attacked them Last',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onStart: () => {},
-  onUpdate: (enemies, party, behaviors) => behaviors,
+  onUpdate: (enemies, allies, behaviors) => behaviors,
 };
 
 // burn the ships - anger cannot be lowered

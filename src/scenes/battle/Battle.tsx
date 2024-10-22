@@ -3,7 +3,8 @@ import { makeAutoObservable, toJS } from 'mobx';
 
 import { Behavior, Enemy } from '../../model/enemy';
 import { OptionType } from '../../model/option';
-import { Party, PartyMember, Folder } from '../../model/party';
+import { Allies, Ally } from '../../model/ally';
+import { Folder } from '../../model/folder';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
 import { JankenbowThrow, Status } from '../../model/combatant';
@@ -14,7 +15,7 @@ import { Spell } from '../../model/spell';
 import { MenuContent } from '../../model/menuContent';
 import { MenuOption } from '../../model/menuOption';
 
-import { DefaultParty } from '../../data/parties';
+import { DefaultAllies } from '../../data/allies';
 import { healieBoi } from '../../data/enemies';
 import { idle } from '../../data/actions';
 import * as Actions from '../../data/actions';
@@ -32,7 +33,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export interface DialogueTrigger {
-  trigger: (enemies: Enemy[], party: Party) => boolean;
+  trigger: (enemies: Enemy[], allies: Allies) => boolean;
   scriptKeyName: string;
 }
 
@@ -47,12 +48,12 @@ type ActionModifier = {
 export class BattleStore {
   // battle vars
   enemies: Enemy[];
-  party: Party;
+  allies: Allies;
 
   // menu vars
-  caster?: PartyMember;
+  caster?: Ally;
   executable?: Executable;
-  target?: Enemy | PartyMember;
+  target?: Enemy | Ally;
   menus: MenuContent[] = [];
   spells?: Spell[] = null;
   
@@ -63,9 +64,9 @@ export class BattleStore {
 
   stageText = "*the wind is howling*"
 
-  constructor(enemies: Enemy[], party: Party) {
+  constructor(enemies: Enemy[], allies: Allies) {
     this.enemies = enemies;
-    this.party = party;
+    this.allies = allies;
     makeAutoObservable(this);
   }
 
@@ -73,11 +74,11 @@ export class BattleStore {
     this.spells = spells;
   }
 
-  setCaster(member?: PartyMember): void {
+  setCaster(member?: Ally): void {
     this.caster = member;
   }
 
-  setTarget(target?: Enemy | PartyMember): void {
+  setTarget(target?: Enemy | Ally): void {
     this.target = target;
   }
 
@@ -99,13 +100,13 @@ export class BattleStore {
 
 
   tickStats(updateFunc: (combatant: Combatant, delta: number) => void, delta: number): void {
-    [...this.party.members, ...this.enemies].forEach((combatant) => {
+    [...this.allies, ...this.enemies].forEach((combatant) => {
       updateFunc(combatant, delta);
     });
   }
 
   updateCombatantsState(): void {
-    [...this.party.members, ...this.enemies].forEach((combatant) => {
+    [...this.allies, ...this.enemies].forEach((combatant) => {
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {
@@ -149,7 +150,7 @@ export class Battle extends Phaser.Scene {
   }
 
   public init(): void {
-    this.battleStore = new BattleStore([healieBoi], DefaultParty);
+    this.battleStore = new BattleStore([healieBoi], DefaultAllies);
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -162,7 +163,7 @@ export class Battle extends Phaser.Scene {
   update(time: number, delta: number): void {
     if (!this.battleStarted) return;
 
-    if (this.battleStore.party.members.every((member) => member.status === Status.DEAD)) {
+    if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
       this.scene.start('World');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
@@ -204,7 +205,7 @@ export class Battle extends Phaser.Scene {
   }
 
   queueAction(): void{
-    for (const member of this.battleStore.party.members) {
+    for (const member of this.battleStore.allies) {
       if (member.status === Status.ATTACKING) {
         this.battleStore.caster.flow = Math.min(this.battleStore.caster.maxMagic, this.battleStore.caster.flow+25);
         member.flow = Math.min(member.maxMagic, member.flow+25);
@@ -257,8 +258,8 @@ export class Battle extends Phaser.Scene {
 
       // Apply Effects
       if (spells.find(containsSpell(Spells.CLEAVE))) {
-        if (combatant.queuedTarget.type === OptionType.MEMBER) {
-          actionModifier.targets = this.battleStore.party.members;
+        if (combatant.queuedTarget.type === OptionType.ALLY) {
+          actionModifier.targets = this.battleStore.allies;
         } else {
           actionModifier.targets = this.battleStore.enemies;
         }
@@ -328,8 +329,8 @@ export class Battle extends Phaser.Scene {
 
   updateEnemies(): void {
     this.battleStore.enemies.forEach((enemy) => {
-      const selectedBehavior = this.selectBehavior(this.battleStore.enemies, this.battleStore.party, enemy);
-      const target = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.party, enemy);
+      const selectedBehavior = this.selectBehavior(this.battleStore.enemies, this.battleStore.allies, enemy);
+      const target = selectedBehavior.targetPriority(this.battleStore.enemies, this.battleStore.allies, enemy);
 
       //Side Effects
       enemy.stamina -= selectedBehavior.action.staminaCost;
@@ -338,7 +339,7 @@ export class Battle extends Phaser.Scene {
     });
   }
 
-  selectBehavior(enemies: Enemy[], party: Party, enemy: Enemy): Behavior {
+  selectBehavior(enemies: Enemy[], allies: Allies, enemy: Enemy): Behavior {
     // Baseline Behavior Filter
     const filteredBehaviors = enemy.behaviors.filter((behavior) => {
       if (enemy.stamina === enemy.maxStamina && behavior.action.name === 'Idle') return false;
@@ -350,7 +351,7 @@ export class Battle extends Phaser.Scene {
     // Apply Traits
     let traitedBehaviors = filteredBehaviors;
     enemy.traits.forEach((trait) => {
-      if (trait.onUpdate) traitedBehaviors = trait.onUpdate(enemies, party, traitedBehaviors);
+      if (trait.onUpdate) traitedBehaviors = trait.onUpdate(enemies, allies, traitedBehaviors);
     });
 
     // Randomly Select Behavior Based on Weight
@@ -368,7 +369,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.executable = executable;
   }
 
-  setTarget(combatant: Enemy | PartyMember): void {
+  setTarget(combatant: Enemy | Ally): void {
     this.battleStore.setTarget(combatant);    
   }
 
@@ -398,7 +399,7 @@ export class Battle extends Phaser.Scene {
     this.music.play();
   }
 
-  openInitialMenu(member: PartyMember): void {
+  openInitialMenu(member: Ally): void {
     const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING, Status.ATTACKING]
     if (CANNOT_OPEN_STATUS.includes(member.status)) {
       this.sound.play('stamina-depleted');
@@ -442,12 +443,12 @@ export class Battle extends Phaser.Scene {
         if (executable.targetType === TargetType.SELF) {
           this.battleStore.setTarget(this.battleStore.caster);
         } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.party.members, ...this.battleStore.enemies]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.menus.push(targetFolder);
         }
         break;
       case OptionType.ENEMY:
-      case OptionType.MEMBER:
+      case OptionType.ALLY:
         const combatant = option;
         this.battleStore.setTarget(combatant);
         this.battleStore.setSpells(this.battleStore.caster.activeSpells.filter(activeSpell => activeSpell.isMenuSpell)); 
@@ -482,7 +483,7 @@ export class Battle extends Phaser.Scene {
   }
 
   getCombatants(): Combatant[] {
-    return [...this.battleStore.enemies, ...this.battleStore.party.members]
+    return [...this.battleStore.enemies, ...this.battleStore.allies]
   }
 }
 

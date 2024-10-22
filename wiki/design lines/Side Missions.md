@@ -55,7 +55,7 @@
 			- I don't care anymore
 			- staring at the smucci bag window
 			- Perma increase Elise’s item menu. 
-	- as side quests (personal ones that let you get to know party better...)
+	- as side quests (personal ones that let you get to know allies better...)
 
 - She shoplifted the bag
 	- Fuck em eji! They’re vultures in this capatlistic system

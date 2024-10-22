@@ -45,7 +45,7 @@ artificial recreations of nature is a theme I like
 	- Expressions. Art. I want very basic art for environment. I want dynamic lighting
 	- For the display art. I want anime art? With ghibli esque density. But omocat basic
 - Mission Structure
-	- Characters talking and planning. Discussing the world. Intra party discussions. Inns. Fireplaces. Coffee shop…. Fuck. What was happening in the world. Why it’s weird. 
+	- Characters talking and planning. Discussing the world. Intra allies discussions. Inns. Fireplaces. Coffee shop…. Fuck. What was happening in the world. Why it’s weird. 
 	- - towns are the dungeon. that feeling of arriving in a town and seeing the mini cutscene of the stuff going on with a lil image to go with it
 	- after you arrive at a town you characters search for a place with coffee
 	- experiences ideas

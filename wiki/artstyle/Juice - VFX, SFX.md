@@ -79,7 +79,7 @@
 # Sound Design
 - The music in the background of you taking to a character. He tells you to shut up and the music and his voice play over  game sounds and your voice. Probably when Keshi is turning
 - Music playing through the door. Open up and the battle starts and the music blasts. It happens on continues. 
-- Approaching the boss battle. It’s muffled like you’re at a party. Retry and it picks back up
+- Approaching the boss battle. It’s muffled like you’re at a allies. Retry and it picks back up
 - Sideline characters chime in while you fight. 
 	- some are procedural. “Hayai” while others are narrative. 
 - ASMR?

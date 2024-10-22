@@ -84,7 +84,7 @@ eshi's Fall
 - Keshi starts attacking the team
 	- Glitch and he's on the other side
 	- Girl is flooded with emotion. Attempting to user her is almost impossible. Level 10 confusion
-	- Sei joins party and has to heal and defend until eji can stabilize.  defend until eji can stabilize. 
+	- Sei joins allies and has to heal and defend until eji can stabilize.  defend until eji can stabilize. 
 
 - I thought my anger was the issue. My rage was holding me back. From being like you. Like you and sei. But that wasn’t it was it. It doesn’t come from holding yourself back. No. It comes from being true to yourself. It comes from my anger. 
 - Then what does that mean for you. If my anger is who I am. Then your detachment. Is who you are. You’re just being true to yourself. 

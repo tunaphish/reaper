@@ -35,7 +35,7 @@ Can't Handle Emotions, Lack of Purpose (lack of control)
 	- This sets off the main desire line for eji. To seek his purpose. Every battle he seeks to understand who they were. Their purpose. To see what they feel. And see what resonated within him. 
 - Mission 7: Sei's Past. 
 	- in the final mission I talked to you about meeting sei and discussing his past and his target. very little information is given. sei doesn't seem to remember much about his past either and is still shrouded in ambiguity. this promps eji to start an investigation to learn more about sei's past. 
-		- Sei... joins your party. 
+		- Sei... joins your allies. 
 	- you go through the dungeon and start investigating his past. 
 		- you look into his job. the dungeon. there's a dickhead boss. annoying coworkers. but overall a normal office job
 		- you go into his family home. normal parents. normal siblings. 

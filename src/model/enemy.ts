@@ -1,9 +1,9 @@
 import { Action } from './action';
-import { Party } from './party';
+import { Allies } from './ally';
 import { Combatant } from './combatant';
 import { OptionType } from './option';
 
-export type TargetPriority = (enemies: Enemy[], party: Party, enemy: Enemy) => Combatant;
+export type TargetPriority = (enemies: Enemy[], allies: Allies, enemy: Enemy) => Combatant;
 
 export interface Behavior {
   action: Action;

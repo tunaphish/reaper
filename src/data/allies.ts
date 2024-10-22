@@ -1,4 +1,5 @@
-import { PartyMember, Party, Folder } from '../model/party';
+import { Ally, Allies } from '../model/ally';
+import { Folder } from '../model/folder';
 import { Status } from '../model/combatant';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
@@ -15,8 +16,8 @@ const ejiFolder: Folder = {
   options: [Actions.attack, bomb, potion, Spells.CLEAVE, Actions.ambush, Actions.revenge],
 }
 
-export const Eji: PartyMember = {
-  type: OptionType.MEMBER,
+export const Eji: Ally = {
+  type: OptionType.ALLY,
   activeSpells: [],
   name: 'Eji',
   health: 100,
@@ -43,8 +44,8 @@ const keshiFolder: Folder = {
   options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN, Actions.bloodlust, Actions.debilitate, Actions.engage, Actions.flourish, Actions.splinter],
 }
 
-export const Keshi: PartyMember = {
-  type: OptionType.MEMBER,
+export const Keshi: Ally = {
+  type: OptionType.ALLY,
   activeSpells: [],
   name: 'Keshi',
   health: 100,
@@ -70,8 +71,8 @@ const eliseFolder: Folder = {
   options: [Actions.attack, Spells.SADIST, Spells.CHARGE, Actions.bandage, Actions.resurrect, Actions.salve],
 };
 
-export const Elise: PartyMember = {
-  type: OptionType.MEMBER,
+export const Elise: Ally = {
+  type: OptionType.ALLY,
   activeSpells: [],
   name: 'Elise',
   health: 100,
@@ -91,6 +92,4 @@ export const Elise: PartyMember = {
   jankenboThrow: JankenboBehaviors.alwaysRock,
 };
 
-export const DefaultParty: Party = {
-  members: [Eji, Keshi, Elise],
-};
+export const DefaultAllies: Allies = [Eji, Keshi, Elise];

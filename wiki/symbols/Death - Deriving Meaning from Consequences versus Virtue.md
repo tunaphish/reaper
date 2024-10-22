@@ -43,7 +43,7 @@ Life is a reality to be experienced.
 	- I don't know what the overarching story is at that point then. 
 	- you're fighting lost souls. 
 	- figuring out the back story for everyone. 
-	- inverse of getting party members is the best part... 
+	- inverse of getting allies members is the best part... 
 		- team 3. 
 		- empathy and inviting emotions unto yourself. 
 - You’re not a reaper until you take down a friend. What’s the overarching narrative then. 

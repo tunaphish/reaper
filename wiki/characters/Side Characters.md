@@ -1,5 +1,5 @@
 # Ava
-- Another reaper. Hates Sei. Takes over your party after Sei leaves
+- Another reaper. Hates Sei. Takes over your allies after Sei leaves
 - The mentor tells you the story of her lover. (the goal of arc 2?). Her lover was another mentor of Sei. So she tried to be a reaper. But the first time she reapt a fellow reaper she herself became a lost soul. (side quest? you can go with female mentor to find a lost soul and she knows its weaknesses. she was never able to put her down herself, sei for some reason will not either. but you can do it.) 
 	- There's an area you can't Enter. It contains a particularly deadly spirit. Result of Ava. She couldn't take down her friend. As a result she became a lost spirit too difficult to handle. This is her regret. Maybe she moves on after this. 
 

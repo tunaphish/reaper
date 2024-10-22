@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 
-import { Combatant, JankenbowThrow, Status } from '../../model/combatant';
+import { Combatant, JankenboThrow, Status } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 import { OptionType } from '../../model/option';
 import { MenuContent } from '../../model/menuContent';
@@ -121,16 +121,16 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
   }
 
   const Jankenbo = () => {
-    const setJankenboThrow = (jankenboThrow: JankenbowThrow) => {
+    const setJankenboThrow = (jankenboThrow: JankenboThrow) => {
       props.battleScene.setJankenboThrow(jankenboThrow);
       props.battleScene.advanceSpell();
     }
 
     return (
         <>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.ROCK)}>ROCK</div>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.PAPER)}>PAPER</div>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenbowThrow.SCISSORS)}>SCISSORS</div>
+          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.ROCK)}>ROCK</div>
+          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.PAPER)}>PAPER</div>
+          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.SCISSORS)}>SCISSORS</div>
         </>
     )
   };

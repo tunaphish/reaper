@@ -1,24 +1,24 @@
-import { Combatant, JankenbowThrow } from "../model/combatant"
+import { Combatant, JankenboThrow } from "../model/combatant"
 
-export const random = (_combatant: Combatant): JankenbowThrow => {
-    return getRandomEnumValue(JankenbowThrow);
+export const random = (_combatant: Combatant): JankenboThrow => {
+    return getRandomEnumValue(JankenboThrow);
 }
 
-export const alwaysRock = (_combatant: Combatant): JankenbowThrow => {
-    return JankenbowThrow.ROCK
+export const alwaysRock = (_combatant: Combatant): JankenboThrow => {
+    return JankenboThrow.ROCK
 }
 
-export const cycle = (combatant: Combatant): JankenbowThrow => {
+export const cycle = (combatant: Combatant): JankenboThrow => {
     if (!combatant.previousJankenboThrow) {
-        return getRandomEnumValue(JankenbowThrow);
+        return getRandomEnumValue(JankenboThrow);
     }
     switch (combatant.previousJankenboThrow) {
-        case JankenbowThrow.ROCK:
-            return JankenbowThrow.PAPER;
-        case JankenbowThrow.PAPER:
-            return JankenbowThrow.SCISSORS;
-        case JankenbowThrow.SCISSORS:
-            return JankenbowThrow.ROCK;
+        case JankenboThrow.ROCK:
+            return JankenboThrow.PAPER;
+        case JankenboThrow.PAPER:
+            return JankenboThrow.SCISSORS;
+        case JankenboThrow.SCISSORS:
+            return JankenboThrow.ROCK;
     }
 }
 

@@ -7,7 +7,7 @@ import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenbowThrow, Status, toggleActiveSpell } from '../../model/combatant';
+import { JankenboThrow, Status, toggleActiveSpell } from '../../model/combatant';
 import { self } from '../../model/targetPriorities';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
@@ -60,7 +60,7 @@ export class BattleStore {
   // spell vars
   chargeMultiplier = 1;
   zantetsukenMultiplier = 3.5;
-  jankenboThrow?: JankenbowThrow = null;
+  jankenboThrow?: JankenboThrow = null;
 
   stageText = "*the wind is howling*"
 
@@ -291,9 +291,9 @@ export class Battle extends Phaser.Scene {
           if (this.battleStore.jankenboThrow === combatant.queuedTarget.previousJankenboThrow) {
             this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU TIE");
           } else if (
-            this.battleStore.jankenboThrow === JankenbowThrow.ROCK && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.SCISSORS ||
-            this.battleStore.jankenboThrow === JankenbowThrow.SCISSORS && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.PAPER ||
-            this.battleStore.jankenboThrow === JankenbowThrow.PAPER && combatant.queuedTarget.previousJankenboThrow === JankenbowThrow.ROCK
+            this.battleStore.jankenboThrow === JankenboThrow.ROCK && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
+            this.battleStore.jankenboThrow === JankenboThrow.SCISSORS && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
+            this.battleStore.jankenboThrow === JankenboThrow.PAPER && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
           ) {
             actionModifier.potency *= 2;
             this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU WIN");
@@ -486,7 +486,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.menus.push(this.battleStore.spells.shift());
   }
 
-  setJankenboThrow(jankenboThrow: JankenbowThrow): void {
+  setJankenboThrow(jankenboThrow: JankenboThrow): void {
     this.battleStore.jankenboThrow = jankenboThrow;
   }
 }

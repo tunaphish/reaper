@@ -17,7 +17,7 @@ export enum Status {
   CHARGING = 'CHARGING',
 }
 
-export enum JankenbowThrow {
+export enum JankenboThrow {
   ROCK = "ROCK",
   PAPER = "PAPER",
   SCISSORS = "SCISSORS",
@@ -43,8 +43,8 @@ export type Combatant = Option & {
 
   activeSpells: Spell[];
 
-  jankenboThrow: (combatant: Combatant) => JankenbowThrow;
-  previousJankenboThrow?: JankenbowThrow;
+  jankenboThrow: (combatant: Combatant) => JankenboThrow;
+  previousJankenboThrow?: JankenboThrow;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

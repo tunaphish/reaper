@@ -1,3 +1,6 @@
+import { Battle } from '../scenes/battle/Battle';
+import { ActionModifier } from './ActionModifier';
+import { Combatant } from './combatant';
 import { Option, OptionType } from './option';
 import { TargetType } from './targetType';
 
@@ -11,4 +14,6 @@ export type Spell = Option & {
   magicCost: number;
   castTimeInMs: number;
   isMenuSpell: boolean;
+
+  modifyAction: (actionModifier: ActionModifier, scene: Battle, caster: Combatant) => ActionModifier;
 };

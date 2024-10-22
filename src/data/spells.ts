@@ -1,6 +1,9 @@
+import { ActionModifier } from "../model/ActionModifier";
+import { Combatant, JankenboThrow } from "../model/combatant";
 import { OptionType } from "../model/option";
 import { Spell } from "../model/spell";
 import { TargetType } from "../model/targetType";
+import { Battle } from "../scenes/battle/Battle";
 
 export const SADIST: Spell = {
     type: OptionType.SPELL,
@@ -12,6 +15,11 @@ export const SADIST: Spell = {
     description: 'Actions that hurt target now heal bleed',
     castTimeInMs: 250,
     isMenuSpell: false,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        actionModifier.potency *= -1;
+        return actionModifier;
+    }
 };
 
 export const ZANTETSUKEN: Spell = {
@@ -24,6 +32,11 @@ export const ZANTETSUKEN: Spell = {
     description: 'Actions scale in potency the faster they are selected one menu is opened',
     castTimeInMs: 250,
     isMenuSpell: false,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        actionModifier.multiplier *= scene.battleStore.zantetsukenMultiplier;
+        return actionModifier;
+    }
 };
 
 // Post Selection Menus
@@ -37,6 +50,12 @@ export const DUAL: Spell = {
     description: 'Actions strike twice at 0.5X potency',
     castTimeInMs: 250,
     isMenuSpell: false,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
+        actionModifier.multiplier *= 0.5;
+        return actionModifier;
+    }
 };
 
 export const CLEAVE: Spell = {
@@ -49,6 +68,16 @@ export const CLEAVE: Spell = {
     description: 'Actions strike everyone on targets side at 0.5X potency',
     castTimeInMs: 250,
     isMenuSpell: true,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        if (caster.queuedTarget.type === OptionType.ALLY) {
+            actionModifier.targets = scene.battleStore.allies;
+          } else {
+            actionModifier.targets = scene.battleStore.enemies;
+          }
+          actionModifier.multiplier *= 0.5;
+        return actionModifier;
+    }
 };
 
 export const CHARGE: Spell = {
@@ -61,6 +90,11 @@ export const CHARGE: Spell = {
     description: 'Actions can use stamina to multiply potency',
     castTimeInMs: 250,
     isMenuSpell: true,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        actionModifier.multiplier *= scene.battleStore.chargeMultiplier;
+        return actionModifier;
+    }
 };
 
 export const JANKENBO: Spell = {
@@ -73,4 +107,26 @@ export const JANKENBO: Spell = {
     description: 'Can play JANKENBO with target to double or nullify potency',
     castTimeInMs: 250,
     isMenuSpell: true,
+    modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
+        const actionModifier = Object.assign({}, initActionModifier);
+        const jankenboThrow = caster.queuedTarget.jankenboThrow(caster.queuedTarget);
+        caster.queuedTarget.previousJankenboThrow = jankenboThrow;
+
+        if (scene.battleStore.jankenboThrow) {
+          if (scene.battleStore.jankenboThrow === caster.queuedTarget.previousJankenboThrow) {
+            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU TIE");
+          } else if (
+            scene.battleStore.jankenboThrow === JankenboThrow.ROCK && caster.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
+            scene.battleStore.jankenboThrow === JankenboThrow.SCISSORS && caster.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
+            scene.battleStore.jankenboThrow === JankenboThrow.PAPER && caster.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
+          ) {
+            actionModifier.potency *= 2;
+            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU WIN");
+          } else {
+            actionModifier.potency = 0;
+            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU LOSE");
+          }
+        }
+        return actionModifier;
+    }
 };

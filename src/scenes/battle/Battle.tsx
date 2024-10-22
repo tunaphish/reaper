@@ -24,6 +24,7 @@ import * as Spells from '../../data/spells';
 import { getRandomInt } from '../../util/random';
 import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
 import { BattleView } from './BattleView';
+import { ActionModifier } from '../../model/ActionModifier';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -38,12 +39,6 @@ export interface DialogueTrigger {
 }
 
 type Executable = Action | Item | Spell;
-
-type ActionModifier = {
-  targets: Combatant[];
-  potency: number;
-  multiplier: number;
-}
 
 export class BattleStore {
   // battle vars
@@ -253,60 +248,15 @@ export class Battle extends Phaser.Scene {
         return;
       }
 
-      const actionModifier: ActionModifier = {
+      const initActionModifier: ActionModifier = {
         targets: [combatant.queuedTarget],
         potency: combatant.queuedOption.potency,
         multiplier: 1,
       }
-      const spells = combatant.activeSpells;
-
-      // Apply Effects
-      if (spells.find(isSameOption(Spells.CLEAVE))) {
-        if (combatant.queuedTarget.type === OptionType.ALLY) {
-          actionModifier.targets = this.battleStore.allies;
-        } else {
-          actionModifier.targets = this.battleStore.enemies;
-        }
-        actionModifier.multiplier *= 0.5;
-      }
-
-      if (spells.find(isSameOption(Spells.DUAL))) {
-        actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
-        actionModifier.multiplier *= 0.5;
-      }
-
-      if (spells.find(isSameOption(Spells.CHARGE))) {
-        actionModifier.multiplier *= this.battleStore.chargeMultiplier;
-      }
-
-      if (spells.find(isSameOption(Spells.ZANTETSUKEN))) {
-        actionModifier.multiplier *= this.battleStore.zantetsukenMultiplier;
-      }
-
-      if (spells.find(isSameOption(Spells.JANKENBO))) {
-        const jankenboThrow = combatant.queuedTarget.jankenboThrow(combatant.queuedTarget);
-        combatant.queuedTarget.previousJankenboThrow = jankenboThrow;
-
-        if (this.battleStore.jankenboThrow) {
-          if (this.battleStore.jankenboThrow === combatant.queuedTarget.previousJankenboThrow) {
-            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU TIE");
-          } else if (
-            this.battleStore.jankenboThrow === JankenboThrow.ROCK && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
-            this.battleStore.jankenboThrow === JankenboThrow.SCISSORS && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
-            this.battleStore.jankenboThrow === JankenboThrow.PAPER && combatant.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
-          ) {
-            actionModifier.potency *= 2;
-            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU WIN");
-          } else {
-            actionModifier.potency = 0;
-            this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU LOSE");
-          }
-        }
-      }
-
-      if (spells.find(isSameOption(Spells.SADIST))) {
-        actionModifier.potency *= -1;
-      }
+      const actionModifier = combatant.activeSpells.reduce(
+        (accumulatedActionModifier, spell) => { return spell.modifyAction(accumulatedActionModifier, this, combatant) },
+        initActionModifier
+      )
 
       // Restrictions
       if (!this.firstActionTaken) this.firstActionTaken = true;

@@ -17,6 +17,7 @@ import { MenuOption } from '../../model/menuOption';
 import { DefaultParty } from '../../data/parties';
 import { healieBoi } from '../../data/enemies';
 import { idle } from '../../data/actions';
+import * as Actions from '../../data/actions';
 import * as Spells from '../../data/spells';
 
 import { getRandomInt } from '../../util/random';
@@ -141,6 +142,7 @@ export class Battle extends Phaser.Scene {
 
   // restriction vars
   firstActionTaken = false;
+  splinterUsed = false;
 
   constructor() {
     super(sceneConfig);
@@ -299,6 +301,7 @@ export class Battle extends Phaser.Scene {
 
       // Restrictions
       if (!this.firstActionTaken) this.firstActionTaken = true;
+      if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
       const potency = actionModifier.potency * actionModifier.multiplier;
       for (const target of actionModifier.targets) {

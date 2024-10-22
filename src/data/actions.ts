@@ -145,6 +145,140 @@ export const flank: Action = {
   },
 };
 
+export const flourish: Action = {
+  type: OptionType.ACTION,
+  name: 'Flourish',
+  staminaCost: 100,
+  castTimeInMs: 250,
+  potency: 50,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Deals double damage, caster must have full health',
+  execute: (target, source, potency, scene) => {
+    updateDamage(target, potency * 2, source);
+  },
+  isRestricted: (target, source, scene) => { 
+    return source.health !== source.maxHealth
+  },
+};
+
+export const gangup: Action = {
+  type: OptionType.ACTION,
+  name: 'Gangup',
+  staminaCost: 100,
+  castTimeInMs: 250,
+  potency: 50,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+  description: 'Damage scales with each damaged combatant',
+  execute: (target, source, potency, scene) => {
+    const damagedCombatants = scene.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
+    const newPotency = damagedCombatants * potency;
+    updateDamage(target, newPotency, source);
+  },
+  isRestricted: (target, source, scene) => { 
+    return false;
+  },
+};
+
+export const prick: Action = {
+  type: OptionType.ACTION,
+  name: 'Prick',
+  staminaCost: 25,
+  castTimeInMs: 100,
+  potency: 5,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Deals damage to target',
+  execute: (target, source, potency) => {
+    updateDamage(target, potency, source);
+  },
+  isRestricted: () => { return false },
+};
+
+export const resurrect: Action = {
+  type: OptionType.ACTION,
+  name: 'Resurrect',
+  staminaCost: 100,
+  castTimeInMs: 2000,
+  potency: 50,
+  tags: new Set([ActionTags.HEAL]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'heal',
+  imageKeyName: 'heal.gif',
+
+  description: 'Heals target, target must be dead',
+  execute: (target, source, potency) => {
+    updateHealth(target, potency);
+  },
+  isRestricted: (target, source, scene) => { 
+    return target.status !== Status.DEAD
+   },
+};
+
+export const revenge: Action = {
+  type: OptionType.ACTION,
+  name: 'Revenge',
+  staminaCost: 50,
+  castTimeInMs: 500,
+  potency: 0,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Potency equal to bleed',
+  execute: (target, source, potency) => {
+    updateDamage(target, source.bleed, source);
+  },
+  isRestricted: () => { return false },
+};
+
+export const salve: Action = {
+  type: OptionType.ACTION,
+  name: 'salve',
+  staminaCost: 100,
+  castTimeInMs: 250,
+  potency: 50,
+  tags: new Set([ActionTags.HEAL]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'heal',
+  imageKeyName: 'heal.gif',
+
+  description: 'Heals double bleed, target must be dying',
+  execute: (target, source, potency) => {
+    updateBleed(target, potency*2);
+  },
+  isRestricted: () => (false)
+};
+
+export const splinter: Action = {
+  type: OptionType.ACTION,
+  name: 'Splinter',
+  staminaCost: 100,
+  castTimeInMs: 1000,
+  potency: 50,
+  tags: new Set([ActionTags.ATTACK]),
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Deals double damage, must not have been used in battle yet',
+  execute: (target, source, potency) => {
+    updateDamage(target, potency*2, source);
+  },
+  isRestricted: (target, source, scene) => { 
+    return scene.splinterUsed;
+  },
+};
 
 export const idle: Action = {
   type: OptionType.ACTION,

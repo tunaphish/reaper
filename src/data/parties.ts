@@ -12,7 +12,7 @@ import { OptionType } from '../model/option';
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
-  options: [Actions.attack, bomb, potion, Spells.CLEAVE, Actions.ambush],
+  options: [Actions.attack, bomb, potion, Spells.CLEAVE, Actions.ambush, Actions.revenge],
 }
 
 export const Eji: PartyMember = {
@@ -21,7 +21,7 @@ export const Eji: PartyMember = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  bleed: 75,
+  bleed: 100,
   stamina: 0,
   maxStamina: 400,
   magic: 100,
@@ -40,7 +40,7 @@ export const Eji: PartyMember = {
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
-  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN, Actions.bloodlust, Actions.debilitate, Actions.engage, Actions.flank],
+  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN, Actions.bloodlust, Actions.debilitate, Actions.engage, Actions.flourish, Actions.splinter],
 }
 
 export const Keshi: PartyMember = {
@@ -49,7 +49,7 @@ export const Keshi: PartyMember = {
   name: 'Keshi',
   health: 100,
   maxHealth: 100,
-  bleed: 50,
+  bleed: 0,
   stamina: 100,
   maxStamina: 300,
   magic: 100,
@@ -67,7 +67,7 @@ export const Keshi: PartyMember = {
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Attack',
-  options: [Actions.attack, Spells.SADIST, Spells.CHARGE, Actions.bandage],
+  options: [Actions.attack, Spells.SADIST, Spells.CHARGE, Actions.bandage, Actions.resurrect, Actions.salve],
 };
 
 export const Elise: PartyMember = {

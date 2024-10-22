@@ -443,7 +443,7 @@ export class Battle extends Phaser.Scene {
         if (executable.targetType === TargetType.SELF) {
           this.battleStore.setTarget(this.battleStore.caster);
         } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: 'Target', desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.menus.push(targetFolder);
         }
         break;

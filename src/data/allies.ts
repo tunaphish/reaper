@@ -5,7 +5,8 @@ import { Status } from '../model/combatant';
 import * as JankenboBehaviors from './jankenboBehaviors';
 import * as Actions from './actions';
 import * as Spells from './spells';
-import { bomb, potion } from './items';
+import * as Items from './items';
+import * as Folders from './folders'
 import { OptionType } from '../model/option';
 
 
@@ -13,7 +14,8 @@ import { OptionType } from '../model/option';
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
-  options: [Actions.attack, bomb, potion, Spells.CLEAVE, Actions.ambush, Actions.revenge],
+  desc: 'Soul of Eji',
+  options: [Actions.attack, Folders.thief, Folders.fencer],
 }
 
 export const Eji: Ally = {
@@ -41,7 +43,8 @@ export const Eji: Ally = {
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
-  options: [Actions.attack, Spells.DUAL, Spells.ZANTETSUKEN, Actions.bloodlust, Actions.debilitate, Actions.engage, Actions.flourish, Actions.splinter],
+  desc: 'Soul of Keshi',
+  options: [Actions.attack, Spells.JANKENBO, Folders.berserker, Folders.hunter],
 }
 
 export const Keshi: Ally = {
@@ -67,8 +70,9 @@ export const Keshi: Ally = {
 
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
-  name: 'Attack',
-  options: [Actions.attack, Spells.SADIST, Spells.CHARGE, Actions.bandage, Actions.resurrect, Actions.salve],
+  desc: 'Soul of Elise',
+  name: 'Elise',
+  options: [Actions.attack, Spells.SADIST, Folders.cleric],
 };
 
 export const Elise: Ally = {

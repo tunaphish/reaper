@@ -2,13 +2,14 @@ import { Action, ActionTags } from '../model/action';
 import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
-import { updateBleed, updateDamage, updateHealth, updateStamina } from '../scenes/battle/Battle';
+import { updateDamage } from '../model/combatant';
+import { updateBleed, updateHealth, updateStamina } from '../model/combatant';
 
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
   staminaCost: 100,
-  castTimeInMs: 3000,
+  castTimeInMs: 500,
   potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
@@ -17,7 +18,7 @@ export const attack: Action = {
 
   description: 'Deals damage to target',
   execute: (target, source, potency) => {
-    updateDamage(target, potency, source);
+    updateDamage(target, potency);
   },
   isRestricted: () => { return false },
 };
@@ -35,7 +36,7 @@ export const ambush: Action = {
 
   description: 'Refunds Stamina, Must be first action taken in battle',
   execute: (target, source, potency) => {
-    updateDamage(target, potency, source);
+    updateDamage(target, potency);
     updateStamina(source, 100)
   },
   isRestricted: (target, source, scene) => { 
@@ -56,7 +57,7 @@ export const bandage: Action = {
 
   description: 'Heals bleed',
   execute: (target, source, potency) => {
-    updateBleed(target, potency);
+    updateBleed(target, -potency);
   },
   isRestricted: (target, source, scene) => { 
     return false;
@@ -76,9 +77,9 @@ export const bloodlust: Action = {
 
   description: 'Damage scales with each damaged combatant',
   execute: (target, source, potency, scene) => {
-    const damagedCombatants = scene.getCombatants().filter(combatant => combatant.bleed > 0).length;
+    const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
     const newPotency = damagedCombatants * potency;
-    updateDamage(target, newPotency, source);
+    updateDamage(target, newPotency);
   },
   isRestricted: (target, source, scene) => { 
     return false;
@@ -98,7 +99,7 @@ export const debilitate: Action = {
 
   description: 'Deals double damage, target must be exhausted',
   execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2, source);
+    updateDamage(target, potency * 2);
   },
   isRestricted: (target, deals, scene) => { 
     return target.status !== Status.EXHAUSTED;
@@ -118,7 +119,7 @@ export const engage: Action = {
 
   description: 'Deals double damage, target must have full health',
   execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2, source);
+    updateDamage(target, potency * 2);
   },
   isRestricted: (target, deals, scene) => { 
     return target.health !== target.maxHealth
@@ -138,7 +139,7 @@ export const flank: Action = {
 
   description: 'Deals additional damage, target must be targetting someone other than caster',
   execute: (target, source, potency, scene) => {
-    updateDamage(target, potency + 25, source);
+    updateDamage(target, potency + 25);
   },
   isRestricted: (target, source, scene) => { 
     return !target.queuedTarget || target.queuedTarget.name === source.name;
@@ -158,7 +159,7 @@ export const flourish: Action = {
 
   description: 'Deals double damage, caster must have full health',
   execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2, source);
+    updateDamage(target, potency * 2);
   },
   isRestricted: (target, source, scene) => { 
     return source.health !== source.maxHealth
@@ -177,9 +178,9 @@ export const gangup: Action = {
   imageKeyName: 'attack.gif',
   description: 'Damage scales with each damaged combatant',
   execute: (target, source, potency, scene) => {
-    const damagedCombatants = scene.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
+    const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
     const newPotency = damagedCombatants * potency;
-    updateDamage(target, newPotency, source);
+    updateDamage(target, newPotency);
   },
   isRestricted: (target, source, scene) => { 
     return false;
@@ -199,7 +200,7 @@ export const prick: Action = {
 
   description: 'Deals damage to target',
   execute: (target, source, potency) => {
-    updateDamage(target, potency, source);
+    updateDamage(target, potency);
   },
   isRestricted: () => { return false },
 };
@@ -237,7 +238,7 @@ export const revenge: Action = {
 
   description: 'Potency equal to bleed',
   execute: (target, source, potency) => {
-    updateDamage(target, source.bleed, source);
+    updateDamage(target, source.bleed);
   },
   isRestricted: () => { return false },
 };
@@ -255,7 +256,7 @@ export const salve: Action = {
 
   description: 'Heals double bleed, target must be dying',
   execute: (target, source, potency) => {
-    updateBleed(target, potency*2);
+    updateBleed(target, -potency*2);
   },
   isRestricted: () => (false)
 };
@@ -273,7 +274,7 @@ export const splinter: Action = {
 
   description: 'Deals double damage, must not have been used in battle yet',
   execute: (target, source, potency) => {
-    updateDamage(target, potency*2, source);
+    updateDamage(target, potency*2);
   },
   isRestricted: (target, source, scene) => { 
     return scene.splinterUsed;

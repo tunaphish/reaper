@@ -2,12 +2,12 @@ import * as React from 'react';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Behavior, Enemy } from '../../model/enemy';
-import { OptionType } from '../../model/option';
+import { isSameOption, OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, ActionTags } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenbowThrow, Status } from '../../model/combatant';
+import { JankenbowThrow, Status, toggleActiveSpell } from '../../model/combatant';
 import { self } from '../../model/targetPriorities';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
@@ -129,6 +129,10 @@ export class BattleStore {
     this.setExecutable(null);
     this.setTarget(null);
   }
+
+  getCombatants(): Combatant[] {
+    return [...this.enemies, ...this.allies]
+  }
 }
 
 export class Battle extends Phaser.Scene {
@@ -190,7 +194,7 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setChargeMultipler(this.battleStore.chargeMultiplier + CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
     }
     const ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING = 1;
-    if (this.battleStore.caster && this.battleStore.caster.activeSpells.find(containsSpell(Spells.ZANTETSUKEN))) {
+    if (this.battleStore.caster && this.battleStore.caster.activeSpells.find(isSameOption(Spells.ZANTETSUKEN))) {
       const zantetsukenMultiplier = Math.max(.5, this.battleStore.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
       this.battleStore.setZantetsukenMultiplier(zantetsukenMultiplier);
     }
@@ -257,7 +261,7 @@ export class Battle extends Phaser.Scene {
       const spells = combatant.activeSpells;
 
       // Apply Effects
-      if (spells.find(containsSpell(Spells.CLEAVE))) {
+      if (spells.find(isSameOption(Spells.CLEAVE))) {
         if (combatant.queuedTarget.type === OptionType.ALLY) {
           actionModifier.targets = this.battleStore.allies;
         } else {
@@ -266,20 +270,20 @@ export class Battle extends Phaser.Scene {
         actionModifier.multiplier *= 0.5;
       }
 
-      if (spells.find(containsSpell(Spells.DUAL))) {
+      if (spells.find(isSameOption(Spells.DUAL))) {
         actionModifier.targets = actionModifier.targets.concat(actionModifier.targets);
         actionModifier.multiplier *= 0.5;
       }
 
-      if (spells.find(containsSpell(Spells.CHARGE))) {
+      if (spells.find(isSameOption(Spells.CHARGE))) {
         actionModifier.multiplier *= this.battleStore.chargeMultiplier;
       }
 
-      if (spells.find(containsSpell(Spells.ZANTETSUKEN))) {
+      if (spells.find(isSameOption(Spells.ZANTETSUKEN))) {
         actionModifier.multiplier *= this.battleStore.zantetsukenMultiplier;
       }
 
-      if (spells.find(containsSpell(Spells.JANKENBO))) {
+      if (spells.find(isSameOption(Spells.JANKENBO))) {
         const jankenboThrow = combatant.queuedTarget.jankenboThrow(combatant.queuedTarget);
         combatant.queuedTarget.previousJankenboThrow = jankenboThrow;
 
@@ -298,6 +302,10 @@ export class Battle extends Phaser.Scene {
             this.battleStore.setStageText(combatant.queuedTarget.name + " threw " + combatant.queuedTarget.previousJankenboThrow + ", YOU LOSE");
           }
         }
+      }
+
+      if (spells.find(isSameOption(Spells.SADIST))) {
+        actionModifier.potency *= -1;
       }
 
       // Restrictions
@@ -481,71 +489,7 @@ export class Battle extends Phaser.Scene {
   setJankenboThrow(jankenboThrow: JankenbowThrow): void {
     this.battleStore.jankenboThrow = jankenboThrow;
   }
-
-  getCombatants(): Combatant[] {
-    return [...this.battleStore.enemies, ...this.battleStore.allies]
-  }
 }
-
-export const updateHealth = (target: Combatant, change: number): void => {
-  if (target.health + change > target.maxHealth) {
-    target.bleed -= (target.health + change) -  target.maxHealth;
-  }
-  target.health = Math.min(target.maxHealth, target.health + change);  
-};
-
-export const updateBleed = (target: Combatant, change: number): void => {
-  const newBleed = target.bleed-change;
-  target.bleed = clamp(0, newBleed, target.health);
-};
-
-export const updateStamina = (target: Combatant, change: number): void => {
-  target.stamina = Math.min(target.maxStamina, target.stamina + change);
-};
-
-export const updateDamage = (target: Combatant, change: number, source: Combatant): void => {
-  if (change > 0) {
-    target.takingDamage = true;
-  }
-
-  if (target.status === Status.EXHAUSTED) {
-    change *= 2;
-  }
-
-  if (source.activeSpells.find(containsSpell(Spells.SADIST))) {
-    updateBleed(target, change);
-    return;
-  }
-  const newBleed = target.bleed+change;
-  // const newHealth = target.health - (target.bleed+change - target.health);
-  target.bleed = clamp(0, newBleed, target.health);
-  // target.health = clamp(0, newHealth, target.maxHealth);
-};
-
-export const toggleActiveSpell = (target: Combatant, spell: Spell): void => {
-  const foundSpell: Spell = target.activeSpells.find(containsSpell(spell));
-  if (!!foundSpell) {
-    const idx = target.activeSpells.indexOf(foundSpell);
-    target.activeSpells.splice(idx,1);
-    return;
-  }
-
-  const flowCost = Math.min(spell.magicCost, target.flow);
-  const magicCost = clamp(0, spell.magicCost - target.flow, target.magic);
-  const healthCost = clamp(0, spell.magicCost - (target.flow + target.magic), target.health)
-  target.flow -= flowCost;
-  target.magic -= magicCost;
-  target.health -= healthCost;
-  
-  target.activeSpells.push(spell);
-}
-
-
-const clamp = (min: number, val: number, max: number): number => {
-  return Math.min(Math.max(val, min), max);
-}
-
-const containsSpell = (spell: Spell) => (activeSpell: Spell) => activeSpell.name === spell.name;
 
 const wait = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));

@@ -77,7 +77,7 @@ const eliseFolder: Folder = {
 
 export const Elise: Ally = {
   type: OptionType.ALLY,
-  activeSpells: [],
+  activeSpells: [Spells.SADIST],
   name: 'Elise',
   health: 100,
   bleed: 0,

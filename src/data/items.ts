@@ -1,7 +1,9 @@
 import { Item } from "../model/item";
 import { OptionType } from "../model/option";
 import { TargetType } from '../model/targetType';
-import { updateDamage, updateHealth, updateStamina } from '../scenes/battle/Battle';
+import { updateHealth, updateStamina } from '../model/combatant';
+
+import { updateDamage } from '../model/combatant';
 
 export const bomb: Item = {
   type: OptionType.ITEM,
@@ -11,7 +13,7 @@ export const bomb: Item = {
   imageKeyName: 'attack.gif',
   description: 'Deals damage to target',
   execute: (target, source) => {
-    updateDamage(target, 50, source);
+    updateDamage(target, 50);
   },
   charges: 0,
   maxCharges: 3,

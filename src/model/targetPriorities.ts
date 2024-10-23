@@ -1,7 +1,7 @@
 import { TargetPriority } from './enemy';
 import { Combatant } from './combatant';
 
-import { getRandomInt } from '../features/math';
+import { getRandomInt } from './math';
 
 const filterDeadUnits = (unit: Combatant) => unit.health !== 0;
 export const self: TargetPriority = (enemies, allies, enemy) => enemy;

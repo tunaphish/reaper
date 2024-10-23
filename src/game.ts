@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
-import UiOverlayPlugin from './features/ui-plugin/UiOverlayPlugin';
+import UiOverlayPlugin from './scenes/UiOverlayPlugin';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',

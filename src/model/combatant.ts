@@ -5,7 +5,7 @@ import { Item } from './item';
 import { Spell } from './spell';
 import { Enemy } from './enemy';
 import { Ally } from './ally';
-import { clamp } from '../features/math';
+import { clamp } from './math';
 
 export enum Status {
   NORMAL = 'NORMAL',

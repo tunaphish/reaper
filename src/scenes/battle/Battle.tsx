@@ -17,7 +17,7 @@ import { healieBoi } from '../../data/enemies';
 import * as Actions from '../../data/actions';
 import * as Spells from '../../data/spells';
 
-import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
+import UiOverlayPlugin from '../UiOverlayPlugin';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
-import Player from '../../sprites/Player';
+import UiOverlayPlugin from '../UiOverlayPlugin';
+import Player from './player/Player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

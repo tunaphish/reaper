@@ -5,7 +5,7 @@ import { OptionType } from './option';
 import { self } from './targetPriorities';
 
 import { idle } from '../data/actions';
-import { getRandomInt } from '../features/math';
+import { getRandomInt } from './math';
 
 export type TargetPriority = (enemies: Enemy[], allies: Allies, enemy: Enemy) => Combatant;
 

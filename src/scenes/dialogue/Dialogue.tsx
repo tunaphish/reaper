@@ -1,5 +1,5 @@
 import * as React from 'react';
-import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
+import UiOverlayPlugin from '../UiOverlayPlugin';
 import styles from './dialogue.module.css';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {

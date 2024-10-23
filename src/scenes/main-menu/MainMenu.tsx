@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import styles from './mainmenu.module.css';
-import UiOverlayPlugin from '../../features/ui-plugin/UiOverlayPlugin';
+import UiOverlayPlugin from '../UiOverlayPlugin';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

@@ -33,11 +33,12 @@ export type Combatant = Option & {
   flow: number;
   flowDecayRatePerSecond: number;
   staminaRegenRatePerSecond: number; 
-  
+
   status: Status;
   takingDamage: boolean;
   queuedOption?: Action | Item | Spell;
   queuedTarget?: Enemy | Ally;
+  timeCasting?: number;
 
   activeSpells: Spell[];
 
@@ -118,4 +119,11 @@ export const updateStats = (combatant: Combatant, delta: number): void => {
 
   const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
   combatant.flow = Math.max(0, combatant.flow-decayPerTick);
+}
+
+export const resetCombatantBattleState = (combatant: Combatant): void => {
+  combatant.status = Status.NORMAL;
+  combatant.queuedOption = null;
+  combatant.queuedTarget = null;
+  combatant.timeCasting = null;
 }

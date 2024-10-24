@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 import { Combatant, JankenboThrow, Status } from '../../model/combatant';
 import { Ally } from '../../model/ally';
@@ -12,7 +12,6 @@ import * as Spells from '../../data/spells';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
-import { observable, toJS } from 'mobx';
 
 
 const ICON_MAP ={
@@ -36,11 +35,6 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     props.combatant.takingDamage ? styles.shake : '',
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
-  const onCastingWindowAnimationComplete = (definition: { height?: string }) => {
-    if (definition?.height === "100%") {
-      props.battleScene.setCombatantAttacking(props.combatant);
-    }
-  } 
   const onAttackWindowAnimationComplete = (definition: { opacity?: number }) => {
     if (definition?.opacity === 1) {
       props.battleScene.execute(props.combatant);
@@ -52,9 +46,14 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 
       <motion.div 
         className={styles.castingWindow}
-        animate={{ height: props.combatant?.queuedOption != null ? "100%" : 0  }}
-        transition={{ duration: props.combatant?.queuedOption != null ? (props.combatant.queuedOption.castTimeInMs / 1000) : 0 }}
-        onAnimationComplete={onCastingWindowAnimationComplete}
+        animate={{ height: props.combatant?.queuedOption != null ? Math.min(Math.round(props.combatant.timeCasting / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
+        transition={{ duration: 0 }}
+       />
+      <motion.div 
+        className={styles.attackWindow}
+        animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
+        transition={{ duration: 0.5 }}
+        onAnimationComplete={onAttackWindowAnimationComplete}
        />
       <div className={styles.resourceContainer}>
         <div>{props.combatant.name}</div>
@@ -82,12 +81,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
           </div>
         </div>
       </div>
-      <motion.div 
-        className={styles.attackWindow}
-        animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
-        transition={{ duration: 0.5 }}
-        onAnimationComplete={onAttackWindowAnimationComplete}
-       />
+
     </div>
   )
 });

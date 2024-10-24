@@ -6,7 +6,7 @@ import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenboThrow, Status, toggleActiveSpell, updateStats } from '../../model/combatant';
+import { JankenboThrow, resetCombatantBattleState, Status, toggleActiveSpell, updateStats } from '../../model/combatant';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
@@ -82,6 +82,15 @@ export class Battle extends Phaser.Scene {
       this.queueAction(); 
     }
 
+    this.battleStore.getCombatants().forEach(combatant => {
+      if (combatant.queuedOption && combatant.timeCasting !== null) {
+        combatant.timeCasting += delta;
+        if (combatant.timeCasting > combatant.queuedOption.castTimeInMs) {
+          combatant.status = Status.ATTACKING;
+        }
+      }
+    });
+
     this.battleStore.tickStats(updateStats, delta);
     this.battleStore.updateCombatantsState();
     if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {
@@ -119,11 +128,9 @@ export class Battle extends Phaser.Scene {
     this.battleStore.caster.status = Status.CASTING;
     this.battleStore.caster.queuedOption = this.battleStore.executable;
     this.battleStore.caster.queuedTarget = this.battleStore.target;
-    this.battleStore.resetSelections();
-  }
+    this.battleStore.caster.timeCasting = 0;
 
-  setCombatantAttacking(combatant: Combatant): void {
-    combatant.status = Status.ATTACKING;
+    this.battleStore.resetSelections();
   }
 
   setCasterCharging(): void {
@@ -146,9 +153,7 @@ export class Battle extends Phaser.Scene {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
       if (combatant.queuedOption.isRestricted(combatant.queuedTarget, combatant, this)) {
-        combatant.status = Status.NORMAL;
-        combatant.queuedOption = null;
-        combatant.queuedTarget = null;
+        resetCombatantBattleState(combatant);
         this.sound.play('stamina-depleted');
         return;
       }
@@ -181,9 +186,7 @@ export class Battle extends Phaser.Scene {
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
     
-    combatant.status = Status.NORMAL;
-    combatant.queuedOption = null;
-    combatant.queuedTarget = null;
+    resetCombatantBattleState(combatant);
   }
 
   updateEnemies(): void {

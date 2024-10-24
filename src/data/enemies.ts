@@ -5,7 +5,6 @@ import { OptionType } from '../model/option';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
 import { attack, idle } from './actions';
-import { selfPreservation } from './traits';
 
 
 export const healieBoi: Enemy = {
@@ -21,7 +20,6 @@ export const healieBoi: Enemy = {
   flow: 0,
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 10,
-  traits: new Set([selfPreservation]),
   behaviors: [
     { action: attack, weight: 100, targetPriority: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
     { action: idle, weight: 100, targetPriority: self },

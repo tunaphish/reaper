@@ -1,4 +1,3 @@
-import { Trait } from './trait';
 import { isSameOption, Option } from './option';
 import { Action } from './action';
 import { Item } from './item';
@@ -35,7 +34,6 @@ export type Combatant = Option & {
   flowDecayRatePerSecond: number;
   staminaRegenRatePerSecond: number; 
   
-  traits: Set<Trait>;
   status: Status;
   takingDamage: boolean;
   queuedOption?: Action | Item | Spell;

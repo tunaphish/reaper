@@ -36,6 +36,9 @@ export interface DialogueTrigger {
 export type Executable = Action | Item | Spell;
 
 const ATTACK_WINDOW_TIME_IN_MS = 500;
+
+type Execution = { action: Action, targets: Combatant[], timeSinceLastTarget: number, potency: number, caster: Combatant, targetIndex: number };
+
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private music: Phaser.Sound.BaseSound;
@@ -49,6 +52,9 @@ export class Battle extends Phaser.Scene {
   // restriction vars
   firstActionTaken = false;
   splinterUsed = false;
+
+  // actions
+  executions: Execution[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -106,6 +112,21 @@ export class Battle extends Phaser.Scene {
       const zantetsukenMultiplier = Math.max(.5, this.battleStore.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
       this.battleStore.setZantetsukenMultiplier(zantetsukenMultiplier);
     }
+
+    this.executions = this.executions.map(({action, targets, timeSinceLastTarget, potency, caster, targetIndex}) => {
+        if (timeSinceLastTarget < 100) {
+          timeSinceLastTarget += delta;
+          return {action, targets, timeSinceLastTarget, potency, caster, targetIndex};
+        }
+        action.execute(targets[targetIndex], caster, potency, this);
+        if (action.soundKeyName) {
+          this.sound.play(action.soundKeyName);
+        }
+        timeSinceLastTarget = 0;
+        targetIndex += 1;
+
+        return {action, targets, timeSinceLastTarget, potency, caster, targetIndex};
+    }).filter(execution => execution.targetIndex < execution.targets.length);
 
     // enemy AI
     this.lastCalculation += delta;
@@ -170,12 +191,15 @@ export class Battle extends Phaser.Scene {
       if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
       const potency = actionModifier.potency * actionModifier.multiplier;
-      for (const target of actionModifier.targets) {
-        combatant.queuedOption.execute(target, combatant, potency, this);
-        if (combatant.queuedOption.soundKeyName) {
-          this.sound.play(combatant.queuedOption.soundKeyName);
-        }
-      }
+      this.executions.push({
+        action: combatant.queuedOption,
+        timeSinceLastTarget: 0,
+        targets: actionModifier.targets,
+        potency: potency,
+        caster: combatant,
+        targetIndex: 0,
+      });
+
     }
     
     if (combatant.queuedOption.type === OptionType.SPELL) {

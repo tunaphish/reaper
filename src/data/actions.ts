@@ -289,7 +289,9 @@ export const idle: Action = {
   potency: 50,
   tags: new Set([ActionTags.DEFEND]),
   targetType: TargetType.SELF,
-
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+  
   description: 'Does Nothing',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   execute: () => {},

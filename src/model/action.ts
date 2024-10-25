@@ -19,8 +19,8 @@ export type Action = Option & {
     execute: (target: Combatant, source: Combatant, potency: number, scene: Battle) => void;
     isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
     targetType: TargetType;
-    soundKeyName?: string;
-    imageKeyName?: string;
+    soundKeyName: string;
+    imageKeyName: string;
     castTimeInMs: number;
     potency: number;
 }

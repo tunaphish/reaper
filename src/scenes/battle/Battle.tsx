@@ -37,8 +37,7 @@ export type Executable = Action | Item | Spell;
 
 const ATTACK_WINDOW_TIME_IN_MS = 500;
 
-type Execution = { action: Action, targets: Combatant[], timeSinceLastTarget: number, potency: number, caster: Combatant, targetIndex: number };
-
+type DeferredAction = { executeAction: () => void, timeTilExecute: number }
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private music: Phaser.Sound.BaseSound;
@@ -53,8 +52,8 @@ export class Battle extends Phaser.Scene {
   firstActionTaken = false;
   splinterUsed = false;
 
-  // actions
-  executions: Execution[] = [];
+
+  deferredActions: DeferredAction[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -113,20 +112,16 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setZantetsukenMultiplier(zantetsukenMultiplier);
     }
 
-    this.executions = this.executions.map(({action, targets, timeSinceLastTarget, potency, caster, targetIndex}) => {
-        if (timeSinceLastTarget < 100) {
-          timeSinceLastTarget += delta;
-          return {action, targets, timeSinceLastTarget, potency, caster, targetIndex};
-        }
-        action.execute(targets[targetIndex], caster, potency, this);
-        if (action.soundKeyName) {
-          this.sound.play(action.soundKeyName);
-        }
-        timeSinceLastTarget = 0;
-        targetIndex += 1;
+    this.deferredActions = this.deferredActions.map(({executeAction, timeTilExecute}) => {
+      if (timeTilExecute - delta <= 0) {
+        executeAction()
+      }
 
-        return {action, targets, timeSinceLastTarget, potency, caster, targetIndex};
-    }).filter(execution => execution.targetIndex < execution.targets.length);
+      return {
+        executeAction,
+        timeTilExecute: timeTilExecute - delta,
+      }
+    }).filter(deferredAction => (deferredAction.timeTilExecute > 0));
 
     // enemy AI
     this.lastCalculation += delta;
@@ -191,15 +186,18 @@ export class Battle extends Phaser.Scene {
       if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
       const potency = actionModifier.potency * actionModifier.multiplier;
-      this.executions.push({
-        action: combatant.queuedOption,
-        timeSinceLastTarget: 0,
-        targets: actionModifier.targets,
-        potency: potency,
-        caster: combatant,
-        targetIndex: 0,
-      });
-
+      this.deferredActions = this.deferredActions.concat( 
+        actionModifier.targets.map((target, index) => {
+        const action = (combatant.queuedOption as Action)
+        const executeAction = () => {
+          action.execute(target, combatant, potency, this);
+          this.sound.play(action.soundKeyName);
+        }
+        return {
+          executeAction,
+          timeTilExecute: index*100,
+        }
+      }));
     }
     
     if (combatant.queuedOption.type === OptionType.SPELL) {

@@ -69,14 +69,21 @@ export class BattleStore {
 
   updateCombatantsState(): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
+      const prevStatus = combatant.status;
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {
         combatant.status = Status.EXHAUSTED;
       } else if (combatant.status === Status.BLOCKING) {
         // do nothing
+      } else if (combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) {
+        combatant.status = Status.ATTACKING;
       } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
         combatant.status = Status.NORMAL;
+      }
+
+      if (prevStatus !== combatant.status) {
+        combatant.timeInStateInMs = 0;
       }
     });
   }

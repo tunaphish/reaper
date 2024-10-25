@@ -24,7 +24,7 @@ export const Eji: Ally = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  bleed: 100,
+  bleed: 50,
   stamina: 0,
   maxStamina: 400,
   magic: 100,
@@ -33,8 +33,11 @@ export const Eji: Ally = {
   flowDecayRatePerSecond: 3,
   staminaRegenRatePerSecond: 13,
   folder: ejiFolder,
+  
   status: Status.NORMAL,
   takingDamage: false,
+  timeInStateInMs: 0,
+  
   jankenboThrow: JankenboBehaviors.cycle,
 };
 
@@ -61,8 +64,11 @@ export const Keshi: Ally = {
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 15,
   folder: keshiFolder,
+  
   status: Status.NORMAL,
   takingDamage: false,
+  timeInStateInMs: 0,
+  
   jankenboThrow: JankenboBehaviors.random,
 };
 
@@ -88,8 +94,11 @@ export const Elise: Ally = {
   flowDecayRatePerSecond: 7,
   staminaRegenRatePerSecond: 10,
   folder: eliseFolder,
+
   status: Status.NORMAL,
   takingDamage: false,
+  timeInStateInMs: 0,
+
   jankenboThrow: JankenboBehaviors.alwaysRock,
 };
 

@@ -35,25 +35,19 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     props.combatant.takingDamage ? styles.shake : '',
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
-  const onAttackWindowAnimationComplete = (definition: { opacity?: number }) => {
-    if (definition?.opacity === 1) {
-      props.battleScene.execute(props.combatant);
-    }
-  } 
 
   return (
     <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
 
       <motion.div 
         className={styles.castingWindow}
-        animate={{ height: props.combatant?.queuedOption != null ? Math.min(Math.round(props.combatant.timeCasting / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
+        animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
         transition={{ duration: 0 }}
        />
       <motion.div 
         className={styles.attackWindow}
         animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
-        transition={{ duration: 0.5 }}
-        onAnimationComplete={onAttackWindowAnimationComplete}
+        transition={{ duration: 0 }}
        />
       <div className={styles.resourceContainer}>
         <div>{props.combatant.name}</div>

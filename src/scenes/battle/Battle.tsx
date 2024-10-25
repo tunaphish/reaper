@@ -35,6 +35,7 @@ export interface DialogueTrigger {
 
 export type Executable = Action | Item | Spell;
 
+const ATTACK_WINDOW_TIME_IN_MS = 500;
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private music: Phaser.Sound.BaseSound;
@@ -83,13 +84,11 @@ export class Battle extends Phaser.Scene {
     }
 
     this.battleStore.getCombatants().forEach(combatant => {
-      if (combatant.queuedOption && combatant.timeCasting !== null) {
-        combatant.timeCasting += delta;
-        if (combatant.timeCasting > combatant.queuedOption.castTimeInMs) {
-          combatant.status = Status.ATTACKING;
-        }
+      if (combatant.status === Status.ATTACKING && combatant.timeInStateInMs > ATTACK_WINDOW_TIME_IN_MS) {
+        combatant.status = Status.EXECUTING;
+        this.execute(combatant);
       }
-    });
+    })
 
     this.battleStore.tickStats(updateStats, delta);
     this.battleStore.updateCombatantsState();
@@ -128,7 +127,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.caster.status = Status.CASTING;
     this.battleStore.caster.queuedOption = this.battleStore.executable;
     this.battleStore.caster.queuedTarget = this.battleStore.target;
-    this.battleStore.caster.timeCasting = 0;
+    this.battleStore.caster.timeInStateInMs = 0;
 
     this.battleStore.resetSelections();
   }

@@ -11,8 +11,11 @@ export enum Status {
   BLOCKING = 'BLOCKING',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
+
   CASTING = 'CASTING',
   ATTACKING = 'ATTACKING',
+  EXECUTING = 'EXECUTING',
+
   CHARGING = 'CHARGING',
 }
 
@@ -38,7 +41,7 @@ export type Combatant = Option & {
   takingDamage: boolean;
   queuedOption?: Action | Item | Spell;
   queuedTarget?: Enemy | Ally;
-  timeCasting?: number;
+  timeInStateInMs: number;
 
   activeSpells: Spell[];
 
@@ -101,6 +104,8 @@ export const toggleActiveSpell = (caster: Combatant, spell: Spell): void => {
 };
 
 export const updateStats = (combatant: Combatant, delta: number): void => {
+  combatant.timeInStateInMs = Math.min(combatant.timeInStateInMs+delta, 1000000);
+
   if (combatant.status === Status.DEAD) return;
   if (combatant.bleed > 0) {
     const DAMAGE_TICK_RATE = (delta / 1000) * 10;
@@ -125,5 +130,5 @@ export const resetCombatantBattleState = (combatant: Combatant): void => {
   combatant.status = Status.NORMAL;
   combatant.queuedOption = null;
   combatant.queuedTarget = null;
-  combatant.timeCasting = null;
+  combatant.timeInStateInMs = 0;
 }

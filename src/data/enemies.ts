@@ -24,7 +24,10 @@ export const healieBoi: Enemy = {
     { action: attack, weight: 100, targetPriority: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
     { action: idle, weight: 100, targetPriority: self },
   ],
+  
   status: Status.NORMAL,
+  timeInStateInMs: 0,
+  
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
   activeSpells: [],

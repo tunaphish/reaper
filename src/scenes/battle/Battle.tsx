@@ -6,7 +6,7 @@ import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenboThrow, resetCombatantBattleState, Status, toggleActiveSpell, updateStats } from '../../model/combatant';
+import { JankenboThrow, resetCombatantBattleState, Status, toggleActiveSpell } from '../../model/combatant';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
@@ -90,7 +90,7 @@ export class Battle extends Phaser.Scene {
       }
     })
 
-    this.battleStore.tickStats(updateStats, delta);
+    this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {
         this.battleStore.setCaster(null);
@@ -140,8 +140,7 @@ export class Battle extends Phaser.Scene {
     this.battleStore.caster.status = Status.NORMAL;
   }
 
-  async execute(combatant: Combatant): Promise<void> {
-
+  execute(combatant: Combatant): void {
     if (combatant.queuedOption.type === OptionType.ITEM) {
       combatant.queuedOption.charges -= 1;
       combatant.queuedOption.execute(combatant.queuedTarget, combatant);
@@ -176,7 +175,6 @@ export class Battle extends Phaser.Scene {
         if (combatant.queuedOption.soundKeyName) {
           this.sound.play(combatant.queuedOption.soundKeyName);
         }
-        await wait(150);
       }
     }
     
@@ -297,8 +295,4 @@ export class Battle extends Phaser.Scene {
   setJankenboThrow(jankenboThrow: JankenboThrow): void {
     this.battleStore.jankenboThrow = jankenboThrow;
   }
-}
-
-const wait = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }

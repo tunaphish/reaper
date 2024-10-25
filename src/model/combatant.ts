@@ -103,29 +103,6 @@ export const toggleActiveSpell = (caster: Combatant, spell: Spell): void => {
   caster.activeSpells.push(spell);
 };
 
-export const updateStats = (combatant: Combatant, delta: number): void => {
-  combatant.timeInStateInMs = Math.min(combatant.timeInStateInMs+delta, 1000000);
-
-  if (combatant.status === Status.DEAD) return;
-  if (combatant.bleed > 0) {
-    const DAMAGE_TICK_RATE = (delta / 1000) * 10;
-    combatant.bleed -= DAMAGE_TICK_RATE;
-    combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
-  }
-  
-  const STAMINA_LOSS_PER_SECOND_WHILE_CHARGING = 100;
-  if (combatant.status === Status.CHARGING) {
-    combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
-  }
-  else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
-      const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-      combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
-  }
-
-  const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
-  combatant.flow = Math.max(0, combatant.flow-decayPerTick);
-}
-
 export const resetCombatantBattleState = (combatant: Combatant): void => {
   combatant.status = Status.NORMAL;
   combatant.queuedOption = null;

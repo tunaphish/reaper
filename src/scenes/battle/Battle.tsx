@@ -235,11 +235,15 @@ export class Battle extends Phaser.Scene {
     this.music.play();
   }
 
-  openInitialMenu(member: Ally): void {
+  openInitialMenu(ally: Ally): void {
     const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING, Status.ATTACKING]
-    if (CANNOT_OPEN_STATUS.includes(member.status)) {
+    if (CANNOT_OPEN_STATUS.includes(ally.status)) {
       this.sound.play('stamina-depleted');
       return;
+    }
+
+    if (ally.status === Status.BLOCKING) {
+      ally.status = Status.NORMAL;
     }
 
     // reset spells
@@ -249,8 +253,8 @@ export class Battle extends Phaser.Scene {
     this.battleStore.setSpells(null);
 
     this.sound.play('choice-select');
-    this.battleStore.setCaster(member);
-    this.battleStore.menus.push(member.folder);
+    this.battleStore.setCaster(ally);
+    this.battleStore.menus.push(ally.folder);
   }
 
   closeMenu(): void {

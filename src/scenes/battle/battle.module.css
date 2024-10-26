@@ -139,7 +139,10 @@
   color: red;
 }
 
-
+.BLOCKING {
+  border: 1px solid blue;
+  color: blue;
+}
 
 .actorMessage {
   padding: 10px;

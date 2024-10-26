@@ -281,6 +281,24 @@ export const splinter: Action = {
   },
 };
 
+export const block: Action = {
+  type: OptionType.ACTION,
+  name: 'Block',
+  staminaCost: 10,
+  castTimeInMs: 100,
+  potency: 0,
+  tags: new Set([ActionTags.DEFEND]),
+  targetType: TargetType.SELF,
+  soundKeyName: 'attack',
+  imageKeyName: 'attack.gif',
+
+  description: 'Switch to block stance, (block stance receives damage as stamina instead of bleed',
+  execute: (target, source, potency) => {
+    source.status = Status.BLOCKING;
+  },
+  isRestricted: (target, source, scene) => (false)
+};
+
 export const idle: Action = {
   type: OptionType.ACTION,
   name: 'Idle',

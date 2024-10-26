@@ -73,9 +73,14 @@ export const updateDamage = (target: Combatant, change: number): void => {
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
   }
-
+  
   if (change < 0) {
     updateBleed(target, change);
+    return;
+  }
+
+  if (target.status === Status.BLOCKING) {
+    updateStamina(target, -change) ; 
     return;
   }
 

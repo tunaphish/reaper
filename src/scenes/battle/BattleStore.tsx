@@ -76,7 +76,7 @@ export class BattleStore {
       if (combatant.status === Status.CHARGING) {
         combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
       }
-      else if (combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+      else if (combatant.status !== Status.BLOCKING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }

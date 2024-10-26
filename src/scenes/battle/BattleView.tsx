@@ -28,6 +28,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     [Status.NORMAL]: '',
     [Status.DEAD]: styles.DEAD,
     [Status.EXHAUSTED]: styles.EXHAUSTED,
+    [Status.BLOCKING]: styles.BLOCKING,
   };
   const style = [
     styles.characterCell,

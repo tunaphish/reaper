@@ -14,7 +14,6 @@ export const attack: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
   execute: (target, source, potency) => {
@@ -32,7 +31,6 @@ export const ambush: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Refunds Stamina, Must be first action taken in battle',
   execute: (target, source, potency) => {
@@ -53,7 +51,6 @@ export const bandage: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Heals bleed',
   execute: (target, source, potency) => {
@@ -73,7 +70,6 @@ export const bloodlust: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Damage scales with each damaged combatant',
   execute: (target, source, potency, scene) => {
@@ -95,7 +91,6 @@ export const debilitate: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, target must be exhausted',
   execute: (target, source, potency, scene) => {
@@ -115,7 +110,6 @@ export const engage: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, target must have full health',
   execute: (target, source, potency, scene) => {
@@ -135,7 +129,6 @@ export const flank: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals additional damage, target must be targetting someone other than caster',
   execute: (target, source, potency, scene) => {
@@ -155,7 +148,6 @@ export const flourish: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, caster must have full health',
   execute: (target, source, potency, scene) => {
@@ -175,7 +167,6 @@ export const gangup: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
   description: 'Damage scales with each damaged combatant',
   execute: (target, source, potency, scene) => {
     const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
@@ -196,7 +187,6 @@ export const prick: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals damage to target',
   execute: (target, source, potency) => {
@@ -214,7 +204,6 @@ export const resurrect: Action = {
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
-  imageKeyName: 'heal.gif',
 
   description: 'Heals target, target must be dead',
   execute: (target, source, potency) => {
@@ -234,7 +223,6 @@ export const revenge: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Potency equal to bleed',
   execute: (target, source, potency) => {
@@ -252,7 +240,6 @@ export const salve: Action = {
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
-  imageKeyName: 'heal.gif',
 
   description: 'Heals double bleed, target must be dying',
   execute: (target, source, potency) => {
@@ -270,7 +257,6 @@ export const splinter: Action = {
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
 
   description: 'Deals double damage, must not have been used in battle yet',
   execute: (target, source, potency) => {
@@ -289,8 +275,7 @@ export const block: Action = {
   potency: 0,
   tags: new Set([ActionTags.DEFEND]),
   targetType: TargetType.SELF,
-  soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
+  soundKeyName: 'block',
 
   description: 'Switch to block stance, (block stance receives damage as stamina instead of bleed',
   execute: (target, source, potency) => {
@@ -308,8 +293,7 @@ export const idle: Action = {
   tags: new Set([ActionTags.DEFEND]),
   targetType: TargetType.SELF,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
-  
+
   description: 'Does Nothing',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   execute: () => {},

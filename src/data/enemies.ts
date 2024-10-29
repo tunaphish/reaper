@@ -1,6 +1,6 @@
 import { Enemy } from '../model/enemy';
 import { Status } from '../model/combatant';
-import { randomEnemy, randomAlly, self } from '../model/targetPriorities';
+import { randomAlly, self } from '../model/targetPriorities';
 import { OptionType } from '../model/option';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
@@ -10,7 +10,7 @@ import { attack, idle } from './actions';
 export const healieBoi: Enemy = {
   type: OptionType.ENEMY,
   name: 'Healie Boi',
-  health: 200,
+  health: 25,
   maxHealth: 200,
   bleed: 0,
   stamina: 0,

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import styles from './boot.module.css';
 import UiOverlayPlugin from '../UiOverlayPlugin';
+import { DefaultAllies } from '../../data/allies';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -18,6 +19,8 @@ export class Boot extends Phaser.Scene {
   }
 
   public preload(): void {
+    this.registry.set('allies', DefaultAllies);
+
     const Ui = () => {
       const [percent, setPercent] = React.useState<number>(0);
       const [fileKey, setFileKey] = React.useState<string>('');
@@ -32,10 +35,10 @@ export class Boot extends Phaser.Scene {
       return (
           <motion.div 
             animate={{opacity}} 
-            transition={{ duration: .5 }} 
+            transition={{ duration: .2 }} 
             className={styles.loadingContainer} 
             onAnimationComplete={(definition: { opacity: number }) => {  
-              if (definition.opacity === 0) this.scene.start('Battle')
+              if (definition.opacity === 0) this.scene.start('World')
             }}
           >
             <div className={styles.spinner}>

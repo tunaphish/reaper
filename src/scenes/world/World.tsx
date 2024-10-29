@@ -1,6 +1,10 @@
 import * as React from 'react';
 import UiOverlayPlugin from '../UiOverlayPlugin';
 import Player from './player/Player';
+import { WorldView } from './WorldView';
+import { healieBoi } from '../../data/enemies';
+
+import { Ally } from '../../model/ally';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -11,12 +15,15 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class World extends Phaser.Scene {
   private player: Player;
   ui: UiOverlayPlugin;
+  allies: Ally[];
+  private choiceSelectSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
   }
 
-  public create(): void {
+  create(): void {
+    this.choiceSelectSound = this.sound.add('choice-select');
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
 
@@ -31,20 +38,23 @@ export class World extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
 
     this.cameras.main.fadeIn(1200);
-
-    const Ui = () => {
-      const onClickPause = () => {
-        this.scene.pause();
-        this.scene.run('PauseMenu');
-      }
-      return <div onClick={onClickPause}>click me</div>;
-    }
     
-    this.ui.create(<Ui/>, this);
-
+    this.ui.create(<WorldView scene={this}/>, this);
   }
 
-  public update(time: number, delta: number): void {
+  update(time: number, delta: number): void {
     this.player.update(time, delta);
+  }
+
+  pause(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause();
+    this.scene.run('PauseMenu');
+  }
+
+  battle(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause();
+    this.scene.run('Battle', { enemies: [healieBoi], allies: this.allies});
   }
 }

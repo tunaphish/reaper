@@ -23,7 +23,7 @@ export const Eji: Ally = {
   name: 'Eji',
   health: 100,
   maxHealth: 100,
-  bleed: 50,
+  bleed: 0,
   stamina: 0,
   maxStamina: 400,
   magic: 100,

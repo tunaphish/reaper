@@ -81,6 +81,7 @@
 }
 
 .alliesBar {
+  background-color: black;
   display: flex;
   flex: 1;
 }

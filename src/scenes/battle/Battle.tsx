@@ -12,8 +12,6 @@ import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
 import { MenuOption } from '../../model/menuOption';
 
-import { DefaultAllies } from '../../data/allies';
-import { healieBoi } from '../../data/enemies';
 import * as Actions from '../../data/actions';
 import * as Spells from '../../data/spells';
 
@@ -59,8 +57,8 @@ export class Battle extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  public init(): void {
-    this.battleStore = new BattleStore([healieBoi], DefaultAllies);
+  init(data: { enemies: Enemy[] }): void {
+    this.battleStore = new BattleStore(data.enemies, this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -74,10 +72,13 @@ export class Battle extends Phaser.Scene {
     if (!this.battleStarted) return;
 
     if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
-      this.scene.start('World');
+      this.scene.stop();
+      this.scene.resume('MainMenu');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
-      this.scene.start('World');
+      this.scene.stop();
+      this.registry.set('allies', this.battleStore.allies);
+      this.scene.resume('World', { allies: this.battleStore.allies });
     }
 
     if (this.battleStore.caster && 

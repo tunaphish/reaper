@@ -1,0 +1,27 @@
+
+.navigation {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+    pointer-events: none !important;
+    align-items: flex-end;
+}
+
+.navigation > * {
+    pointer-events: auto;
+}
+
+.navigationButton {
+    width: 100px;
+    height: 100px;
+    border: 1px solid white;
+    background-color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 5px;
+}

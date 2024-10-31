@@ -31,44 +31,36 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
     [Status.BLOCKING]: styles.BLOCKING,
   };
   const style = [
-    styles.characterCell,
+    styles.window,
     statusToStylesMap[props.combatant.status],
     props.combatant.takingDamage ? styles.shake : '',
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}>
-
-      <motion.div 
-        className={styles.castingWindow}
-        animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
-        transition={{ duration: 0 }}
-       />
-      <motion.div 
-        className={styles.attackWindow}
-        animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
-        transition={{ duration: 0 }}
-       />
-      <div className={styles.resourceContainer}>
-        <div>{props.combatant.name}</div>
-        <div className={styles.statContainer}>
-          <div>❤️ </div>
+    <div className={style.join(' ')} onClick={props.onClickCell}>
+      <div className={styles.windowName}>{props.combatant.name}</div>
+      <div className={styles.characterCell} onAnimationEnd={onAnimationEnd}>
+        <motion.div 
+          className={styles.castingWindow}
+          animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
+          transition={{ duration: 0 }}
+        />
+        <motion.div 
+          className={styles.attackWindow}
+          animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
+          transition={{ duration: 0 }}
+        />
+        <div className={styles.resourceContainer}>
           <div className={styles.meterContainer}>
             <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
             <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
             <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
           </div>
-        </div>
-        <div className={styles.statContainer}>
-          <div>☀️ </div>
           <div className={styles.meterContainer}>
             <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
             <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
           </div>
-        </div>
-        <div className={styles.statContainer}>
-          <div>🌙 </div>
           <div className={styles.meterContainer}>
             <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
             <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
@@ -76,7 +68,6 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
           </div>
         </div>
       </div>
-
     </div>
   )
 });
@@ -152,64 +143,71 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
   }
     return (
         <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
-          <div className={styles.menu}>
-          <div className={styles.modalMenuHeader}>{props.menuContent.name}</div>
-          <hr style={{ marginBottom: 4 }}/>
-          {
-            props.menuContent.type === OptionType.FOLDER && 
-            props.menuContent.options.map((option: MenuOption) => {
-              const onClickOption = () => props.battleScene.selectOption(option);
-              
-              function getFolderKey(option: MenuOption) {
-                switch(option.type) {
-                  case OptionType.FOLDER:
-                    return'folder';
-                  case OptionType.ENEMY:
-                    return'enemy';
-                  case OptionType.ALLY:
-                    return'ally';
-                  case OptionType.ACTION:
-                    return'attack';
-                  case OptionType.ITEM:
-                    return'item';
-                  case OptionType.SPELL:
-                    return'magic';
-                  default:
-                    return'folder';
+          <div className={styles.window} 
+            style={{ 
+              minWidth: "100px",
+              width:" 100%",
+            }}
+          >
+          <div className={styles.windowName}>{props.menuContent.name}</div>
+          <div className={styles.menuContent}>
+            {
+              props.menuContent.type === OptionType.FOLDER && 
+              props.menuContent.options.map((option: MenuOption) => {
+                const onClickOption = () => props.battleScene.selectOption(option);
+                
+                function getFolderKey(option: MenuOption) {
+                  switch(option.type) {
+                    case OptionType.FOLDER:
+                      return'folder';
+                    case OptionType.ENEMY:
+                      return'enemy';
+                    case OptionType.ALLY:
+                      return'ally';
+                    case OptionType.ACTION:
+                      return'attack';
+                    case OptionType.ITEM:
+                      return'item';
+                    case OptionType.SPELL:
+                      return'magic';
+                    default:
+                      return'folder';
+                  }
                 }
-              }
-              const iconMapKey = getFolderKey(option);
-      
-              return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-                  <img
-                    src={ICON_MAP[iconMapKey]}
-                    alt="Icon"
-                    style={{ width: '18px', height: '18px', marginRight: '4px' }} 
-                  />
-                <div>{option.name}</div>
-                { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-                { option.type === OptionType.SPELL && (
-                    <>
-                      <div className={styles.magicCost}>{option.magicCost}</div>
-                      <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-                    </>
-                  )
-                }
-                { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-              </button>
-              )
-            })
-          }
-          {
-            props.menuContent.name === Spells.CHARGE.name && <Charge />
-          }
-          {
-            props.menuContent.name === Spells.JANKENBO.name && <Jankenbo />
-          }
-          {
-            props.menuContent.name === Spells.CLEAVE.name && <Cleave />
-          }
-        </div>
+                const iconMapKey = getFolderKey(option);
+        
+                return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+                    <img
+                      src={ICON_MAP[iconMapKey]}
+                      alt="Icon"
+                      style={{ width: '18px', height: '18px', marginRight: '4px' }} 
+                    />
+                  <div>{option.name}</div>
+                  { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+                  { option.type === OptionType.SPELL && (
+                      <>
+                        <div className={styles.magicCost}>{option.magicCost}</div>
+                        <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                      </>
+                    )
+                  }
+                  { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+                </button>
+                )
+              })
+            }
+            {
+              props.menuContent.name === Spells.CHARGE.name && <Charge />
+            }
+            {
+              props.menuContent.name === Spells.JANKENBO.name && <Jankenbo />
+            }
+            {
+              props.menuContent.name === Spells.CLEAVE.name && <Cleave />
+            }
+          </div>
+          </div>
+
         <Zantetsuken />
       </div>
 
@@ -218,8 +216,6 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
 
 
 }
-
-
 
 
 const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Battle }) => {
@@ -260,20 +256,49 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
   );
 }) 
 
+const Stage = (props: { scene: Battle }) => {
+  const { enemies } = props.scene.battleStore;
+
+  const onAnimationEnd = () => {
+    props.scene.startBattle();
+  }
+  
+  const enemyPortaitStyle: React.CSSProperties = {
+    backgroundImage: `url(${enemies[0].imageUrl})`
+  }
+  const backgroundImageStyle: React.CSSProperties = {
+    backgroundImage: `url(${props.scene.backgroundImageUrl})`
+  }
+  
+  return ( 
+    <div style={{ flex: 5, display: "flex", justifyContent: "space-around", }}>
+      <motion.div
+        style={{
+          width: "100%",
+          margin: 10,
+        }}
+        initial={{ scaleY: 0 }} 
+        animate={{ scaleY: 1 }} 
+        transition={{ duration: .3, ease: 'easeOut' }} 
+        onAnimationComplete={onAnimationEnd} 
+      >
+        <div className={styles.window} style={{ height: "100%" }}>
+          <div className={styles.windowName}>{enemies[0].name}</div>
+          <div className={styles.tvContainer}>
+            <div className={styles.background} style={backgroundImageStyle}/>
+            <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+
+  )
+}
+
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
     const { enemies, allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
-    }
-    const onAnimationEnd = () => {
-      props.scene.startBattle();
-    }
-    // TODO: update for multiple enemies
-    const enemyPortaitStyle: React.CSSProperties = {
-      backgroundImage: `url(${enemies[0].imageUrl})`
-    }
-    const backgroundImageStyle: React.CSSProperties = {
-      backgroundImage: `url(${props.scene.backgroundImageUrl})`
     }
 
     return (
@@ -283,27 +308,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
          </div>
-         <motion.div
-            style={{
-              width: '100%',
-              height: '100%',
-              flex: 4,
-            }}
-            initial={{ scaleY: 0 }} 
-            animate={{ scaleY: 1 }} 
-            transition={{ duration: .3, ease: 'easeOut' }} 
-            onAnimationComplete={onAnimationEnd} 
-          >
-            <div className={styles.tvContainer}>
-              <div className={styles.staticEffect}>
-                <div className={styles.oldTvContent}>
-                <div className={styles.background} style={backgroundImageStyle}/>
-                  <div className={styles.enemyPortait} style={enemyPortaitStyle}/>
-                  <p className={styles.animeText}>{props.scene.battleStore.stageText}</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <Stage scene={props.scene} />
           <div className={styles.alliesBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>

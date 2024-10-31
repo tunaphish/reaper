@@ -18,6 +18,7 @@ import * as Spells from '../../data/spells';
 import UiOverlayPlugin from '../UiOverlayPlugin';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
+import { healieBoi } from '../../data/enemies';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -58,7 +59,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies, this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [healieBoi], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -73,7 +74,7 @@ export class Battle extends Phaser.Scene {
 
     if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
       this.scene.stop();
-      this.scene.resume('MainMenu');
+      this.scene.start('MainMenu');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
       this.scene.stop();

@@ -38,7 +38,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell}>
+    <div className={style.join(' ')} onClick={props.onClickCell} style={{ aspectRatio: 1 }}>
       <div className={styles.windowName}>{props.combatant.name}</div>
       <div className={styles.characterCell} onAnimationEnd={onAnimationEnd}>
         <motion.div 
@@ -271,18 +271,21 @@ const Stage = (props: { scene: Battle }) => {
   }
   
   return ( 
-    <div style={{ flex: 5, display: "flex", justifyContent: "space-around", }}>
+    <div style={{ flex: 4, display: "flex", justifyContent: "space-around", }}>
       <motion.div
         style={{
           width: "100%",
           margin: 10,
+          display: "flex",
+          justifyContent: "space-around",
+          flexDirection: "column",
         }}
         initial={{ scaleY: 0 }} 
         animate={{ scaleY: 1 }} 
         transition={{ duration: .3, ease: 'easeOut' }} 
         onAnimationComplete={onAnimationEnd} 
       >
-        <div className={styles.window} style={{ height: "100%" }}>
+        <div className={styles.window} style={{ aspectRatio: "16/9" }}>
           <div className={styles.windowName}>{enemies[0].name}</div>
           <div className={styles.tvContainer}>
             <div className={styles.background} style={backgroundImageStyle}/>

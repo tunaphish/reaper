@@ -38,19 +38,25 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell} style={{ aspectRatio: 1 }}>
-      <div className={styles.windowName}>{props.combatant.name}</div>
-      <div className={styles.characterCell} onAnimationEnd={onAnimationEnd}>
-        <motion.div 
-          className={styles.castingWindow}
-          animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
-          transition={{ duration: 0 }}
-        />
-        <motion.div 
-          className={styles.attackWindow}
-          animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
-          transition={{ duration: 0 }}
-        />
+    <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}
+      style={{ 
+        aspectRatio: 1, 
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "1fr",  
+      }}>
+      <motion.div 
+        className={styles.castingWindow}
+        animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
+        transition={{ duration: 0 }}
+      />
+      <motion.div 
+        className={styles.attackWindow}
+        animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
+        transition={{ duration: 0 }}
+      />
+      <div className={styles.characterCellContainer}>
+        <div className={styles.windowName}>{props.combatant.name}</div>
         <div className={styles.resourceContainer}>
           <div className={styles.meterContainer}>
             <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
@@ -155,39 +161,15 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
               props.menuContent.type === OptionType.FOLDER && 
               props.menuContent.options.map((option: MenuOption) => {
                 const onClickOption = () => props.battleScene.selectOption(option);
-                
-                function getFolderKey(option: MenuOption) {
-                  switch(option.type) {
-                    case OptionType.FOLDER:
-                      return'folder';
-                    case OptionType.ENEMY:
-                      return'enemy';
-                    case OptionType.ALLY:
-                      return'ally';
-                    case OptionType.ACTION:
-                      return'attack';
-                    case OptionType.ITEM:
-                      return'item';
-                    case OptionType.SPELL:
-                      return'magic';
-                    default:
-                      return'folder';
-                  }
-                }
-                const iconMapKey = getFolderKey(option);
-        
+                        
                 return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-                    <img
-                      src={ICON_MAP[iconMapKey]}
-                      alt="Icon"
-                      style={{ width: '18px', height: '18px', marginRight: '4px' }} 
-                    />
+  
                   <div>{option.name}</div>
                   { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
                   { option.type === OptionType.SPELL && (
                       <>
-                        <div className={styles.magicCost}>{option.magicCost}</div>
                         <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                        <div className={styles.magicCost}>{option.magicCost}</div>
                       </>
                     )
                   }
@@ -286,7 +268,6 @@ const Stage = (props: { scene: Battle }) => {
         onAnimationComplete={onAnimationEnd} 
       >
         <div className={styles.window} style={{ aspectRatio: "16/9" }}>
-          <div className={styles.windowName}>{enemies[0].name}</div>
           <div className={styles.tvContainer}>
             <div className={styles.background} style={backgroundImageStyle}/>
             <div className={styles.enemyPortait} style={enemyPortaitStyle}/>

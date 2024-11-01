@@ -12,16 +12,20 @@
 }
 
 .window {
-  border: 1px solid white;
-  background-color: black;
+  background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+  background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+  background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+  background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+  
+  border: 2px ridge white;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
+
   border-radius: 3px;
   display: flex;
   flex-direction: column;
 }
 
 .windowName {
-  background-color: white;
-  color: black;
   padding: 3px;
 }
 
@@ -36,12 +40,13 @@
 
 .characterCell {
   flex: 1;
-  text-align: center;
+}
 
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr;    
+.characterCellContainer {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .attackWindow {
@@ -63,15 +68,11 @@
 }
 
 .resourceContainer {
-  grid-column: 1;
-  grid-row: 1;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  padding: 5px;
+  flex: 1;
 }
 
 .statContainer {
@@ -201,6 +202,7 @@ meter {
 .optionCost, .magicCost {
   text-align: end;
   flex: 1;
+  padding-left: 5px;
 }
 
 .magicCost {

@@ -66,17 +66,19 @@ export class Battle extends Phaser.Scene {
       volume: 0.5  
     });
     this.ui.create(<BattleView scene={this}/>, this);
-    //this.music.play();
+    // this.music.play();
   }
 
   update(time: number, delta: number): void {
     if (!this.battleStarted) return;
 
     if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
+      this.music.stop();
       this.scene.stop();
       this.scene.start('MainMenu');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
+      this.music.stop();
       this.scene.stop();
       this.registry.set('allies', this.battleStore.allies);
       this.scene.resume('World', { allies: this.battleStore.allies });

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { motion, Variants } from 'framer-motion';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Combatant, JankenboThrow, Status } from '../../model/combatant';
 import { Ally } from '../../model/ally';
@@ -12,16 +12,6 @@ import * as Spells from '../../data/spells';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
-
-
-const ICON_MAP ={
-  attack: '/reaper/assets/ui/icons/attack.png',
-  magic: '/reaper/assets/ui/icons/magic.png',
-  item: '/reaper/assets/ui/icons/item.png',
-  folder: '/reaper/assets/ui/icons/folder.png',
-  ally: '/reaper/assets/ui/icons/ally.png',
-  enemy: '/reaper/assets/ui/icons/enemy.png',
-}
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -279,6 +269,45 @@ const Stage = (props: { scene: Battle }) => {
   )
 }
 
+const Description = observer((props: { scene: Battle }) => {
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [props.scene.battleStore.stageText]);
+
+  return (
+    <AnimatePresence>
+    { isVisible && (
+        <motion.div 
+          style={{ position: "relative" }}
+          initial={{ scaleY: 0 }} 
+          animate={{ scaleY: 1 }} 
+          exit={{ scaleY: 0 }}
+          transition={{ duration: .1, ease: 'easeOut' }} 
+        >
+            <div className={styles.window}
+              style={{
+                padding: 5,
+                position: "absolute",
+                bottom: 0,
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "90%"
+              }}
+            >
+              {props.scene.battleStore.stageText}
+            </div>
+        </motion.div>
+    )}
+    </AnimatePresence>
+  )
+});
+
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
     const { enemies, allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
@@ -293,6 +322,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
             })}
          </div>
           <Stage scene={props.scene} />
+          <Description scene={props.scene} />
           <div className={styles.alliesBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>

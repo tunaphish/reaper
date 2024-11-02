@@ -87,7 +87,7 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.caster && 
       this.battleStore.executable && 
       this.battleStore.target &&
-      this.battleStore.spells === null
+      (this.battleStore.executable.type === OptionType.SPELL || this.battleStore.spells === null)
     ) {
       this.queueAction(); 
     }
@@ -281,6 +281,7 @@ export class Battle extends Phaser.Scene {
     switch(option.type) {
       case OptionType.ITEM:
       case OptionType.ACTION:
+      case OptionType.SPELL:
         const executable = option as Executable;
         this.battleStore.setExecutable(executable);
         if (executable.targetType === TargetType.SELF) {
@@ -290,12 +291,8 @@ export class Battle extends Phaser.Scene {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.menus.push(targetFolder);
         }
+        this.battleStore.setStageText(executable.description);
         break;
-      case OptionType.SPELL:
-        const spell = option as Spell;
-        this.battleStore.setExecutable(spell);
-        this.battleStore.setTarget(this.battleStore.caster);
-        break
       case OptionType.ENEMY:
       case OptionType.ALLY:
         const combatant = option;

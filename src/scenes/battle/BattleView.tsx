@@ -295,9 +295,8 @@ const Description = observer((props: { scene: Battle }) => {
                 padding: 5,
                 position: "absolute",
                 bottom: 0,
-                left: "50%",
-                transform: "translate(-50%, 0)",
-                width: "90%"
+                left: "5%",
+                width: "50%"
               }}
             >
               {props.scene.battleStore.stageText}

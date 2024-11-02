@@ -5,7 +5,7 @@ import styles from './boot.module.css';
 import UiOverlayPlugin from '../UiOverlayPlugin';
 import { DefaultAllies } from '../../data/allies';
 
-const SCENE_TO_START = 'Battle';
+const SCENE_TO_START = 'MainMenu';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

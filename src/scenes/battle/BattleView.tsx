@@ -296,7 +296,7 @@ const Description = observer((props: { scene: Battle }) => {
                 position: "absolute",
                 bottom: 0,
                 left: "50%",
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-50%, 0)",
                 width: "90%"
               }}
             >

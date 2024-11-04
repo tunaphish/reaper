@@ -283,19 +283,3 @@ export const block: Action = {
   },
   isRestricted: (target, source, scene) => (false)
 };
-
-export const idle: Action = {
-  type: OptionType.ACTION,
-  name: 'Idle',
-  staminaCost: 0,
-  castTimeInMs: 0,
-  potency: 50,
-  tags: new Set([ActionTags.DEFEND]),
-  targetType: TargetType.SELF,
-  soundKeyName: 'attack',
-
-  description: 'Does Nothing',
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  execute: () => {},
-  isRestricted: () => { return false },
-};

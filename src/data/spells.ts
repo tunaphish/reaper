@@ -70,7 +70,8 @@ export const CLEAVE: Spell = {
     isMenuSpell: true,
     modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
         const actionModifier = Object.assign({}, initActionModifier);
-        if (caster.queuedTarget.type === OptionType.ALLY) {
+        // @ts-ignore
+        if ((caster.queuedTarget.type as OptionType) === OptionType.ALLY) {
             actionModifier.targets = scene.battleStore.allies;
           } else {
             actionModifier.targets = scene.battleStore.enemies;
@@ -114,17 +115,17 @@ export const JANKENBO: Spell = {
 
         if (scene.battleStore.jankenboThrow) {
           if (scene.battleStore.jankenboThrow === caster.queuedTarget.previousJankenboThrow) {
-            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU TIE");
+            scene.battleStore.allyMenuSelections.setText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU TIE");
           } else if (
             scene.battleStore.jankenboThrow === JankenboThrow.ROCK && caster.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
             scene.battleStore.jankenboThrow === JankenboThrow.SCISSORS && caster.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
             scene.battleStore.jankenboThrow === JankenboThrow.PAPER && caster.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
           ) {
             actionModifier.potency *= 2;
-            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU WIN");
+            scene.battleStore.allyMenuSelections.setText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU WIN");
           } else {
             actionModifier.potency = 0;
-            scene.battleStore.setStageText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU LOSE");
+            scene.battleStore.allyMenuSelections.setText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU LOSE");
           }
         }
         return actionModifier;

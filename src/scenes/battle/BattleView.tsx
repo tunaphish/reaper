@@ -12,6 +12,7 @@ import * as Spells from '../../data/spells';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
+import { MenuSelections } from './BattleStore';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -69,11 +70,11 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 });
 
 
-const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Battle }) => {
+const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Battle, menuSelection: MenuSelections }) => {
   const Zantetsuken = observer(() => {
     return (
         props.idx === 0 && 
-        props.battleScene?.battleStore.caster.activeSpells.find(activeSpell => activeSpell.name === Spells.ZANTETSUKEN.name) &&
+        props.menuSelection.caster.activeSpells.find(activeSpell => activeSpell.name === Spells.ZANTETSUKEN.name) &&
         <div className={styles.menu}>ZANTETSUKEN {props.battleScene.battleStore.zantetsukenMultiplier.toFixed(2)}X</div>
     )
   });
@@ -158,7 +159,7 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
                   { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
                   { option.type === OptionType.SPELL && (
                       <>
-                        <input type="checkbox" checked={!!props.battleScene.battleStore?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                        <input type="checkbox" checked={!!props.menuSelection.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
                         <div className={styles.magicCost}>{option.magicCost}</div>
                       </>
                     )
@@ -219,7 +220,7 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
               key={idx}
               style={{ zIndex: 10 * (idx + 1) }}
             >
-            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene}/>
+            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene} menuSelection={props.battleScene.battleStore.allyMenuSelections}/>
           </motion.div>        
           )
           })
@@ -269,8 +270,24 @@ const Stage = (props: { scene: Battle }) => {
   )
 }
 
-const Description = observer((props: { scene: Battle }) => {
+const Description = observer((props: { text: string, isEnemy: boolean }) => {
   const [isVisible, setIsVisible] = React.useState(true);
+
+  const style: React.CSSProperties =  props.isEnemy ?
+  {
+    padding: 5,
+    position: "absolute",
+    top: 0,
+    right: "5%",
+    width: "50%"
+  } :
+  {
+    padding: 5,
+    position: "absolute",
+    bottom: 0,
+    left: "5%",
+    width: "50%"
+  };
 
   React.useEffect(() => {
     setIsVisible(true);
@@ -278,7 +295,7 @@ const Description = observer((props: { scene: Battle }) => {
       setIsVisible(false);
     }, 3000);
     return () => clearTimeout(timer);
-  }, [props.scene.battleStore.stageText]);
+  }, [props.text]);
 
   return (
     <AnimatePresence>
@@ -290,16 +307,8 @@ const Description = observer((props: { scene: Battle }) => {
           exit={{ scaleY: 0 }}
           transition={{ duration: .1, ease: 'easeOut' }} 
         >
-            <div className={styles.window}
-              style={{
-                padding: 5,
-                position: "absolute",
-                bottom: 0,
-                left: "5%",
-                width: "50%"
-              }}
-            >
-              {props.scene.battleStore.stageText}
+            <div className={styles.window} style={style}>
+              {props.text}
             </div>
         </motion.div>
     )}
@@ -320,14 +329,15 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
          </div>
+          <Description text={props.scene.battleStore.enemyMenuSelections.text} isEnemy={true}/>
           <Stage scene={props.scene} />
-          <Description scene={props.scene} />
+          <Description text={props.scene.battleStore.allyMenuSelections.text} isEnemy={false}/>
           <div className={styles.alliesBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
               })}
           </div>
-          <MenuContainer menus={props.scene.battleStore.menus} battleScene={props.scene}/>
+          <MenuContainer menus={props.scene.battleStore.allyMenuSelections.menus} battleScene={props.scene}/>
         </div>
       )
 });

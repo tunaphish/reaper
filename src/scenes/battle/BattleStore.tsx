@@ -6,29 +6,16 @@ import { MenuContent } from "../../model/menuContent";
 import { Spell } from "../../model/spell";
 import { Executable } from "./Battle";
 
-
-export class BattleStore {
-  // battle vars
-  enemies: Enemy[];
-  allies: Allies;
-
-  // menu vars
-  caster?: Ally;
+export class MenuSelections {
+  caster?: Combatant;
   executable?: Executable;
-  target?: Enemy | Ally;
+  target?: Combatant;
   menus: MenuContent[] = [];
   spells?: Spell[] = null;
+  text: string;
 
-  // spell vars
-  chargeMultiplier = 1;
-  zantetsukenMultiplier = 3.5;
-  jankenboThrow?: JankenboThrow = null;
+  constructor(text: string) {
 
-  stageText = "*the wind is howling*";
-
-  constructor(enemies: Enemy[], allies: Allies) {
-    this.enemies = enemies;
-    this.allies = allies;
     makeAutoObservable(this);
   }
 
@@ -36,16 +23,52 @@ export class BattleStore {
     this.spells = spells;
   }
 
-  setCaster(member?: Ally): void {
+  setCaster(member?: Combatant): void {
     this.caster = member;
   }
 
-  setTarget(target?: Enemy | Ally): void {
+  setTarget(target?: Combatant): void {
     this.target = target;
   }
 
   setExecutable(executable?: Executable): void {
     this.executable = executable;
+  }
+
+  setText(text: string): void {
+    this.text = text;
+  }
+
+  emptyMenu(): void {
+    this.menus.splice(0, this.menus.length);
+  }
+
+  resetSelections(): void {
+    this.emptyMenu();
+    this.setCaster(null);
+    this.setExecutable(null);
+    this.setTarget(null);
+  }
+}
+
+export class BattleStore {
+  // battle vars
+  enemies: Enemy[];
+  allies: Allies;
+
+  // menu vars
+  allyMenuSelections: MenuSelections = new MenuSelections("*the wind is howling*");
+  enemyMenuSelections: MenuSelections  = new MenuSelections("woof");
+
+  // spell vars
+  chargeMultiplier = 1;
+  zantetsukenMultiplier = 3.5;
+  jankenboThrow?: JankenboThrow = null;
+
+  constructor(enemies: Enemy[], allies: Allies) {
+    this.enemies = enemies;
+    this.allies = allies;
+    makeAutoObservable(this);
   }
 
   setChargeMultipler(chargeMultiplier: number): void {
@@ -55,11 +78,6 @@ export class BattleStore {
   setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
     this.zantetsukenMultiplier = zantetsukenMultiplier;
   }
-
-  setStageText(stageText: string): void {
-    this.stageText = stageText;
-  }
-
 
   tickStats(delta: number): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
@@ -105,17 +123,6 @@ export class BattleStore {
         combatant.timeInStateInMs = 0;
       }
     });
-  }
-
-  emptyMenu(): void {
-    this.menus.splice(0, this.menus.length);
-  }
-
-  resetSelections(): void {
-    this.emptyMenu();
-    this.setCaster(null);
-    this.setExecutable(null);
-    this.setTarget(null);
   }
 
   getCombatants(): Combatant[] {

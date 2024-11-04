@@ -1,29 +1,65 @@
 import { Enemy } from '../model/enemy';
 import { Status } from '../model/combatant';
-import { randomAlly, self } from '../model/targetPriorities';
+import { Combatant } from '../model/combatant';
 import { OptionType } from '../model/option';
+import { getRandomInt } from '../model/math';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
-import { attack, idle } from './actions';
+import * as Actions from './actions';
 
+import { Battle } from '../scenes/battle/Battle';
+
+
+// Target Functions
+const isAlive = (unit: Combatant) => unit.health !== 0;
+
+const self = (scene: Battle) => {
+  return scene.battleStore.enemyMenuSelections.caster;
+};
+
+const randomEnemy = (scene: Battle) => {
+  const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
+  return aliveEnemies.at(getRandomInt(aliveEnemies.length));
+};
+
+const randomAlly = (scene: Battle) => {
+  const aliveEnemies = scene.battleStore.allies.filter(isAlive);
+  return aliveEnemies.at(getRandomInt(aliveEnemies.length));
+};
+
+const steepness = 5;
+const sigmoidFunction = (enemy: Enemy, scene: Battle) => {
+  const staminaRatio = enemy.stamina / enemy.maxStamina;
+  const result = 1 / (1 + Math.exp(-steepness * (staminaRatio - 0.5)));
+  return result;
+}
+
+function reverseSigmoid(enemy: Enemy, scene: Battle) {
+  const staminaRatio =  enemy.bleed / 50; // 50 is avg attack
+  const steepness = 5;
+  const reverseProbability = 1 - (1 / (1 + Math.exp(-steepness * (staminaRatio - 0.5))));
+
+  return reverseProbability;
+}
 
 export const healieBoi: Enemy = {
   type: OptionType.ENEMY,
   name: 'Healie Boi',
-  health: 25,
+  health: 200,
   maxHealth: 200,
   bleed: 0,
   stamina: 0,
-  maxStamina: 800,
+  maxStamina: 500,
   magic: 100,
   maxMagic: 100,
   flow: 0,
   flowDecayRatePerSecond: 5,
-  staminaRegenRatePerSecond: 10,
+  staminaRegenRatePerSecond: 25,
   behaviors: [
-    { action: attack, weight: 100, targetPriority: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
-    { action: idle, weight: 100, targetPriority: self },
+    { option: [Actions.bandage], getProbability: sigmoidFunction, getTarget: self, dialoguePool: ['Oh shit', 'fuck fuck fuck'] },
+    { option: [Actions.attack], getProbability: sigmoidFunction, getTarget: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
   ],
+  folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Targets...', options: [Actions.attack, Actions.bandage]},
   
   status: Status.NORMAL,
   timeInStateInMs: 0,

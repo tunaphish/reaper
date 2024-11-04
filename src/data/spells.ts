@@ -34,7 +34,7 @@ export const ZANTETSUKEN: Spell = {
     isMenuSpell: false,
     modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
         const actionModifier = Object.assign({}, initActionModifier);
-        actionModifier.multiplier *= scene.battleStore.zantetsukenMultiplier;
+        actionModifier.multiplier *= scene.battleStore.allyMenuSelections.zantetsukenMultiplier;
         return actionModifier;
     }
 };
@@ -93,7 +93,7 @@ export const CHARGE: Spell = {
     isMenuSpell: true,
     modifyAction: (initActionModifier: ActionModifier, scene: Battle, caster: Combatant) => {
         const actionModifier = Object.assign({}, initActionModifier);
-        actionModifier.multiplier *= scene.battleStore.chargeMultiplier;
+        actionModifier.multiplier *= scene.battleStore.allyMenuSelections.chargeMultiplier;
         return actionModifier;
     }
 };
@@ -113,13 +113,13 @@ export const JANKENBO: Spell = {
         const jankenboThrow = caster.queuedTarget.jankenboThrow(caster.queuedTarget);
         caster.queuedTarget.previousJankenboThrow = jankenboThrow;
 
-        if (scene.battleStore.jankenboThrow) {
-          if (scene.battleStore.jankenboThrow === caster.queuedTarget.previousJankenboThrow) {
+        if (scene.battleStore.allyMenuSelections.jankenboThrow) {
+          if (scene.battleStore.allyMenuSelections.jankenboThrow === caster.queuedTarget.previousJankenboThrow) {
             scene.battleStore.allyMenuSelections.setText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU TIE");
           } else if (
-            scene.battleStore.jankenboThrow === JankenboThrow.ROCK && caster.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
-            scene.battleStore.jankenboThrow === JankenboThrow.SCISSORS && caster.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
-            scene.battleStore.jankenboThrow === JankenboThrow.PAPER && caster.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
+            scene.battleStore.allyMenuSelections.jankenboThrow === JankenboThrow.ROCK && caster.queuedTarget.previousJankenboThrow === JankenboThrow.SCISSORS ||
+            scene.battleStore.allyMenuSelections.jankenboThrow === JankenboThrow.SCISSORS && caster.queuedTarget.previousJankenboThrow === JankenboThrow.PAPER ||
+            scene.battleStore.allyMenuSelections.jankenboThrow === JankenboThrow.PAPER && caster.queuedTarget.previousJankenboThrow === JankenboThrow.ROCK
           ) {
             actionModifier.potency *= 2;
             scene.battleStore.allyMenuSelections.setText(caster.queuedTarget.name + " threw " + caster.queuedTarget.previousJankenboThrow + ", YOU WIN");

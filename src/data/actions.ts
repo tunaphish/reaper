@@ -9,7 +9,7 @@ export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
   staminaCost: 100,
-  castTimeInMs: 500,
+  castTimeInMs: 1500,
   potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,

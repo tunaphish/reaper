@@ -56,10 +56,10 @@ export const healieBoi: Enemy = {
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 25,
   behaviors: [
-    { option: [Actions.bandage], getProbability: sigmoidFunction, getTarget: self, dialoguePool: ['Oh shit', 'fuck fuck fuck'] },
+    { option: [Actions.bandage], getProbability: reverseSigmoid, getTarget: self, dialoguePool: ['Oh shit', 'fuck fuck fuck'] },
     { option: [Actions.attack], getProbability: sigmoidFunction, getTarget: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
   ],
-  folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Targets...', options: [Actions.attack, Actions.bandage]},
+  folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Healie Boi Menu', options: [Actions.bandage, Actions.attack]},
   
   status: Status.NORMAL,
   timeInStateInMs: 0,

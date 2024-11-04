@@ -14,8 +14,13 @@ export class MenuSelections {
   spells?: Spell[] = null;
   text: string;
 
-  constructor(text: string) {
+  // spell vars
+  chargeMultiplier = 1;
+  zantetsukenMultiplier = 3.5;
+  jankenboThrow?: JankenboThrow = null;
 
+  constructor(text: string) {
+    this.text = text;
     makeAutoObservable(this);
   }
 
@@ -39,6 +44,14 @@ export class MenuSelections {
     this.text = text;
   }
 
+  setChargeMultipler(chargeMultiplier: number): void {
+    this.chargeMultiplier = chargeMultiplier;
+  }
+
+  setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
+    this.zantetsukenMultiplier = zantetsukenMultiplier;
+  }
+
   emptyMenu(): void {
     this.menus.splice(0, this.menus.length);
   }
@@ -60,10 +73,7 @@ export class BattleStore {
   allyMenuSelections: MenuSelections = new MenuSelections("*the wind is howling*");
   enemyMenuSelections: MenuSelections  = new MenuSelections("woof");
 
-  // spell vars
-  chargeMultiplier = 1;
-  zantetsukenMultiplier = 3.5;
-  jankenboThrow?: JankenboThrow = null;
+  enemyCursorIdx = 0;
 
   constructor(enemies: Enemy[], allies: Allies) {
     this.enemies = enemies;
@@ -71,12 +81,8 @@ export class BattleStore {
     makeAutoObservable(this);
   }
 
-  setChargeMultipler(chargeMultiplier: number): void {
-    this.chargeMultiplier = chargeMultiplier;
-  }
-
-  setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
-    this.zantetsukenMultiplier = zantetsukenMultiplier;
+  setEnemyCursorIdx(enemyCursorIdx: number) {
+    this.enemyCursorIdx = enemyCursorIdx;
   }
 
   tickStats(delta: number): void {

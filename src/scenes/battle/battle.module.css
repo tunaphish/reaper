@@ -208,3 +208,22 @@ meter {
 .magicCost {
   text-shadow: 3px 2px 2px rgba(251, 12, 12,1), 0px -1px 3px rgba(12, 79, 251,.5),-3px 0px 2px rgba(52, 251, 12, 1);
 }
+
+.unclickable {
+  pointer-events: none;
+}
+
+.cursor::before {
+  content: "";
+  position: absolute;
+  border-top: 10px solid transparent;
+  border-left: 10px solid;
+  border-bottom:10px solid transparent;
+  opacity: 0;
+  left: -5px;
+  animation: .5s steps(1,end) infinite blink-animation;
+}
+
+@keyframes blink-animation {
+  50% { opacity: 1; }
+}

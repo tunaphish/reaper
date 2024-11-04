@@ -13,6 +13,7 @@ import * as Spells from '../../data/spells';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { MenuSelections } from './BattleStore';
+import { toJS } from 'mobx';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -70,12 +71,13 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 });
 
 
-const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Battle, menuSelection: MenuSelections }) => {
+const MenuView = observer((props: {menuContent: MenuContent, idx: number, battleScene: Battle, menuSelection: MenuSelections, isEnemy: boolean }) => {
   const Zantetsuken = observer(() => {
     return (
         props.idx === 0 && 
+        props.menuSelection.caster && 
         props.menuSelection.caster.activeSpells.find(activeSpell => activeSpell.name === Spells.ZANTETSUKEN.name) &&
-        <div className={styles.menu}>ZANTETSUKEN {props.battleScene.battleStore.zantetsukenMultiplier.toFixed(2)}X</div>
+        <div className={styles.menu}>ZANTETSUKEN {props.menuSelection.zantetsukenMultiplier.toFixed(2)}X</div>
     )
   });
   
@@ -127,71 +129,76 @@ const MenuView = (props: {menuContent: MenuContent, idx: number, battleScene: Ba
             onMouseUp={onChargeEnd}
             onTouchStart={onChargeStart} 
             onTouchEnd={onChargeEnd}>
-              CHARGE!!! {props.battleScene.battleStore.chargeMultiplier.toFixed(2)}X
+              CHARGE!!! {props.menuSelection.chargeMultiplier.toFixed(2)}X
         </button>
     )
   });
 
-  const RIGHT_OFFSET = 50;
-  const BOTTOM_OFFSET = 150;
-  const style: React.CSSProperties = {
-    right: 30 * (props.idx - 1) + RIGHT_OFFSET + 'px',
-    bottom: 30 * (props.idx - 1) + BOTTOM_OFFSET + 'px',
+  const HORIZONTAL_OFFSET = 50;
+  const VERTICAL_OFFSET = 150;
+  const style: React.CSSProperties = props.isEnemy ?
+  {
+    left: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
+    top: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
   }
-    return (
-        <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
-          <div className={styles.window} 
-            style={{ 
-              minWidth: "100px",
-              width:" 100%",
-            }}
-          >
-          <div className={styles.windowName}>{props.menuContent.name}</div>
-          <div className={styles.menuContent}>
-            {
-              props.menuContent.type === OptionType.FOLDER && 
-              props.menuContent.options.map((option: MenuOption) => {
-                const onClickOption = () => props.battleScene.selectOption(option);
-                        
-                return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-  
-                  <div>{option.name}</div>
-                  { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-                  { option.type === OptionType.SPELL && (
-                      <>
-                        <input type="checkbox" checked={!!props.menuSelection.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-                        <div className={styles.magicCost}>{option.magicCost}</div>
-                      </>
-                    )
-                  }
-                  { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-                </button>
-                )
-              })
-            }
-            {
-              props.menuContent.name === Spells.CHARGE.name && <Charge />
-            }
-            {
-              props.menuContent.name === Spells.JANKENBO.name && <Jankenbo />
-            }
-            {
-              props.menuContent.name === Spells.CLEAVE.name && <Cleave />
-            }
-          </div>
-          </div>
+  : {
+    right: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
+    bottom: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
+  }
+  return (
+      <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
+        <div className={styles.window} 
+          style={{ 
+            minWidth: "100px",
+            width:" 100%",
+          }}
+        >
+        <div className={styles.windowName}>{props.menuContent.name}</div>
+        <div className={styles.menuContent}>
+          {
+            props.menuContent.type === OptionType.FOLDER && 
+            props.menuContent.options.map((option: MenuOption, index: number) => {
+              const onClickOption = () => props.battleScene.selectOption(option, props.menuSelection);
+              const classes = [
+                styles.menuOption,
+                props.idx === props.menuSelection.menus.length-1 && props.isEnemy && index === props.battleScene.battleStore.enemyCursorIdx ? styles.cursor : '',
+              ]
+              return ( <button key={option.name} onClick={onClickOption} className={classes.join(' ')} disabled={option.type === OptionType.ITEM && option.charges === 0}>
 
-        <Zantetsuken />
-      </div>
+                <div>{option.name}</div>
+                { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+                { option.type === OptionType.SPELL && (
+                    <>
+                      <input type="checkbox" checked={!!props.menuSelection?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                      <div className={styles.magicCost}>{option.magicCost}</div>
+                    </>
+                  )
+                }
+                { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+              </button>
+              )
+            })
+          }
+          {
+            props.menuContent.name === Spells.CHARGE.name && <Charge />
+          }
+          {
+            props.menuContent.name === Spells.JANKENBO.name && <Jankenbo />
+          }
+          {
+            props.menuContent.name === Spells.CLEAVE.name && <Cleave />
+          }
+        </div>
+        </div>
 
-    );    
+      <Zantetsuken />
+    </div>
+
+  );    
+});
 
 
-
-}
-
-
-const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Battle }) => {
+const MenuContainer = observer((props: { battleScene: Battle, menuSelections: MenuSelections, isEnemy: boolean }) => {
   const onClickModalContainer = () => {
     props.battleScene.closeMenu();
   }
@@ -205,12 +212,12 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
   }
 
   return (
-    <div className={styles.menuViewsContainer}>
+    <div className={ props.isEnemy ? styles.unclickable : ''}>
         {
-          props.menus.map((menu, idx) => {
+          props.menuSelections.menus.map((menu, idx) => {
           return (
             <motion.div 
-              custom={{idx, total: props.menus.length}}
+              custom={{idx, total: props.menuSelections.menus.length}}
               className={styles.modalContainer} 
               onClick={onClickModalContainer}
               variants={variants}
@@ -220,7 +227,7 @@ const MenuContainer = observer((props: { menus: MenuContent[], battleScene: Batt
               key={idx}
               style={{ zIndex: 10 * (idx + 1) }}
             >
-            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene} menuSelection={props.battleScene.battleStore.allyMenuSelections}/>
+            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene} menuSelection={props.menuSelections} isEnemy={props.isEnemy}/>
           </motion.div>        
           )
           })
@@ -324,6 +331,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
+          <MenuContainer battleScene={props.scene} menuSelections={props.scene.battleStore.enemyMenuSelections} isEnemy={true}/>
           <div className={styles.alliesBar}>
             {enemies.map((enemy) => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
@@ -337,7 +345,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
               })}
           </div>
-          <MenuContainer menus={props.scene.battleStore.allyMenuSelections.menus} battleScene={props.scene}/>
+          <MenuContainer battleScene={props.scene} menuSelections={props.scene.battleStore.allyMenuSelections} isEnemy={false}/>
         </div>
       )
 });

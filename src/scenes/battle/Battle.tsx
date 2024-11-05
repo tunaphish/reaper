@@ -82,7 +82,7 @@ export class Battle extends Phaser.Scene {
       this.scene.manager.getScenes(false).forEach(scene => {
         this.scene.stop(scene.scene.key);  
       });
-      this.scene.start('MainMenu');
+      this.scene.start('GameOver');
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
       this.music.stop();
@@ -157,7 +157,7 @@ export class Battle extends Phaser.Scene {
         this.queueAction(this.battleStore.enemyMenuSelections);
         this.timeSinceLastNavigation = 0;
         this.battleStore.enemyCursorIdx = 0;
-      } else if (this.timeSinceLastNavigation > 500) {
+      } else if (this.timeSinceLastNavigation > 750) {
         const currentMenu: MenuContent = this.battleStore.enemyMenuSelections.menus[this.battleStore.enemyMenuSelections.menus.length - 1];
         const currentMenuOption: Option = (currentMenu as Folder).options[this.battleStore.enemyCursorIdx];
         if (this.enemyNavigationQueue[0].name === currentMenuOption.name) {

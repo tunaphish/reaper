@@ -5,5 +5,6 @@ import { Dialogue } from './dialogue/Dialogue';
 import { Battle } from './battle/Battle';
 import { PauseMenu } from './pause-menu/PauseMenu';
 import { DialogueList } from './dialogue-list/DialogueList';
+import { GameOver } from './game-over/GameOver'
 
-export default [Boot, MainMenu, World, PauseMenu, Dialogue, DialogueList, Battle];  
+export default [Boot, MainMenu, World, PauseMenu, Dialogue, DialogueList, Battle, GameOver];  

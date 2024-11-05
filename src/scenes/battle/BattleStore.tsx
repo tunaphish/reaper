@@ -91,7 +91,7 @@ export class BattleStore {
 
       if (combatant.status === Status.DEAD) return;
       if (combatant.bleed > 0) {
-        const DAMAGE_TICK_RATE = (delta / 1000) * 10;
+        const DAMAGE_TICK_RATE = (delta / 1000) * 5;
         combatant.bleed -= DAMAGE_TICK_RATE;
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }

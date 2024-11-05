@@ -1,0 +1,17 @@
+.title {
+  font-size: 32px;
+  letter-spacing: 2.5px;
+  text-align: center;
+  margin: 10px;
+  margin-top: 24px;
+}
+
+.mainMenuButton {
+  letter-spacing: 2.5px;
+  text-align: center;
+  margin: 10px;
+}
+
+.mainMenuButton:hover {
+  color: yellow;
+}

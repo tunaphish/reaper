@@ -9,9 +9,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'MainMenu',
 };
 
-/**
- * The initial scene that starts, shows the splash screens, and loads the necessary assets.
- */
 export class MainMenu extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private choiceSelectSound: Phaser.Sound.BaseSound;

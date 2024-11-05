@@ -120,6 +120,9 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
       this.music.stop();
       this.scene.stop();
+      this.battleStore.allies.forEach((ally) => {
+        ally.health = Math.ceil(ally.health);
+      })
       this.registry.set('allies', this.battleStore.allies);
       this.scene.resume('World', { allies: this.battleStore.allies });
     }

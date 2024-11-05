@@ -1,27 +1,65 @@
-
-.navigation {
-    flex: 1;
+.menuContainer {
     display: flex;
+    flex-direction: column;
+
     height: 100%;
     width: 100%;
-    flex-direction: row;
+    padding: 5px;
     pointer-events: none !important;
+
+}
+
+.menuContent {
+    flex: 1;
+}
+
+.window {
+    border: 1px solid white;
+    background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    border-radius: 3px;
+}
+
+.partyContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 5px;
+}
+
+.abilitiesContainer {
+    flex: 1;
+}
+
+.ally {
+    flex: 1;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
     align-items: flex-end;
+
+    border: 1px solid white;
+    background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+    border-radius: 3px;
 }
 
 .navigation > * {
     pointer-events: auto;
+    display: flex;
 }
 
 .navigationButton {
-    width: 100px;
     height: 100px;
-    border: 1px solid white;
-    background-color: black;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    margin: 5px;
 }

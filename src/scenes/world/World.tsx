@@ -16,13 +16,15 @@ export class World extends Phaser.Scene {
   private player: Player;
   ui: UiOverlayPlugin;
   allies: Ally[];
-  private choiceSelectSound: Phaser.Sound.BaseSound;
+  choiceSelectSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(sceneConfig);
   }
 
   create(): void {
+    this.allies = this.registry.get('allies');
+
     this.choiceSelectSound = this.sound.add('choice-select');
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
@@ -48,13 +50,25 @@ export class World extends Phaser.Scene {
 
   pause(): void {
     this.choiceSelectSound.play();
-    this.scene.pause();
-    this.scene.run('PauseMenu');
+    this.scene.pause('World');
+  }
+
+  unpause(): void {
+    this.choiceSelectSound.play();
+    this.scene.resume('World');
   }
 
   battle(): void {
     this.choiceSelectSound.play();
     this.scene.pause();
-    this.scene.run('Battle', { enemies: [healieBoi], allies: this.allies});
+    this.scene.run('Battle', { enemies: [healieBoi] });
   }
+
+  world(): void {
+    this.choiceSelectSound.play();
+    this.scene.manager.getScenes(false).forEach(scene => {
+      this.scene.stop(scene.scene.key);  
+    });
+    this.scene.start('MainMenu');
+  };
 }

@@ -76,7 +76,40 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     if (!this.battleStarted) return;
+    this.battleStore.tickStats(delta);
+    this.battleStore.updateCombatantsState();
+    this.checkBattleEndConditions();
+    this.queueAllyActions();    
 
+    this.selectEnemyBehaviorAndSetEnemyCaster(delta);
+    this.navigateEnemyMenu(delta);
+    this.executeCombatantActions();
+    this.resetDeadAllyCasterMenu();
+    
+    this.modifyCasterMultiplier(delta);
+    this.executeDeferredActions(delta);
+  }
+
+  modifyCasterMultiplier(delta: number): void {
+    const CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING = 1;
+    if (this.battleStore.allyMenuSelections.caster && this.battleStore.allyMenuSelections.caster.status === Status.CHARGING) {
+      this.battleStore.allyMenuSelections.setChargeMultipler(this.battleStore.allyMenuSelections.chargeMultiplier + CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
+    }
+    const ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING = 1;
+    if (this.battleStore.allyMenuSelections.caster && this.battleStore.allyMenuSelections.caster.activeSpells.find(isSameOption(Spells.ZANTETSUKEN))) {
+      const zantetsukenMultiplier = Math.max(.5, this.battleStore.allyMenuSelections.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
+      this.battleStore.allyMenuSelections.setZantetsukenMultiplier(zantetsukenMultiplier);
+    }
+  }
+
+  resetDeadAllyCasterMenu(): void {
+    if (this.battleStore.allyMenuSelections.caster && this.battleStore?.allyMenuSelections.caster.status === Status.DEAD) {
+      this.battleStore.allyMenuSelections.setCaster(null);
+      this.battleStore.allyMenuSelections.emptyMenu();
+    }
+  }
+
+  checkBattleEndConditions(): void {
     if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
       this.music.stop();
       this.scene.manager.getScenes(false).forEach(scene => {
@@ -90,7 +123,9 @@ export class Battle extends Phaser.Scene {
       this.registry.set('allies', this.battleStore.allies);
       this.scene.resume('World', { allies: this.battleStore.allies });
     }
+  }
 
+  queueAllyActions(): void {
     if (this.battleStore.allyMenuSelections.caster && 
       this.battleStore.allyMenuSelections.executable && 
       this.battleStore.allyMenuSelections.target &&
@@ -98,31 +133,69 @@ export class Battle extends Phaser.Scene {
     ) {
       this.queueAction(this.battleStore.allyMenuSelections); 
     }
+  }
 
+  executeCombatantActions(): void {
     this.battleStore.getCombatants().forEach(combatant => {
       if (combatant.status === Status.ATTACKING && combatant.timeInStateInMs > ATTACK_WINDOW_TIME_IN_MS) {
         combatant.status = Status.EXECUTING;
         this.execute(combatant);
       }
     })
+  }
 
-    this.battleStore.tickStats(delta);
-    this.battleStore.updateCombatantsState();
-    if (this.battleStore.allyMenuSelections.caster && this.battleStore?.allyMenuSelections.caster.status === Status.DEAD) {
-        this.battleStore.allyMenuSelections.setCaster(null);
-        this.battleStore.allyMenuSelections.emptyMenu();
+  selectEnemyBehaviorAndSetEnemyCaster(delta: number): void {
+    this.lastCalculation += delta;
+    if (this.lastCalculation < 1000 || this.battleStore.enemyMenuSelections.caster) {
+      return;
     }
 
-    const CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING = 1;
-    if (this.battleStore.allyMenuSelections.caster && this.battleStore.allyMenuSelections.caster.status === Status.CHARGING) {
-      this.battleStore.allyMenuSelections.setChargeMultipler(this.battleStore.allyMenuSelections.chargeMultiplier + CHARGE_MULTIPLIER_GAIN_PERSECOND_WHILE_CHARGING * (delta/1000));
-    }
-    const ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING = 1;
-    if (this.battleStore.allyMenuSelections.caster && this.battleStore.allyMenuSelections.caster.activeSpells.find(isSameOption(Spells.ZANTETSUKEN))) {
-      const zantetsukenMultiplier = Math.max(.5, this.battleStore.allyMenuSelections.zantetsukenMultiplier - (ZANTETSUKEN_MULTIPLIER_LOSS_PERSECOND_WHILE_CHARGING*(delta/1000)))
-      this.battleStore.allyMenuSelections.setZantetsukenMultiplier(zantetsukenMultiplier);
-    }
+    this.lastCalculation = 0;
+    for (const enemy of this.battleStore.enemies.filter((enemy) => enemy.status === Status.NORMAL)) {
+      for (const behavior of enemy.behaviors) {
+        const probability = behavior.getProbability(enemy, this);
+        if (Math.random() > probability) {
+          this.battleStore.enemyMenuSelections.setCaster(enemy);
+          this.battleStore.enemyMenuSelections.menus.push(enemy.folder);
+          this.sound.play('choice-select');
+          this.battleStore.enemyMenuSelections.setText(getRandomItem<string>(behavior.dialoguePool));
+          this.enemyNavigationQueue = [...behavior.option, behavior.getTarget(this)];
+          return;
+        }
+      }
+    }  
+  }
 
+  navigateEnemyMenu(delta: number): void {
+    if (!this.battleStore.enemyMenuSelections.caster) return;
+
+    if (this.enemyNavigationQueue.length === 0) {
+      this.queueAction(this.battleStore.enemyMenuSelections);
+      this.timeSinceLastNavigation = 0;
+      this.battleStore.enemyCursorIdx = 0;
+      return;
+    } 
+
+    this.timeSinceLastNavigation += delta;
+    if (this.timeSinceLastNavigation < 750) {
+      return;
+    } 
+
+    this.timeSinceLastNavigation = 0;
+    const currentMenu: MenuContent = this.battleStore.enemyMenuSelections.menus[this.battleStore.enemyMenuSelections.menus.length - 1];
+    const currentMenuOption: Option = (currentMenu as Folder).options[this.battleStore.enemyCursorIdx];
+    if (this.enemyNavigationQueue[0].name === currentMenuOption.name) {
+      this.selectOption((currentMenuOption as MenuOption), this.battleStore.enemyMenuSelections);
+      this.battleStore.enemyCursorIdx = 0;
+      this.enemyNavigationQueue.shift();
+      return;
+    } 
+
+    this.battleStore.setEnemyCursorIdx(this.battleStore.enemyCursorIdx+1);
+    this.sound.play('choice-hover');
+  }
+
+  executeDeferredActions(delta: number): void {
     this.deferredActions = this.deferredActions.map(({executeAction, timeTilExecute}) => {
       if (timeTilExecute - delta <= 0) {
         executeAction()
@@ -133,47 +206,6 @@ export class Battle extends Phaser.Scene {
         timeTilExecute: timeTilExecute - delta,
       }
     }).filter(deferredAction => (deferredAction.timeTilExecute > 0));
-
-    // enemy AI
-    this.lastCalculation += delta;
-    if (this.lastCalculation > 1000 && !this.battleStore.enemyMenuSelections.caster) {
-      this.lastCalculation = 0;
-      for (const enemy of this.battleStore.enemies.filter((enemy) => enemy.status === Status.NORMAL)) {
-        for (const behavior of enemy.behaviors) {
-          const probability = behavior.getProbability(enemy, this);
-          if (Math.random() > probability) {
-            this.battleStore.enemyMenuSelections.setCaster(enemy);
-            this.battleStore.enemyMenuSelections.menus.push(enemy.folder);
-            this.sound.play('choice-select');
-            this.battleStore.enemyMenuSelections.setText(getRandomItem<string>(behavior.dialoguePool));
-            this.enemyNavigationQueue = [...behavior.option, behavior.getTarget(this)];
-          }
-        }
-      }
-    }
-
-    if (this.battleStore.enemyMenuSelections.caster) {
-      if (this.enemyNavigationQueue.length === 0) {
-        this.queueAction(this.battleStore.enemyMenuSelections);
-        this.timeSinceLastNavigation = 0;
-        this.battleStore.enemyCursorIdx = 0;
-      } else if (this.timeSinceLastNavigation > 750) {
-        const currentMenu: MenuContent = this.battleStore.enemyMenuSelections.menus[this.battleStore.enemyMenuSelections.menus.length - 1];
-        const currentMenuOption: Option = (currentMenu as Folder).options[this.battleStore.enemyCursorIdx];
-        if (this.enemyNavigationQueue[0].name === currentMenuOption.name) {
-          this.selectOption((currentMenuOption as MenuOption), this.battleStore.enemyMenuSelections);
-          this.battleStore.enemyCursorIdx = 0;
-          this.enemyNavigationQueue.shift();
-        } else {
-          this.battleStore.setEnemyCursorIdx(this.battleStore.enemyCursorIdx+1);
-          this.sound.play('choice-hover');
-        }
-        
-        this.timeSinceLastNavigation = 0;
-      } else {
-        this.timeSinceLastNavigation += delta
-      }
-    }
   }
 
   queueAction(menuSelection: MenuSelections): void{

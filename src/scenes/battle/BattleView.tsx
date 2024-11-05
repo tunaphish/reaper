@@ -116,10 +116,10 @@ const MenuView = observer((props: {menuContent: MenuContent, idx: number, battle
 
   const Charge = observer(() => {
     const onChargeStart = () => {
-      props.battleScene.setCasterCharging();
+      props.battleScene.setCasterStatus(Status.CHARGING);
     }
     const onChargeEnd = () => {
-      props.battleScene.setCasterNormal();
+      props.battleScene.setCasterStatus(Status.NORMAL);
       props.battleScene.advanceSpell();
     }
 

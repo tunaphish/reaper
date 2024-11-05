@@ -224,12 +224,8 @@ export class Battle extends Phaser.Scene {
     menuSelection.resetSelections();
   }
 
-  setCasterCharging(): void {
-    this.battleStore.allyMenuSelections.caster.status = Status.CHARGING;
-  }
-
-  setCasterNormal(): void {
-    this.battleStore.allyMenuSelections.caster.status = Status.NORMAL;
+  setCasterStatus(status: Status): void {
+    this.battleStore.allyMenuSelections.caster.status = status;
   }
 
   execute(combatant: Combatant): void {

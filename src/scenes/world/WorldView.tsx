@@ -9,12 +9,12 @@ const Party = (props: { scene: World }) => {
       <div className={styles.abilitiesContainer}>
         <div>abilities placeholder</div>
       </div>
-      <div className={styles.window}>desc placeholder</div>
-      <div className={styles.window} style={{ display: 'flex', justifyContent: 'space-around' }}>
+      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
+      <div className={styles.window} style={{ display: 'flex', justifyContent: 'space-around', padding: '5px' }}>
         {props.scene.allies.map((ally) => {
           return (
             <div className={styles.ally} key={ally.name}>
-              <div>pic</div>
+              <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
               <div>{ally.name}</div>
               <div>HP {ally.health}/{ally.maxHealth}</div>
               <div>MP {ally.magic}/{ally.maxMagic}</div>
@@ -40,6 +40,7 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
 
   const onMenuClick = () => {
     props.scene.allies = props.scene.registry.get('allies'); // allies gets set after battle.
+
     setMenuOpen(!menuOpen);
     props.scene.pause();
     setMenuContent(<Party scene={props.scene}/>);

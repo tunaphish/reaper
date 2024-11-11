@@ -38,6 +38,8 @@ export const Eji: Ally = {
   timeInStateInMs: 0,
   
   jankenboThrow: JankenboBehaviors.cycle,
+
+  menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
 };
 
 
@@ -51,7 +53,7 @@ const keshiFolder: Folder = {
 export const Keshi: Ally = {
   type: OptionType.ALLY,
   activeSpells: [],
-  name: 'Barrett',
+  name: 'Barret',
   health: 100,
   maxHealth: 100,
   bleed: 0,
@@ -69,6 +71,8 @@ export const Keshi: Ally = {
   timeInStateInMs: 0,
   
   jankenboThrow: JankenboBehaviors.random,
+
+  menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
 };
 
 const eliseFolder: Folder = {
@@ -99,6 +103,8 @@ export const Elise: Ally = {
   timeInStateInMs: 0,
 
   jankenboThrow: JankenboBehaviors.alwaysRock,
+
+  menuPortraitPath: '/reaper/assets/characters/menu/tifa.png',
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Elise];

@@ -22,11 +22,19 @@
     border-radius: 3px;
 }
 
-.partyContainer {
+.partyContainer, .inventoryContainer {
     display: flex;
     flex-direction: column;
     height: 100%;
     padding-bottom: 5px;
+}
+
+.item {
+    all: unset;
+}
+
+.item:disabled {
+    color: gray;
 }
 
 .abilitiesContainer {

@@ -12,4 +12,5 @@ export type Item = Option & {
     charges: number;
     maxCharges: number;
     castTimeInMs: number;
+    canUseOutsideBattle: boolean;
 }

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import styles from './boot.module.css';
 import UiOverlayPlugin from '../UiOverlayPlugin';
 import { DefaultAllies } from '../../data/allies';
+import { DEFAULT_INVENTORY } from '../../data/items';
 
 const SCENE_TO_START = 'World';
 
@@ -22,6 +23,7 @@ export class Boot extends Phaser.Scene {
 
   public preload(): void {
     this.registry.set('allies', DefaultAllies);
+    this.registry.set('inventory', DEFAULT_INVENTORY)
 
     const Ui = () => {
       const [percent, setPercent] = React.useState<number>(0);

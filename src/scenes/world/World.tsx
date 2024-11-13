@@ -5,6 +5,7 @@ import { WorldView } from './WorldView';
 import { healieBoi } from '../../data/enemies';
 
 import { Ally } from '../../model/ally';
+import { Inventory } from '../../model/inventory';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,8 +16,11 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class World extends Phaser.Scene {
   private player: Player;
   ui: UiOverlayPlugin;
-  allies: Ally[];
+
   choiceSelectSound: Phaser.Sound.BaseSound;
+
+  allies: Ally[];
+  inventory: Inventory
 
   constructor() {
     super(sceneConfig);
@@ -24,6 +28,7 @@ export class World extends Phaser.Scene {
 
   create(): void {
     this.allies = this.registry.get('allies');
+    this.inventory = this.registry.get('inventory');
 
     this.choiceSelectSound = this.sound.add('choice-select');
     const map = this.make.tilemap({ key: 'map' });

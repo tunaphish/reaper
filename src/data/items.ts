@@ -1,7 +1,7 @@
 import { Item } from "../model/item";
 import { OptionType } from "../model/option";
 import { TargetType } from '../model/targetType';
-import { updateHealth, updateStamina } from '../model/combatant';
+import { updateHealth } from '../model/combatant';
 
 import { updateDamage } from '../model/combatant';
 
@@ -15,9 +15,10 @@ export const bomb: Item = {
   execute: (target, source) => {
     updateDamage(target, 50);
   },
-  charges: 0,
+  charges: 1,
   maxCharges: 3,
   castTimeInMs: 250,
+  canUseOutsideBattle: false,
 };
 
 export const potion: Item = {
@@ -33,4 +34,7 @@ export const potion: Item = {
   charges: 3,
   maxCharges: 3,
   castTimeInMs: 250,
+  canUseOutsideBattle: true,
 };
+
+export const DEFAULT_INVENTORY = [bomb, potion];

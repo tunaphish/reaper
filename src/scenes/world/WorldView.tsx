@@ -3,33 +3,53 @@ import { motion } from 'framer-motion';
 import styles from './world.module.css';
 import { World } from './World';
 
+const PartyWindow = (props: { scene: World }) => {
+  return (
+    <div className={styles.window} style={{ display: 'flex', justifyContent: 'space-around', padding: '5px' }}>
+      {props.scene.allies.map((ally) => {
+        return (
+          <div className={styles.ally} key={ally.name}>
+            <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
+            <div>{ally.name}</div>
+            <div>HP {ally.health}/{ally.maxHealth}</div>
+            <div>MP {ally.magic}/{ally.maxMagic}</div>
+          </div>
+        )
+      })}
+    </div>
+   )
+}
+
 const Party = (props: { scene: World }) => {
   return (
     <div className={styles.partyContainer}>
+      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
       <div className={styles.abilitiesContainer}>
         <div>abilities placeholder</div>
       </div>
-      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
-      <div className={styles.window} style={{ display: 'flex', justifyContent: 'space-around', padding: '5px' }}>
-        {props.scene.allies.map((ally) => {
-          return (
-            <div className={styles.ally} key={ally.name}>
-              <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
-              <div>{ally.name}</div>
-              <div>HP {ally.health}/{ally.maxHealth}</div>
-              <div>MP {ally.magic}/{ally.maxMagic}</div>
-            </div>
-          )
-        })}
-      </div>
+      <PartyWindow scene={props.scene} />
     </div>
    )
 }
 
 const Inventory = (props: { scene: World }) => {
   return (
-    <div>
-      Inventory Placeholder
+    <div className={styles.inventoryContainer}>
+      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
+      <PartyWindow scene={props.scene} />
+      <div className={styles.window} style={{ flex: 1, padding: '5px', marginTop: '5px' }}>
+        {
+          props.scene.inventory.map(item => {
+            return (
+              <div key={item.name}>
+                <button className={styles.item} disabled={!item.canUseOutsideBattle || item.charges === 0}>
+                  { `${item.name} ${item.charges}/${item.maxCharges}` }
+                </button>
+              </div>
+            )
+          })
+        }
+      </div>
     </div>
    )
 }
@@ -57,6 +77,7 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
   }
 
   const onExitClick = () => {
+    props.scene.choiceSelectSound.play();
     setMenuOpen(!menuOpen);
     setMenuContent(null);
     props.scene.unpause();

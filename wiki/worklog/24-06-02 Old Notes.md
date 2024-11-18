@@ -462,3 +462,95 @@ disgust - increase ticks (hard to convey)
 # Cast Effects
 - slow, haste, stop
 - Flash - Dodge Attack
+
+# Emotions
+- update to have effects 
+- potency?
+- Anger - shaky text
+	- stat changes
+- anxiety - drain stamina
+- confusion - mixes up menu
+- doubt - yes or no menu
+- excited - auto attacks if stamina too high
+- panic - loaders
+- petrified - frozen menus
+
+- Increase stamina refill rate
+- Increase max stamina (for longer combos?)
+- depressed - increase cast time, lower sp regen
+- euphoria - decrease cast time, increase sp regen
+- bewildered - mix letters
+- high confusion - mix options between multiple menus
+- regret - increase cost of last used option
+- blur the bg when navigating menus
+- Mirror sensations 
+- Stamina refunds
+- Analog Horror Emotion in Menu - regreet
+	- DO NOT ENGAGE
+	- DO NOT ENGAGE
+	- DO NOT ENGAGE
+	- DO NOT **ENGAGE**
+
+# Dropped Mechanic - Curses and Covenants
+- Design
+
+## Design
+
+- Potency
+    - consider covenant and curse potency (can scale via combos)
+        - shields can scale, heals can scale
+    - if curses have potency then you can recast... you don't really need to have such uniqueness?
+        - that way there's no overlap in restrictions?
+- Covenant
+	- Positive Power
+	- Additional Restrictions
+- Curse 
+	- Maybe positive triggers aren't known and have to be discovered
+    - Negative Passive
+    - Positive Trigger,
+    - Examples
+        - Vow Effect -> Replace counters with chained move...
+        - Final attack - drain health, chained move on death + aoe efect
+        - Can act while exahusted
+    
+
+- Trigger Ideation    
+    - Death
+    - Counter
+    - Kill
+    - Chase - on Attack
+    - Block - on block
+    - On Enter
+    - Some of these were states before.... like counter.
+    - On status, on vow, on restriction violation
+    - on heal
+    - on combo
+    - on timer?
+- Negative Triggers, Positive buffs
+    - on full stamina (excited) character just attacks and break vow or else you lose double the stamina you gained. hunter's devotion.
+        - this should be the new covenant actually. increased stamina regen but don't let it top out.
+    - on shield removal (powerful buff), slowed shield decay
+    - slow bleed, must always bleed, dealt damage -> beserker's vow (makes it easier?)
+- Assassin Vow. Target lowest health combatant. Additional damage.
+- Berserker Vow. Increased damage. Vow is to attack the highest health combatant. Otherwise debuffs damage. And then when your people have higher health you turn off the vow.
+- Hunter's Mark - Curse that lowers stamina regeneration
+
+# Spell Modifier Magic Syste
+- progression magic - must do more damage?
+- single use
+- Form Progression = Stance Progression
+- Tabs = stances (calm stance vs wrath stance)
+- Type Target
+    - Attack is more powerful (but you have to type name of target)
+- Spam Button
+- magic unlock new options
+- Magic combinations unexpected effects 
+- Magic can target
+- Continuously surprise
+- magic switches target and action order
+
+# Dropped Mechanic - Vows
+- Inquisitor - Vow Killer
+    - Must have broken a vow
+- Sovereign - Flagbearer (Makes Vows that Buff their Allies)
+    - Vow of Pacifist - I will not attack my enemies, strengthens attack of allies. Breaking this vow means debuffing ally attacks.

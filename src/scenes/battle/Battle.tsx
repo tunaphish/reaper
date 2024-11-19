@@ -146,19 +146,19 @@ export class Battle extends Phaser.Scene {
     }
 
     this.lastCalculation = 0;
-    for (const enemy of this.battleStore.enemies.filter((enemy) => enemy.status === Status.NORMAL)) {
-      for (const behavior of enemy.behaviors) {
-        const probability = behavior.getProbability(enemy, this);
-        if (Math.random() > probability) {
-          this.battleStore.enemyMenuSelections.setCaster(enemy);
-          this.battleStore.enemyMenuSelections.menus.push(enemy.folder);
-          this.sound.play('choice-select');
-          this.battleStore.enemyMenuSelections.setText(getRandomItem<string>(behavior.dialoguePool));
-          this.enemyNavigationQueue = [...behavior.option, behavior.getTarget(this)];
-          return;
-        }
-      }
-    }  
+    this.battleStore.enemies
+      .filter((enemy) => enemy.status === Status.NORMAL)
+      .forEach(enemy => {
+        const selectedBehavior = enemy.behaviors.find(behavior => Math.random() > behavior.getProbability(enemy, this));
+        // bug with multiple enemies
+        if (!selectedBehavior) return;
+        this.battleStore.enemyMenuSelections.setCaster(enemy);
+        this.battleStore.enemyMenuSelections.menus.push(enemy.folder);
+        this.sound.play('choice-select');
+        this.battleStore.enemyMenuSelections.setText(getRandomItem<string>(selectedBehavior.dialoguePool));
+        this.enemyNavigationQueue = [...selectedBehavior.option, selectedBehavior.getTarget(this)];
+        return;
+      });
   }
 
   navigateEnemyMenu(delta: number): void {
@@ -226,6 +226,11 @@ export class Battle extends Phaser.Scene {
       combatant.queuedOption.execute(combatant.queuedTarget, combatant);
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
+
+    else if (combatant.queuedOption.type === OptionType.SPELL) {
+      toggleActiveSpell(combatant, combatant.queuedOption);
+      this.sound.play(combatant.queuedOption.soundKeyName);
+    }
     
     else if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
@@ -263,11 +268,6 @@ export class Battle extends Phaser.Scene {
       });
 
       this.deferredActions = this.deferredActions.concat(newDeferredActions);
-    }
-    
-    else if (combatant.queuedOption.type === OptionType.SPELL) {
-      toggleActiveSpell(combatant, combatant.queuedOption);
-      this.sound.play(combatant.queuedOption.soundKeyName);
     }
     
     resetCombatantBattleState(combatant);

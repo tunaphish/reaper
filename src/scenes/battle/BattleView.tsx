@@ -28,17 +28,43 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
-  // const actionsDirectedAtCombatant = props.battleScene.deferredActions.filter(action => {
-  //   action.target.name
-  // })
+  const actionsDirectedAtCombatant = props.battleScene.deferredActions.filter(action => action.target.name === props.combatant.name);
 
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', top: '-5px', left: '-5px' }}>
-        <div className={styles.window} style={{ padding: 5 }}>
-          attack
-        </div>
-      </div>
+      {
+        actionsDirectedAtCombatant.map((action, idx) => {
+          const style: React.CSSProperties = {
+            position: 'absolute', 
+            top:  `${-10*(idx+1)}px`, 
+            left: `${-5*(idx+1)}px`
+          }
+          return (
+            <div key={idx}>
+              <div style={style}>
+                <motion.div 
+                  className={styles.window} 
+                  style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr" }}
+                  initial={{ scaleY: 0 }} 
+                  animate={{ scaleY: 1 }} 
+                  exit={{ scaleY: 0 }}
+                  transition={{ duration: .1, ease: 'easeOut' }} 
+                >
+                  <motion.div 
+                    className={styles.actionWindow}
+                    animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
+                    transition={{ duration: 0 }}
+                  />
+                  <div style={{ padding: 5, gridColumn: 1, gridRow: 1 }}>
+                    {action.action.name}
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          )
+        })
+      }
+
       <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}
         style={{ 
           aspectRatio: 1, 

@@ -14,7 +14,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.block, Folders.thief, Folders.fencer],
+  options: [Actions.attack, Actions.block, Folders.fencer],
 }
 
 export const Eji: Ally = {

@@ -6,7 +6,7 @@ import UiOverlayPlugin from '../UiOverlayPlugin';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'World';
+const SCENE_TO_START = 'Battle';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

@@ -35,9 +35,7 @@ export interface DialogueTrigger {
 
 export type Executable = Action | Item | Spell;
 
-const ATTACK_WINDOW_TIME_IN_MS = 500;
-
-type DeferredAction = { executeAction: () => void, timeTilExecute: number }
+type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant, potency: number }
 export class Battle extends Phaser.Scene {
   private ui: UiOverlayPlugin;
   private music: Phaser.Sound.BaseSound;
@@ -81,8 +79,8 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.queueAllyActions();    
 
-    this.selectEnemyBehaviorAndSetEnemyCaster(delta);
-    this.navigateEnemyMenu(delta);
+    // this.selectEnemyBehaviorAndSetEnemyCaster(delta);
+    // this.navigateEnemyMenu(delta);
     this.executeCombatantActions();
     this.resetDeadAllyCasterMenu();
     
@@ -112,17 +110,14 @@ export class Battle extends Phaser.Scene {
   checkBattleEndConditions(): void {
     if (this.battleStore.allies.every((member) => member.status === Status.DEAD)) {
       this.music.stop();
-      this.scene.manager.getScenes(false).forEach(scene => {
-        this.scene.stop(scene.scene.key);  
-      });
+      this.scene.manager.getScenes(false).forEach(scene => this.scene.stop(scene.scene.key));
       this.scene.start('GameOver');
+      return;
     }
     if (this.battleStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
       this.music.stop();
       this.scene.stop();
-      this.battleStore.allies.forEach((ally) => {
-        ally.health = Math.ceil(ally.health);
-      })
+      this.battleStore.allies.forEach((ally) => ally.health = Math.ceil(ally.health));
       this.registry.set('allies', this.battleStore.allies);
       this.scene.resume('World', { allies: this.battleStore.allies });
     }
@@ -139,12 +134,9 @@ export class Battle extends Phaser.Scene {
   }
 
   executeCombatantActions(): void {
-    this.battleStore.getCombatants().forEach(combatant => {
-      if (combatant.status === Status.ATTACKING && combatant.timeInStateInMs > ATTACK_WINDOW_TIME_IN_MS) {
-        combatant.status = Status.EXECUTING;
-        this.execute(combatant);
-      }
-    })
+    this.battleStore.getCombatants()
+                    .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
+                    .forEach(combatant => this.execute(combatant));
   }
 
   selectEnemyBehaviorAndSetEnemyCaster(delta: number): void {
@@ -199,26 +191,23 @@ export class Battle extends Phaser.Scene {
   }
 
   executeDeferredActions(delta: number): void {
-    this.deferredActions = this.deferredActions.map(({executeAction, timeTilExecute}) => {
+    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster, potency}) => {
       if (timeTilExecute - delta <= 0) {
-        executeAction()
+        action.execute(target, caster, potency, this);
+        this.sound.play(action.soundKeyName);
       }
 
       return {
-        executeAction,
         timeTilExecute: timeTilExecute - delta,
+        target,
+        action, 
+        caster,
+        potency
       }
-    }).filter(deferredAction => (deferredAction.timeTilExecute > 0));
+    }).filter(deferredAction => deferredAction.timeTilExecute > 0);
   }
 
   queueAction(menuSelection: MenuSelections): void{
-    // for (const member of this.battleStore.allies) {
-    //   if (member.status === Status.ATTACKING) {
-    //     this.battleStore.allyMenuSelections.caster.flow = Math.min(this.battleStore.allyMenuSelections.caster.maxMagic, this.battleStore.allyMenuSelections.caster.flow+25);
-    //     member.flow = Math.min(member.maxMagic, member.flow+25);
-    //     this.sound.play("smirk");
-    //   }
-    // }
     menuSelection.caster.status = Status.CASTING;
     menuSelection.caster.queuedOption = menuSelection.executable;
     menuSelection.caster.queuedTarget = menuSelection.target;
@@ -238,7 +227,7 @@ export class Battle extends Phaser.Scene {
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
     
-    if (combatant.queuedOption.type === OptionType.ACTION) {
+    else if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
       if (combatant.queuedOption.isRestricted(combatant.queuedTarget, combatant, this)) {
@@ -261,21 +250,22 @@ export class Battle extends Phaser.Scene {
       if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
       const potency = actionModifier.potency * actionModifier.multiplier;
-      this.deferredActions = this.deferredActions.concat( 
-        actionModifier.targets.map((target, index) => {
-        const action = (combatant.queuedOption as Action)
-        const executeAction = () => {
-          action.execute(target, combatant, potency, this);
-          this.sound.play(action.soundKeyName);
-        }
+      const newDeferredActions: DeferredAction[] =  actionModifier.targets.map((target, index) => {
+        const action = (combatant.queuedOption as Action);
         return {
-          executeAction,
-          timeTilExecute: index*100,
+          timeTilExecute: index*100 + (action.animTimeInMs || 0),
+          caster: combatant,
+          action,
+          target,
+          potency, 
+
         }
-      }));
+      });
+
+      this.deferredActions = this.deferredActions.concat(newDeferredActions);
     }
     
-    if (combatant.queuedOption.type === OptionType.SPELL) {
+    else if (combatant.queuedOption.type === OptionType.SPELL) {
       toggleActiveSpell(combatant, combatant.queuedOption);
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
@@ -297,7 +287,7 @@ export class Battle extends Phaser.Scene {
   }
 
   openInitialMenu(ally: Ally): void {
-    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING, Status.ATTACKING]
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING]
     if (CANNOT_OPEN_STATUS.includes(ally.status)) {
       this.sound.play('stamina-depleted');
       return;

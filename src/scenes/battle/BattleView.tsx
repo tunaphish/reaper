@@ -13,7 +13,6 @@ import * as Spells from '../../data/spells';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { MenuSelections } from './BattleStore';
-import { toJS } from 'mobx';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -29,44 +28,51 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   ];
   const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
+  // const actionsDirectedAtCombatant = props.battleScene.deferredActions.filter(action => {
+  //   action.target.name
+  // })
+
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}
-      style={{ 
-        aspectRatio: 1, 
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gridTemplateRows: "1fr",  
-      }}>
-      <motion.div 
-        className={styles.castingWindow}
-        animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
-        transition={{ duration: 0 }}
-      />
-      <motion.div 
-        className={styles.attackWindow}
-        animate={{ opacity: props.combatant.status === Status.ATTACKING ? 1 : 0  }}
-        transition={{ duration: 0 }}
-      />
-      <div className={styles.characterCellContainer}>
-        <div className={styles.windowName}>{props.combatant.name}</div>
-        <div className={styles.resourceContainer}>
-          <div className={styles.meterContainer}>
-            <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
-            <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
-            <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
-          </div>
-          <div className={styles.meterContainer}>
-            <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
-            <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
-          </div>
-          <div className={styles.meterContainer}>
-            <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
-            <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
-            <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
+    <div style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '-5px', left: '-5px' }}>
+        <div className={styles.window} style={{ padding: 5 }}>
+          attack
+        </div>
+      </div>
+      <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}
+        style={{ 
+          aspectRatio: 1, 
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gridTemplateRows: "1fr",  
+        }}>
+        <motion.div 
+          className={styles.castingWindow}
+          animate={{ height: props.combatant.status === Status.CASTING ? Math.min(Math.round(props.combatant.timeInStateInMs / props.combatant.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
+          transition={{ duration: 0 }}
+        />
+        <div className={styles.characterCellContainer}>
+          <div className={styles.windowName}>{props.combatant.name}</div>
+          <div className={styles.resourceContainer}>
+            <div className={styles.meterContainer}>
+              <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
+              <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
+              <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
+            </div>
+            <div className={styles.meterContainer}>
+              <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
+              <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
+            </div>
+            <div className={styles.meterContainer}>
+              <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
+              <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
+              <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
   )
 });
 

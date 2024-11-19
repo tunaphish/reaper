@@ -81,7 +81,7 @@ export class BattleStore {
     makeAutoObservable(this);
   }
 
-  setEnemyCursorIdx(enemyCursorIdx: number) {
+  setEnemyCursorIdx(enemyCursorIdx: number): void {
     this.enemyCursorIdx = enemyCursorIdx;
   }
 
@@ -100,7 +100,7 @@ export class BattleStore {
       if (combatant.status === Status.CHARGING) {
         combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
       }
-      else if (combatant.status !== Status.BLOCKING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+      else if (combatant.status !== Status.BLOCKING && combatant.status !== Status.CASTING) {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }
@@ -119,9 +119,7 @@ export class BattleStore {
         combatant.status = Status.EXHAUSTED;
       } else if (combatant.status === Status.BLOCKING) {
         // do nothing
-      } else if (combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) {
-        combatant.status = Status.ATTACKING;
-      } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING && combatant.status !== Status.ATTACKING) {
+      } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING) {
         combatant.status = Status.NORMAL;
       }
 

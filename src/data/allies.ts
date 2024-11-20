@@ -2,7 +2,6 @@ import { Ally, Allies } from '../model/ally';
 import { Status } from '../model/combatant';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
-import * as Spells from './spells';
 import * as Souls from './souls'
 import { OptionType } from '../model/option';
 
@@ -21,8 +20,6 @@ export const Eji: Ally = {
   flow: 0,
   flowDecayRatePerSecond: 3,
   staminaRegenRatePerSecond: 7,
-  primarySoul: Souls.fencer,
-  secondarySoul: Souls.reaper,
   
   status: Status.NORMAL,
   takingDamage: false,
@@ -47,8 +44,6 @@ export const Keshi: Ally = {
   flow: 0,
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 8,
-  primarySoul: Souls.berserker,
-  secondarySoul: Souls.hunter,
   
   status: Status.NORMAL,
   takingDamage: false,
@@ -73,8 +68,6 @@ export const Elise: Ally = {
   flow: 15,
   flowDecayRatePerSecond: 7,
   staminaRegenRatePerSecond: 5,
-  primarySoul: Souls.cleric,
-  secondarySoul: Souls.reaper,
 
   status: Status.NORMAL,
   takingDamage: false,

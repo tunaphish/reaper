@@ -44,6 +44,7 @@ export class Battle extends Phaser.Scene {
   backgroundImageUrl: string;
 
   battleStore: BattleStore;
+  souls: Soul[];
 
   private lastCalculation = 0;
   private battleStarted = false;
@@ -70,6 +71,7 @@ export class Battle extends Phaser.Scene {
       loop: true,  
       volume: 0.5  
     });
+    this.souls = ALL_SOULS;
     this.ui.create(<BattleView scene={this}/>, this);
   }
 
@@ -294,16 +296,29 @@ export class Battle extends Phaser.Scene {
     this.sound.play('choice-select');
     this.battleStore.allyMenuSelections.setCaster(ally);
 
+    const allySouls = this.souls.filter(soul => soul.owner && soul.owner.name === ally.name);
     const actionsFolder: Folder = { 
       type: OptionType.FOLDER,
       name: 'Actions',
-      options: ally.primarySoul.options.concat(ally.secondarySoul.options),
+      options: [Actions.attack, Actions.breathe, ...allySouls.map(soul => soul.options).flat()],
+    }
+
+    const equippedFolder: Folder = {
+      type: OptionType.FOLDER,
+      name: 'Equipped',
+      options: [...allySouls],
+    }
+
+    const soulsFolder: Folder = {
+      type: OptionType.FOLDER,
+      name: 'Souls',
+      options: this.souls.filter(soul => !soul.owner),
     }
 
     const initialFolder: Folder = { 
       type: OptionType.FOLDER,
       name: 'ACT',
-      options: [ally.primarySoul, ally.secondarySoul, actionsFolder],
+      options: [actionsFolder, equippedFolder, soulsFolder],
     }
     this.battleStore.allyMenuSelections.menus.push(initialFolder);
   }
@@ -356,24 +371,18 @@ export class Battle extends Phaser.Scene {
         menuSelection.menus.push(folder);
         break;
       case OptionType.SOUL: // Ally only option
-        // whole section is super hacky lol
         const soul = option as Soul;
         const caster = (menuSelection.caster as Ally);
-        if (soul.name === caster.primarySoul.name || soul.name === caster.secondarySoul.name) {
-          const soulsFolder: Folder = {
-            type: OptionType.FOLDER,
-            name: soul.name === caster.primarySoul.name ? 'Primary' : 'Secondary',
-            options: ALL_SOULS.filter(newSoul => newSoul.name !== caster.primarySoul.name && newSoul.name !== caster.secondarySoul.name),
+        this.souls.forEach(curSoul => {
+          if (curSoul.name === soul.name) {
+            if (curSoul.owner && curSoul.owner.name === caster.name) {
+              curSoul.owner = null;
+            } else {
+              curSoul.owner = caster;
+            }
           }
-          menuSelection.menus.push(soulsFolder);
-        } else {
-          if (this.battleStore.allyMenuSelections.menus[this.battleStore.allyMenuSelections.menus.length-1].name === 'Primary') {
-            caster.primarySoul = soul;
-          } else {
-            caster.secondarySoul = soul;
-          }
-          this.battleStore.allyMenuSelections.resetSelections();
-        }
+        })
+        this.battleStore.allyMenuSelections.resetSelections();
         break;
     }
   }

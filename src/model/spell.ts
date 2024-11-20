@@ -1,5 +1,5 @@
 import { Battle } from '../scenes/battle/Battle';
-import { ActionModifier } from './ActionModifier';
+import { ActionModifier } from './actionModifier';
 import { Combatant } from './combatant';
 import { Option, OptionType } from './option';
 import { TargetType } from './targetType';

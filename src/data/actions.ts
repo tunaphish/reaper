@@ -51,11 +51,31 @@ export const bandage: Action = {
   castTimeInMs: 0,
   animTimeInMs: 250,
   potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
+  tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack',
+  soundKeyName: 'heal',
 
   description: 'Heals bleed',
+  execute: (target, source, potency) => {
+    updateBleed(target, -potency);
+  },
+  isRestricted: (target, source, scene) => { 
+    return false;
+  },
+};
+
+export const breathe: Action = {
+  type: OptionType.ACTION,
+  name: 'Breathe',
+  staminaCost: 10,
+  castTimeInMs: 0,
+  animTimeInMs: 100,
+  potency: 10,
+  tags: new Set([ActionTags.HEAL]),
+  targetType: TargetType.SELF,
+  soundKeyName: 'heal',
+
+  description: 'Heals bleed on self',
   execute: (target, source, potency) => {
     updateBleed(target, -potency);
   },
@@ -245,7 +265,7 @@ export const revenge: Action = {
 
 export const salve: Action = {
   type: OptionType.ACTION,
-  name: 'salve',
+  name: 'Salve',
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 250,

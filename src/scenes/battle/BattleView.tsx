@@ -195,19 +195,19 @@ const MenuView = observer((props: {menuContent: MenuContent, idx: number, battle
                 styles.menuOption,
                 props.idx === props.menuSelection.menus.length-1 && props.isEnemy && index === props.battleScene.battleStore.enemyCursorIdx ? styles.cursor : '',
               ]
-              return ( <button key={option.name} onClick={onClickOption} className={classes.join(' ')} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-
-                <div>{option.name}</div>
-                { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-                { option.type === OptionType.SPELL && (
-                    <>
-                      <input type="checkbox" checked={!!props.menuSelection?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-                      <div className={styles.magicCost}>{option.magicCost}</div>
-                    </>
-                  )
-                }
-                { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-              </button>
+              return ( 
+                <button key={option.name} onClick={onClickOption} className={classes.join(' ')} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+                  <div>{option.name}</div>
+                  { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+                  { option.type === OptionType.SPELL && (
+                      <>
+                        <input type="checkbox" checked={!!props.menuSelection?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
+                        <div className={styles.magicCost}>{option.magicCost}</div>
+                      </>
+                    )
+                  }
+                  { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+                </button>
               )
             })
           }

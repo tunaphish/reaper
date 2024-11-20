@@ -1,21 +1,11 @@
 import { Ally, Allies } from '../model/ally';
-import { Folder } from '../model/folder';
 import { Status } from '../model/combatant';
 
 import * as JankenboBehaviors from './jankenboBehaviors';
-import * as Actions from './actions';
 import * as Spells from './spells';
-import * as Folders from './folders'
+import * as Souls from './souls'
 import { OptionType } from '../model/option';
 
-
-
-const ejiFolder: Folder = {
-  type: OptionType.FOLDER,
-  name: 'Eji',
-  desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.block, Folders.fencer],
-}
 
 export const Eji: Ally = {
   type: OptionType.ALLY,
@@ -31,7 +21,8 @@ export const Eji: Ally = {
   flow: 0,
   flowDecayRatePerSecond: 3,
   staminaRegenRatePerSecond: 7,
-  folder: ejiFolder,
+  primarySoul: Souls.fencer,
+  secondarySoul: Souls.reaper,
   
   status: Status.NORMAL,
   takingDamage: false,
@@ -41,14 +32,6 @@ export const Eji: Ally = {
 
   menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
 };
-
-
-const keshiFolder: Folder = {
-  type: OptionType.FOLDER,
-  name: 'Keshi',
-  desc: 'Soul of Keshi',
-  options: [Actions.attack, Actions.block, Spells.JANKENBO, Folders.berserker, Folders.hunter],
-}
 
 export const Keshi: Ally = {
   type: OptionType.ALLY,
@@ -64,7 +47,8 @@ export const Keshi: Ally = {
   flow: 0,
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 8,
-  folder: keshiFolder,
+  primarySoul: Souls.berserker,
+  secondarySoul: Souls.hunter,
   
   status: Status.NORMAL,
   takingDamage: false,
@@ -75,16 +59,9 @@ export const Keshi: Ally = {
   menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
 };
 
-const eliseFolder: Folder = {
-  type: OptionType.FOLDER,
-  desc: 'Soul of Elise',
-  name: 'Elise',
-  options: [Actions.attack, Actions.block, Spells.SADIST, Folders.cleric],
-};
-
 export const Elise: Ally = {
   type: OptionType.ALLY,
-  activeSpells: [Spells.SADIST],
+  activeSpells: [],
   name: 'Tifa',
   health: 100,
   bleed: 0,
@@ -96,7 +73,8 @@ export const Elise: Ally = {
   flow: 15,
   flowDecayRatePerSecond: 7,
   staminaRegenRatePerSecond: 5,
-  folder: eliseFolder,
+  primarySoul: Souls.cleric,
+  secondarySoul: Souls.reaper,
 
   status: Status.NORMAL,
   takingDamage: false,

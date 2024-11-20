@@ -3,9 +3,10 @@ import { Option } from './option';
 import { OptionType } from './option';
 
 export type Soul = Option & {
-    desc: string;
+    description: string;
     passive: string;
     type: OptionType.SOUL;
     options: Option[];
     owner?: Ally;
+    castTimeInMs: number;
 };

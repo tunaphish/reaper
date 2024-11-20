@@ -278,7 +278,9 @@ export const salve: Action = {
   execute: (target, source, potency) => {
     updateBleed(target, -potency*2);
   },
-  isRestricted: () => (false)
+  isRestricted: (target, source, scene) => {
+    return target.health !== target.bleed
+  }
 };
 
 export const splinter: Action = {
@@ -287,7 +289,7 @@ export const splinter: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 50,
+  potency: 25,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',

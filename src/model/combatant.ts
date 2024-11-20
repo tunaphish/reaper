@@ -3,6 +3,7 @@ import { Action } from './action';
 import { Item } from './item';
 import { Spell } from './spell';
 import { clamp } from './math';
+import { Soul } from './soul';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -34,7 +35,7 @@ export type Combatant = Option & {
 
   status: Status;
   takingDamage: boolean;
-  queuedOption?: Action | Item | Spell;
+  queuedOption?: Action | Item | Spell | Soul;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
 

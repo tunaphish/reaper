@@ -79,10 +79,16 @@ export const updateDamage = (target: Combatant, change: number): void => {
     return;
   }
 
-  const newBleed = target.bleed + change;
-  // const newHealth = target.health - (target.bleed+change - target.health);
-  target.bleed = clamp(0, newBleed, target.health);
-  // target.health = clamp(0, newHealth, target.maxHealth);
+  if (target.bleed + change > target.health) {
+    const newHealth = target.health - (target.bleed+change - target.health);
+    target.health = clamp(0, newHealth, target.maxHealth);
+    target.bleed = target.health;
+  } else {
+    const newBleed = target.bleed + change;
+    target.bleed = clamp(0, newBleed, target.health);
+  }
+  
+
 };
 
 export const toggleActiveSpell = (caster: Combatant, spell: Spell): void => {

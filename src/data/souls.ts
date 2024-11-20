@@ -27,7 +27,7 @@ export const cleric: Soul = {
     name: 'Cleric',
     description: 'Soul focused on healing',
     passive: 'Revive once per battle',
-    options: [Actions.salve, Actions.resurrect, Actions.bandage],
+    options: [Actions.salve, Actions.resurrect, Actions.bandage, Actions.succor],
     owner: Allies.Elise,
     castTimeInMs: 1000,
 }
@@ -42,6 +42,16 @@ export const fencer: Soul = {
     castTimeInMs: 1000,
 }
 
-export const ALL_SOULS = [hunter, berserker, cleric, fencer];
+export const pirate: Soul = {
+    type: OptionType.SOUL,
+    name: 'Pirate',
+    description: 'Soul focused on heavy attacks',
+    passive: 'Actions have doubled stamina cost, potency, and cast time',
+    options: [Actions.expend],
+    owner: Allies.Eji,
+    castTimeInMs: 2000,
+}
+
+export const ALL_SOULS = [hunter, berserker, cleric, fencer, pirate];
 
 // pirate

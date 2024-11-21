@@ -6,7 +6,7 @@ import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
 import { TargetType } from '../../model/targetType';
-import { JankenboThrow, resetCombatantBattleState, Status, toggleActiveSpell } from '../../model/combatant';
+import { JankenboThrow, resetCombatantBattleState, Status, toggleActiveSpell, updateDamage } from '../../model/combatant';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { Spell } from '../../model/spell';
@@ -23,7 +23,8 @@ import { getRandomItem } from '../../model/random';
 import { MenuContent } from '../../model/menuContent';
 import { Soul } from '../../model/soul';
 import { ALL_SOULS } from '../../data/souls';
-import { action } from 'mobx';
+import * as Souls from '../../data/souls';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -57,6 +58,7 @@ export class Battle extends Phaser.Scene {
   // restriction vars
   firstActionTaken = false;
   splinterUsed = false;
+  saintResurrectionUsed = false;
 
 
   deferredActions: DeferredAction[] = [];
@@ -87,9 +89,19 @@ export class Battle extends Phaser.Scene {
     // this.navigateEnemyMenu(delta);
     this.executeCombatantActions();
     this.resetDeadAllyCasterMenu();
+    this.resurrectSaintOncePerBattle();
     
     this.modifyCasterMultiplier(delta);
     this.executeDeferredActions(delta);
+  }
+
+  resurrectSaintOncePerBattle(): void {
+    if (this.saintResurrectionUsed || !Souls.cleric.owner) return;
+    const clericSoulOwner = this.battleStore.allies.find(ally => ally.name === Souls.cleric.owner.name);
+    if (clericSoulOwner.status !== Status.DEAD) return;
+    clericSoulOwner.health = clericSoulOwner.maxHealth;
+    this.sound.play('saint-resurrect');
+    this.saintResurrectionUsed = true;  
   }
 
   modifyCasterMultiplier(delta: number): void {
@@ -252,7 +264,12 @@ export class Battle extends Phaser.Scene {
     }
     
     else if (combatant.queuedOption.type === OptionType.ACTION) {
-      combatant.stamina -= combatant.queuedOption.staminaCost;
+      if (Souls.berserker.owner && Souls.berserker.owner.name === combatant.name) {
+        updateDamage(combatant, combatant.queuedOption.staminaCost);
+      } else {
+        combatant.stamina -= combatant.queuedOption.staminaCost;
+      }
+      
       
       if (combatant.queuedOption.isRestricted(combatant.queuedTarget, combatant, this)) {
         resetCombatantBattleState(combatant);

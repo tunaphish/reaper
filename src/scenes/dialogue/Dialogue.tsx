@@ -1,5 +1,5 @@
 import * as React from 'react';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 import styles from './dialogue.module.css';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -21,7 +21,7 @@ export class Dialogue extends Phaser.Scene {
   private dialogueTextIndex;
   private dialogueAdvanceSound: Phaser.Sound.BaseSound;
 
-  private ui: UiOverlayPlugin;
+  private reactOverlay: ReactOverlay;
 
   constructor() {
     super(sceneConfig);
@@ -88,6 +88,6 @@ export class Dialogue extends Phaser.Scene {
       )
     }
 
-    this.ui.create(<Ui/>, this);
+    this.reactOverlay.create(<Ui/>, this);
   }
 }

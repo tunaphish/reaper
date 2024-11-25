@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import styles from './gameover.module.css';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -11,7 +11,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 
 export class GameOver extends Phaser.Scene {
-  private ui: UiOverlayPlugin;
+  private reactOverlay: ReactOverlay;
   private choiceSelectSound: Phaser.Sound.BaseSound;
 
   constructor() {
@@ -52,7 +52,7 @@ export class GameOver extends Phaser.Scene {
       )
     }
 
-    this.ui.create(<Ui/>, this);
+    this.reactOverlay.create(<Ui/>, this);
   }
   
 

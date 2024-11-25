@@ -1,5 +1,5 @@
 import * as React from 'react';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 import styles from './dialoguelist.module.css';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -14,7 +14,7 @@ import { load } from 'js-yaml';
  * List of Dialogue Scenes in the Game
  */
 export class DialogueList extends Phaser.Scene {
-  private ui: UiOverlayPlugin;
+  private reactOverlay: ReactOverlay;
   private choiceSelectSound: Phaser.Sound.BaseSound;
 
   constructor() {
@@ -54,6 +54,6 @@ export class DialogueList extends Phaser.Scene {
         <div className={styles.container}>{FileHeaders}</div>
       );
     };
-    this.ui.create(<Ui/>, this);
+    this.reactOverlay.create(<Ui/>, this);
   }
 }

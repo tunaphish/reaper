@@ -1,10 +1,10 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
-import UiOverlayPlugin from './scenes/UiOverlayPlugin';
+import ReactOverlay from './plugins/ReactOverlay';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',
-  type: Phaser.AUTO,
+  type: Phaser.HEADLESS,
   width: 450,
   height: 800,
   scale: {
@@ -24,7 +24,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     createContainer: true,
   },
   plugins: {
-    global: [{ key: 'ui-overlay', plugin: UiOverlayPlugin, start: true, mapping: 'ui' }],
+    global: [{ key: 'react-overlay', plugin: ReactOverlay, start: true, mapping: 'reactOverlay' }],
   },
 };
 

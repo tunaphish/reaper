@@ -5,5 +5,6 @@ import { Dialogue } from './dialogue/Dialogue';
 import { Battle } from './battle/Battle';
 import { DialogueList } from './dialogue-list/DialogueList';
 import { GameOver } from './game-over/GameOver'
+import { R3FTest } from './r3f-test/R3F-Test'
 
-export default [Boot, MainMenu, World, Dialogue, DialogueList, Battle, GameOver];  
+export default [Boot, MainMenu, World, Dialogue, DialogueList, Battle, GameOver, R3FTest];  

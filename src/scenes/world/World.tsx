@@ -1,5 +1,5 @@
 import * as React from 'react';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
 import { WorldView } from './WorldView';
 import { healieBoi } from '../../data/enemies';
@@ -15,7 +15,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class World extends Phaser.Scene {
   private player: Player;
-  ui: UiOverlayPlugin;
+  ui: ReactOverlay;
 
   choiceSelectSound: Phaser.Sound.BaseSound;
 

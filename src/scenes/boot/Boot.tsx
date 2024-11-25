@@ -2,11 +2,11 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 
 import styles from './boot.module.css';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'Battle';
+const SCENE_TO_START = 'R3FTest';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,7 +15,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export class Boot extends Phaser.Scene {
-  ui: UiOverlayPlugin
+  reactOverlay: ReactOverlay
 
   constructor() {
     super(sceneConfig);
@@ -54,7 +54,7 @@ export class Boot extends Phaser.Scene {
         </motion.div>
       );
     }
-    this.ui.create(<Ui/>, this);
+    this.reactOverlay.create(<Ui/>, this);
 
     this.loadAssets();
   }

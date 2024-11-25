@@ -2,7 +2,7 @@ import { Plugins } from "phaser";
 import * as React from 'react';
 import { createRoot, Root } from "react-dom/client";
 
-export default class UiOverlayPlugin extends Plugins.BasePlugin {
+export default class ReactOverlay extends Plugins.BasePlugin {
   private root: Root;
   private uiMap: Map<string, React.ReactElement> = new Map();
 

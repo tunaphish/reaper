@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import styles from './mainmenu.module.css';
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -10,7 +10,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export class MainMenu extends Phaser.Scene {
-  private ui: UiOverlayPlugin;
+  private reactOverlay: ReactOverlay;
   private choiceSelectSound: Phaser.Sound.BaseSound;
   private menuMusic: Phaser.Sound.BaseSound;
   private backgroundImage;
@@ -82,7 +82,7 @@ export class MainMenu extends Phaser.Scene {
       )
     }
 
-    this.ui.create(<Ui/>, this);
+    this.reactOverlay.create(<Ui/>, this);
   }
   
   fadeInImage(onCompleteCallback: () => void): void {

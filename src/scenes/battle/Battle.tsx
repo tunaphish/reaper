@@ -15,7 +15,7 @@ import { MenuOption } from '../../model/menuOption';
 import * as Actions from '../../data/actions';
 import * as Spells from '../../data/spells';
 
-import UiOverlayPlugin from '../UiOverlayPlugin';
+import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore, MenuSelections } from './BattleStore';
 import { healieBoi } from '../../data/enemies';
@@ -41,7 +41,7 @@ export type Executable = Action | Item | Spell | Soul;
 
 type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant, potency: number }
 export class Battle extends Phaser.Scene {
-  private ui: UiOverlayPlugin;
+  private ui: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
   backgroundImageUrl: string;
 

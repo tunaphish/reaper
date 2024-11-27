@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useGameStore } from './R3FTest';
 
-const getDirection = (x1, y1, x2, y2) => {
+const getDirectionInRadians = (x1, y1, x2, y2) => {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const angleRadians = Math.atan2(dy, dx);  
-    const angleDegrees = angleRadians * (180 / Math.PI);
-    const direction = (angleDegrees + 360) % 360;
-    return direction;
+    return angleRadians;
 }
 
 const getDistance = (x1, y1, x2, y2) =>  {
@@ -36,8 +34,8 @@ export const DynamicJoystick = (): JSX.Element => {
     const touch = 'touches' in e ? e.touches[0] : e as React.MouseEvent;
     const distance = getDistance(joystick.x, joystick.y, touch.clientX, touch.clientY);
     if (distance < size/2) return;
-    const newDirection = getDirection(joystick.x, joystick.y, touch.clientX, touch.clientY); 
-    setDirection(newDirection);
+    const direction = getDirectionInRadians(joystick.x, joystick.y, touch.clientX, touch.clientY); 
+    setDirection(direction);
   };
 
   return (

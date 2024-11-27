@@ -8,6 +8,12 @@ import { create } from 'zustand';
 import { Stats } from '@react-three/drei';
 import { DynamicJoystick } from './DynamicJoystick';
 
+function angleToDirection3D(angleInRadians: number): THREE.Vector3 {
+  const x = Math.cos(angleInRadians); 
+  const z = Math.sin(angleInRadians); 
+  return new THREE.Vector3(x, 0, z).normalize(); 
+}
+
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -49,11 +55,16 @@ const Player = () => {
 
 
   useFrame(() => {
-    if (!playerRef.current) return;
-    if (direction) console.log(direction);
-
     const { x, y, z } = playerRef.current.translation();
     setTargetPosition(new THREE.Vector3(x, y, z)); 
+
+    if (!playerRef.current) return;
+    if (!direction) return;
+
+    const direction3d = angleToDirection3D(direction);    
+    const SPEED = 5;
+    const velocity = direction3d.multiplyScalar(SPEED);
+    playerRef.current?.setLinvel(velocity, true);
   });
 
   return (

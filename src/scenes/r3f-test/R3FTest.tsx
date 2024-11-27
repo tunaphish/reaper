@@ -52,7 +52,6 @@ const Player = () => {
   const direction = useGameStore((state) => state.direction);
   const setTargetPosition = useGameStore((state) => state.setTargetPosition);
 
-
   useFrame(() => {
     const { x, y, z } = playerRef.current.translation();
     setTargetPosition(new THREE.Vector3(x, y, z)); 
@@ -88,7 +87,6 @@ const Plane = () => {
         <planeGeometry args={[100, 100]} /> 
         <meshStandardMaterial map={checkerTexture} />
       </mesh>
-
       <CuboidCollider args={[10, 0.1, 10]} friction={0} restitution={0} />
     </RigidBody>
   )
@@ -105,7 +103,7 @@ export class R3FTest extends Phaser.Scene {
     const R3F = () => {
 
       return (
-        <>
+        <div style={{ aspectRatio: 0.5625, height: '100%' }}>
           <Canvas>
             <Stats />
             <Camera />
@@ -117,8 +115,7 @@ export class R3FTest extends Phaser.Scene {
             </Physics>
           </Canvas>
           <DynamicJoystick />
-        </>
-
+        </div>
       )
     }
 

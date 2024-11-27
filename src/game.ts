@@ -5,15 +5,9 @@ import ReactOverlay from './plugins/ReactOverlay';
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',
   type: Phaser.HEADLESS,
-  width: 450,
-  height: 800,
+  width: 1,
+  height: 1,
   scene: Scenes,
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: true,
-    },
-  },
   parent: 'game',
   backgroundColor: '#000000',
   dom: {

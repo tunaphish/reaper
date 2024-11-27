@@ -42,7 +42,6 @@ const Camera = () => {
   useFrame(() => {
     const desiredPosition = targetPosition.clone().add(CAMERA_OFFSET);
     camera.position.lerp(desiredPosition, 0.1); 
-    camera.lookAt(targetPosition); 
   });
 
   return null;

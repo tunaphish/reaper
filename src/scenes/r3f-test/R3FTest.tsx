@@ -2,10 +2,11 @@ import * as React from 'react';
 import * as THREE from 'three';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Physics, RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping } from 'three';
 import { create } from 'zustand';
-import { useDrag } from '@use-gesture/react';
+import { Stats } from '@react-three/drei';
+import { DynamicJoystick } from './DynamicJoystick';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -16,11 +17,15 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 interface R3FState {
   targetPosition: THREE.Vector3; 
   setTargetPosition: (position: THREE.Vector3) => void;
+  direction?: number;
+  setDirection: (direction: number) => void;
 }
 
 export const useGameStore = create<R3FState>((set) => ({
   targetPosition: new THREE.Vector3(0,0,0),
-  setTargetPosition: (position) => set({ targetPosition: position }),
+  setTargetPosition: (targetPosition) => set({ targetPosition }),
+  direction: null,
+  setDirection: (direction) => set({ direction }),
 }));
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);
@@ -39,32 +44,25 @@ const Camera = () => {
 
 const Player = () => {
   const playerRef = React.useRef<RapierRigidBody>(null);
+  const direction = useGameStore((state) => state.direction);
   const setTargetPosition = useGameStore((state) => state.setTargetPosition);
 
-  useDrag(({ offset: [x, y], delta: [dx, dy] }) => {
-    if (!playerRef.current) return;
-
-    const velocity = {
-      x: dx * 5, 
-      y: 0,      
-      z: dy * 5,
-    };
-
-    playerRef.current.setLinvel(velocity, true);
-  }, { target: window });
 
   useFrame(() => {
     if (!playerRef.current) return;
+    if (direction) console.log(direction);
+
     const { x, y, z } = playerRef.current.translation();
     setTargetPosition(new THREE.Vector3(x, y, z)); 
   });
 
   return (
-    <RigidBody ref={playerRef} position={[0,10,0]} type="dynamic">
+    <RigidBody ref={playerRef} position={[0,0,0]} type="dynamic">
       <mesh>
         <boxGeometry />
         <meshStandardMaterial  />
       </mesh>
+      <CuboidCollider args={[0.5, 0.5, 0.5]} friction={0} restitution={0} />
     </RigidBody>
   )
 }
@@ -80,6 +78,8 @@ const Plane = () => {
         <planeGeometry args={[100, 100]} /> 
         <meshStandardMaterial map={checkerTexture} />
       </mesh>
+
+      <CuboidCollider args={[10, 0.1, 10]} friction={0} restitution={0} />
     </RigidBody>
   )
 }
@@ -97,6 +97,7 @@ export class R3FTest extends Phaser.Scene {
       return (
         <>
           <Canvas>
+            <Stats />
             <Camera />
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 10, 5]} castShadow />
@@ -105,20 +106,7 @@ export class R3FTest extends Phaser.Scene {
               <Plane/>
             </Physics>
           </Canvas>
-          {/* <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none", 
-            }}
-          >
-            <div style={{ pointerEvents: "auto", color: 'black' }} onClick={clickhi}>
-              hi
-            </div>
-          </div> */}
+          <DynamicJoystick />
         </>
 
       )
@@ -126,8 +114,6 @@ export class R3FTest extends Phaser.Scene {
 
     this.reactOverlay.create(<R3F/>, this);
   }
-  
-
 }
 
 

@@ -59,31 +59,27 @@ export type AsepriteJson = {
   }
 }
 
-function frameList(json: AsepriteJson): AsepriteFrame[] {
-  return Object.values(json.frames)
-}
+const frameList = (json: AsepriteJson): AsepriteFrame[] => Object.values(json.frames)
 
-function concatReverseExceptBounds(arr) {
-  if (arr.length < 3) {
-    return [...arr]; 
-  }
 
+const concatReverseExceptBounds = (arr) => {
+  if (arr.length < 3) return [...arr]; 
+  
   const firstElement = arr[0];
   const lastElement = arr[arr.length - 1];
   const middle = arr.slice(1, -1);
   return [firstElement, ...middle, lastElement, ...middle.reverse()];
 }
 
-function getAnimationFrames(json: AsepriteJson, name: string): AsepriteFrame[] {
-  const tag = json.meta.frameTags.find((t) => t.name === name)
-  if (!tag) return []
+const getAnimationFrames = (json: AsepriteJson, name: string): AsepriteFrame[] => {
+  const tag = json.meta.frameTags.find((t) => t.name === name);
+  if (!tag) return [];
 
-  const allFrames = frameList(json)
-  const frames = allFrames.slice(tag.from, tag.to+1);
+  const frames = frameList(json).slice(tag.from, tag.to+1);
   if (tag.direction === "pingpong") {
-    return(concatReverseExceptBounds(frames))
+    return concatReverseExceptBounds(frames);
   }
-  return frames
+  return frames;
 }
 //#endregion
 
@@ -97,7 +93,7 @@ function getAnimationFrames(json: AsepriteJson, name: string): AsepriteFrame[] {
  * useAseprite -> slice and play animations using aseprite data
  */
 
-export function usePixelTexture(src: string, wrap = false): THREE.Texture {
+export const usePixelTexture = (src: string, wrap = false): THREE.Texture => {
   const tex: THREE.Texture = useLoader(THREE.TextureLoader, src);
 
   if (wrap) {
@@ -111,18 +107,18 @@ export function usePixelTexture(src: string, wrap = false): THREE.Texture {
   return tex;
 }
 
-export function useSpritesheet(
+export const useSpritesheet = (
   src: string,
   rows: number,
   columns: number,
   currentFrameIndex: number
-): THREE.Texture {
+): THREE.Texture => {
   const texture = useLoader(THREE.TextureLoader, src);
   texture.minFilter = THREE.NearestFilter;
   texture.magFilter = THREE.NearestFilter;
   texture.repeat.set(1 / columns, 1 / rows);
 
-  const totalFrames = rows * columns; // TODO: or override?
+  const totalFrames = rows * columns; 
 
   useFrame(() => {
     const index = currentFrameIndex % totalFrames;
@@ -133,13 +129,13 @@ export function useSpritesheet(
   return texture;
 }
 
-export function useSpritesheetAnimation(
+export const useSpritesheetAnimation = (
   src: string,
   frameDuration: number,
   rows: number,
   columns: number,
   paused = false
-): [THREE.Texture, MutableRefObject<number>, MutableRefObject<number>] {
+): [THREE.Texture, MutableRefObject<number>, MutableRefObject<number>] => {
   const texture = useLoader(THREE.TextureLoader, src);
 
   const tex = useMemo(() => {
@@ -158,22 +154,22 @@ export function useSpritesheetAnimation(
   const totalFrames = rows * columns;
 
   useFrame((_, delta) => {
-    if (!paused) {
-      t.current += delta * 1000;
+    if (paused) return;
 
-      if (t.current >= frameDuration) {
-        index.current += 1;
-        if (index.current >= totalFrames) {
-          index.current = 0;
-        }
+    t.current += delta * 1000;
+    if (t.current < frameDuration) return;
 
-        t.current = 0;
-      }
+    index.current += 1;
+    if (index.current >= totalFrames) {
+      index.current = 0;
     }
 
-    // split index into x and y components
+    t.current = 0;
+    
+      // split index into x and y components
     tex.offset.x = (index.current % columns) / columns;
     tex.offset.y = Math.floor(index.current / columns) / rows;
+    
   });
 
   return [tex, index, t];
@@ -187,12 +183,12 @@ export function useSpritesheetAnimation(
  * @param paused
  * @returns [texture, ref internalTimer, ref currentFrameIndex]
  */
-export function useAseprite(
+export const useAseprite = ( 
   src: string,
   json: AsepriteJson,
   currentAnimation: string | null = null,
   paused = false
-): [THREE.Texture, MutableRefObject<number>, MutableRefObject<number>] {
+): [THREE.Texture, MutableRefObject<number>, MutableRefObject<number>] => {
   const texture: THREE.Texture = useLoader(THREE.TextureLoader, src);
 
   const tex = useMemo(() => {
@@ -228,24 +224,18 @@ export function useAseprite(
   useFrame((_, delta) => {
     const f = frames.current[index.current];
     if (!f) return;
-
-    tex.repeat.set(f.frame.w / w, f.frame.h / h);
-
-    if (!paused) {
-      t.current += delta * 1000;
-
-      if (t.current >= f.duration) {
-        index.current += 1;
-        if (index.current >= frames.current.length) {
-          index.current = 0;
-        }
-
-        t.current = 0;
-      }
-    }
-
     tex.offset.x = f.frame.x / w;
     tex.offset.y = f.frame.y / h;
+    tex.repeat.set(f.frame.w / w, f.frame.h / h);
+
+    if (paused) return;
+    t.current += delta * 1000;
+    if (t.current < f.duration) return;
+    index.current += 1;
+    if (index.current >= frames.current.length) {
+      index.current = 0;
+    }
+    t.current = 0;
   });
 
   return [tex, index, t];

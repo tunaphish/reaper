@@ -7,6 +7,7 @@ import { TextureLoader, RepeatWrapping } from 'three';
 import { create } from 'zustand';
 import { Stats } from '@react-three/drei';
 import { DynamicJoystick } from './DynamicJoystick';
+import { AsepriteJson, useAseprite } from './use-spritesheet';
 
 function angleToDirection3D(angleInRadians: number): THREE.Vector3 {
   const x = Math.cos(angleInRadians); 
@@ -47,32 +48,60 @@ const Camera = () => {
   return null;
 }
 
-const Player = () => {
+const ShizukaSprite = (props: { animation: string, paused: boolean, scene: R3FTest }) => {
+  const spriteRef = React.useRef<THREE.Sprite>(null); // Sprite reference
+  const {x,y,z} = useGameStore((store) => store.targetPosition);
+  const shizukaSpriteData = props.scene.cache.json.get('shizuka-sprite-data');
+  const [texture] = useAseprite(
+    '/reaper/assets/sprites/shizuka.png',
+    shizukaSpriteData as AsepriteJson,
+    props.animation,
+    props.paused,
+  );
+  useFrame(() => {
+    if (!spriteRef) return;
+    spriteRef.current.position.set(x,y,z);
+  })
+
+  return (
+    <sprite position={[0,0,0]} scale={[2,2,2]} ref={spriteRef}>
+      <spriteMaterial map={texture} />
+    </sprite>
+  );
+};
+
+const Player = (props: { scene: R3FTest }) => {
   const playerRef = React.useRef<RapierRigidBody>(null);
   const direction = useGameStore((state) => state.direction);
   const setTargetPosition = useGameStore((state) => state.setTargetPosition);
 
   useFrame(() => {
+    if (!playerRef.current) return;
     const { x, y, z } = playerRef.current.translation();
     setTargetPosition(new THREE.Vector3(x, y, z)); 
 
-    if (!playerRef.current) return;
     if (!direction) return;
-
     const direction3d = angleToDirection3D(direction);    
-    const SPEED = 5;
+    const SPEED = 7;
     const velocity = direction3d.multiplyScalar(SPEED);
     playerRef.current?.setLinvel(velocity, true);
   });
 
   return (
-    <RigidBody ref={playerRef} position={[0,0,0]} type="dynamic">
-      <mesh>
-        <boxGeometry />
-        <meshStandardMaterial  />
-      </mesh>
-      <CuboidCollider args={[0.5, 0.5, 0.5]} friction={0} restitution={0} />
-    </RigidBody>
+    <>
+      <RigidBody ref={playerRef} type="dynamic">
+        <mesh visible={false}>
+          <boxGeometry />
+          <meshStandardMaterial  />
+        </mesh>
+        <CuboidCollider args={[0.5, 0.5, 0.5]} friction={0} restitution={0} />
+      </RigidBody>
+      <ShizukaSprite
+        scene={props.scene} 
+        paused={false}
+        animation={'run-down-neutral'}
+      />
+    </>
   )
 }
 
@@ -99,9 +128,12 @@ export class R3FTest extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  public create(): void {
-    const R3F = () => {
+  preload(): void {
+    this.load.json('shizuka-sprite-data', '/reaper/assets/sprites/shizuka.json');
+  }
 
+  create(): void {
+    const R3F = () => {
       return (
         <div style={{ aspectRatio: 0.5625, height: '100%' }}>
           <Canvas>
@@ -110,7 +142,7 @@ export class R3FTest extends Phaser.Scene {
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 10, 5]} castShadow />
             <Physics>
-              <Player/>              
+              <Player scene={this}/>              
               <Plane/>
             </Physics>
           </Canvas>

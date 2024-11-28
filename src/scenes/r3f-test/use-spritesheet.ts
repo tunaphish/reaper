@@ -7,69 +7,84 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { MutableRefObject, useEffect, useMemo, useRef } from "react";
 
 //#region asesprite
-export type AsepriteFrame = {
-    frame: {
-      x: number
-      y: number
+type AsepriteFrame = {
+  frame: {
+    x: number
+    y: number
+    w: number
+    h: number
+  }
+  rotated: boolean
+  trimmed: boolean
+  spriteSourceSize: {
+    x: number
+    y: number
+    w: number
+    h: number
+  }
+  sourceSize: {
+    w: number
+    h: number
+  }
+  duration: number
+}
+  
+type AsepriteLayer = {
+  name: string
+  opacity: number
+  blendMode: string
+}
+
+type AsepriteFrameTag = {
+  name: string
+  from: number
+  to: number
+  direction: 'forward' | 'backward' | 'pingpong'
+}
+
+export type AsepriteJson = {
+  frames: { [name: string]: AsepriteFrame }
+  meta: {
+    app: string
+    version: string
+    image: string
+    format: string
+    size: {
       w: number
       h: number
     }
-    rotated: boolean
-    trimmed: boolean
-    spriteSourceSize: {
-      x: number
-      y: number
-      w: number
-      h: number
-    }
-    sourceSize: {
-      w: number
-      h: number
-    }
-    duration: number
+    frameTags: AsepriteFrameTag[]
+    layers: AsepriteLayer[]
+    slices: unknown[]
   }
-  
-  export type AsepriteLayer = {
-    name: string
-    opacity: number
-    blendMode: string
+}
+
+function frameList(json: AsepriteJson): AsepriteFrame[] {
+  return Object.values(json.frames)
+}
+
+function concatReverseExceptBounds(arr) {
+  if (arr.length < 3) {
+    return [...arr]; 
   }
-  
-  export type AsepriteFrameTag = {
-    name: string
-    from: number
-    to: number
-    direction: 'forward' | 'backward'
+
+  const firstElement = arr[0];
+  const lastElement = arr[arr.length - 1];
+  const middle = arr.slice(1, -1);
+  return [firstElement, ...middle, lastElement, ...middle.reverse()];
+}
+
+function getAnimationFrames(json: AsepriteJson, name: string): AsepriteFrame[] {
+  const tag = json.meta.frameTags.find((t) => t.name === name)
+  if (!tag) return []
+
+  const allFrames = frameList(json)
+  const frames = allFrames.slice(tag.from, tag.to+1);
+  if (tag.direction === "pingpong") {
+    return(concatReverseExceptBounds(frames))
   }
-  
-  export type AsepriteJson = {
-    frames: { [name: string]: AsepriteFrame }
-    meta: {
-      app: string
-      version: string
-      image: string
-      format: string
-      size: {
-        w: number
-        h: number
-      }
-      frameTags: AsepriteFrameTag[]
-      layers: AsepriteLayer[]
-      slices: unknown[]
-    }
-  }
-  
-  export function frameList(json: AsepriteJson): AsepriteFrame[] {
-    return Object.values(json.frames)
-  }
-  
-  export function getAnimationFrames(json: AsepriteJson, name: string): AsepriteFrame[] {
-    const tag = json.meta.frameTags.find((t) => t.name === name)
-    if (!tag) return []
-  
-    const allFrames = frameList(json)
-    return allFrames.slice(tag.from, tag.to)
-  }
+  return frames
+}
 //#endregion
 
 /**
@@ -102,13 +117,6 @@ export function useSpritesheet(
   columns: number,
   currentFrameIndex: number
 ): THREE.Texture {
-  console.assert(Number.isInteger(rows));
-  console.assert(Number.isInteger(columns));
-  console.assert(Number.isInteger(currentFrameIndex));
-  console.assert(rows >= 1);
-  console.assert(columns >= 1);
-  console.assert(currentFrameIndex >= 0);
-
   const texture = useLoader(THREE.TextureLoader, src);
   texture.minFilter = THREE.NearestFilter;
   texture.magFilter = THREE.NearestFilter;
@@ -132,11 +140,6 @@ export function useSpritesheetAnimation(
   columns: number,
   paused = false
 ): [THREE.Texture, MutableRefObject<number>, MutableRefObject<number>] {
-  console.assert(Number.isInteger(rows));
-  console.assert(Number.isInteger(columns));
-  console.assert(rows >= 1);
-  console.assert(columns >= 1);
-
   const texture = useLoader(THREE.TextureLoader, src);
 
   const tex = useMemo(() => {

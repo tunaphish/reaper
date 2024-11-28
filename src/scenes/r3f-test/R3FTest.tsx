@@ -64,7 +64,7 @@ const ShizukaSprite = (props: { animation: string, paused: boolean, scene: R3FTe
   })
 
   return (
-    <sprite position={[0,0,0]} scale={[2,2,2]} ref={spriteRef}>
+    <sprite position={[0,0,0]} ref={spriteRef}>
       <spriteMaterial map={texture} />
     </sprite>
   );
@@ -99,7 +99,7 @@ const Player = (props: { scene: R3FTest }) => {
       <ShizukaSprite
         scene={props.scene} 
         paused={false}
-        animation={'run-down-neutral'}
+        animation={'run-up-neutral'}
       />
     </>
   )

@@ -5,11 +5,6 @@ import { CuboidCollider , RapierRigidBody, RigidBody } from "@react-three/rapier
 import { AsepriteJson, useAseprite } from './use-spritesheet';
 import { R3FTest, useGameStore } from './R3FTest';
 
-// export default interface State {
-//     enter(player: Player);
-//     update(player: Player, time: number, delta: number);
-// }
-
 const angleToDirection3D = (angleInRadians: number): THREE.Vector3 => {
     const x = Math.cos(angleInRadians); 
     const z = Math.sin(angleInRadians); 
@@ -34,16 +29,25 @@ const getHorizontalDirection = (radians?: number): string =>{
   return 'right';
 }
 
-const ShizukaSprite = (props: { scene: R3FTest }) => {
+const getState = (player?: RapierRigidBody): string => {
+  if (!player) return 'idle';
+  const linvel = player.linvel();
+  const speed = Math.sqrt(linvel.x ** 2 + linvel.y ** 2 + linvel.z ** 2); 
+  if (speed > 1) return 'run';
+  return 'idle';
+}
+
+const ShizukaSprite = (props: { scene: R3FTest, player?: RapierRigidBody }) => {
   const spriteRef = React.useRef<THREE.Sprite>(null); // Sprite reference
   const {x,y,z} = useGameStore((store) => store.targetPosition);
   const direction = useGameStore((state) => state.direction);
-  const animationDirection = getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
-  
+  const animation = getState(props.player) + '-' + getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
+
+
   const [texture] = useAseprite(
     '/reaper/assets/sprites/shizuka-full.png',
     props.scene.cache.json.get('shizuka-sprite-data') as AsepriteJson,
-    'run-' + animationDirection,
+    animation,
     false,
   );
 
@@ -87,6 +91,7 @@ export const Player = (props: { scene: R3FTest }): JSX.Element => {
       </RigidBody>
       <ShizukaSprite
         scene={props.scene} 
+        player={playerRef.current}
       />
     </>
   )

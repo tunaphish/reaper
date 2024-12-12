@@ -2,18 +2,12 @@ import * as React from 'react';
 import * as THREE from 'three';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { CuboidCollider, Physics, RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping } from 'three';
 import { create } from 'zustand';
 import { Stats } from '@react-three/drei';
 import { DynamicJoystick } from './DynamicJoystick';
-import { AsepriteJson, useAseprite } from './use-spritesheet';
-
-function angleToDirection3D(angleInRadians: number): THREE.Vector3 {
-  const x = Math.cos(angleInRadians); 
-  const z = Math.sin(angleInRadians); 
-  return new THREE.Vector3(x, 0, z).normalize(); 
-}
+import { Player } from './player';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -48,63 +42,6 @@ const Camera = () => {
   return null;
 }
 
-const ShizukaSprite = (props: { animation: string, paused: boolean, scene: R3FTest }) => {
-  const spriteRef = React.useRef<THREE.Sprite>(null); // Sprite reference
-  const {x,y,z} = useGameStore((store) => store.targetPosition);
-  const shizukaSpriteData = props.scene.cache.json.get('shizuka-sprite-data');
-  const [texture] = useAseprite(
-    '/reaper/assets/sprites/shizuka.png',
-    shizukaSpriteData as AsepriteJson,
-    props.animation,
-    props.paused,
-  );
-  useFrame(() => {
-    if (!spriteRef) return;
-    spriteRef.current.position.set(x,y,z);
-  })
-
-  return (
-    <sprite position={[0,0,0]} ref={spriteRef}>
-      <spriteMaterial map={texture} />
-    </sprite>
-  );
-};
-
-const Player = (props: { scene: R3FTest }) => {
-  const playerRef = React.useRef<RapierRigidBody>(null);
-  const direction = useGameStore((state) => state.direction);
-  const setTargetPosition = useGameStore((state) => state.setTargetPosition);
-
-  useFrame(() => {
-    if (!playerRef.current) return;
-    const { x, y, z } = playerRef.current.translation();
-    setTargetPosition(new THREE.Vector3(x, y, z)); 
-
-    if (!direction) return;
-    const direction3d = angleToDirection3D(direction);    
-    const SPEED = 7;
-    const velocity = direction3d.multiplyScalar(SPEED);
-    playerRef.current?.setLinvel(velocity, true);
-  });
-
-  return (
-    <>
-      <RigidBody ref={playerRef} type="dynamic">
-        <mesh visible={false}>
-          <boxGeometry />
-          <meshStandardMaterial  />
-        </mesh>
-        <CuboidCollider args={[0.5, 0.5, 0.5]} friction={0} restitution={0} />
-      </RigidBody>
-      <ShizukaSprite
-        scene={props.scene} 
-        paused={false}
-        animation={'run-up-neutral'}
-      />
-    </>
-  )
-}
-
 const Plane = () => {
   const checkerTexture = useLoader(TextureLoader, '/reaper/assets/textures/checker.svg')
   checkerTexture.wrapS = checkerTexture.wrapT = RepeatWrapping;
@@ -129,7 +66,7 @@ export class R3FTest extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.json('shizuka-sprite-data', '/reaper/assets/sprites/shizuka.json');
+    this.load.json('shizuka-sprite-data', '/reaper/assets/sprites/shizuka-full.json');
   }
 
   create(): void {
@@ -154,5 +91,3 @@ export class R3FTest extends Phaser.Scene {
     this.reactOverlay.create(<R3F/>, this);
   }
 }
-
-

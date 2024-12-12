@@ -63,7 +63,7 @@ export class Boot extends Phaser.Scene {
     this.load.image('tiles', '../reaper/assets/tilesets/tuxmon-sample-32px-extruded.png');
     this.load.tilemapTiledJSON('map', '../reaper/assets/tilemaps/tuxemon-town.json');
 
-    this.load.aseprite('shizuka', '/reaper/assets/sprites/shizuka.png', '/reaper/assets/sprites/shizuka.json');
+    this.load.aseprite('shizuka', '/reaper/assets/sprites/shizuka-full.png', '/reaper/assets/sprites/shizuka-full.json');
 
     this.load.image('rise', '/reaper/assets/characters/rise.png');
     this.load.image('eji', '/reaper/assets/characters/eji.png');

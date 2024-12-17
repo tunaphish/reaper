@@ -18,15 +18,19 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 interface R3FState {
   targetPosition: THREE.Vector3; 
   setTargetPosition: (position: THREE.Vector3) => void;
-  direction?: number;
+  direction: number;
   setDirection: (direction: number) => void;
+  isMoving: boolean;
+  setIsMoving: (isMoving: boolean) => void;
 }
 
 export const useGameStore = create<R3FState>((set) => ({
   targetPosition: new THREE.Vector3(0,0,0),
   setTargetPosition: (targetPosition) => set({ targetPosition }),
-  direction: null,
+  direction: 1.570,
   setDirection: (direction) => set({ direction }),
+  isMoving: false,
+  setIsMoving: (isMoving) => set({ isMoving }),
 }));
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);

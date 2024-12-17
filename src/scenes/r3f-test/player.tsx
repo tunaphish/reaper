@@ -12,7 +12,6 @@ const angleToDirection3D = (angleInRadians: number): THREE.Vector3 => {
 }
 
 const getVerticalDirection = (radians: number): string => {
-  if (radians === null) return 'down';
   if ((radians > 0.383972 && radians < 2.740167) || (radians < -3.525565 && radians > -5.881758)) {
     return 'down';
   } else if ((radians > 3.525565 && radians < 5.881758) || (radians < -0.383972 && radians > -2.740167)) {
@@ -22,7 +21,6 @@ const getVerticalDirection = (radians: number): string => {
 }
 
 const getHorizontalDirection = (radians?: number): string =>{
-  if (radians === null) return 'neutral';
   const absRadians = Math.abs(radians);
   if (absRadians > 2.094) return 'left';
   if (absRadians > 1.047) return 'neutral';
@@ -42,7 +40,6 @@ const ShizukaSprite = (props: { scene: R3FTest, player?: RapierRigidBody }) => {
   const {x,y,z} = useGameStore((store) => store.targetPosition);
   const direction = useGameStore((state) => state.direction);
   const animation = getState(props.player) + '-' + getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
-
 
   const [texture] = useAseprite(
     '/reaper/assets/sprites/shizuka-full.png',
@@ -66,14 +63,14 @@ const ShizukaSprite = (props: { scene: R3FTest, player?: RapierRigidBody }) => {
 export const Player = (props: { scene: R3FTest }): JSX.Element => {
   const playerRef = React.useRef<RapierRigidBody>(null);
   const direction = useGameStore((state) => state.direction);
+  const isMoving = useGameStore((state) => state.isMoving);
   const setTargetPosition = useGameStore((state) => state.setTargetPosition);
 
   useFrame(() => {
     if (!playerRef.current) return;
     const { x, y, z } = playerRef.current.translation();
     setTargetPosition(new THREE.Vector3(x, y, z)); 
-
-    if (!direction) return;
+    if (!isMoving) return;
     const direction3d = angleToDirection3D(direction);    
     const SPEED = 7;
     const velocity = direction3d.multiplyScalar(SPEED);

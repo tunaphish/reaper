@@ -77,11 +77,7 @@ export class BattleStore {
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }
       
-      const STAMINA_LOSS_PER_SECOND_WHILE_CHARGING = 100;
-      if (combatant.status === Status.CHARGING) {
-        combatant.stamina = combatant.stamina -= STAMINA_LOSS_PER_SECOND_WHILE_CHARGING*(delta/1000);
-      }
-      else if (combatant.status !== Status.BLOCKING && combatant.status !== Status.CASTING) {
+      else if (combatant.status !== Status.CASTING) {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }
@@ -98,9 +94,7 @@ export class BattleStore {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {
         combatant.status = Status.EXHAUSTED;
-      } else if (combatant.status === Status.BLOCKING) {
-        // do nothing
-      } else if (combatant.status !== Status.CHARGING && combatant.status !== Status.CASTING) {
+      } else if (combatant.status !== Status.CASTING) {
         combatant.status = Status.NORMAL;
       }
 

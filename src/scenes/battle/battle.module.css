@@ -87,11 +87,6 @@
   color: red;
 }
 
-.BLOCKING {
-  border: 1px solid blue;
-  color: blue;
-}
-
 .tvContainer {
   flex: 1;
   display: grid;

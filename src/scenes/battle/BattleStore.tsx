@@ -1,31 +1,20 @@
 import { makeAutoObservable } from "mobx";
-import { Allies, Ally } from "../../model/ally";
-import { JankenboThrow, Combatant, Status } from "../../model/combatant";
+import { Allies } from "../../model/ally";
+import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
-import { MenuContent } from "../../model/menuContent";
-import { Spell } from "../../model/spell";
 import { Executable } from "./Battle";
+import { Folder } from "../../model/folder";
 
 export class MenuSelections {
   caster?: Combatant;
   executable?: Executable;
   target?: Combatant;
-  menus: MenuContent[] = [];
-  spells?: Spell[] = null;
+  menus: Folder[] = [];
   text: string;
-
-  // spell vars
-  chargeMultiplier = 1;
-  zantetsukenMultiplier = 3.5;
-  jankenboThrow?: JankenboThrow = null;
 
   constructor(text: string) {
     this.text = text;
     makeAutoObservable(this);
-  }
-
-  setSpells(spells?: Spell[]): void {
-    this.spells = spells;
   }
 
   setCaster(member?: Combatant): void {
@@ -42,14 +31,6 @@ export class MenuSelections {
 
   setText(text: string): void {
     this.text = text;
-  }
-
-  setChargeMultipler(chargeMultiplier: number): void {
-    this.chargeMultiplier = chargeMultiplier;
-  }
-
-  setZantetsukenMultiplier(zantetsukenMultiplier: number): void {
-    this.zantetsukenMultiplier = zantetsukenMultiplier;
   }
 
   emptyMenu(): void {

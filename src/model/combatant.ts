@@ -1,7 +1,6 @@
 import { isSameOption, Option } from './option';
 import { Action } from './action';
 import { Item } from './item';
-import { Spell } from './spell';
 import { clamp } from './math';
 import { Folder } from './folder';
 
@@ -15,11 +14,6 @@ export enum Status {
   CHARGING = 'CHARGING',
 }
 
-export enum JankenboThrow {
-  ROCK = "ROCK",
-  PAPER = "PAPER",
-  SCISSORS = "SCISSORS",
-}
 
 export type Combatant = Option & {
   health: number;
@@ -36,14 +30,9 @@ export type Combatant = Option & {
 
   status: Status;
   takingDamage: boolean;
-  queuedOption?: Action | Item | Spell;
+  queuedOption?: Action | Item;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
-
-  activeSpells: Spell[];
-
-  jankenboThrow: (combatant: Combatant) => JankenboThrow;
-  previousJankenboThrow?: JankenboThrow;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {
@@ -81,28 +70,14 @@ export const updateDamage = (target: Combatant, change: number): void => {
     return;
   }
 
-  const newBleed = target.bleed + change;
-  // const newHealth = target.health - (target.bleed+change - target.health);
-  target.bleed = clamp(0, newBleed, target.health);
-  // target.health = clamp(0, newHealth, target.maxHealth);
-};
-
-export const toggleActiveSpell = (caster: Combatant, spell: Spell): void => {
-  const foundSpell: Spell = caster.activeSpells.find(isSameOption(spell));
-  if (!!foundSpell) {
-    const idx = caster.activeSpells.indexOf(foundSpell);
-    caster.activeSpells.splice(idx, 1);
-    return;
+  if (target.bleed + change > target.health) {
+    const newHealth = target.health - (target.bleed+change - target.health);
+    target.health = clamp(0, newHealth, target.maxHealth);
+    target.bleed = target.health;
+  } else {
+    const newBleed = target.bleed + change;
+    target.bleed = clamp(0, newBleed, target.health);
   }
-
-  const flowCost = Math.min(spell.magicCost, caster.flow);
-  const magicCost = clamp(0, spell.magicCost - caster.flow, caster.magic);
-  const healthCost = clamp(0, spell.magicCost - (caster.flow + caster.magic), caster.health);
-  caster.flow -= flowCost;
-  caster.magic -= magicCost;
-  caster.health -= healthCost;
-
-  caster.activeSpells.push(spell);
 };
 
 export const resetCombatantBattleState = (combatant: Combatant): void => {

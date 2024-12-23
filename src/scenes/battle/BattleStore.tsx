@@ -6,13 +6,24 @@ import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
 
 export class MenuSelections {
+
+
+}
+
+export class BattleStore {
+  // battle vars
+  enemies: Enemy[];
+  allies: Allies;
+
   caster?: Combatant;
   executable?: Executable;
   target?: Combatant;
   menus: Folder[] = [];
   text: string;
 
-  constructor(text: string) {
+  constructor(enemies: Enemy[], allies: Allies, text: string) {
+    this.enemies = enemies;
+    this.allies = allies;
     this.text = text;
     makeAutoObservable(this);
   }
@@ -43,28 +54,7 @@ export class MenuSelections {
     this.setExecutable(null);
     this.setTarget(null);
   }
-}
 
-export class BattleStore {
-  // battle vars
-  enemies: Enemy[];
-  allies: Allies;
-
-  // menu vars
-  allyMenuSelections: MenuSelections = new MenuSelections("*the wind is howling*");
-  enemyMenuSelections: MenuSelections  = new MenuSelections("woof");
-
-  enemyCursorIdx = 0;
-
-  constructor(enemies: Enemy[], allies: Allies) {
-    this.enemies = enemies;
-    this.allies = allies;
-    makeAutoObservable(this);
-  }
-
-  setEnemyCursorIdx(enemyCursorIdx: number): void {
-    this.enemyCursorIdx = enemyCursorIdx;
-  }
 
   tickStats(delta: number): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {

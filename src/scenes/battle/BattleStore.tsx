@@ -5,11 +5,6 @@ import { Enemy } from "../../model/enemy";
 import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
 
-export class MenuSelections {
-
-
-}
-
 export class BattleStore {
   // battle vars
   enemies: Enemy[];

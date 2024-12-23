@@ -9,7 +9,6 @@ import { MenuOption } from '../../model/menuOption';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
-import { MenuSelections } from './BattleStore';
 import { Folder } from '../../model/folder';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {

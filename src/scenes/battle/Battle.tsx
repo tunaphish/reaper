@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Enemy } from '../../model/enemy';
-import { Option, OptionType } from '../../model/option';
+import { OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
@@ -14,9 +14,8 @@ import * as Actions from '../../data/actions';
 
 import UiOverlayPlugin from '../UiOverlayPlugin';
 import { BattleView } from './BattleView';
-import { BattleStore, MenuSelections } from './BattleStore';
+import { BattleStore } from './BattleStore';
 import { healieBoi } from '../../data/enemies';
-import { getRandomItem } from '../../model/random';
 import { TargetType } from '../../model/targetType';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -39,13 +38,6 @@ export class Battle extends Phaser.Scene {
   backgroundImageUrl: string;
 
   battleStore: BattleStore;
-
-  private lastCalculation = 0;
-  private battleStarted = false;
-
-  // enemy menu navigation vars
-  private timeSinceLastNavigation = 0;
-  enemyNavigationQueue = [];
 
   // restriction vars
   firstActionTaken = false;
@@ -70,14 +62,11 @@ export class Battle extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    if (!this.battleStarted) return;
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     this.checkBattleEndConditions();
     this.queueAllyActions();    
 
-    // this.selectEnemyBehaviorAndSetEnemyCaster(delta);
-    // this.navigateEnemyMenu(delta);
     this.executeCombatantActions();
     this.resetDeadAllyCasterMenu();
     
@@ -174,17 +163,6 @@ export class Battle extends Phaser.Scene {
       if (!this.firstActionTaken) this.firstActionTaken = true;
       if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
-      // const potency = actionModifier.potency * actionModifier.multiplier;
-      // const newDeferredActions: DeferredAction[] =  actionModifier.targets.map((target, index) => {
-      //   const action = (combatant.queuedOption as Action);
-      //   return {
-      //     timeTilExecute: index*100 + (action.animTimeInMs || 0),
-      //     caster: combatant,
-      //     action,
-      //     target,
-      //     potency, 
-      //   }
-      // });
       const newDeferredActions = [{
         timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
         caster: combatant,
@@ -240,10 +218,10 @@ export class Battle extends Phaser.Scene {
         const executable = option as Executable;
         this.battleStore.setExecutable(executable);
         if (executable.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [this.battleStore.caster]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets...', options: [this.battleStore.caster]};
           this.battleStore.menus.push(targetFolder);
         } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.menus.push(targetFolder);
         }
         this.battleStore.setText(executable.description);
@@ -258,9 +236,5 @@ export class Battle extends Phaser.Scene {
         this.battleStore.menus.push(folder);
         break;
     }
-  }
-
-  startBattle(): void {
-    this.battleStarted = true;
   }
 }

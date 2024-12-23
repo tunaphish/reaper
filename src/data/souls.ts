@@ -6,40 +6,36 @@ import * as Allies from "../data/allies"
 export const hunter: Soul = {
     type: OptionType.SOUL,
     name: 'Hunter',
-    description: 'Soul focused on stamina',
+    desc: 'Soul focused on stamina',
     passive: 'Doubles stamina regen rate, halves max stamina',
     options: [Actions.ambush, Actions.debilitate],
-    castTimeInMs: 1000,
 }
 
 export const berserker: Soul = {
     type: OptionType.SOUL,
     name: 'Berserker',
-    description: 'Soul focused on bleed',
+    desc: 'Soul focused on bleed',
     passive: 'Actions cost bleed instead of stamina',
     options: [Actions.bloodlust, Actions.revenge],
     owner: Allies.Keshi,
-    castTimeInMs: 1000,
 }
 
 export const cleric: Soul = {
     type: OptionType.SOUL,
     name: 'Cleric',
-    description: 'Soul focused on healing',
+    desc: 'Soul focused on healing',
     passive: 'Revive once per battle',
     options: [Actions.salve, Actions.resurrect, Actions.bandage],
     owner: Allies.Elise,
-    castTimeInMs: 1000,
 }
 
 export const fencer: Soul = {
     type: OptionType.SOUL,
     name: 'Fencer',
-    description: 'Soul focused on elegant attacks',
+    desc: 'Soul focused on elegant attacks',
     passive: 'Actions used for the first time will have boosted potency',
     options: [Actions.engage, Actions.flourish, Actions.splinter, Actions.prick],
-    owner: Allies.Eji,
-    castTimeInMs: 1000,
+    owner: Allies.Eji
 }
 
 export const ALL_SOULS = [hunter, berserker, cleric, fencer];

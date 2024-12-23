@@ -35,7 +35,7 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
-export type Executable = Action | Item | Spell | Soul;
+export type Executable = Action | Item | Spell;
 
 type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant, potency: number }
 export class Battle extends Phaser.Scene {
@@ -230,21 +230,6 @@ export class Battle extends Phaser.Scene {
       this.sound.play(combatant.queuedOption.soundKeyName);
     }
 
-    // Ally Only
-    else if (combatant.queuedOption.type === OptionType.SOUL) {
-      this.souls.forEach(curSoul => {
-        if (curSoul.name === combatant.queuedOption.name) {
-          if (curSoul.owner && curSoul.owner.name === combatant.name) {
-            curSoul.owner = null;
-            this.sound.play('unequip-soul');
-          } else {
-            curSoul.owner = (combatant as Ally);
-            this.sound.play('equip-soul');
-          }
-        }
-      })
-    }
-
     else if (combatant.queuedOption.type === OptionType.SPELL) {
       toggleActiveSpell(combatant, combatant.queuedOption);
       this.sound.play(combatant.queuedOption.soundKeyName);
@@ -358,11 +343,10 @@ export class Battle extends Phaser.Scene {
     switch(option.type) {
       case OptionType.ITEM:
       case OptionType.ACTION:
-      case OptionType.SOUL:
       case OptionType.SPELL:
         const executable = option as Executable;
         menuSelection.setExecutable(executable);
-        if (executable.type === OptionType.SOUL || executable.targetType === TargetType.SELF) {
+        if (executable.targetType === TargetType.SELF) {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", options: [menuSelection.caster]};
           menuSelection.menus.push(targetFolder);
         } else {
@@ -385,6 +369,20 @@ export class Battle extends Phaser.Scene {
       case OptionType.FOLDER:
         const folder = option as Folder;
         menuSelection.menus.push(folder);
+        break;
+      case OptionType.SOUL: // Ally only option
+        const soul = option as Soul;
+        const caster = (menuSelection.caster as Ally);
+        this.souls.forEach(curSoul => {
+          if (curSoul.name === soul.name) {
+            if (curSoul.owner && curSoul.owner.name === caster.name) {
+              curSoul.owner = null;
+            } else {
+              curSoul.owner = caster;
+            }
+          }
+        })
+        this.battleStore.allyMenuSelections.resetSelections();
         break;
     }
   }

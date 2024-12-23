@@ -86,8 +86,6 @@ export class Boot extends Phaser.Scene {
     this.load.audio('debuff', '/reaper/assets/sounds/debuff.wav');
     this.load.audio('smirk', '/reaper/assets/sounds/smirk.mp3');
     this.load.audio('charged', '/reaper/assets/sounds/charged.mp3');
-    this.load.audio('equip-soul', '/reaper/assets/sounds/equip-soul.mp3');
-    this.load.audio('unequip-soul', '/reaper/assets/sounds/unequip-soul.mp3');
 
     this.load.audio('stamina-depleted', '/reaper/assets/sounds/stamina-depleted.wav');
 

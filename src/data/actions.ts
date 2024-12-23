@@ -65,27 +65,6 @@ export const bandage: Action = {
   },
 };
 
-export const succor: Action = {
-  type: OptionType.ACTION,
-  name: 'Succor',
-  staminaCost: 100,
-  castTimeInMs: 0,
-  animTimeInMs: 250,
-  potency: 25,
-  tags: new Set([ActionTags.HEAL]),
-  targetType: TargetType.ALL,
-  soundKeyName: 'heal',
-
-  description: 'Heals anyone who is bleeding',
-  execute: (target, source, potency) => {
-    updateBleed(target, -potency);
-  },
-  isRestricted: (target, source, scene) => { 
-    return false;
-  },
-  targetResolver: (battle: Battle) => battle.battleStore.getCombatants().filter(combatant => combatant.bleed > 0),
-};
-
 export const breathe: Action = {
   type: OptionType.ACTION,
   name: 'Breathe',
@@ -360,24 +339,4 @@ export const block: Action = {
     source.status = Status.BLOCKING;
   },
   isRestricted: (target, source, scene) => (false)
-};
-
-export const expend: Action = {
-  type: OptionType.ACTION,
-  name: 'Expend',
-  staminaCost: 100,
-  castTimeInMs: 0,
-  animTimeInMs: 1000,
-  potency: 0,
-  tags: new Set([ActionTags.ATTACK]),
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack',
-
-  description: 'Uses the rest of casters stamina as potency',
-  execute: (target, source, potency) => {
-    const newPotency = Math.max(source.stamina, 0);
-    updateDamage(target, newPotency);
-    updateStamina(source, -newPotency);
-  },
-  isRestricted: () => { return false },
 };

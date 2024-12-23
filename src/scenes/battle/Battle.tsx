@@ -21,8 +21,6 @@ import { BattleStore, MenuSelections } from './BattleStore';
 import { healieBoi } from '../../data/enemies';
 import { getRandomItem } from '../../model/random';
 import { MenuContent } from '../../model/menuContent';
-import { Soul } from '../../model/soul';
-import { ALL_SOULS } from '../../data/souls';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -71,6 +69,7 @@ export class Battle extends Phaser.Scene {
       volume: 0.5  
     });
     this.ui.create(<BattleView scene={this}/>, this);
+    // this.music.play();
   }
 
   update(time: number, delta: number): void {
@@ -274,6 +273,19 @@ export class Battle extends Phaser.Scene {
     resetCombatantBattleState(combatant);
   }
 
+  setExecutable(executable: Executable): void {
+    this.battleStore.allyMenuSelections.executable = executable;
+  }
+
+  setTarget(combatant: Enemy | Ally): void {
+    this.battleStore.allyMenuSelections.setTarget(combatant);    
+  }
+
+  playSong(songKey: string): void {
+    this.music = this.sound.add(songKey, { loop: true });
+    this.music.play();
+  }
+
   openInitialMenu(ally: Ally): void {
     const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING]
     if (CANNOT_OPEN_STATUS.includes(ally.status)) {
@@ -293,19 +305,7 @@ export class Battle extends Phaser.Scene {
 
     this.sound.play('choice-select');
     this.battleStore.allyMenuSelections.setCaster(ally);
-
-    const actionsFolder: Folder = { 
-      type: OptionType.FOLDER,
-      name: 'Actions',
-      options: ally.primarySoul.options.concat(ally.secondarySoul.options),
-    }
-
-    const initialFolder: Folder = { 
-      type: OptionType.FOLDER,
-      name: 'ACT',
-      options: [ally.primarySoul, ally.secondarySoul, actionsFolder],
-    }
-    this.battleStore.allyMenuSelections.menus.push(initialFolder);
+    this.battleStore.allyMenuSelections.menus.push(ally.folder);
   }
 
   closeMenu(): void {
@@ -332,10 +332,10 @@ export class Battle extends Phaser.Scene {
         const executable = option as Executable;
         menuSelection.setExecutable(executable);
         if (executable.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", options: [menuSelection.caster]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [menuSelection.caster]};
           menuSelection.menus.push(targetFolder);
         } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           menuSelection.menus.push(targetFolder);
         }
         menuSelection.setText(executable.description);
@@ -354,26 +354,6 @@ export class Battle extends Phaser.Scene {
       case OptionType.FOLDER:
         const folder = option as Folder;
         menuSelection.menus.push(folder);
-        break;
-      case OptionType.SOUL: // Ally only option
-        // whole section is super hacky lol
-        const soul = option as Soul;
-        const caster = (menuSelection.caster as Ally);
-        if (soul.name === caster.primarySoul.name || soul.name === caster.secondarySoul.name) {
-          const soulsFolder: Folder = {
-            type: OptionType.FOLDER,
-            name: soul.name === caster.primarySoul.name ? 'Primary' : 'Secondary',
-            options: ALL_SOULS.filter(newSoul => newSoul.name !== caster.primarySoul.name && newSoul.name !== caster.secondarySoul.name),
-          }
-          menuSelection.menus.push(soulsFolder);
-        } else {
-          if (this.battleStore.allyMenuSelections.menus[this.battleStore.allyMenuSelections.menus.length-1].name === 'Primary') {
-            caster.primarySoul = soul;
-          } else {
-            caster.secondarySoul = soul;
-          }
-          this.battleStore.allyMenuSelections.resetSelections();
-        }
         break;
     }
   }

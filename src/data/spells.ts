@@ -1,4 +1,4 @@
-import { ActionModifier } from "../model/actionModifier";
+import { ActionModifier } from "../model/ActionModifier";
 import { Combatant, JankenboThrow } from "../model/combatant";
 import { OptionType } from "../model/option";
 import { Spell } from "../model/spell";

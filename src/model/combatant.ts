@@ -3,6 +3,7 @@ import { Action } from './action';
 import { Item } from './item';
 import { Spell } from './spell';
 import { clamp } from './math';
+import { Folder } from './folder';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -31,6 +32,7 @@ export type Combatant = Option & {
   flow: number;
   flowDecayRatePerSecond: number;
   staminaRegenRatePerSecond: number; 
+  folder: Folder;
 
   status: Status;
   takingDamage: boolean;

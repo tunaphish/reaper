@@ -23,7 +23,6 @@ import { getRandomItem } from '../../model/random';
 import { MenuContent } from '../../model/menuContent';
 import { Soul } from '../../model/soul';
 import { ALL_SOULS } from '../../data/souls';
-import { action } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -269,15 +268,6 @@ export class Battle extends Phaser.Scene {
         }
       )
 
-      // bug with spells if we continue down this path
-      if (combatant.queuedOption.targetResolver) {
-        actionModifier.targets = combatant.queuedOption.targetResolver(this);
-        if (actionModifier.targets.length === 0) {
-          this.sound.play('stamina-depleted');
-          return;
-        }
-      }
-
       // Restrictions
       if (!this.firstActionTaken) this.firstActionTaken = true;
       if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
@@ -291,6 +281,7 @@ export class Battle extends Phaser.Scene {
           action,
           target,
           potency, 
+
         }
       });
 
@@ -371,10 +362,10 @@ export class Battle extends Phaser.Scene {
       case OptionType.SPELL:
         const executable = option as Executable;
         menuSelection.setExecutable(executable);
-        if (executable.type === OptionType.SOUL || executable.targetType === TargetType.SELF || executable.targetType === TargetType.ALL) {
+        if (executable.type === OptionType.SOUL || executable.targetType === TargetType.SELF) {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", options: [menuSelection.caster]};
           menuSelection.menus.push(targetFolder);
-        } else if (executable.targetType === TargetType.SINGLE_TARGET) {
+        } else {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           menuSelection.menus.push(targetFolder);
         }

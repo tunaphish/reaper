@@ -4,7 +4,6 @@ import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage } from '../model/combatant';
 import { updateBleed, updateHealth, updateStamina } from '../model/combatant';
-import { Battle } from '../scenes/battle/Battle';
 
 export const attack: Action = {
   type: OptionType.ACTION,
@@ -12,7 +11,7 @@ export const attack: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -30,7 +29,7 @@ export const ambush: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -51,7 +50,7 @@ export const bandage: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 250,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
@@ -105,25 +104,6 @@ export const bloodlust: Action = {
   isRestricted: (target, source, scene) => { 
     return false;
   },
-};
-
-export const cull: Action = {
-  type: OptionType.ACTION,
-  name: 'Cull',
-  staminaCost: 100,
-  castTimeInMs: 0,
-  animTimeInMs: 350,
-  potency: 25,
-  tags: new Set([ActionTags.ATTACK]),
-  targetType: TargetType.ALL,
-  soundKeyName: 'attack',
-
-  description: 'Attacks anyone who is bleeding',
-  execute: (target, source, potency) => {
-    updateDamage(target, potency);
-  },
-  isRestricted: () => { return false },
-  targetResolver: (battle: Battle) => battle.battleStore.getCombatants().filter(combatant => combatant.bleed > 0),
 };
 
 export const debilitate: Action = {
@@ -192,7 +172,7 @@ export const flourish: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 250,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -212,7 +192,7 @@ export const gangup: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 250,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
@@ -251,7 +231,7 @@ export const resurrect: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 2000,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
@@ -268,7 +248,7 @@ export const resurrect: Action = {
 export const revenge: Action = {
   type: OptionType.ACTION,
   name: 'Revenge',
-  staminaCost: 100,
+  staminaCost: 50,
   castTimeInMs: 0,
   animTimeInMs: 500,
   potency: 0,
@@ -289,7 +269,7 @@ export const salve: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 250,
-  potency: 25,
+  potency: 50,
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',

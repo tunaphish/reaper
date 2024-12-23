@@ -17,7 +17,7 @@ export const berserker: Soul = {
     name: 'Berserker',
     description: 'Soul focused on bleed',
     passive: 'Actions cost bleed instead of stamina',
-    options: [Actions.bloodlust, Actions.cull, Actions.revenge],
+    options: [Actions.bloodlust, Actions.revenge],
     owner: Allies.Keshi,
     castTimeInMs: 1000,
 }

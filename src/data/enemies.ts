@@ -12,10 +12,6 @@ import { Battle } from '../scenes/battle/Battle';
 // Target Functions
 const isAlive = (unit: Combatant) => unit.health !== 0;
 
-const self = (scene: Battle) => {
-  return scene.battleStore.enemyMenuSelections.caster;
-};
-
 const randomEnemy = (scene: Battle) => {
   const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
@@ -54,10 +50,6 @@ export const healieBoi: Enemy = {
   flow: 0,
   flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 14,
-  behaviors: [
-    { option: [Actions.bandage], getProbability: reverseSigmoid, getTarget: self, dialoguePool: ['Oh shit', 'fuck fuck fuck'] },
-    { option: [Actions.attack], getProbability: sigmoidFunction, getTarget: randomAlly, dialoguePool: ['Suffer as I have', 'Eat shit'] },
-  ],
   folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Healie Boi Menu', options: [Actions.bandage, Actions.attack]},
   
   status: Status.NORMAL,

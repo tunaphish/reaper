@@ -18,7 +18,6 @@ export type Action = Option & {
     description: string;
     execute: (target: Combatant, source: Combatant, potency: number, scene: Battle) => void;
     isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
-    targetResolver?: (scene: Battle) => Combatant[];
     targetType: TargetType;
     soundKeyName: string;
     castTimeInMs: number;

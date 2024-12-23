@@ -1,4 +1,4 @@
-import { isSameOption, Option } from './option';
+import { Option } from './option';
 import { Action } from './action';
 import { Item } from './item';
 import { clamp } from './math';
@@ -6,12 +6,9 @@ import { Folder } from './folder';
 
 export enum Status {
   NORMAL = 'NORMAL',
-  BLOCKING = 'BLOCKING',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
-  CASTING = 'CASTING',
-  
-  CHARGING = 'CHARGING',
+  CASTING = 'CASTING',  
 }
 
 
@@ -62,11 +59,6 @@ export const updateDamage = (target: Combatant, change: number): void => {
   
   if (change < 0) {
     updateBleed(target, change);
-    return;
-  }
-
-  if (target.status === Status.BLOCKING) {
-    updateStamina(target, -change) ; 
     return;
   }
 

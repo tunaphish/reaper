@@ -12,7 +12,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.block, Folders.fencer],
+  options: [Actions.attack, Folders.fencer],
 }
 
 export const Eji: Ally = {
@@ -42,7 +42,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
   desc: 'Soul of Keshi',
-  options: [Actions.attack, Actions.block, Folders.berserker, Folders.hunter],
+  options: [Actions.attack, Folders.berserker, Folders.hunter],
 }
 
 export const Keshi: Ally = {
@@ -71,7 +71,7 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Elise',
   name: 'Elise',
-  options: [Actions.attack, Actions.block, Folders.cleric],
+  options: [Actions.attack, Folders.cleric],
 };
 
 export const Elise: Ally = {

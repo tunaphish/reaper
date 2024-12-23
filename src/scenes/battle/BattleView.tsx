@@ -100,20 +100,14 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 });
 
 
-const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene: Battle, menuSelection: MenuSelections, isEnemy: boolean }) => {
+const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
 
-
   const HORIZONTAL_OFFSET = 50;
   const VERTICAL_OFFSET = 150;
-  const style: React.CSSProperties = props.isEnemy ?
-  {
-    left: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
-    top: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
-  }
-  : {
+  const style: React.CSSProperties = {
     right: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
     bottom: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
   }
@@ -129,13 +123,10 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
         <div className={styles.menuContent}>
           {
             props.menuContent.type === OptionType.FOLDER && 
-            props.menuContent.options.map((option: MenuOption, index: number) => {
-              const onClickOption = () => props.battleScene.selectOption(option, props.menuSelection);
-              const classes = [
-                styles.menuOption,
-                props.idx === props.menuSelection.menus.length-1 && props.isEnemy && index === props.battleScene.battleStore.enemyCursorIdx ? styles.cursor : '',
-              ]
-              return ( <button key={option.name} onClick={onClickOption} className={classes.join(' ')} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+            props.menuContent.options.map((option: MenuOption) => {
+              const onClickOption = () => props.battleScene.selectOption(option);
+
+              return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
 
                 <div>{option.name}</div>
                 { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
@@ -153,7 +144,7 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
 });
 
 
-const MenuContainer = observer((props: { battleScene: Battle, menuSelections: MenuSelections, isEnemy: boolean }) => {
+const MenuContainer = observer((props: { battleScene: Battle }) => {
   const onClickModalContainer = () => {
     props.battleScene.closeMenu();
   }
@@ -167,12 +158,12 @@ const MenuContainer = observer((props: { battleScene: Battle, menuSelections: Me
   }
 
   return (
-    <div className={ props.isEnemy ? styles.unclickable : ''}>
+    <div>
         {
-          props.menuSelections.menus.map((menu, idx) => {
+          props.battleScene.battleStore.menus.map((menu, idx) => {
           return (
             <motion.div 
-              custom={{idx, total: props.menuSelections.menus.length}}
+              custom={{idx, total: props.battleScene.battleStore.menus.length}}
               className={styles.modalContainer} 
               onClick={onClickModalContainer}
               variants={variants}
@@ -182,7 +173,7 @@ const MenuContainer = observer((props: { battleScene: Battle, menuSelections: Me
               key={idx}
               style={{ zIndex: 10 * (idx + 1) }}
             >
-            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene} menuSelection={props.menuSelections} isEnemy={props.isEnemy}/>
+            <MenuView menuContent={menu} idx={idx} battleScene={props.battleScene} />
           </motion.div>        
           )
           })
@@ -199,18 +190,10 @@ const Stage = (props: { scene: Battle }) => {
   )
 }
 
-const Description = observer((props: { text: string, isEnemy: boolean }) => {
+const Description = observer((props: { text: string }) => {
   const [isVisible, setIsVisible] = React.useState(true);
 
-  const style: React.CSSProperties =  props.isEnemy ?
-  {
-    padding: 5,
-    position: "absolute",
-    top: 0,
-    right: "5%",
-    width: "50%"
-  } :
-  {
+  const style: React.CSSProperties = {
     padding: 5,
     position: "absolute",
     bottom: 0,
@@ -253,21 +236,19 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
-          <MenuContainer battleScene={props.scene} menuSelections={props.scene.battleStore.enemyMenuSelections} isEnemy={true}/>
           <div className={styles.alliesBar}>
             {enemies.map((enemy) => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
          </div>
-          <Description text={props.scene.battleStore.enemyMenuSelections.text} isEnemy={true}/>
           <Stage scene={props.scene} />
-          <Description text={props.scene.battleStore.allyMenuSelections.text} isEnemy={false}/>
+          <Description text={props.scene.battleStore.text}/>
           <div className={styles.alliesBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
               })}
           </div>
-          <MenuContainer battleScene={props.scene} menuSelections={props.scene.battleStore.allyMenuSelections} isEnemy={false}/>
+          <MenuContainer battleScene={props.scene}/>
         </div>
       )
 });

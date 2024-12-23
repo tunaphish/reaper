@@ -59,7 +59,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [healieBoi], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [healieBoi], this.registry.get('allies'), 'hihi');
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -85,9 +85,9 @@ export class Battle extends Phaser.Scene {
   }
 
   resetDeadAllyCasterMenu(): void {
-    if (this.battleStore.allyMenuSelections.caster && this.battleStore?.allyMenuSelections.caster.status === Status.DEAD) {
-      this.battleStore.allyMenuSelections.setCaster(null);
-      this.battleStore.allyMenuSelections.emptyMenu();
+    if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {
+      this.battleStore.setCaster(null);
+      this.battleStore.emptyMenu();
     }
   }
 
@@ -108,11 +108,12 @@ export class Battle extends Phaser.Scene {
   }
 
   queueAllyActions(): void {
-    if (this.battleStore.allyMenuSelections.caster && 
-      this.battleStore.allyMenuSelections.executable && 
-      this.battleStore.allyMenuSelections.target
+    if (
+      this.battleStore.caster && 
+      this.battleStore.executable && 
+      this.battleStore.target
     ) {
-      this.queueAction(this.battleStore.allyMenuSelections); 
+      this.queueAction(); 
     }
   }
 
@@ -120,57 +121,6 @@ export class Battle extends Phaser.Scene {
     this.battleStore.getCombatants()
                     .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
                     .forEach(combatant => this.execute(combatant));
-  }
-
-  selectEnemyBehaviorAndSetEnemyCaster(delta: number): void {
-    this.lastCalculation += delta;
-    if (this.lastCalculation < 1000 || this.battleStore.enemyMenuSelections.caster) {
-      return;
-    }
-
-    this.lastCalculation = 0;
-    this.battleStore.enemies
-      .filter((enemy) => enemy.status === Status.NORMAL)
-      .forEach(enemy => {
-        const selectedBehavior = enemy.behaviors.find(behavior => Math.random() > behavior.getProbability(enemy, this));
-        // bug with multiple enemies
-        if (!selectedBehavior) return;
-        this.battleStore.enemyMenuSelections.setCaster(enemy);
-        this.battleStore.enemyMenuSelections.menus.push(enemy.folder);
-        this.sound.play('choice-select');
-        this.battleStore.enemyMenuSelections.setText(getRandomItem<string>(selectedBehavior.dialoguePool));
-        this.enemyNavigationQueue = [...selectedBehavior.option, selectedBehavior.getTarget(this)];
-        return;
-      });
-  }
-
-  navigateEnemyMenu(delta: number): void {
-    if (!this.battleStore.enemyMenuSelections.caster) return;
-
-    if (this.enemyNavigationQueue.length === 0) {
-      this.queueAction(this.battleStore.enemyMenuSelections);
-      this.timeSinceLastNavigation = 0;
-      this.battleStore.enemyCursorIdx = 0;
-      return;
-    } 
-
-    this.timeSinceLastNavigation += delta;
-    if (this.timeSinceLastNavigation < 750) {
-      return;
-    } 
-
-    this.timeSinceLastNavigation = 0;
-    const currentMenu: Folder = this.battleStore.enemyMenuSelections.menus[this.battleStore.enemyMenuSelections.menus.length - 1];
-    const currentMenuOption: Option = (currentMenu as Folder).options[this.battleStore.enemyCursorIdx];
-    if (this.enemyNavigationQueue[0].name === currentMenuOption.name) {
-      this.selectOption((currentMenuOption as MenuOption), this.battleStore.enemyMenuSelections);
-      this.battleStore.enemyCursorIdx = 0;
-      this.enemyNavigationQueue.shift();
-      return;
-    } 
-
-    this.battleStore.setEnemyCursorIdx(this.battleStore.enemyCursorIdx+1);
-    this.sound.play('choice-hover');
   }
 
   executeDeferredActions(delta: number): void {
@@ -190,17 +140,17 @@ export class Battle extends Phaser.Scene {
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
   }
 
-  queueAction(menuSelection: MenuSelections): void{
-    menuSelection.caster.status = Status.CASTING;
-    menuSelection.caster.queuedOption = menuSelection.executable;
-    menuSelection.caster.queuedTarget = menuSelection.target;
-    menuSelection.caster.timeInStateInMs = 0;
+  queueAction(): void{
+    this.battleStore.caster.status = Status.CASTING;
+    this.battleStore.caster.queuedOption = this.battleStore.executable;
+    this.battleStore.caster.queuedTarget = this.battleStore.target;
+    this.battleStore.caster.timeInStateInMs = 0;
 
-    menuSelection.resetSelections();
+    this.battleStore.resetSelections();
   }
 
   setCasterStatus(status: Status): void {
-    this.battleStore.allyMenuSelections.caster.status = status;
+    this.battleStore.caster.status = status;
   }
 
   execute(combatant: Combatant): void {
@@ -249,11 +199,11 @@ export class Battle extends Phaser.Scene {
   }
 
   setExecutable(executable: Executable): void {
-    this.battleStore.allyMenuSelections.executable = executable;
+    this.battleStore.executable = executable;
   }
 
   setTarget(combatant: Enemy | Ally): void {
-    this.battleStore.allyMenuSelections.setTarget(combatant);    
+    this.battleStore.setTarget(combatant);    
   }
 
   playSong(songKey: string): void {
@@ -269,43 +219,43 @@ export class Battle extends Phaser.Scene {
     }
 
     this.sound.play('choice-select');
-    this.battleStore.allyMenuSelections.setCaster(ally);
-    this.battleStore.allyMenuSelections.menus.push(ally.folder);
+    this.battleStore.setCaster(ally);
+    this.battleStore.menus.push(ally.folder);
   }
 
   closeMenu(): void {
-    this.battleStore.allyMenuSelections.menus.pop();
+    this.battleStore.menus.pop();
 
-    if (this.battleStore.allyMenuSelections.menus.length === 0) {
-      this.battleStore.allyMenuSelections.setCaster(null); // hacky way of resetting selection if user clicks out
+    if (this.battleStore.menus.length === 0) {
+      this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
     }
     this.sound.play('dialogue-advance');
   }
 
-  selectOption(option: MenuOption, menuSelection: MenuSelections): void {
+  selectOption(option: MenuOption): void {
     this.sound.play('choice-select');
     switch(option.type) {
       case OptionType.ITEM:
       case OptionType.ACTION:
         const executable = option as Executable;
-        menuSelection.setExecutable(executable);
+        this.battleStore.setExecutable(executable);
         if (executable.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [menuSelection.caster]};
-          menuSelection.menus.push(targetFolder);
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [this.battleStore.caster]};
+          this.battleStore.menus.push(targetFolder);
         } else {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name + " Target", desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          menuSelection.menus.push(targetFolder);
+          this.battleStore.menus.push(targetFolder);
         }
-        menuSelection.setText(executable.description);
+        this.battleStore.setText(executable.description);
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:
         const combatant = option;
-        menuSelection.setTarget(combatant);
+        this.battleStore.setTarget(combatant);
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
-        menuSelection.menus.push(folder);
+        this.battleStore.menus.push(folder);
         break;
     }
   }

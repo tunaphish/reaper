@@ -268,10 +268,6 @@ export class Battle extends Phaser.Scene {
       return;
     }
 
-    if (ally.status === Status.BLOCKING) {
-      ally.status = Status.NORMAL;
-    }
-
     this.sound.play('choice-select');
     this.battleStore.allyMenuSelections.setCaster(ally);
     this.battleStore.allyMenuSelections.menus.push(ally.folder);

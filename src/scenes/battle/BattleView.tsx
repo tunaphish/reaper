@@ -2,17 +2,15 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 
-import { Combatant, JankenboThrow, Status } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 import { OptionType } from '../../model/option';
-import { MenuContent } from '../../model/menuContent';
 import { MenuOption } from '../../model/menuOption';
-
-import * as Spells from '../../data/spells';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { MenuSelections } from './BattleStore';
+import { Folder } from '../../model/folder';
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -103,68 +101,11 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 });
 
 
-const MenuView = observer((props: {menuContent: MenuContent, idx: number, battleScene: Battle, menuSelection: MenuSelections, isEnemy: boolean }) => {
-  const Zantetsuken = observer(() => {
-    return (
-        props.idx === 0 && 
-        props.menuSelection.caster && 
-        props.menuSelection.caster.activeSpells.find(activeSpell => activeSpell.name === Spells.ZANTETSUKEN.name) &&
-        <div className={styles.menu}>ZANTETSUKEN {props.menuSelection.zantetsukenMultiplier.toFixed(2)}X</div>
-    )
-  });
-  
+const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene: Battle, menuSelection: MenuSelections, isEnemy: boolean }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }
 
-
-  const Cleave = () => {
-    const [value, setValue] = React.useState('0')
-    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-      setValue(e.currentTarget.value);
-      if (e.currentTarget.value === "100") {
-        props.battleScene.advanceSpell();
-      }
-    }
-    return (
-      <input type="range" min="0" max="100" value={value} onChange={onChange}/>
-    )
-  }
-
-  const Jankenbo = () => {
-    const setJankenboThrow = (jankenboThrow: JankenboThrow) => {
-      props.battleScene.setJankenboThrow(jankenboThrow);
-      props.battleScene.advanceSpell();
-    }
-
-    return (
-        <>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.ROCK)}>ROCK</div>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.PAPER)}>PAPER</div>
-          <div className={styles.menuOption} onClick={() => setJankenboThrow(JankenboThrow.SCISSORS)}>SCISSORS</div>
-        </>
-    )
-  };
-
-  const Charge = observer(() => {
-    const onChargeStart = () => {
-      props.battleScene.setCasterStatus(Status.CHARGING);
-    }
-    const onChargeEnd = () => {
-      props.battleScene.setCasterStatus(Status.NORMAL);
-      props.battleScene.advanceSpell();
-    }
-
-    return (
-          <button 
-            onMouseDown={onChargeStart}
-            onMouseUp={onChargeEnd}
-            onTouchStart={onChargeStart} 
-            onTouchEnd={onChargeEnd}>
-              CHARGE!!! {props.menuSelection.chargeMultiplier.toFixed(2)}X
-        </button>
-    )
-  });
 
   const HORIZONTAL_OFFSET = 50;
   const VERTICAL_OFFSET = 150;
@@ -199,31 +140,14 @@ const MenuView = observer((props: {menuContent: MenuContent, idx: number, battle
 
                 <div>{option.name}</div>
                 { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-                { option.type === OptionType.SPELL && (
-                    <>
-                      <input type="checkbox" checked={!!props.menuSelection?.caster.activeSpells.find((spell) => spell.name === option.name)} disabled/>
-                      <div className={styles.magicCost}>{option.magicCost}</div>
-                    </>
-                  )
-                }
                 { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
               </button>
               )
             })
           }
-          {
-            props.menuContent.name === Spells.CHARGE.name && <Charge />
-          }
-          {
-            props.menuContent.name === Spells.JANKENBO.name && <Jankenbo />
-          }
-          {
-            props.menuContent.name === Spells.CLEAVE.name && <Cleave />
-          }
         </div>
         </div>
 
-      <Zantetsuken />
     </div>
 
   );    

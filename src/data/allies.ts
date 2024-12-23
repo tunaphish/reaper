@@ -2,9 +2,7 @@ import { Ally, Allies } from '../model/ally';
 import { Folder } from '../model/folder';
 import { Status } from '../model/combatant';
 
-import * as JankenboBehaviors from './jankenboBehaviors';
 import * as Actions from './actions';
-import * as Spells from './spells';
 import * as Folders from './folders'
 import { OptionType } from '../model/option';
 
@@ -19,7 +17,6 @@ const ejiFolder: Folder = {
 
 export const Eji: Ally = {
   type: OptionType.ALLY,
-  activeSpells: [],
   name: 'Cloud',
   health: 100,
   maxHealth: 100,
@@ -37,8 +34,6 @@ export const Eji: Ally = {
   takingDamage: false,
   timeInStateInMs: 0,
   
-  jankenboThrow: JankenboBehaviors.cycle,
-
   menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
 };
 
@@ -47,12 +42,11 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
   desc: 'Soul of Keshi',
-  options: [Actions.attack, Actions.block, Spells.JANKENBO, Folders.berserker, Folders.hunter],
+  options: [Actions.attack, Actions.block, Folders.berserker, Folders.hunter],
 }
 
 export const Keshi: Ally = {
   type: OptionType.ALLY,
-  activeSpells: [],
   name: 'Barret',
   health: 100,
   maxHealth: 100,
@@ -70,8 +64,6 @@ export const Keshi: Ally = {
   takingDamage: false,
   timeInStateInMs: 0,
   
-  jankenboThrow: JankenboBehaviors.random,
-
   menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
 };
 
@@ -79,12 +71,11 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Elise',
   name: 'Elise',
-  options: [Actions.attack, Actions.block, Spells.SADIST, Folders.cleric],
+  options: [Actions.attack, Actions.block, Folders.cleric],
 };
 
 export const Elise: Ally = {
   type: OptionType.ALLY,
-  activeSpells: [Spells.SADIST],
   name: 'Tifa',
   health: 100,
   bleed: 0,
@@ -101,8 +92,6 @@ export const Elise: Ally = {
   status: Status.NORMAL,
   takingDamage: false,
   timeInStateInMs: 0,
-
-  jankenboThrow: JankenboBehaviors.alwaysRock,
 
   menuPortraitPath: '/reaper/assets/characters/menu/tifa.png',
 };

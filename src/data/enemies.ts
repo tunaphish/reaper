@@ -4,7 +4,6 @@ import { Combatant } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { getRandomInt } from '../model/math';
 
-import * as JankenboBehaviors from './jankenboBehaviors';
 import * as Actions from './actions';
 
 import { Battle } from '../scenes/battle/Battle';
@@ -66,6 +65,4 @@ export const healieBoi: Enemy = {
   
   imageUrl: '/reaper/assets/characters/eji.png',
   takingDamage: false,
-  activeSpells: [],
-  jankenboThrow: JankenboBehaviors.cycle,
 };

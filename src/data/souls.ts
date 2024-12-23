@@ -1,7 +1,14 @@
 import { Soul } from "../model/soul";
 import { OptionType } from "../model/option";
 import * as Actions from './actions';
-import * as Allies from "../data/allies"
+
+export const reaper: Soul = {
+    type: OptionType.SOUL,
+    name: 'Reaper',
+    desc: 'Soul of a Novice',
+    passive: 'None',
+    options: [Actions.attack, Actions.breathe],
+}
 
 export const hunter: Soul = {
     type: OptionType.SOUL,
@@ -17,7 +24,6 @@ export const berserker: Soul = {
     desc: 'Soul focused on bleed',
     passive: 'Actions cost bleed instead of stamina',
     options: [Actions.bloodlust, Actions.revenge],
-    owner: Allies.Keshi,
 }
 
 export const cleric: Soul = {
@@ -26,7 +32,6 @@ export const cleric: Soul = {
     desc: 'Soul focused on healing',
     passive: 'Revive once per battle',
     options: [Actions.salve, Actions.resurrect, Actions.bandage],
-    owner: Allies.Elise,
 }
 
 export const fencer: Soul = {
@@ -35,9 +40,8 @@ export const fencer: Soul = {
     desc: 'Soul focused on elegant attacks',
     passive: 'Actions used for the first time will have boosted potency',
     options: [Actions.engage, Actions.flourish, Actions.splinter, Actions.prick],
-    owner: Allies.Eji
 }
 
-export const ALL_SOULS = [hunter, berserker, cleric, fencer];
+export const ALL_SOULS = [reaper, hunter, berserker, cleric, fencer];
 
 // pirate

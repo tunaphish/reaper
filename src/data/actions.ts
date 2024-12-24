@@ -1,9 +1,71 @@
-import { Action, ActionTags } from '../model/action';
+import { Action, ActionTags, Restriction } from '../model/action';
 import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage } from '../model/combatant';
-import { updateBleed, updateHealth, updateStamina } from '../model/combatant';
+import { updateBleed, updateHealth, updateStamina } from '../model/combatant'
+
+// #region Restrictions
+
+export const firstActionTaken: Restriction = {
+  desc: 'Action must be first in Battle',
+  isRestricted: (target, source, scene) => { 
+    return scene.firstActionTaken;
+  },
+}
+
+export const targetExhausted: Restriction = {
+  desc: 'Target must be exhausted',
+  isRestricted: (target, source, scene) => { 
+    return scene.firstActionTaken;
+  },
+}
+
+export const targetFullHealth: Restriction = {
+  desc: 'Target must have full health',
+  isRestricted: (target, source, scene) => { 
+    return target.health !== target.maxHealth
+  },
+}
+
+export const targetTargetingOther: Restriction = {
+  desc: 'Target must be acting on anyone besides caster',
+  isRestricted: (target, source, scene) => { 
+    return !target.queuedTarget || target.queuedTarget.name === source.name;
+  },
+}
+
+export const casterFullHealth: Restriction = {
+  desc: 'Caster must have full health',
+  isRestricted: (target, source, scene) => { 
+    return source.health !== source.maxHealth
+  },
+}
+
+export const targetDead: Restriction = {
+  desc: 'Target must be Dead',
+  isRestricted: (target, source, scene) => { 
+    return target.status !== Status.DEAD
+  },
+}
+
+export const actionSingleUse: Restriction = {
+  desc: 'Action must not have been previously used in battle',
+  isRestricted: (target, source, scene) => { 
+    return scene.splinterUsed;
+  },
+}
+
+export const targetDying: Restriction = {
+  desc: 'Target must be dying',
+  isRestricted: (target, source, scene) => { 
+    return target.bleed === target.health;
+  },
+}
+
+// #endregion
+
+// #region Actions
 
 export const attack: Action = {
   type: OptionType.ACTION,
@@ -16,11 +78,10 @@ export const attack: Action = {
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals damage to target',
+  description: 'Deals damage',
   execute: (target, source, potency) => {
     updateDamage(target, potency);
   },
-  isRestricted: () => { return false },
 };
 
 export const ambush: Action = {
@@ -34,14 +95,12 @@ export const ambush: Action = {
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Refunds Stamina, Must be first action taken in battle',
+  description: 'Deals damage, refunds stamina cost',
   execute: (target, source, potency) => {
     updateDamage(target, potency);
     updateStamina(source, 100)
   },
-  isRestricted: (target, source, scene) => { 
-    return scene.firstActionTaken;
-  },
+  restriction: firstActionTaken,
 };
 
 export const bandage: Action = {
@@ -49,7 +108,7 @@ export const bandage: Action = {
   name: 'Bandage',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 500,
   potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
@@ -59,9 +118,6 @@ export const bandage: Action = {
   execute: (target, source, potency) => {
     updateBleed(target, -potency);
   },
-  isRestricted: (target, source, scene) => { 
-    return false;
-  },
 };
 
 export const bloodlust: Action = {
@@ -69,7 +125,7 @@ export const bloodlust: Action = {
   name: 'Bloodlust',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 1000,
   potency: 25,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
@@ -81,9 +137,6 @@ export const bloodlust: Action = {
     const newPotency = damagedCombatants * potency;
     updateDamage(target, newPotency);
   },
-  isRestricted: (target, source, scene) => { 
-    return false;
-  },
 };
 
 export const debilitate: Action = {
@@ -91,19 +144,17 @@ export const debilitate: Action = {
   name: 'Debilitate',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 500,
   potency: 25,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals double damage, target must be exhausted',
+  description: 'Deals high damage',
   execute: (target, source, potency, scene) => {
     updateDamage(target, potency * 2);
   },
-  isRestricted: (target, deals, scene) => { 
-    return target.status !== Status.EXHAUSTED;
-  },
+  restriction: targetExhausted,
 };
 
 export const engage: Action = {
@@ -111,19 +162,17 @@ export const engage: Action = {
   name: 'Engage',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 1000,
   potency: 25,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals double damage, target must have full health',
+  description: 'Deals high damage',
   execute: (target, source, potency, scene) => {
     updateDamage(target, potency * 2);
   },
-  isRestricted: (target, deals, scene) => { 
-    return target.health !== target.maxHealth
-  },
+  restriction: targetFullHealth,
 };
 
 export const flank: Action = {
@@ -131,19 +180,17 @@ export const flank: Action = {
   name: 'Flank',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 500,
   potency: 25,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals additional damage, target must be targetting someone other than caster',
+  description: 'Deals medium damage',
   execute: (target, source, potency, scene) => {
     updateDamage(target, potency + 25);
   },
-  isRestricted: (target, source, scene) => { 
-    return !target.queuedTarget || target.queuedTarget.name === source.name;
-  },
+  restriction: targetTargetingOther
 };
 
 export const flourish: Action = {
@@ -151,19 +198,17 @@ export const flourish: Action = {
   name: 'Flourish',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 1000,
   potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals double damage, caster must have full health',
+  description: 'Deals high damage',
   execute: (target, source, potency, scene) => {
     updateDamage(target, potency * 2);
   },
-  isRestricted: (target, source, scene) => { 
-    return source.health !== source.maxHealth
-  },
+  restriction: casterFullHealth,
 };
 
 export const gangup: Action = {
@@ -171,20 +216,17 @@ export const gangup: Action = {
   name: 'Gangup',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 500,
   potency: 50,
   tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  description: 'Damage scales with each damaged combatant',
+  description: 'Deals scaling damage based on number of combatants acting on target',
   execute: (target, source, potency, scene) => {
     const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
     const newPotency = damagedCombatants * potency;
     updateDamage(target, newPotency);
-  },
-  isRestricted: (target, source, scene) => { 
-    return false;
-  },
+  }
 };
 
 export const prick: Action = {
@@ -202,7 +244,6 @@ export const prick: Action = {
   execute: (target, source, potency) => {
     updateDamage(target, potency);
   },
-  isRestricted: () => { return false },
 };
 
 export const resurrect: Action = {
@@ -220,9 +261,7 @@ export const resurrect: Action = {
   execute: (target, source, potency) => {
     updateHealth(target, potency);
   },
-  isRestricted: (target, source, scene) => { 
-    return target.status !== Status.DEAD
-   },
+  restriction: targetDead,
 };
 
 export const revenge: Action = {
@@ -240,7 +279,6 @@ export const revenge: Action = {
   execute: (target, source, potency) => {
     updateDamage(target, source.bleed);
   },
-  isRestricted: () => { return false },
 };
 
 export const salve: Action = {
@@ -248,7 +286,7 @@ export const salve: Action = {
   name: 'salve',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 250,
+  animTimeInMs: 500,
   potency: 50,
   tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
@@ -258,7 +296,7 @@ export const salve: Action = {
   execute: (target, source, potency) => {
     updateBleed(target, -potency*2);
   },
-  isRestricted: () => (false)
+  restriction: targetDying,
 };
 
 export const splinter: Action = {
@@ -272,11 +310,11 @@ export const splinter: Action = {
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals double damage, must not have been used in battle yet',
+  description: 'Deals high damage',
   execute: (target, source, potency) => {
     updateDamage(target, potency*2);
   },
-  isRestricted: (target, source, scene) => { 
-    return scene.splinterUsed;
-  },
+  restriction: actionSingleUse,
 };
+
+// #endregion

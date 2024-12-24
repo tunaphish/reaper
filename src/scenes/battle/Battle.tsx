@@ -61,16 +61,18 @@ export class Battle extends Phaser.Scene {
     // this.music.play();
   }
 
+  // #region Time Based Updates
+
   update(time: number, delta: number): void {
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     this.checkBattleEndConditions();
-    this.queueAllyActions();    
-
-    this.castCombatantActions();
+    
     this.resetDeadAllyCasterMenu();
     
-    this.executeDeferredActions(delta);
+    this.castActions();    
+    this.executeActions();    
+    this.resolveDeferredActions(delta);
   }
 
   resetDeadAllyCasterMenu(): void {
@@ -96,58 +98,25 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  queueAllyActions(): void {
+  castActions(): void {
     if (
       this.battleStore.caster && 
       this.battleStore.executable && 
       this.battleStore.target
     ) {
-      this.queueAction(); 
+      this.battleStore.caster.status = Status.CASTING;
+      this.battleStore.caster.queuedOption = this.battleStore.executable;
+      this.battleStore.caster.queuedTarget = this.battleStore.target;
+      this.battleStore.caster.timeInStateInMs = 0;
+  
+      this.battleStore.resetSelections();
     }
   }
 
-  castCombatantActions(): void {
+  executeActions(): void {
     this.battleStore.getCombatants()
                     .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
                     .forEach(combatant => this.execute(combatant));
-  }
-
-  executeDeferredActions(delta: number): void {
-    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster, potency}) => {
-      if (timeTilExecute - delta <= 0) {
-        if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
-          this.sound.play('stamina-depleted');
-        } else {
-          // Update Battle Restrictions
-          if (!this.firstActionTaken) this.firstActionTaken = true;
-          if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
-
-          action.execute(target, caster, potency, this);
-          this.sound.play(action.soundKeyName);
-        }
-      }
-
-      return {
-        timeTilExecute: timeTilExecute - delta,
-        target,
-        action, 
-        caster,
-        potency
-      }
-    }).filter(deferredAction => deferredAction.timeTilExecute > 0);
-  }
-
-  queueAction(): void{
-    this.battleStore.caster.status = Status.CASTING;
-    this.battleStore.caster.queuedOption = this.battleStore.executable;
-    this.battleStore.caster.queuedTarget = this.battleStore.target;
-    this.battleStore.caster.timeInStateInMs = 0;
-
-    this.battleStore.resetSelections();
-  }
-
-  setCasterStatus(status: Status): void {
-    this.battleStore.caster.status = status;
   }
 
   execute(combatant: Combatant): void {
@@ -171,6 +140,38 @@ export class Battle extends Phaser.Scene {
     }
     
     resetCombatantBattleState(combatant);
+  }
+
+  resolveDeferredActions(delta: number): void {
+    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster, potency}) => {
+      if (timeTilExecute - delta <= 0) {
+        if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
+          this.sound.play('stamina-depleted');
+        } else {
+          // Update Battle Restrictions
+          if (!this.firstActionTaken) this.firstActionTaken = true;
+          if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
+
+          action.execute(target, caster, potency, this);
+          this.sound.play(action.soundKeyName);
+        }
+      }
+
+      return {
+        timeTilExecute: timeTilExecute - delta,
+        target,
+        action, 
+        caster,
+        potency
+      }
+    }).filter(deferredAction => deferredAction.timeTilExecute > 0);
+  }
+  // #endregion
+
+  // #region Input Based Updates
+
+  setCasterStatus(status: Status): void {
+    this.battleStore.caster.status = status;
   }
 
   setExecutable(executable: Executable): void {
@@ -248,4 +249,6 @@ export class Battle extends Phaser.Scene {
         break;
     }
   }
+
+  // #endregion
 }

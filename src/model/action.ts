@@ -11,13 +11,18 @@ export enum ActionTags {
   BUFF,
 }
 
+export type Restriction = {
+  desc: string;
+  isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
+}
+
 export type Action = Option & {
     type: OptionType.ACTION;
     staminaCost: number;
     tags: Set<ActionTags>;
     description: string;
     execute: (target: Combatant, source: Combatant, potency: number, scene: Battle) => void;
-    isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
+    restriction?: Restriction; 
     targetType: TargetType;
     soundKeyName: string;
     castTimeInMs: number;

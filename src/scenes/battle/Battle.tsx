@@ -67,7 +67,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.queueAllyActions();    
 
-    this.executeCombatantActions();
+    this.castCombatantActions();
     this.resetDeadAllyCasterMenu();
     
     this.executeDeferredActions(delta);
@@ -106,7 +106,7 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  executeCombatantActions(): void {
+  castCombatantActions(): void {
     this.battleStore.getCombatants()
                     .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
                     .forEach(combatant => this.execute(combatant));
@@ -115,8 +115,16 @@ export class Battle extends Phaser.Scene {
   executeDeferredActions(delta: number): void {
     this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster, potency}) => {
       if (timeTilExecute - delta <= 0) {
-        action.execute(target, caster, potency, this);
-        this.sound.play(action.soundKeyName);
+        if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
+          this.sound.play('stamina-depleted');
+        } else {
+          // Update Battle Restrictions
+          if (!this.firstActionTaken) this.firstActionTaken = true;
+          if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
+
+          action.execute(target, caster, potency, this);
+          this.sound.play(action.soundKeyName);
+        }
       }
 
       return {
@@ -151,17 +159,6 @@ export class Battle extends Phaser.Scene {
     
     else if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
-      
-      if (combatant.queuedOption.isRestricted(combatant.queuedTarget, combatant, this)) {
-        resetCombatantBattleState(combatant);
-        this.sound.play('stamina-depleted');
-        return;
-      }
-
-
-      // Restrictions
-      if (!this.firstActionTaken) this.firstActionTaken = true;
-      if (combatant.queuedOption.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
       
       const newDeferredActions = [{
         timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
@@ -214,17 +211,31 @@ export class Battle extends Phaser.Scene {
     this.sound.play('choice-select');
     switch(option.type) {
       case OptionType.ITEM:
-      case OptionType.ACTION:
-        const executable = option as Executable;
-        this.battleStore.setExecutable(executable);
-        if (executable.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets...', options: [this.battleStore.caster]};
+        const item = option as Item;
+        this.battleStore.setExecutable(item);
+        if (item.targetType === TargetType.SELF) {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
           this.battleStore.menus.push(targetFolder);
         } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets...', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.menus.push(targetFolder);
         }
-        this.battleStore.setText(executable.description);
+        this.battleStore.setText(item.description);
+        break;
+      case OptionType.ACTION:
+        const action = option as Action;
+        this.battleStore.setExecutable(action);
+        if (action.targetType === TargetType.SELF) {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
+          this.battleStore.menus.push(targetFolder);
+        } else {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          this.battleStore.menus.push(targetFolder);
+        }
+        const restrictionText = action.restriction ? 
+        'RESTRCTION: ' + action.restriction.desc + '. '
+        : ''
+        this.battleStore.setText(restrictionText + action.description);
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:

@@ -1,4 +1,4 @@
-import { Action, ActionTags, Restriction } from '../model/action';
+import { Action, Restriction } from '../model/action';
 import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
@@ -59,8 +59,44 @@ export const actionSingleUse: Restriction = {
 export const targetDying: Restriction = {
   desc: 'Target must be dying',
   isRestricted: (target, source, scene) => { 
-    return target.bleed === target.health;
+    return target.bleed !== target.health;
   },
+}
+
+// #endregion
+
+// #region Effects
+const dealDamage = (target, source, potency) => {
+  updateDamage(target, potency);
+};
+
+const healStamina = (target, source, potency) => {
+  updateStamina(source, potency)
+};
+
+const healBleed = (target, source, potency) => {
+  updateBleed(target, -potency);
+};
+
+const healHealth = (target, source, potency) => {
+  updateHealth(target, potency);
+};
+
+// consider converting to getPotency functions
+const scaleDamageOnBleedCombatants = (target, source, potency, scene) => {
+  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
+  const newPotency = damagedCombatants * potency;
+  updateDamage(target, newPotency);
+}
+
+const scaleDamageOnCombatantsTargetingTarget = (target, source, potency, scene) => {
+  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
+  const newPotency = damagedCombatants * potency;
+  updateDamage(target, newPotency);
+}
+
+const scaleDamageOnCasterBleed = (target, source, potency) => {
+  updateDamage(target, source.bleed);
 }
 
 // #endregion
@@ -73,15 +109,11 @@ export const attack: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals damage',
-  execute: (target, source, potency) => {
-    updateDamage(target, potency);
-  },
+  effects: [{execute: dealDamage, potency: 50}],
 };
 
 export const ambush: Action = {
@@ -90,16 +122,11 @@ export const ambush: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals damage, refunds stamina cost',
-  execute: (target, source, potency) => {
-    updateDamage(target, potency);
-    updateStamina(source, 100)
-  },
+  effects: [{execute: dealDamage, potency: 50,}, {execute: healStamina, potency: 100}],
   restriction: firstActionTaken,
 };
 
@@ -109,15 +136,11 @@ export const bandage: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Heals bleed',
-  execute: (target, source, potency) => {
-    updateBleed(target, -potency);
-  },
+  effects: [{execute: healBleed, potency: 50}],
 };
 
 export const bloodlust: Action = {
@@ -126,17 +149,11 @@ export const bloodlust: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 25,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Damage scales with each damaged combatant',
-  execute: (target, source, potency, scene) => {
-    const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
-    const newPotency = damagedCombatants * potency;
-    updateDamage(target, newPotency);
-  },
+  effects: [{execute: scaleDamageOnBleedCombatants, potency: 25}],
 };
 
 export const debilitate: Action = {
@@ -145,15 +162,11 @@ export const debilitate: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 25,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals high damage',
-  execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2);
-  },
+  effects: [{execute: dealDamage, potency: 100}],
   restriction: targetExhausted,
 };
 
@@ -163,15 +176,11 @@ export const engage: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 25,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals high damage',
-  execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2);
-  },
+  effects: [{execute: dealDamage, potency: 100}],
   restriction: targetFullHealth,
 };
 
@@ -181,15 +190,11 @@ export const flank: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 25,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals medium damage',
-  execute: (target, source, potency, scene) => {
-    updateDamage(target, potency + 25);
-  },
+  effects: [{execute: dealDamage, potency: 75}],
   restriction: targetTargetingOther
 };
 
@@ -199,15 +204,11 @@ export const flourish: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals high damage',
-  execute: (target, source, potency, scene) => {
-    updateDamage(target, potency * 2);
-  },
+  effects: [{execute: dealDamage, potency: 100}],
   restriction: casterFullHealth,
 };
 
@@ -217,16 +218,10 @@ export const gangup: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
   description: 'Deals scaling damage based on number of combatants acting on target',
-  execute: (target, source, potency, scene) => {
-    const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
-    const newPotency = damagedCombatants * potency;
-    updateDamage(target, newPotency);
-  }
+  effects: [{execute: scaleDamageOnCombatantsTargetingTarget, potency: 30}],
 };
 
 export const prick: Action = {
@@ -235,15 +230,11 @@ export const prick: Action = {
   staminaCost: 25,
   castTimeInMs: 0,
   animTimeInMs: 100,
-  potency: 5,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Deals damage to target',
-  execute: (target, source, potency) => {
-    updateDamage(target, potency);
-  },
+  description: 'Deals low damage to target with quick attack time',
+  effects: [{execute: dealDamage, potency: 5}],
 };
 
 export const resurrect: Action = {
@@ -252,15 +243,11 @@ export const resurrect: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 2000,
-  potency: 50,
-  tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
 
   description: 'Heals target, target must be dead',
-  execute: (target, source, potency) => {
-    updateHealth(target, potency);
-  },
+  effects: [{execute: healHealth, potency: 50}],
   restriction: targetDead,
 };
 
@@ -270,15 +257,11 @@ export const revenge: Action = {
   staminaCost: 50,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 0,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
-  description: 'Potency equal to bleed',
-  execute: (target, source, potency) => {
-    updateDamage(target, source.bleed);
-  },
+  description: 'Deal scaling damage equal to bleed on caster',
+  effects: [{execute: scaleDamageOnCasterBleed, potency: 50}],
 };
 
 export const salve: Action = {
@@ -287,15 +270,11 @@ export const salve: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 500,
-  potency: 50,
-  tags: new Set([ActionTags.HEAL]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
 
-  description: 'Heals double bleed, target must be dying',
-  execute: (target, source, potency) => {
-    updateBleed(target, -potency*2);
-  },
+  description: 'Heals high bleed, target must be dying',
+  effects: [{execute: healBleed, potency: 100}],
   restriction: targetDying,
 };
 
@@ -305,15 +284,11 @@ export const splinter: Action = {
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 1000,
-  potency: 50,
-  tags: new Set([ActionTags.ATTACK]),
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
   description: 'Deals high damage',
-  execute: (target, source, potency) => {
-    updateDamage(target, potency*2);
-  },
+  effects: [{execute: dealDamage, potency: 100}],
   restriction: actionSingleUse,
 };
 

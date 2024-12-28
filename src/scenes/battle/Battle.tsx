@@ -31,7 +31,7 @@ export interface DialogueTrigger {
 
 export type Executable = Action | Item;
 
-type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant, potency: number }
+type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant  }
 export class Battle extends Phaser.Scene {
   private ui: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
@@ -134,7 +134,6 @@ export class Battle extends Phaser.Scene {
         caster: combatant,
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
-        potency: combatant.queuedOption.potency, 
       }];
       this.deferredActions = this.deferredActions.concat(newDeferredActions);
     }
@@ -143,7 +142,7 @@ export class Battle extends Phaser.Scene {
   }
 
   resolveDeferredActions(delta: number): void {
-    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster, potency}) => {
+    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -151,8 +150,9 @@ export class Battle extends Phaser.Scene {
           // Update Battle Restrictions
           if (!this.firstActionTaken) this.firstActionTaken = true;
           if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
-
-          action.execute(target, caster, potency, this);
+          action.effects.forEach(effect => {
+            effect.execute(target, caster, effect.potency, this);
+          })
           this.sound.play(action.soundKeyName);
         }
       }
@@ -162,7 +162,6 @@ export class Battle extends Phaser.Scene {
         target,
         action, 
         caster,
-        potency
       }
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
   }

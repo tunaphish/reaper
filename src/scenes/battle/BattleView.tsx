@@ -10,6 +10,65 @@ import { MenuOption } from '../../model/menuOption';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
+import { DeferredAction } from './BattleStore';
+
+const ActionView = (props: { action: DeferredAction}) => {
+  const { action } = props;
+
+  const getRandomBorderPoint = () => {
+    const boxSize = 100;
+    const side = Math.floor(Math.random() * 4);  
+
+    switch (side) {
+      case 0: // Top edge
+        return [Math.random() * boxSize, 0];
+      case 1: // Right edge
+        return [boxSize, Math.random() * boxSize];
+      case 2: // Bottom edge
+        return [Math.random() * boxSize, boxSize];
+      case 3: // Left edge
+        return [0, Math.random() * boxSize];
+    }
+  }
+
+  const style: React.CSSProperties = React.useMemo(() => {
+    // place around borders
+    const [topPos, leftPos] = getRandomBorderPoint();
+    const top = `${topPos}%`; 
+    const left = `${leftPos}%`;
+    return {
+      position: 'absolute', 
+      top, 
+      left,
+      transform: "translate(-50%, -50%)",
+
+    }
+  }, []);
+  return (
+    <div>
+      <div style={style}>
+        <motion.fieldset 
+          className={styles.window} 
+          style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+          initial={{ scaleY: 0 }} 
+          animate={{ scaleY: 1 }} 
+          exit={{ scaleY: 0 }}
+          transition={{ duration: .1, ease: 'easeOut' }} 
+        >
+          <motion.div 
+            className={styles.actionWindow}
+            animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
+            transition={{ duration: 0 }}
+          />
+          <legend style={{ fontSize: '12px' }}>{action.caster.name}</legend>
+          <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+            {action.action.name}
+          </div>
+        </motion.fieldset>
+      </div>
+    </div>
+  )
+}
 
 const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -20,48 +79,16 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   const style = [
     styles.window,
     statusToStylesMap[props.combatant.status],
-    props.combatant.takingDamage ? styles.shake : '',
   ];
-  const onAnimationEnd = () => { props.combatant.takingDamage = false }; // hacky
 
-  const actionsDirectedAtCombatant = props.battleScene.deferredActions.filter(action => action.target.name === props.combatant.name);
+  const actionsDirectedAtCombatant = props.battleScene.battleStore.deferredActions.filter(action => action.target.name === props.combatant.name);
 
   return (
     <div style={{ position: 'relative' }}>
       {
-        actionsDirectedAtCombatant.map((action, idx) => {
-          const style: React.CSSProperties = {
-            position: 'absolute', 
-            top:  `${-10*(idx+1)}px`, 
-            left: `${-5*(idx+1)}px`
-          }
-          return (
-            <div key={idx}>
-              <div style={style}>
-                <motion.div 
-                  className={styles.window} 
-                  style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr" }}
-                  initial={{ scaleY: 0 }} 
-                  animate={{ scaleY: 1 }} 
-                  exit={{ scaleY: 0 }}
-                  transition={{ duration: .1, ease: 'easeOut' }} 
-                >
-                  <motion.div 
-                    className={styles.actionWindow}
-                    animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
-                    transition={{ duration: 0 }}
-                  />
-                  <div style={{ padding: 5, gridColumn: 1, gridRow: 1 }}>
-                    {action.action.name}
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          )
-        })
+        actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action}/>)
       }
-
-      <div className={style.join(' ')} onClick={props.onClickCell} onAnimationEnd={onAnimationEnd}
+      <div className={style.join(' ')} onClick={props.onClickCell} 
         style={{ 
           aspectRatio: 1, 
           display: "grid",
@@ -98,6 +125,18 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   )
 });
 
+const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
+  const { option } = props;
+  const onClickOption = () => props.battleScene.selectOption(option);
+
+  return ( 
+    <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
+        <div>{option.name}</div>
+        { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+        { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+    </button>
+  )
+}
 
 const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene: Battle }) => {
   const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -121,18 +160,7 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
         <div className={styles.windowName}>{props.menuContent.name}</div>
         <div className={styles.menuContent}>
           {
-            props.menuContent.type === OptionType.FOLDER && 
-            props.menuContent.options.map((option: MenuOption) => {
-              const onClickOption = () => props.battleScene.selectOption(option);
-
-              return ( <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
-
-                <div>{option.name}</div>
-                { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
-                { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-              </button>
-              )
-            })
+            props.menuContent.options.map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
           }
         </div>
         </div>

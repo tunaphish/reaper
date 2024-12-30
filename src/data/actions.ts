@@ -3,7 +3,7 @@ import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage } from '../model/combatant';
-import { updateBleed, updateHealth, updateStamina } from '../model/combatant'
+import { dealDamage, healStamina, healBleed, healHealth } from './effects';
 
 // #region Restrictions
 
@@ -63,25 +63,6 @@ export const targetDying: Restriction = {
   },
 }
 
-// #endregion
-
-// #region Effects
-const dealDamage = (target, source, potency) => {
-  updateDamage(target, potency);
-};
-
-const healStamina = (target, source, potency) => {
-  updateStamina(source, potency)
-};
-
-const healBleed = (target, source, potency) => {
-  updateBleed(target, -potency);
-};
-
-const healHealth = (target, source, potency) => {
-  updateHealth(target, potency);
-};
-
 // consider converting to getPotency functions
 const scaleDamageOnBleedCombatants = (target, source, potency, scene) => {
   const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
@@ -108,7 +89,7 @@ export const attack: Action = {
   name: 'Attack',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -121,7 +102,7 @@ export const ambush: Action = {
   name: 'Ambush',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -135,7 +116,7 @@ export const bandage: Action = {
   name: 'Bandage',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -148,7 +129,7 @@ export const bloodlust: Action = {
   name: 'Bloodlust',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -161,7 +142,7 @@ export const debilitate: Action = {
   name: 'Debilitate',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -175,7 +156,7 @@ export const engage: Action = {
   name: 'Engage',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -189,7 +170,7 @@ export const flank: Action = {
   name: 'Flank',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -203,7 +184,7 @@ export const flourish: Action = {
   name: 'Flourish',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -217,7 +198,7 @@ export const gangup: Action = {
   name: 'Gangup',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
   description: 'Deals scaling damage based on number of combatants acting on target',
@@ -229,7 +210,7 @@ export const prick: Action = {
   name: 'Prick',
   staminaCost: 25,
   castTimeInMs: 0,
-  animTimeInMs: 100,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -242,7 +223,7 @@ export const resurrect: Action = {
   name: 'Resurrect',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 2000,
+  animTimeInMs: 20000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
 
@@ -256,7 +237,7 @@ export const revenge: Action = {
   name: 'Revenge',
   staminaCost: 50,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -269,7 +250,7 @@ export const salve: Action = {
   name: 'salve',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 500,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
 
@@ -283,7 +264,7 @@ export const splinter: Action = {
   name: 'Splinter',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 10000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

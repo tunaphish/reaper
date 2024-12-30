@@ -4,6 +4,7 @@ import { Status } from '../model/combatant';
 
 import * as Actions from './actions';
 import * as Folders from './folders'
+import * as Reactions from './reactions'
 import { OptionType } from '../model/option';
 
 
@@ -12,7 +13,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Folders.fencer],
+  options: [Actions.attack, Folders.fencer, Reactions.block],
 }
 
 export const Eji: Ally = {
@@ -31,7 +32,6 @@ export const Eji: Ally = {
   folder: ejiFolder,
   
   status: Status.NORMAL,
-  takingDamage: false,
   timeInStateInMs: 0,
   
   menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
@@ -61,7 +61,6 @@ export const Keshi: Ally = {
   folder: keshiFolder,
   
   status: Status.NORMAL,
-  takingDamage: false,
   timeInStateInMs: 0,
   
   menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
@@ -90,7 +89,6 @@ export const Elise: Ally = {
   folder: eliseFolder,
 
   status: Status.NORMAL,
-  takingDamage: false,
   timeInStateInMs: 0,
 
   menuPortraitPath: '/reaper/assets/characters/menu/tifa.png',

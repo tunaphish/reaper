@@ -56,5 +56,4 @@ export const healieBoi: Enemy = {
   timeInStateInMs: 0,
   
   imageUrl: '/reaper/assets/characters/eji.png',
-  takingDamage: false,
 };

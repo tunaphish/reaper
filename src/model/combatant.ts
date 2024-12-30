@@ -26,7 +26,6 @@ export type Combatant = Option & {
   folder: Folder;
 
   status: Status;
-  takingDamage: boolean;
   queuedOption?: Action | Item;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
@@ -49,10 +48,6 @@ export const updateStamina = (target: Combatant, change: number): void => {
 };
 
 export const updateDamage = (target: Combatant, change: number): void => {
-  if (change > 0) {
-    target.takingDamage = true;
-  }
-
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
   }

@@ -4,6 +4,10 @@ import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
 import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
+import { Reaction } from "../../model/reaction";
+import { Action } from "../../model/action";
+
+export type DeferredAction = { id: string; timeTilExecute: number; action: Action; target: Combatant; caster: Combatant; };
 
 export class BattleStore {
   // battle vars
@@ -13,6 +17,11 @@ export class BattleStore {
   caster?: Combatant;
   executable?: Executable;
   target?: Combatant;
+
+  reaction?: Reaction;
+  actionTarget?: Action;
+  deferredActions: DeferredAction[] = [];
+
   menus: Folder[] = [];
   text: string;
 
@@ -33,6 +42,14 @@ export class BattleStore {
 
   setExecutable(executable?: Executable): void {
     this.executable = executable;
+  }
+
+  setReaction(reaction?: Reaction): void {
+    this.reaction = reaction;
+  }
+
+  setActionTarget(actionTarget?: Action): void {
+    this.actionTarget = actionTarget;
   }
 
   setText(text: string): void {
@@ -93,3 +110,4 @@ export class BattleStore {
     return [...this.enemies, ...this.allies];
   }
 }
+

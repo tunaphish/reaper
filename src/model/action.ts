@@ -1,16 +1,12 @@
 import { Battle } from "../scenes/battle/Battle";
 import { Combatant } from "./combatant";
+import { Effect } from "./effect";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 
 export type Restriction = {
   desc: string;
   isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
-}
-
-export type Effect = {
-  execute: (target: Combatant, source: Combatant, potency: number, scene: Battle) => void;
-  potency: number;
 }
 
 export type Action = Option & {

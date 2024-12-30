@@ -17,6 +17,7 @@ import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
 import { healieBoi } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
+import { Reaction } from '../../model/reaction';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -31,7 +32,6 @@ export interface DialogueTrigger {
 
 export type Executable = Action | Item;
 
-type DeferredAction = { timeTilExecute: number, action: Action, target: Combatant, caster: Combatant  }
 export class Battle extends Phaser.Scene {
   private ui: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
@@ -42,9 +42,6 @@ export class Battle extends Phaser.Scene {
   // restriction vars
   firstActionTaken = false;
   splinterUsed = false;
-
-
-  deferredActions: DeferredAction[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -120,29 +117,31 @@ export class Battle extends Phaser.Scene {
   }
 
   execute(combatant: Combatant): void {
-    if (combatant.queuedOption.type === OptionType.ITEM) {
-      combatant.queuedOption.charges -= 1;
-      combatant.queuedOption.execute(combatant.queuedTarget, combatant);
-      this.sound.play(combatant.queuedOption.soundKeyName);
-    }
+    // if (combatant.queuedOption.type === OptionType.ITEM) {
+    //   combatant.queuedOption.charges -= 1;
+    //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    //   this.sound.play(combatant.queuedOption.soundKeyName);
+    // } else
     
-    else if (combatant.queuedOption.type === OptionType.ACTION) {
+    if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
       const newDeferredActions = [{
+         // @ts-ignore
+        id: self.crypto.randomUUID(),
         timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
         caster: combatant,
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
       }];
-      this.deferredActions = this.deferredActions.concat(newDeferredActions);
+      this.battleStore.deferredActions = this.battleStore.deferredActions.concat(newDeferredActions);
     }
     
     resetCombatantBattleState(combatant);
   }
 
   resolveDeferredActions(delta: number): void {
-    this.deferredActions = this.deferredActions.map(({timeTilExecute, action, target, caster}) => {
+    this.battleStore.deferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -158,6 +157,7 @@ export class Battle extends Phaser.Scene {
       }
 
       return {
+        id,
         timeTilExecute: timeTilExecute - delta,
         target,
         action, 
@@ -210,18 +210,18 @@ export class Battle extends Phaser.Scene {
   selectOption(option: MenuOption): void {
     this.sound.play('choice-select');
     switch(option.type) {
-      case OptionType.ITEM:
-        const item = option as Item;
-        this.battleStore.setExecutable(item);
-        if (item.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-          this.battleStore.menus.push(targetFolder);
-        } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          this.battleStore.menus.push(targetFolder);
-        }
-        this.battleStore.setText(item.description);
-        break;
+      // case OptionType.ITEM:
+      //   const item = option as Item;
+      //   this.battleStore.setExecutable(item);
+      //   if (item.targetType === TargetType.SELF) {
+      //     const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
+      //     this.battleStore.menus.push(targetFolder);
+      //   } else {
+      //     const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+      //     this.battleStore.menus.push(targetFolder);
+      //   }
+      //   this.battleStore.setText(item.description);
+      //   break;
       case OptionType.ACTION:
         const action = option as Action;
         this.battleStore.setExecutable(action);
@@ -236,6 +236,16 @@ export class Battle extends Phaser.Scene {
         'RESTRCTION: ' + action.restriction.desc + '. '
         : ''
         this.battleStore.setText(restrictionText + action.description);
+        break;
+      case OptionType.REACTION:
+        // const reaction = option as Reaction;
+        // this.battleStore.setReaction(reaction);
+        
+        // const actionOptions: Action[] = this.battleStore.deferredActions.map(deferredAction => deferredAction.action);
+        // const reactionsFolder: Folder = { type: OptionType.FOLDER, name: reaction.name, desc: 'Target Actions', options: actionOptions};
+        // this.battleStore.menus.push(reactionsFolder);
+        
+        // this.battleStore.setText(reaction.description);
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:

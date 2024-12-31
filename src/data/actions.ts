@@ -2,8 +2,7 @@ import { Action, Restriction } from '../model/action';
 import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
-import { updateDamage } from '../model/combatant';
-import { dealDamage, healStamina, healBleed, healHealth } from './effects';
+import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget } from './effects';
 
 // #region Restrictions
 
@@ -63,23 +62,6 @@ export const targetDying: Restriction = {
   },
 }
 
-// consider converting to getPotency functions
-const scaleDamageOnBleedCombatants = (target, source, potency, scene) => {
-  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
-  const newPotency = damagedCombatants * potency;
-  updateDamage(target, newPotency);
-}
-
-const scaleDamageOnCombatantsTargetingTarget = (target, source, potency, scene) => {
-  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
-  const newPotency = damagedCombatants * potency;
-  updateDamage(target, newPotency);
-}
-
-const scaleDamageOnCasterBleed = (target, source, potency) => {
-  updateDamage(target, source.bleed);
-}
-
 // #endregion
 
 // #region Actions
@@ -89,7 +71,7 @@ export const attack: Action = {
   name: 'Attack',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

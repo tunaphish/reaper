@@ -14,10 +14,11 @@ import * as Actions from '../../data/actions';
 
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
-import { BattleStore } from './BattleStore';
+import { BattleStore, DeferredAction } from './BattleStore';
 import { healieBoi } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
+import { Effect } from '../../model/effect';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -69,6 +70,7 @@ export class Battle extends Phaser.Scene {
     
     this.castActions();    
     this.executeActions();    
+    this.reactToActions();
     this.resolveDeferredActions(delta);
   }
 
@@ -110,6 +112,21 @@ export class Battle extends Phaser.Scene {
     }
   }
 
+  reactToActions(): void {
+    if (!this.battleStore.caster || !this.battleStore.reaction || !this.battleStore.actionTarget) return;  
+  
+    this.battleStore.caster.stamina -= this.battleStore.reaction.staminaCost
+
+    if (this.battleStore.reaction.restriction.isRestricted(this.battleStore.actionTarget, this.battleStore.caster)) {
+      this.sound.play('stamina-depleted');
+    } else {
+      this.sound.play('choice-select');
+      this.battleStore.actionTarget.reactions.push(this.battleStore.reaction);
+    }
+
+    this.battleStore.resetSelections();  
+  }
+
   executeActions(): void {
     this.battleStore.getCombatants()
                     .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
@@ -133,6 +150,7 @@ export class Battle extends Phaser.Scene {
         caster: combatant,
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
+        reactions: [],
       }];
       this.battleStore.deferredActions = this.battleStore.deferredActions.concat(newDeferredActions);
     }
@@ -141,7 +159,7 @@ export class Battle extends Phaser.Scene {
   }
 
   resolveDeferredActions(delta: number): void {
-    this.battleStore.deferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster}) => {
+    this.battleStore.deferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -149,9 +167,14 @@ export class Battle extends Phaser.Scene {
           // Update Battle Restrictions
           if (!this.firstActionTaken) this.firstActionTaken = true;
           if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
-          action.effects.forEach(effect => {
+
+          const effects: Effect[] = reactions.reduce((previousEffects, reaction) => {
+            return reaction.modifyEffects(previousEffects);
+          }, action.effects);
+          effects.forEach(effect => {
             effect.execute(target, caster, effect.potency, this);
           })
+          
           this.sound.play(action.soundKeyName);
         }
       }
@@ -162,6 +185,7 @@ export class Battle extends Phaser.Scene {
         target,
         action, 
         caster,
+        reactions,
       }
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
   }
@@ -179,6 +203,11 @@ export class Battle extends Phaser.Scene {
 
   setTarget(combatant: Enemy | Ally): void {
     this.battleStore.setTarget(combatant);    
+  }
+
+  setActionTarget(actionTarget: DeferredAction): void {
+    if (!this.battleStore.caster || !this.battleStore.reaction) return;
+    this.battleStore.setActionTarget(actionTarget)
   }
 
   playSong(songKey: string): void {
@@ -238,14 +267,11 @@ export class Battle extends Phaser.Scene {
         this.battleStore.setText(restrictionText + action.description);
         break;
       case OptionType.REACTION:
-        // const reaction = option as Reaction;
-        // this.battleStore.setReaction(reaction);
-        
-        // const actionOptions: Action[] = this.battleStore.deferredActions.map(deferredAction => deferredAction.action);
-        // const reactionsFolder: Folder = { type: OptionType.FOLDER, name: reaction.name, desc: 'Target Actions', options: actionOptions};
-        // this.battleStore.menus.push(reactionsFolder);
-        
-        // this.battleStore.setText(reaction.description);
+        const reaction = option as Reaction;
+        this.battleStore.setReaction(reaction);
+        const reactionsFolder: Folder = { type: OptionType.FOLDER, name: 'Select Action', desc: 'Select Action', options: []};
+        this.battleStore.menus.push(reactionsFolder);
+        this.battleStore.setText(reaction.description);
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:

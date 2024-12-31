@@ -26,8 +26,6 @@ export const Eji: Ally = {
   maxStamina: 200,
   magic: 100,
   maxMagic: 100,
-  flow: 0,
-  flowDecayRatePerSecond: 3,
   staminaRegenRatePerSecond: 7,
   folder: ejiFolder,
   
@@ -55,8 +53,6 @@ export const Keshi: Ally = {
   maxStamina: 150,
   magic: 100,
   maxMagic: 100,
-  flow: 0,
-  flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 8,
   folder: keshiFolder,
   
@@ -83,8 +79,6 @@ export const Elise: Ally = {
   maxStamina: 250,
   magic: 10,
   maxMagic: 100,
-  flow: 15,
-  flowDecayRatePerSecond: 7,
   staminaRegenRatePerSecond: 5,
   folder: eliseFolder,
 

@@ -91,9 +91,6 @@ export class BattleStore {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }
-    
-      const decayPerTick = combatant.flowDecayRatePerSecond * (delta/1000);
-      combatant.flow = Math.max(0, combatant.flow-decayPerTick);
     });
   }
 

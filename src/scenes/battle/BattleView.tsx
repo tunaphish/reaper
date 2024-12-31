@@ -12,8 +12,12 @@ import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { DeferredAction } from './BattleStore';
 
-const ActionView = (props: { action: DeferredAction}) => {
-  const { action } = props;
+const ActionView = (props: { action: DeferredAction, battleScene: Battle }) => {
+  const { action, battleScene } = props;
+
+  const onClickAction = () => {
+    battleScene.setActionTarget(action)
+  }
 
   const getRandomBorderPoint = () => {
     const boxSize = 100;
@@ -32,7 +36,6 @@ const ActionView = (props: { action: DeferredAction}) => {
   }
 
   const style: React.CSSProperties = React.useMemo(() => {
-    // place around borders
     const [topPos, leftPos] = getRandomBorderPoint();
     const top = `${topPos}%`; 
     const left = `${leftPos}%`;
@@ -41,31 +44,29 @@ const ActionView = (props: { action: DeferredAction}) => {
       top, 
       left,
       transform: "translate(-50%, -50%)",
-
+      zIndex: 100,
     }
   }, []);
   return (
-    <div>
-      <div style={style}>
-        <motion.fieldset 
-          className={styles.window} 
-          style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
-          initial={{ scaleY: 0 }} 
-          animate={{ scaleY: 1 }} 
-          exit={{ scaleY: 0 }}
-          transition={{ duration: .1, ease: 'easeOut' }} 
-        >
-          <motion.div 
-            className={styles.actionWindow}
-            animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
-            transition={{ duration: 0 }}
-          />
-          <legend style={{ fontSize: '12px' }}>{action.caster.name}</legend>
-          <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
-            {action.action.name}
-          </div>
-        </motion.fieldset>
-      </div>
+    <div onClick={onClickAction} style={style}>
+      <motion.fieldset 
+        className={styles.window} 
+        style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+        initial={{ scaleY: 0 }} 
+        animate={{ scaleY: 1 }} 
+        exit={{ scaleY: 0 }}
+        transition={{ duration: .1, ease: 'easeOut' }} 
+      >
+        <motion.div 
+          className={styles.actionWindow}
+          animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
+          transition={{ duration: 0 }}
+        />
+        <legend style={{ fontSize: '12px' }}>{action.caster.name}</legend>
+        <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+          {action.action.name}
+        </div>
+      </motion.fieldset>
     </div>
   )
 }
@@ -86,7 +87,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   return (
     <div style={{ position: 'relative' }}>
       {
-        actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action}/>)
+        actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} battleScene={props.battleScene}/>)
       }
       <div className={style.join(' ')} onClick={props.onClickCell} 
         style={{ 
@@ -144,7 +145,7 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   }
 
   const HORIZONTAL_OFFSET = 50;
-  const VERTICAL_OFFSET = 150;
+  const VERTICAL_OFFSET = 200;
   const style: React.CSSProperties = {
     right: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
     bottom: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',

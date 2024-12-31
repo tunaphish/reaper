@@ -7,7 +7,14 @@ import { Folder } from "../../model/folder";
 import { Reaction } from "../../model/reaction";
 import { Action } from "../../model/action";
 
-export type DeferredAction = { id: string; timeTilExecute: number; action: Action; target: Combatant; caster: Combatant; };
+export type DeferredAction = { 
+  id: string; 
+  timeTilExecute: number; 
+  action: Action; 
+  target: Combatant; 
+  caster: Combatant; 
+  reactions: Reaction[];
+};
 
 export class BattleStore {
   // battle vars
@@ -19,7 +26,7 @@ export class BattleStore {
   target?: Combatant;
 
   reaction?: Reaction;
-  actionTarget?: Action;
+  actionTarget?: DeferredAction;
   deferredActions: DeferredAction[] = [];
 
   menus: Folder[] = [];
@@ -48,7 +55,7 @@ export class BattleStore {
     this.reaction = reaction;
   }
 
-  setActionTarget(actionTarget?: Action): void {
+  setActionTarget(actionTarget?: DeferredAction): void {
     this.actionTarget = actionTarget;
   }
 
@@ -65,6 +72,7 @@ export class BattleStore {
     this.setCaster(null);
     this.setExecutable(null);
     this.setTarget(null);
+    this.setActionTarget(null);
   }
 
 

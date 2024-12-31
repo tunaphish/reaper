@@ -4,7 +4,7 @@ export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
 };
 export const healStamina = (target, source, potency) => {
-  updateStamina(source, potency);
+  updateStamina(target, potency);
 };
 export const healBleed = (target, source, potency) => {
   updateBleed(target, -potency);

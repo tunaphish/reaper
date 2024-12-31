@@ -67,6 +67,13 @@ const ActionView = (props: { action: DeferredAction, battleScene: Battle }) => {
           {action.action.name}
         </div>
       </motion.fieldset>
+      <div className={styles.reactionContainer}>
+        {
+          action.reactions.map((reaction, idx) => 
+            <img src='/reaper/assets/ui/icons/magic.png' className={styles.reaction}key={idx} />
+          )
+        }
+      </div>
     </div>
   )
 }

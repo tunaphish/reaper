@@ -122,7 +122,6 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
             </div>
             <div className={styles.meterContainer}>
               <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
-              <meter className={styles.flowMeter} min={0} value={props.combatant.flow} max={props.combatant.maxMagic}></meter>
               <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
             </div>
           </div>

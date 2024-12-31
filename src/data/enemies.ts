@@ -47,8 +47,6 @@ export const healieBoi: Enemy = {
   maxStamina: 200,
   magic: 100,
   maxMagic: 100,
-  flow: 0,
-  flowDecayRatePerSecond: 5,
   staminaRegenRatePerSecond: 14,
   folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Healie Boi Menu', options: [Actions.bandage, Actions.attack]},
   

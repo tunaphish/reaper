@@ -140,11 +140,11 @@ meter {
   margin-bottom: 3px;    
 }
 
-.healthMeter, .flowMeter {
+.healthMeter {
   background: transparent;
 }
 
-.healthMeter, .bleedMeter, .magicMeter, .flowMeter, .staminaMeter, .meterNumber {
+.healthMeter, .bleedMeter, .magicMeter, .staminaMeter, .meterNumber {
   grid-column: 1;
   grid-row: 1;
 }
@@ -161,9 +161,6 @@ meter {
   background: green;
 }
 
-.flowMeter:-moz-meter-optimum::-moz-meter-bar, .flowMeter::-webkit-meter-optimum-value {
-  background: turquoise;
-}
 
 .magicMeter:-moz-meter-optimum::-moz-meter-bar, .magicMeter::-webkit-meter-optimum-value {
   background: blue;

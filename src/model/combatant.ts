@@ -20,8 +20,6 @@ export type Combatant = Option & {
   maxStamina: number;
   magic: number;
   maxMagic: number;
-  flow: number;
-  flowDecayRatePerSecond: number;
   staminaRegenRatePerSecond: number; 
   folder: Folder;
 

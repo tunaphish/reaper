@@ -140,12 +140,13 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
 const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
   const { option } = props;
   const onClickOption = () => props.battleScene.selectOption(option);
-
+  
   return ( 
     <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
         <div>{option.name}</div>
         { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
         { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
+        { option.type === OptionType.FOLDER && option.criteria && <div className={option.criteria.fulfilled ? styles.magicCostFulfilled : styles.magicCost}>{option.criteria.magicCost}</div>}
     </button>
   )
 }

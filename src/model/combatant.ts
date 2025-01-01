@@ -24,7 +24,7 @@ export type Combatant = Option & {
   folder: Folder;
 
   status: Status;
-  queuedOption?: Action | Item;
+  queuedOption?: Action | Item | Folder;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
 
@@ -65,6 +65,14 @@ export const updateDamage = (target: Combatant, change: number): void => {
     const newBleed = target.bleed + change;
     target.bleed = clamp(0, newBleed, target.health);
   }
+};
+
+export const updateMagic = (caster: Combatant, change: number): void => {
+  const magicCost = clamp(0, change, caster.magic);
+  const healthCost = clamp(0, change - caster.magic, caster.health);
+  
+  caster.magic -= magicCost;
+  caster.health -= healthCost;
 };
 
 export const resetCombatantBattleState = (combatant: Combatant): void => {

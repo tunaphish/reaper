@@ -71,7 +71,7 @@ export const attack: Action = {
   name: 'Attack',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 5000,
+  animTimeInMs: 2000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

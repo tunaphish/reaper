@@ -84,7 +84,7 @@ export const ambush: Action = {
   name: 'Ambush',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -111,7 +111,7 @@ export const bloodlust: Action = {
   name: 'Bloodlust',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -138,7 +138,7 @@ export const engage: Action = {
   name: 'Engage',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -166,7 +166,7 @@ export const flourish: Action = {
   name: 'Flourish',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -205,7 +205,7 @@ export const resurrect: Action = {
   name: 'Resurrect',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 20000,
+  animTimeInMs: 2000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
 
@@ -246,7 +246,7 @@ export const splinter: Action = {
   name: 'Splinter',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 10000,
+  animTimeInMs: 1000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

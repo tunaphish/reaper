@@ -31,6 +31,7 @@ export const Eji: Ally = {
   
   status: Status.NORMAL,
   timeInStateInMs: 0,
+  juggleDuration: 0,
   
   menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
 };
@@ -58,6 +59,7 @@ export const Keshi: Ally = {
   
   status: Status.NORMAL,
   timeInStateInMs: 0,
+  juggleDuration: 0,
   
   menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
 };
@@ -84,6 +86,7 @@ export const Elise: Ally = {
 
   status: Status.NORMAL,
   timeInStateInMs: 0,
+  juggleDuration: 0,
 
   menuPortraitPath: '/reaper/assets/characters/menu/tifa.png',
 };

@@ -11,9 +11,9 @@ import { OptionType } from '../model/option';
 
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
-  name: 'Eji',
-  desc: 'Soul of Eji',
-  options: [Actions.attack, Folders.fencer, Reactions.block],
+  name: 'Cloud',
+  desc: 'Soul of Cloud',
+  options: [Actions.uppercut, Actions.attack, Actions.jab, Reactions.block],
 }
 
 export const Eji: Ally = {
@@ -39,8 +39,8 @@ export const Eji: Ally = {
 
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
-  name: 'Keshi',
-  desc: 'Soul of Keshi',
+  name: 'Barret',
+  desc: 'Soul of Barret',
   options: [Actions.attack, Folders.berserker, Folders.hunter],
 }
 
@@ -66,8 +66,8 @@ export const Keshi: Ally = {
 
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
-  desc: 'Soul of Elise',
-  name: 'Elise',
+  desc: 'Soul of Tifa',
+  name: 'Tifa',
   options: [Actions.attack, Folders.cleric],
 };
 

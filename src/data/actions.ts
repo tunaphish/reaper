@@ -2,7 +2,7 @@ import { Action, Restriction } from '../model/action';
 import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
-import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget } from './effects';
+import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget, launch } from './effects';
 
 // #region Restrictions
 
@@ -69,7 +69,7 @@ export const targetDying: Restriction = {
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
-  staminaCost: 100,
+  staminaCost: 10,
   castTimeInMs: 0,
   animTimeInMs: 2000,
   targetType: TargetType.SINGLE_TARGET,
@@ -253,6 +253,36 @@ export const splinter: Action = {
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
   restriction: actionSingleUse,
+};
+
+// #endregion
+
+// #region Monk Actions
+
+export const jab: Action = {
+  type: OptionType.ACTION,
+  name: 'Jab',
+  staminaCost: 10,
+  castTimeInMs: 0,
+  animTimeInMs: 1000,
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+
+  description: 'Deals damage',
+  effects: [{execute: dealDamage, potency: 10}],
+};
+
+export const uppercut: Action = {
+  type: OptionType.ACTION,
+  name: 'Uppercut',
+  staminaCost: 10,
+  castTimeInMs: 0,
+  animTimeInMs: 4000,
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'attack',
+
+  description: 'Deals damage, launches',
+  effects: [{execute: dealDamage, potency: 50}, {execute: launch, potency: 1000}],
 };
 
 // #endregion

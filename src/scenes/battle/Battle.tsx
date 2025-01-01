@@ -5,7 +5,7 @@ import { OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
-import { resetCombatantBattleState, Status } from '../../model/combatant';
+import { resetCombatantBattleState, Status, updateMagic } from '../../model/combatant';
 import { Combatant } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { MenuOption } from '../../model/menuOption';
@@ -31,7 +31,7 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
-export type Executable = Action | Item;
+export type Executable = Action | Item | Folder;
 
 export class Battle extends Phaser.Scene {
   private ui: ReactOverlay;
@@ -139,6 +139,11 @@ export class Battle extends Phaser.Scene {
     //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
     //   this.sound.play(combatant.queuedOption.soundKeyName);
     // } else
+
+    if (combatant.queuedOption.type === OptionType.FOLDER) {
+      combatant.queuedOption.criteria.fulfilled = true;
+      this.sound.play('charged');
+    } else 
     
     if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
@@ -283,7 +288,13 @@ export class Battle extends Phaser.Scene {
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
-        this.battleStore.menus.push(folder);
+        if (folder.criteria && !folder.criteria.fulfilled) {
+          updateMagic(this.battleStore.caster, folder.criteria.magicCost);
+          this.battleStore.setExecutable(folder);
+          this.battleStore.setTarget(this.battleStore.caster);
+        } else {
+          this.battleStore.menus.push(folder);
+        }
         break;
     }
   }

@@ -17,8 +17,9 @@ export type Action = Option & {
   targetType: TargetType;
   soundKeyName: string;
   castTimeInMs: number;
-  
+
   effects: Effect[];
   restriction?: Restriction; 
   animTimeInMs?: number;
+  airtime?: number;
 }

@@ -158,6 +158,7 @@ export class Battle extends Phaser.Scene {
     resetCombatantBattleState(combatant);
   }
 
+  // potentially split function
   resolveDeferredActions(delta: number): void {
     this.battleStore.deferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions}) => {
       if (timeTilExecute - delta <= 0) {
@@ -179,9 +180,11 @@ export class Battle extends Phaser.Scene {
         }
       }
 
+      // pause caster actions whilst juggled
+      const timeElapsed = caster.juggleDuration === 0 ? delta : 0;
       return {
         id,
-        timeTilExecute: timeTilExecute - delta,
+        timeTilExecute: timeTilExecute - timeElapsed,
         target,
         action, 
         caster,

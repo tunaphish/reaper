@@ -230,3 +230,9 @@ meter {
   max-width: 12px;
   max-height: 12px;
 }
+
+.juggleMeter {
+  background-color: white;
+  height: 12px;
+  position: absolute;
+}

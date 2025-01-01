@@ -2,6 +2,7 @@ import { updateDamage, updateStamina, updateBleed, updateHealth } from "../model
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
+  target.juggleDuration += 500;
 };
 export const healStamina = (target, source, potency) => {
   updateStamina(target, potency);

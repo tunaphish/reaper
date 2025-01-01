@@ -90,6 +90,10 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   ];
 
   const actionsDirectedAtCombatant = props.battleScene.battleStore.deferredActions.filter(action => action.target.name === props.combatant.name);
+  
+  const juggleWidth = {
+    width: `${props.combatant.juggleDuration * .1}px`
+  }
 
   return (
     <div style={{ position: 'relative' }}>
@@ -127,6 +131,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
           </div>
         </div>
       </div>
+      <div className={styles.juggleMeter} style={juggleWidth}/>
     </div>
 
   )

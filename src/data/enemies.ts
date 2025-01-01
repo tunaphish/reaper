@@ -49,9 +49,11 @@ export const healieBoi: Enemy = {
   maxMagic: 100,
   staminaRegenRatePerSecond: 14,
   folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Healie Boi Menu', options: [Actions.bandage, Actions.attack]},
-  
+
+  imageUrl: '/reaper/assets/characters/eji.png',
+
+  // temp props
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  
-  imageUrl: '/reaper/assets/characters/eji.png',
+  juggleDuration: 0,  
 };

@@ -32,6 +32,8 @@ export class BattleStore {
   menus: Folder[] = [];
   text: string;
 
+  resonance = 0;
+
   constructor(enemies: Enemy[], allies: Allies, text: string) {
     this.enemies = enemies;
     this.allies = allies;
@@ -91,6 +93,8 @@ export class BattleStore {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }
+
+      combatant.juggleDuration = Math.max(0, combatant.juggleDuration -= delta);
     });
   }
 

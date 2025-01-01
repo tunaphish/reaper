@@ -2,7 +2,9 @@ import { updateDamage, updateStamina, updateBleed, updateHealth } from "../model
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
-  target.juggleDuration += 500;
+  if (target.juggleDuration > 0) {
+    target.juggleDuration += 500;
+  }
 };
 export const healStamina = (target, source, potency) => {
   updateStamina(target, potency);
@@ -12,6 +14,9 @@ export const healBleed = (target, source, potency) => {
 };
 export const healHealth = (target, source, potency) => {
   updateHealth(target, potency);
+};
+export const launch = (target, source, potency) => {
+  target.juggleDuration += potency;
 };
 
 // consider converting to getPotency functions

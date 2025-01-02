@@ -68,11 +68,11 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyBehavior(delta);
-
+    //this.selectEnemyBehavior(delta);
     this.castActions();    
-    this.executeActions();    
     this.reactToActions();
+
+    this.executeActions();    
     this.resolveDeferredActions(delta);
   }
 
@@ -147,16 +147,21 @@ export class Battle extends Phaser.Scene {
   }
 
   reactToActions(): void {
-    if (!this.battleStore.caster || !this.battleStore.reaction || !this.battleStore.actionTarget) return;  
+    if (!this.battleStore.caster || !this.battleStore.reaction || !this.battleStore.target) return;  
   
     this.battleStore.caster.stamina -= this.battleStore.reaction.staminaCost
 
-    if (this.battleStore.reaction.restriction.isRestricted(this.battleStore.actionTarget, this.battleStore.caster)) {
-      this.sound.play('stamina-depleted');
-    } else {
-      this.sound.play(this.battleStore.reaction.soundKeyName);
-      this.battleStore.actionTarget.reactions.push(this.battleStore.reaction);
-    }
+    // TODO: Add queue
+    const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === this.battleStore.target.name);
+    actionsTargetingTarget.forEach(action => {
+      if (this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)) {
+        this.sound.play('stamina-depleted');
+      } else {
+        this.sound.play(this.battleStore.reaction.soundKeyName);
+        action.reactions.push(this.battleStore.reaction);
+      }
+    })
+
 
     this.battleStore.resetSelections();  
   }
@@ -248,11 +253,6 @@ export class Battle extends Phaser.Scene {
     this.battleStore.setTarget(combatant);    
   }
 
-  setActionTarget(actionTarget: DeferredAction): void {
-    if (!this.battleStore.caster || !this.battleStore.reaction) return;
-    this.battleStore.setActionTarget(actionTarget)
-  }
-
   playSong(songKey: string): void {
     this.music = this.sound.add(songKey, { loop: true });
     this.music.play();
@@ -312,8 +312,13 @@ export class Battle extends Phaser.Scene {
       case OptionType.REACTION:
         const reaction = option as Reaction;
         this.battleStore.setReaction(reaction);
-        const reactionsFolder: Folder = { type: OptionType.FOLDER, name: 'Select Action', desc: 'Select Action', options: []};
-        this.battleStore.menus.push(reactionsFolder);
+        if (reaction.targetType === TargetType.SELF) {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
+          this.battleStore.menus.push(targetFolder);
+        } else {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
+          this.battleStore.menus.push(targetFolder);
+        }
         this.battleStore.setText(reaction.description);
         break;
       case OptionType.ENEMY:

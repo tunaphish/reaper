@@ -12,12 +12,8 @@ import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { DeferredAction } from './BattleStore';
 
-const ActionView = (props: { action: DeferredAction, battleScene: Battle }) => {
-  const { action, battleScene } = props;
-
-  const onClickAction = () => {
-    battleScene.setActionTarget(action)
-  }
+const ActionView = (props: { action: DeferredAction }) => {
+  const { action } = props;
 
   const getRandomBorderPoint = () => {
     const boxSize = 100;
@@ -48,7 +44,7 @@ const ActionView = (props: { action: DeferredAction, battleScene: Battle }) => {
     }
   }, []);
   return (
-    <div onClick={onClickAction} style={style}>
+    <div style={style}>
       <motion.fieldset 
         className={styles.window} 
         style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
@@ -98,7 +94,7 @@ const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: ()
   return (
     <div style={{ position: 'relative' }}>
       {
-        actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} battleScene={props.battleScene}/>)
+        actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} />)
       }
       <div className={style.join(' ')} onClick={props.onClickCell} 
         style={{ 

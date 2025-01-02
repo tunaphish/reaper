@@ -2,6 +2,7 @@ import { DeferredAction } from "../scenes/battle/BattleStore";
 import { Combatant } from "./combatant";
 import { Effect } from "./effect";
 import { Option, OptionType } from "./option";
+import { TargetType } from "./targetType";
 
 export type ReactionRestriction = {
   desc: string;
@@ -10,6 +11,7 @@ export type ReactionRestriction = {
 
 export type Reaction = Option & {
   type: OptionType.REACTION;
+  targetType: TargetType;
   staminaCost: number;
   description: string;
   soundKeyName: string;

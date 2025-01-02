@@ -19,7 +19,6 @@ import { slime } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
-import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -44,8 +43,6 @@ export class Battle extends Phaser.Scene {
   // restriction vars
   firstActionTaken = false;
   splinterUsed = false;
-
-  lastCalculation = 0;
 
   constructor() {
     super(sceneConfig);
@@ -81,22 +78,33 @@ export class Battle extends Phaser.Scene {
 
 
   selectEnemyBehavior(delta: number): void {
-    this.lastCalculation += delta;
-    if (this.lastCalculation < 1000) {
-      return;
-    }
-
-    this.lastCalculation = 0;
+    // TODO: update for spells and items
     this.battleStore.enemies
-      .filter((enemy) => enemy.status === Status.NORMAL)
+      .map(enemy => { 
+        enemy.timeSinceLastAction += delta 
+        return enemy;
+      })
+      .filter((enemy) => enemy.status === Status.NORMAL && enemy.timeSinceLastAction > enemy.cadence)
       .forEach(enemy => {
+        enemy.timeSinceLastAction = 0;
         const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
         if (!selectedBehavior) return;
-        enemy.status = Status.CASTING;
-        enemy.queuedOption = selectedBehavior.option;
-        enemy.queuedTarget = selectedBehavior.getTarget(this);
-        enemy.timeInStateInMs = 0;
-        return;
+
+        selectedBehavior.options.forEach((option) => {
+          const action =  option as Action;
+          enemy.stamina -= action.staminaCost;
+      
+          const newDeferredAction = {
+             // @ts-ignore
+            id: self.crypto.randomUUID(),
+            timeTilExecute: action.animTimeInMs || 0,
+            caster: enemy,
+            action,
+            target: selectedBehavior.getTarget(this),
+            reactions: [],
+          };
+          this.battleStore.deferredActions.push(newDeferredAction);
+        })
       });
   }
 
@@ -146,7 +154,7 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.reaction.restriction.isRestricted(this.battleStore.actionTarget, this.battleStore.caster)) {
       this.sound.play('stamina-depleted');
     } else {
-      this.sound.play('choice-select');
+      this.sound.play(this.battleStore.reaction.soundKeyName);
       this.battleStore.actionTarget.reactions.push(this.battleStore.reaction);
     }
 
@@ -174,7 +182,7 @@ export class Battle extends Phaser.Scene {
     if (combatant.queuedOption.type === OptionType.ACTION) {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
-      const newDeferredActions = [{
+      const newDeferredAction = {
          // @ts-ignore
         id: self.crypto.randomUUID(),
         timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
@@ -182,8 +190,8 @@ export class Battle extends Phaser.Scene {
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
         reactions: [],
-      }];
-      this.battleStore.deferredActions = this.battleStore.deferredActions.concat(newDeferredActions);
+      };
+      this.battleStore.deferredActions.push(newDeferredAction);
     }
     
     resetCombatantBattleState(combatant);

@@ -79,6 +79,19 @@ export const attack: Action = {
   effects: [{execute: dealDamage, potency: 50}],
 };
 
+export const stanch: Action = {
+  type: OptionType.ACTION,
+  name: 'Stanch',
+  staminaCost: 25,
+  castTimeInMs: 0,
+  animTimeInMs: 1000,
+  targetType: TargetType.SELF,
+  soundKeyName: 'attack',
+
+  description: 'Heals bleed on self',
+  effects: [{execute: healBleed, potency: 25}],
+};
+
 export const ambush: Action = {
   type: OptionType.ACTION,
   name: 'Ambush',
@@ -229,7 +242,7 @@ export const revenge: Action = {
 
 export const salve: Action = {
   type: OptionType.ACTION,
-  name: 'salve',
+  name: 'Salve',
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 5000,

@@ -27,7 +27,7 @@ export const block: Reaction = {
             if (effect.execute.toString() != Effects.dealDamage.toString()) return effect;
             return {
                 execute: Effects.healStamina,
-                potency: effect.potency *= -1,
+                potency: effect.potency * -1,
             }
         });
     },

@@ -21,7 +21,6 @@ export type Combatant = Option & {
   magic: number;
   maxMagic: number;
   staminaRegenRatePerSecond: number; 
-  folder: Folder;
 
   status: Status;
   queuedOption?: Action | Item | Folder;

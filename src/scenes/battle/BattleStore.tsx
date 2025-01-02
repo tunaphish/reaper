@@ -89,7 +89,7 @@ export class BattleStore {
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }
       
-      else if (combatant.status !== Status.CASTING) {
+      if (combatant.status !== Status.CASTING) {
           const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }

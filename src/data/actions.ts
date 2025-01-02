@@ -69,9 +69,9 @@ export const targetDying: Restriction = {
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
-  staminaCost: 10,
+  staminaCost: 50,
   castTimeInMs: 0,
-  animTimeInMs: 2000,
+  animTimeInMs: 5000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

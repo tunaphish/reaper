@@ -15,10 +15,11 @@ import * as Actions from '../../data/actions';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore, DeferredAction } from './BattleStore';
-import { healieBoi } from '../../data/enemies';
+import { slime } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -44,12 +45,14 @@ export class Battle extends Phaser.Scene {
   firstActionTaken = false;
   splinterUsed = false;
 
+  lastCalculation = 0;
+
   constructor() {
     super(sceneConfig);
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [healieBoi], this.registry.get('allies'), 'hihi');
+    this.battleStore = new BattleStore(data.enemies || [slime], this.registry.get('allies'), 'hihi');
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -64,14 +67,37 @@ export class Battle extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
-    this.checkBattleEndConditions();
     
+    this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
+    this.selectEnemyBehavior(delta);
+
     this.castActions();    
     this.executeActions();    
     this.reactToActions();
     this.resolveDeferredActions(delta);
+  }
+
+
+  selectEnemyBehavior(delta: number): void {
+    this.lastCalculation += delta;
+    if (this.lastCalculation < 1000) {
+      return;
+    }
+
+    this.lastCalculation = 0;
+    this.battleStore.enemies
+      .filter((enemy) => enemy.status === Status.NORMAL)
+      .forEach(enemy => {
+        const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
+        if (!selectedBehavior) return;
+        enemy.status = Status.CASTING;
+        enemy.queuedOption = selectedBehavior.option;
+        enemy.queuedTarget = selectedBehavior.getTarget(this);
+        enemy.timeInStateInMs = 0;
+        return;
+      });
   }
 
   resetDeadAllyCasterMenu(): void {
@@ -177,6 +203,7 @@ export class Battle extends Phaser.Scene {
           const effects: Effect[] = reactions.reduce((previousEffects, reaction) => {
             return reaction.modifyEffects(previousEffects);
           }, action.effects);
+
           effects.forEach(effect => {
             effect.execute(target, caster, effect.potency, this);
           })

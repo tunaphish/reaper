@@ -9,7 +9,7 @@ import * as Actions from './actions';
 import { Battle } from '../scenes/battle/Battle';
 
 
-// Target Functions
+// #region Target
 const isAlive = (unit: Combatant) => unit.health !== 0;
 
 const randomEnemy = (scene: Battle) => {
@@ -22,24 +22,21 @@ const randomAlly = (scene: Battle) => {
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
 };
 
+// #endregion
+
+
+// #region Valid 
 const steepness = 5;
-const sigmoidFunction = (enemy: Enemy, scene: Battle) => {
-  const staminaRatio = enemy.stamina / enemy.maxStamina;
-  const result = 1 / (1 + Math.exp(-steepness * (staminaRatio - 0.5)));
-  return result;
+const enoughStamina = (enemy: Enemy, scene: Battle) => {
+  return enemy.stamina > 100;
 }
 
-function reverseSigmoid(enemy: Enemy, scene: Battle) {
-  const staminaRatio =  enemy.bleed / 50; // 50 is avg attack
-  const steepness = 5;
-  const reverseProbability = 1 - (1 / (1 + Math.exp(-steepness * (staminaRatio - 0.5))));
+// #endregion
 
-  return reverseProbability;
-}
-
-export const healieBoi: Enemy = {
+// #region Enemies
+export const slime: Enemy = {
   type: OptionType.ENEMY,
-  name: 'Healie Boi',
+  name: 'Slime',
   health: 200,
   maxHealth: 200,
   bleed: 0,
@@ -47,8 +44,11 @@ export const healieBoi: Enemy = {
   maxStamina: 200,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 14,
-  folder:{ type: OptionType.FOLDER, name: 'Healie Boi', desc: 'Healie Boi Menu', options: [Actions.bandage, Actions.attack]},
+  staminaRegenRatePerSecond: 12,
+
+  behaviors: [
+    { option: Actions.attack, valid: enoughStamina, getTarget: randomAlly },
+  ],
 
   imageUrl: '/reaper/assets/characters/eji.png',
 
@@ -57,3 +57,6 @@ export const healieBoi: Enemy = {
   timeInStateInMs: 0,
   juggleDuration: 0,  
 };
+
+
+// #endregion

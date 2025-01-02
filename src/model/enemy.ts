@@ -6,13 +6,17 @@ import { Item } from './item';
 import { Folder } from './folder';
 
 export interface Behavior {
-  option: Action | Item | Folder;
+  options: (Action | Item | Folder)[];
   valid: (enemy: Enemy, scene: Battle) => boolean;
   getTarget: (scene: Battle) => Combatant;
+  text: string;
 }
 
 export type Enemy = Combatant & {
   type: OptionType.ENEMY;
-  imageUrl: string;
   behaviors: Behavior[];
+  cadence: number;
+
+  // temp vars
+  timeSinceLastAction: number;
 };

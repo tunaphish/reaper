@@ -26,9 +26,10 @@ const randomAlly = (scene: Battle) => {
 
 
 // #region Valid 
+const isTrue = (enemy: Enemy, scene: Battle) => true;
 const steepness = 5;
 const enoughStamina = (enemy: Enemy, scene: Battle) => {
-  return enemy.stamina > 100;
+  return enemy.stamina > 75;
 }
 
 // #endregion
@@ -41,21 +42,22 @@ export const slime: Enemy = {
   maxHealth: 200,
   bleed: 0,
   stamina: 0,
-  maxStamina: 200,
+  maxStamina: 125,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 12,
+  staminaRegenRatePerSecond: 10,
+  cadence: 5000,
 
   behaviors: [
-    { option: Actions.attack, valid: enoughStamina, getTarget: randomAlly },
+    { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'slime is attacking randomly!' },
+    { options: [], valid: isTrue, getTarget: randomAlly, text: 'idle' },
   ],
-
-  imageUrl: '/reaper/assets/characters/eji.png',
 
   // temp props
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
+  timeSinceLastAction: 0,
 };
 
 

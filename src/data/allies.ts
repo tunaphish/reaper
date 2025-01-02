@@ -13,7 +13,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Reactions.block, Actions.uppercut, Actions.attack, Actions.jab],
+  options: [Actions.attack, Reactions.block, Actions.stanch],
 }
 
 export const Eji: Ally = {
@@ -23,10 +23,10 @@ export const Eji: Ally = {
   maxHealth: 100,
   bleed: 0,
   stamina: 0,
-  maxStamina: 200,
+  maxStamina: 150,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 7,
+  staminaRegenRatePerSecond: 5,
   folder: ejiFolder,
   
   status: Status.NORMAL,
@@ -41,7 +41,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Barret',
   desc: 'Soul of Barret',
-  options: [Reactions.block, Actions.attack, Folders.berserker, Folders.hunter],
+  options: [Actions.attack, Reactions.block, Actions.stanch],
 }
 
 export const Keshi: Ally = {
@@ -51,10 +51,10 @@ export const Keshi: Ally = {
   maxHealth: 100,
   bleed: 0,
   stamina: 0,
-  maxStamina: 150,
+  maxStamina: 100,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 8,
+  staminaRegenRatePerSecond: 7,
   folder: keshiFolder,
   
   status: Status.NORMAL,
@@ -68,7 +68,7 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Tifa',
   name: 'Tifa',
-  options: [Reactions.block, Actions.attack, Folders.cleric],
+  options: [Actions.attack, Reactions.block, Actions.stanch],
 };
 
 export const Elise: Ally = {
@@ -78,10 +78,10 @@ export const Elise: Ally = {
   bleed: 0,
   maxHealth: 100,
   stamina: 0,
-  maxStamina: 250,
+  maxStamina: 200,
   magic: 10,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 5,
+  staminaRegenRatePerSecond: 4,
   folder: eliseFolder,
 
   status: Status.NORMAL,

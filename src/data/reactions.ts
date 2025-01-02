@@ -4,6 +4,7 @@ import { OptionType } from "../model/option"
 import { DeferredAction } from "../scenes/battle/BattleStore";
 import { Reaction, ReactionRestriction } from "../model/reaction";
 import * as Effects from './effects';
+import { TargetType } from "../model/targetType";
 
 // #region ReactionRestriction
 export const reactionOnSelf: ReactionRestriction = {
@@ -18,6 +19,7 @@ export const reactionOnSelf: ReactionRestriction = {
 export const block: Reaction = {
     type: OptionType.REACTION,
     name: 'Block',
+    targetType: TargetType.SELF,
     staminaCost: 10,
     soundKeyName: 'block',
     description: 'Modify damage effects to damage stamina',

@@ -26,7 +26,6 @@ export class BattleStore {
   target?: Combatant;
 
   reaction?: Reaction;
-  actionTarget?: DeferredAction;
   deferredActions: DeferredAction[] = [];
 
   menus: Folder[] = [];
@@ -57,10 +56,6 @@ export class BattleStore {
     this.reaction = reaction;
   }
 
-  setActionTarget(actionTarget?: DeferredAction): void {
-    this.actionTarget = actionTarget;
-  }
-
   setText(text: string): void {
     this.text = text;
   }
@@ -74,7 +69,6 @@ export class BattleStore {
     this.setCaster(null);
     this.setExecutable(null);
     this.setTarget(null);
-    this.setActionTarget(null);
   }
 
 

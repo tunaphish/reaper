@@ -17,7 +17,7 @@ const randomEnemy = (scene: Battle) => {
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
 };
 
-const randomAlly = (scene: Battle) => {
+export const randomAlly = (scene: Battle) => {
   const aliveEnemies = scene.battleStore.allies.filter(isAlive);
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
 };
@@ -50,10 +50,12 @@ export const slime: Enemy = {
 
   behaviors: [
     { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'slime is attacking randomly!' },
-    { options: [], valid: isTrue, getTarget: randomAlly, text: 'idle' },
+    { options: [], valid: isTrue, getTarget: randomAlly, text: 'slime is waiting...' },
   ],
 
   // temp props
+  optionQueue: [],
+  targetFn: randomAlly,
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  

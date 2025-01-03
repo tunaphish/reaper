@@ -226,10 +226,17 @@ const Stage = (props: { scene: Battle }) => {
   )
 }
 
-const Description = observer((props: { text: string }) => {
+const Description = observer((props: { text: string, isEnemy: boolean }) => {
   const [isVisible, setIsVisible] = React.useState(true);
 
-  const style: React.CSSProperties = {
+  const style: React.CSSProperties =  props.isEnemy ?
+  {
+    padding: 5,
+    position: "absolute",
+    top: 0,
+    right: "5%",
+    width: "50%"
+  } : {
     padding: 5,
     position: "absolute",
     bottom: 0,
@@ -277,8 +284,9 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
          </div>
+          <Description text={props.scene.battleStore.enemyText} isEnemy={true}/>
           <Stage scene={props.scene} />
-          <Description text={props.scene.battleStore.text}/>
+          <Description text={props.scene.battleStore.text} isEnemy={false}/>
           <div className={styles.alliesBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>

@@ -30,13 +30,15 @@ export class BattleStore {
 
   menus: Folder[] = [];
   text: string;
+  enemyText: string;
 
   resonance = 0;
 
-  constructor(enemies: Enemy[], allies: Allies, text: string) {
+  constructor(enemies: Enemy[], allies: Allies, text: string, enemyText: string) {
     this.enemies = enemies;
     this.allies = allies;
     this.text = text;
+    this.enemyText = enemyText;
     makeAutoObservable(this);
   }
 

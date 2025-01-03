@@ -18,5 +18,7 @@ export type Enemy = Combatant & {
   cadence: number;
 
   // temp vars
+  optionQueue: (Action | Item | Folder)[];
+  targetFn: (scene: Battle) => Combatant;
   timeSinceLastAction: number;
 };

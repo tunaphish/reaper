@@ -14,7 +14,7 @@ import * as Actions from '../../data/actions';
 
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
-import { BattleStore, DeferredAction } from './BattleStore';
+import { BattleStore } from './BattleStore';
 import { slime } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
@@ -49,14 +49,15 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [slime], this.registry.get('allies'), 'hihi');
+    this.battleStore = new BattleStore(data.enemies || [slime], this.registry.get('allies'), 'hihi', 'slime is attacking!');
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
       volume: 0.5  
     });
     this.ui.create(<BattleView scene={this}/>, this);
-    // this.music.play();
+    this.music.play();
+    //this.sound.play('battle-start');
   }
 
   // #region Time Based Updates
@@ -68,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    //this.selectEnemyBehavior(delta);
+    this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 
@@ -79,32 +80,43 @@ export class Battle extends Phaser.Scene {
 
   selectEnemyBehavior(delta: number): void {
     // TODO: update for spells and items
-    this.battleStore.enemies
-      .map(enemy => { 
-        enemy.timeSinceLastAction += delta 
-        return enemy;
-      })
-      .filter((enemy) => enemy.status === Status.NORMAL && enemy.timeSinceLastAction > enemy.cadence)
-      .forEach(enemy => {
-        enemy.timeSinceLastAction = 0;
-        const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
-        if (!selectedBehavior) return;
+    const updateEnemyTimeSinceLastAction = (enemy): Enemy => { 
+      enemy.timeSinceLastAction += delta 
+      return enemy;
+    }
 
-        selectedBehavior.options.forEach((option) => {
-          const action =  option as Action;
-          enemy.stamina -= action.staminaCost;
-      
-          const newDeferredAction = {
-             // @ts-ignore
-            id: self.crypto.randomUUID(),
-            timeTilExecute: action.animTimeInMs || 0,
-            caster: enemy,
-            action,
-            target: selectedBehavior.getTarget(this),
-            reactions: [],
-          };
-          this.battleStore.deferredActions.push(newDeferredAction);
-        })
+    this.battleStore.enemies.map(updateEnemyTimeSinceLastAction)
+      .forEach((enemy) => {
+        if (enemy.status !== Status.NORMAL) return;
+        if (enemy.optionQueue.length > 0) {
+          if (enemy.timeSinceLastAction < 500) return;
+          enemy.timeSinceLastAction = 0;
+
+           // Handle Actions
+           const action =  enemy.optionQueue.pop() as Action;
+           enemy.stamina -= action.staminaCost;
+       
+           const newDeferredAction = {
+              // @ts-ignore
+             id: self.crypto.randomUUID(),
+             timeTilExecute: action.animTimeInMs || 0,
+             caster: enemy,
+             action,
+             target: enemy.targetFn(this), 
+             reactions: [],
+           };
+           this.battleStore.deferredActions.push(newDeferredAction);
+        } else {
+          if (enemy.timeSinceLastAction < enemy.cadence) return;
+          enemy.timeSinceLastAction = 0;
+          const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
+          if (!selectedBehavior) return;
+            this.sound.play('slime-noise'); // TODO: have event system instead
+            this.battleStore.enemyText = selectedBehavior.text;
+
+            enemy.optionQueue = [...selectedBehavior.options];
+            enemy.targetFn = selectedBehavior.getTarget;
+          }
       });
   }
 

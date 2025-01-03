@@ -87,6 +87,8 @@ export class Boot extends Phaser.Scene {
     this.load.audio('smirk', '/reaper/assets/sounds/smirk.mp3');
     this.load.audio('charged', '/reaper/assets/sounds/charged.mp3');
 
+    this.load.audio('slime-noise', '/reaper/assets/sounds/slime-noise.mp3');
+
     this.load.audio('stamina-depleted', '/reaper/assets/sounds/stamina-depleted.wav');
 
     // #region effects

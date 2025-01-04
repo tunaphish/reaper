@@ -242,7 +242,7 @@ export const revenge: Action = {
 
 export const salve: Action = {
   type: OptionType.ACTION,
-  name: 'Salve',
+  name: 'salve',
   staminaCost: 100,
   castTimeInMs: 0,
   animTimeInMs: 5000,

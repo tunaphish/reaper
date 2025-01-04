@@ -34,7 +34,7 @@ export interface DialogueTrigger {
 export type Executable = Action | Item | Folder;
 
 export class Battle extends Phaser.Scene {
-  private ui: ReactOverlay;
+  private reactOverlay: ReactOverlay; // initialized by plugin manager
   private music: Phaser.Sound.BaseSound;
   backgroundImageUrl: string;
 
@@ -55,8 +55,8 @@ export class Battle extends Phaser.Scene {
       loop: true,  
       volume: 0.5  
     });
-    this.ui.create(<BattleView scene={this}/>, this);
-    this.music.play();
+    this.reactOverlay.create(<BattleView scene={this}/>, this);
+    //this.music.play();
     //this.sound.play('battle-start');
   }
 
@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyBehavior(delta);
+//    this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 
@@ -163,7 +163,6 @@ export class Battle extends Phaser.Scene {
   
     this.battleStore.caster.stamina -= this.battleStore.reaction.staminaCost
 
-    // TODO: Add queue
     const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === this.battleStore.target.name);
     actionsTargetingTarget.forEach(action => {
       if (this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)) {

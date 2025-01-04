@@ -11,6 +11,7 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { DeferredAction } from './BattleStore';
+import { Stage } from './Stage';
 
 const ActionView = (props: { action: DeferredAction }) => {
   const { action } = props;
@@ -194,7 +195,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   }
 
   return (
-    <div>
+    <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
         {
           props.battleScene.battleStore.menus.map((menu, idx) => {
           return (
@@ -218,13 +219,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   );
 }) 
 
-const Stage = (props: { scene: Battle }) => {  
-  return ( 
-    <div style={{ flex: 4, display: "flex", justifyContent: "space-around", }}>
-    </div>
 
-  )
-}
 
 const Description = observer((props: { text: string, isEnemy: boolean }) => {
   const [isVisible, setIsVisible] = React.useState(true);
@@ -279,15 +274,18 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
-          <div className={styles.alliesBar}>
+          <div className={styles.combatantBar}>
             {enemies.map((enemy) => {
               return <ResourceDisplay battleScene={props.scene} combatant={enemy} key={enemy.name} />
             })}
-         </div>
+        </div>
           <Description text={props.scene.battleStore.enemyText} isEnemy={true}/>
-          <Stage scene={props.scene} />
+          <div style={{ flex: 4 }}> 
+            <Stage scene={props.scene} />
+
+          </div>
           <Description text={props.scene.battleStore.text} isEnemy={false}/>
-          <div className={styles.alliesBar}>
+          <div className={styles.combatantBar}>
               {allies.map((member) => {
                 return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
               })}

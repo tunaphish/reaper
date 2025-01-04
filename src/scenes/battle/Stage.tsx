@@ -1,9 +1,31 @@
 import * as React from 'react';
 import { Canvas, useLoader } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { TextureLoader, RepeatWrapping } from 'three';
-import { Stats } from '@react-three/drei';
+import { TextureLoader, RepeatWrapping, DoubleSide } from 'three';
+import { CameraControls, Stats } from '@react-three/drei';
 import { Battle } from './Battle';
+import { Html } from '@react-three/drei';
+import { Enemy } from '../../model/enemy';
+import { Combatant } from '../../model/combatant';
+import { ResourceDisplay } from './ResourceDisplay';
+
+const Enemy = (props: {combatant: Combatant, battleScene: Battle }) => {
+  const { combatant, battleScene } = props;
+
+  return (
+    <mesh>
+      <Html 
+        transform
+        occlude
+        castShadow
+        receiveShadow
+      >
+        <ResourceDisplay combatant={combatant} battleScene={battleScene}/>
+      </Html>
+    </mesh>
+
+  )
+}
 
 const Plane = () => {
     const checkerTexture = useLoader(TextureLoader, '/reaper/assets/textures/checker.svg')
@@ -22,14 +44,17 @@ const Plane = () => {
   }
 
 export const Stage = (props: { scene: Battle }) => {
+    const { scene } = props;
     return (
     <Canvas>
         <Stats />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-        <Plane/>
+          {scene.battleStore.enemies.map((enemy) => <Enemy key={enemy.name} combatant={enemy} battleScene={scene} />)}
+          <Plane/>
         </Physics>
+        {/* <CameraControls /> */}
     </Canvas>
     )
   }

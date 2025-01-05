@@ -1,4 +1,6 @@
 import * as React from 'react';
+import styles from './battle.module.css';
+
 import { Canvas, useLoader } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping } from 'three';
@@ -7,10 +9,51 @@ import { Battle } from './Battle';
 import { Html } from '@react-three/drei';
 import { Enemy } from '../../model/enemy';
 import { ResourceDisplay } from './ResourceDisplay';
+import { observer } from 'mobx-react-lite';
+import { AnimatePresence, motion } from 'framer-motion';
+
+
+const Dialogue = observer((props: { enemy: Enemy }) => {
+  const [isVisible, setIsVisible] = React.useState(true);
+  const style: React.CSSProperties = {
+    padding: 5,
+    position: "absolute",
+    top: "20px",
+    right: "-180%",
+    width: "200%",
+  }
+
+  React.useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [props.enemy.dialogue]);
+
+  return (
+    <AnimatePresence>
+    { isVisible && (
+        <motion.div 
+          style={{ position: "relative" }}
+          initial={{ scaleY: 0 }} 
+          animate={{ scaleY: 1 }} 
+          exit={{ scaleY: 0 }}
+          transition={{ duration: .1, ease: 'easeOut' }} 
+        >
+            <div className={styles.window} style={style}>
+              {props.enemy.dialogue}
+            </div>
+        </motion.div>
+    )}
+    </AnimatePresence>
+  )
+});
+
 
 const Enemy = (props: {enemy: Enemy, battleScene: Battle }) => {
   const { enemy, battleScene } = props;
-
+  
   return (
     <mesh position={[0, 0, -15]}>
       <Html 
@@ -27,6 +70,7 @@ const Enemy = (props: {enemy: Enemy, battleScene: Battle }) => {
             }}
           >
             <ResourceDisplay combatant={enemy} battleScene={battleScene}/>
+            <Dialogue enemy={enemy} />
             <img src={enemy.spritePath} />
           </div>
         

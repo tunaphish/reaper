@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    // this.selectEnemyBehavior(delta);
+    this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 
@@ -80,13 +80,9 @@ export class Battle extends Phaser.Scene {
 
   selectEnemyBehavior(delta: number): void {
     // TODO: update for spells and items
-    const updateEnemyTimeSinceLastAction = (enemy): Enemy => { 
-      enemy.timeSinceLastAction += delta 
-      return enemy;
-    }
 
-    this.battleStore.enemies.map(updateEnemyTimeSinceLastAction)
-      .forEach((enemy) => {
+    this.battleStore.enemies.forEach((enemy) => {
+        enemy.timeSinceLastAction += delta 
         if (enemy.status !== Status.NORMAL) return;
         if (enemy.optionQueue.length > 0) {
           if (enemy.timeSinceLastAction < 500) return;
@@ -111,11 +107,12 @@ export class Battle extends Phaser.Scene {
           enemy.timeSinceLastAction = 0;
           const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
           if (!selectedBehavior) return;
-            this.sound.play('slime-noise'); // TODO: have event system instead
+          this.sound.play('slime-noise'); // TODO: have event system instead
+          enemy.dialogue = selectedBehavior.text;
+          enemy.optionQueue = [...selectedBehavior.options];
+          enemy.targetFn = selectedBehavior.getTarget;
 
-            enemy.optionQueue = [...selectedBehavior.options];
-            enemy.targetFn = selectedBehavior.getTarget;
-          }
+        }
       });
   }
 

@@ -1,26 +1,35 @@
 import * as React from 'react';
 import { Canvas, useLoader } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { TextureLoader, RepeatWrapping, DoubleSide } from 'three';
+import { TextureLoader, RepeatWrapping } from 'three';
 import { CameraControls, Stats } from '@react-three/drei';
 import { Battle } from './Battle';
 import { Html } from '@react-three/drei';
 import { Enemy } from '../../model/enemy';
-import { Combatant } from '../../model/combatant';
 import { ResourceDisplay } from './ResourceDisplay';
 
-const Enemy = (props: {combatant: Combatant, battleScene: Battle }) => {
-  const { combatant, battleScene } = props;
+const Enemy = (props: {enemy: Enemy, battleScene: Battle }) => {
+  const { enemy, battleScene } = props;
 
   return (
-    <mesh>
+    <mesh position={[0, 0, -15]}>
       <Html 
         transform
         occlude
         castShadow
         receiveShadow
       >
-        <ResourceDisplay combatant={combatant} battleScene={battleScene}/>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+
+            }}
+          >
+            <ResourceDisplay combatant={enemy} battleScene={battleScene}/>
+            <img src={enemy.spritePath} />
+          </div>
+        
       </Html>
     </mesh>
 
@@ -51,7 +60,7 @@ export const Stage = (props: { scene: Battle }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-          {scene.battleStore.enemies.map((enemy) => <Enemy key={enemy.name} combatant={enemy} battleScene={scene} />)}
+          {scene.battleStore.enemies.map((enemy) => <Enemy key={enemy.name} enemy={enemy} battleScene={scene} />)}
           <Plane/>
         </Physics>
         {/* <CameraControls /> */}

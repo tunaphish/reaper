@@ -15,7 +15,7 @@ import * as Actions from '../../data/actions';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { slime } from '../../data/enemies';
+import { thief } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
@@ -49,7 +49,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [slime], this.registry.get('allies'), 'hihi', 'slime is attacking!');
+    this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'), 'hihi');
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    //this.selectEnemyBehavior(delta);
+    // this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 
@@ -112,7 +112,6 @@ export class Battle extends Phaser.Scene {
           const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
           if (!selectedBehavior) return;
             this.sound.play('slime-noise'); // TODO: have event system instead
-            this.battleStore.enemyText = selectedBehavior.text;
 
             enemy.optionQueue = [...selectedBehavior.options];
             enemy.targetFn = selectedBehavior.getTarget;

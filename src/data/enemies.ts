@@ -35,9 +35,9 @@ const enoughStamina = (enemy: Enemy, scene: Battle) => {
 // #endregion
 
 // #region Enemies
-export const slime: Enemy = {
+export const thief: Enemy = {
   type: OptionType.ENEMY,
-  name: 'Slime',
+  name: 'Thief',
   health: 200,
   maxHealth: 200,
   bleed: 0,
@@ -49,9 +49,11 @@ export const slime: Enemy = {
   cadence: 5000,
 
   behaviors: [
-    { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'slime is attacking randomly!' },
-    { options: [], valid: isTrue, getTarget: randomAlly, text: 'slime is waiting...' },
+    { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'Thief is attacking randomly!' },
+    { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
   ],
+
+  spritePath: '/reaper/assets/sprites/enemies/thief-idle.png',
 
   // temp props
   optionQueue: [],

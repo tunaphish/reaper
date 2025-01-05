@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
 import { WorldView } from './WorldView';
-import { slime } from '../../data/enemies';
+import { thief } from '../../data/enemies';
 
 import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
@@ -66,7 +66,7 @@ export class World extends Phaser.Scene {
   battle(): void {
     this.choiceSelectSound.play();
     this.scene.pause();
-    this.scene.run('Battle', { enemies: [slime] });
+    this.scene.run('Battle', { enemies: [thief] });
   }
 
   world(): void {

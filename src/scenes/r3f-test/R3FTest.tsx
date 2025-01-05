@@ -4,10 +4,11 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping } from 'three';
-import { create } from 'zustand';
 import { Stats } from '@react-three/drei';
 import { DynamicJoystick } from './DynamicJoystick';
 import { Player } from './player';
+import { makeAutoObservable } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,36 +16,42 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'R3FTest',
 };
 
-interface R3FState {
-  targetPosition: THREE.Vector3; 
-  setTargetPosition: (position: THREE.Vector3) => void;
-  direction: number;
-  setDirection: (direction: number) => void;
-  isMoving: boolean;
-  setIsMoving: (isMoving: boolean) => void;
+
+
+export class WorldStore {
+  targetPosition = new THREE.Vector3(0, 0, 0);
+  direction = 1.570;
+  isMoving = false;
+
+  constructor() {
+      makeAutoObservable(this);
+  }
+
+  setTargetPosition(targetPosition) {
+      this.targetPosition = targetPosition;
+  }
+
+  setDirection(direction) {
+      this.direction = direction;
+  }
+
+  setIsMoving(isMoving) {
+      this.isMoving = isMoving;
+  }
 }
 
-export const useGameStore = create<R3FState>((set) => ({
-  targetPosition: new THREE.Vector3(0,0,0),
-  setTargetPosition: (targetPosition) => set({ targetPosition }),
-  direction: 1.570,
-  setDirection: (direction) => set({ direction }),
-  isMoving: false,
-  setIsMoving: (isMoving) => set({ isMoving }),
-}));
-
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);
-const Camera = () => {
-  const targetPosition = useGameStore((state) => state.targetPosition);
+const Camera = observer((props: { world: R3FTest }) => {
+  const { world } = props;
   const { camera } = useThree();
   
   useFrame(() => {
-    const desiredPosition = targetPosition.clone().add(CAMERA_OFFSET);
+    const desiredPosition = world.worldStore.targetPosition.clone().add(CAMERA_OFFSET);
     camera.position.lerp(desiredPosition, 0.1); 
   });
 
   return null;
-}
+});
 
 const Plane = () => {
   const checkerTexture = useLoader(TextureLoader, '/reaper/assets/textures/checker.svg')
@@ -63,6 +70,7 @@ const Plane = () => {
 }
 
 export class R3FTest extends Phaser.Scene {
+  worldStore: WorldStore
   private reactOverlay: ReactOverlay;
 
   constructor() {
@@ -73,13 +81,17 @@ export class R3FTest extends Phaser.Scene {
     this.load.json('shizuka-sprite-data', '/reaper/assets/sprites/shizuka-full.json');
   }
 
+  init(): void {
+    this.worldStore = new WorldStore();
+  }
+
   create(): void {
     const R3F = () => {
       return (
         <div style={{ aspectRatio: 0.5625, height: '100%' }}>
           <Canvas>
             <Stats />
-            <Camera />
+            <Camera world={this}/>
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 10, 5]} castShadow />
             <Physics>
@@ -87,7 +99,7 @@ export class R3FTest extends Phaser.Scene {
               <Plane/>
             </Physics>
           </Canvas>
-          <DynamicJoystick />
+          <DynamicJoystick world={this}/>
         </div>
       )
     }

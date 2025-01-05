@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGameStore } from './R3FTest';
+import { R3FTest } from './R3FTest';
 
 const getDirectionInRadians = (x1, y1, x2, y2) => {
     const dx = x2 - x1;
@@ -15,9 +15,8 @@ const getDistance = (x1, y1, x2, y2) =>  {
 }
 
 const size = 100;
-export const DynamicJoystick = (): JSX.Element => {
-  const setDirection = useGameStore((state) => state.setDirection);
-  const setIsMoving = useGameStore((state) => state.setIsMoving);
+export const DynamicJoystick = (props: { world: R3FTest }): JSX.Element => {
+  const { world } = props;
   const [joystick, setJoystick] = React.useState<{ x: number; y: number } | null>(null);
 
   const onpointstart = (e: React.MouseEvent | React.TouchEvent) => {
@@ -27,7 +26,7 @@ export const DynamicJoystick = (): JSX.Element => {
 
   const onpointend = () => {
     setJoystick(null);
-    setIsMoving(false);
+    world.worldStore.setIsMoving(false);
   };
 
   const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
@@ -35,9 +34,9 @@ export const DynamicJoystick = (): JSX.Element => {
     const touch = 'touches' in e ? e.touches[0] : e as React.MouseEvent;
     const distance = getDistance(joystick.x, joystick.y, touch.clientX, touch.clientY);
     if (distance < size/2) return;
-    setIsMoving(true);
+    world.worldStore.setIsMoving(true);
     const direction = getDirectionInRadians(joystick.x, joystick.y, touch.clientX, touch.clientY); 
-    setDirection(direction);
+    world.worldStore.setDirection(direction);
   };
 
   return (

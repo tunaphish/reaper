@@ -56,7 +56,7 @@ export class Battle extends Phaser.Scene {
       volume: 0.5  
     });
     this.reactOverlay.create(<BattleView scene={this}/>, this);
-    //this.music.play();
+    // this.music.play();
     //this.sound.play('battle-start');
   }
 
@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    // this.selectEnemyBehavior(delta);
+    this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 

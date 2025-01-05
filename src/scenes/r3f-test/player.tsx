@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import { useFrame } from "@react-three/fiber";
 import { CuboidCollider , RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { AsepriteJson, useAseprite } from './use-spritesheet';
-import { R3FTest, useGameStore } from './R3FTest';
+import { R3FTest } from './R3FTest';
+import { observer } from 'mobx-react-lite';
 
 const angleToDirection3D = (angleInRadians: number): THREE.Vector3 => {
     const x = Math.cos(angleInRadians); 
@@ -35,10 +36,10 @@ const getState = (player?: RapierRigidBody): string => {
   return 'idle';
 }
 
-const ShizukaSprite = (props: { scene: R3FTest, player?: RapierRigidBody }) => {
-  const spriteRef = React.useRef<THREE.Sprite>(null); // Sprite reference
-  const {x,y,z} = useGameStore((store) => store.targetPosition);
-  const direction = useGameStore((state) => state.direction);
+const ShizukaSprite = observer((props: { scene: R3FTest, player?: RapierRigidBody }) => {
+  const { scene } = props;
+  const {x,y,z} = scene.worldStore.targetPosition;
+  const direction = scene.worldStore.direction;
   const animation = getState(props.player) + '-' + getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
 
   const [texture] = useAseprite(
@@ -47,29 +48,23 @@ const ShizukaSprite = (props: { scene: R3FTest, player?: RapierRigidBody }) => {
     animation,
     false,
   );
-
-  useFrame(() => {
-    if (!spriteRef) return;
-    spriteRef.current.position.set(x,y,z);
-  })
-
   return (
-    <sprite position={[0,0,0]} ref={spriteRef}>
+    <sprite position={[x,y,z]} >
       <spriteMaterial map={texture} />
     </sprite>
   );
-};
+});
 
-export const Player = (props: { scene: R3FTest }): JSX.Element => {
+export const Player = observer((props: { scene: R3FTest }): JSX.Element => {
+  const { scene } = props;
+
   const playerRef = React.useRef<RapierRigidBody>(null);
-  const direction = useGameStore((state) => state.direction);
-  const isMoving = useGameStore((state) => state.isMoving);
-  const setTargetPosition = useGameStore((state) => state.setTargetPosition);
+  const {direction, isMoving } = scene.worldStore;
 
   useFrame(() => {
     if (!playerRef.current) return;
     const { x, y, z } = playerRef.current.translation();
-    setTargetPosition(new THREE.Vector3(x, y, z)); 
+    scene.worldStore.setTargetPosition(new THREE.Vector3(x, y, z)); 
     if (!isMoving) return;
     const direction3d = angleToDirection3D(direction);    
     const SPEED = 7;
@@ -92,4 +87,4 @@ export const Player = (props: { scene: R3FTest }): JSX.Element => {
       />
     </>
   )
-}
+});

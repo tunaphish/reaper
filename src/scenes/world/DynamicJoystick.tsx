@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { R3FTest } from './R3FTest';
+import { World } from './World';
 
 const getDirectionInRadians = (x1, y1, x2, y2) => {
     const dx = x2 - x1;
@@ -15,7 +15,7 @@ const getDistance = (x1, y1, x2, y2) =>  {
 }
 
 const size = 100;
-export const DynamicJoystick = (props: { world: R3FTest }): JSX.Element => {
+export const DynamicJoystick = (props: { world: World }): JSX.Element => {
   const { world } = props;
   const [joystick, setJoystick] = React.useState<{ x: number; y: number } | null>(null);
 
@@ -47,6 +47,7 @@ export const DynamicJoystick = (props: { world: R3FTest }): JSX.Element => {
         left: 0, 
         width: '100%', 
         height: '100%', 
+        pointerEvents: 'auto',
       }}
       onTouchStart={onpointstart}
       onMouseDown={onpointstart}

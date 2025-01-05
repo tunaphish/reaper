@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from "@react-three/fiber";
 import { CuboidCollider , RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { AsepriteJson, useAseprite } from './use-spritesheet';
-import { R3FTest } from './R3FTest';
+import { World } from './World';
 import { observer } from 'mobx-react-lite';
 
 const angleToDirection3D = (angleInRadians: number): THREE.Vector3 => {
@@ -36,15 +36,15 @@ const getState = (player?: RapierRigidBody): string => {
   return 'idle';
 }
 
-const ShizukaSprite = observer((props: { scene: R3FTest, player?: RapierRigidBody }) => {
-  const { scene } = props;
-  const {x,y,z} = scene.worldStore.targetPosition;
-  const direction = scene.worldStore.direction;
+const ShizukaSprite = observer((props: { world: World, player?: RapierRigidBody }) => {
+  const { world } = props;
+  const {x,y,z} = world.worldStore.targetPosition;
+  const direction = world.worldStore.direction;
   const animation = getState(props.player) + '-' + getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
 
   const [texture] = useAseprite(
     '/reaper/assets/sprites/shizuka-full.png',
-    props.scene.cache.json.get('shizuka-sprite-data') as AsepriteJson,
+    props.world.cache.json.get('shizuka-sprite-data') as AsepriteJson,
     animation,
     false,
   );
@@ -55,16 +55,16 @@ const ShizukaSprite = observer((props: { scene: R3FTest, player?: RapierRigidBod
   );
 });
 
-export const Player = observer((props: { scene: R3FTest }): JSX.Element => {
-  const { scene } = props;
+export const Player = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
 
   const playerRef = React.useRef<RapierRigidBody>(null);
-  const {direction, isMoving } = scene.worldStore;
+  const {direction, isMoving } = world.worldStore;
 
   useFrame(() => {
     if (!playerRef.current) return;
     const { x, y, z } = playerRef.current.translation();
-    scene.worldStore.setTargetPosition(new THREE.Vector3(x, y, z)); 
+    world.worldStore.setTargetPosition(new THREE.Vector3(x, y, z)); 
     if (!isMoving) return;
     const direction3d = angleToDirection3D(direction);    
     const SPEED = 7;
@@ -82,7 +82,7 @@ export const Player = observer((props: { scene: R3FTest }): JSX.Element => {
         <CuboidCollider args={[0.5, 0.5, 0.5]} friction={0} restitution={0} />
       </RigidBody>
       <ShizukaSprite
-        scene={props.scene} 
+        world={props.world} 
         player={playerRef.current}
       />
     </>

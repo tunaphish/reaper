@@ -1,6 +1,7 @@
 // Copied from https://github.com/bfollington/use-spritesheet/tree/main/use-spritesheet/src
 // There was a dependency error with r3f that I did not feel like resolving with OG package
 // so I just copied the source
+// TODO: Potentially Refactor to use Drei Sprite Animator
 
 import * as THREE from "three";
 import { useFrame, useLoader } from "@react-three/fiber";

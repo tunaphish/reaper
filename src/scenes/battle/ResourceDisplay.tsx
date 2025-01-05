@@ -34,7 +34,6 @@ const ActionView = (props: { action: DeferredAction }) => {
         top, 
         left,
         transform: "translate(-50%, -50%)",
-        zIndex: 100,
       }
     }, []);
     return (

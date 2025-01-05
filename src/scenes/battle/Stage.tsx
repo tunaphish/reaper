@@ -11,6 +11,7 @@ import { Enemy } from '../../model/enemy';
 import { ResourceDisplay } from './ResourceDisplay';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Combatant } from '../../model/combatant';
 
 
 const Dialogue = observer((props: { enemy: Enemy }) => {
@@ -51,11 +52,19 @@ const Dialogue = observer((props: { enemy: Enemy }) => {
 });
 
 
-const Enemy = (props: {enemy: Enemy, battleScene: Battle }) => {
+const Enemy = (props: {enemy: Enemy, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
   const { enemy, battleScene } = props;
+  const [beingEffected, setBeingEffected] = React.useState(false);
   
+  React.useEffect(() => {
+    battleScene.events.on('combatant-effected', (effectedCombatant: Combatant) => {
+      if (effectedCombatant.name !== enemy.name) return;
+      setBeingEffected(true);
+    });
+  }, []);
+
   return (
-    <mesh position={[0, 0, -15]}>
+    <mesh position={props.position}>
       <Html 
         transform
         occlude
@@ -66,12 +75,11 @@ const Enemy = (props: {enemy: Enemy, battleScene: Battle }) => {
             style={{
               display: 'flex',
               flexDirection: 'column',
-
             }}
           >
             <ResourceDisplay combatant={enemy} battleScene={battleScene}/>
             <Dialogue enemy={enemy} />
-            <img src={enemy.spritePath} />
+            <img className={beingEffected ? styles.shake : ''} src={enemy.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
           </div>
         
       </Html>
@@ -104,7 +112,7 @@ export const Stage = (props: { scene: Battle }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-          {scene.battleStore.enemies.map((enemy) => <Enemy key={enemy.name} enemy={enemy} battleScene={scene} />)}
+          {scene.battleStore.enemies.map((enemy, idx) => <Enemy key={enemy.name} enemy={enemy} battleScene={scene} position={[idx*5, 0, -15]}/>)}
           <Plane/>
         </Physics>
         {/* <CameraControls /> */}

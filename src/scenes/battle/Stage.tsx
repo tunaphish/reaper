@@ -3,14 +3,14 @@ import styles from './battle.module.css';
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { TextureLoader, RepeatWrapping } from 'three';
-import { CameraControls, Stats } from '@react-three/drei';
-import { Battle } from './Battle';
-import { Html } from '@react-three/drei';
-import { Enemy } from '../../model/enemy';
-import { ResourceDisplay } from './ResourceDisplay';
+import { TextureLoader, RepeatWrapping, Vector3Like } from 'three';
+import { CameraControls, Stats, Html } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { Battle } from './Battle';
+import { Enemy } from '../../model/enemy';
+import { ResourceDisplay } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
@@ -147,6 +147,7 @@ const CASTER_X_POSITION_MAP = {
 const Camera = (props: { battle: Battle }) => {
   const { battle } = props;
   const { camera } = useThree();
+  const [targetPosition, setTargetPosition] = React.useState<Vector3Like>(camera.position)
 
   React.useEffect(() => {
     camera.position.set(1., 0, 3); 
@@ -154,10 +155,15 @@ const Camera = (props: { battle: Battle }) => {
 
     battle.events.on('caster-set', (caster: Ally) => {
       const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
-      camera.position.set(xPosition, 0, 3); 
-      camera.lookAt(0, 0, -10); 
+      setTargetPosition({x: xPosition, y: 0, z: 3 });
     });
   }, []);
+
+  useFrame(() => {
+    const newPosition = camera.position.lerp(targetPosition, 0.2);
+    camera.position.set(newPosition.x, newPosition.y, newPosition.z); 
+    camera.lookAt(0, 0, -10); 
+  })
 
   return null; 
 }

@@ -33,6 +33,7 @@ export const Eji: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
   
+  spritePath: '/reaper/assets/sprites/allies/charizard.png',
   menuPortraitPath: '/reaper/assets/characters/menu/cloud.png',
 };
 
@@ -61,6 +62,7 @@ export const Keshi: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
   
+  spritePath: '/reaper/assets/sprites/allies/gengar.png',
   menuPortraitPath: '/reaper/assets/characters/menu/barret.png',
 };
 
@@ -88,6 +90,7 @@ export const Elise: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
 
+  spritePath: '/reaper/assets/sprites/allies/snorlax.png',
   menuPortraitPath: '/reaper/assets/characters/menu/tifa.png',
 };
 

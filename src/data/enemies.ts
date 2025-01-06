@@ -27,7 +27,6 @@ export const randomAlly = (scene: Battle) => {
 
 // #region Valid 
 const isTrue = (enemy: Enemy, scene: Battle) => true;
-const steepness = 5;
 const enoughStamina = (enemy: Enemy, scene: Battle) => {
   return enemy.stamina > 75;
 }

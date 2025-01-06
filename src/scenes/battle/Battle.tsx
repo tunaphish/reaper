@@ -49,7 +49,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [thief, thief2], this.registry.get('allies'), 'hihi');
+    this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'), 'hihi');
     this.backgroundImageUrl = '/reaper/assets/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyBehavior(delta);
+    // this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 

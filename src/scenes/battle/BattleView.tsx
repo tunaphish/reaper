@@ -153,7 +153,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
-          <div style={{ flex: 4 }}> 
+          <div style={{ flex: 4, zIndex: -1 }}> 
             <Stage scene={props.scene} />
           </div>
           <Description text={props.scene.battleStore.text} isEnemy={false}/>

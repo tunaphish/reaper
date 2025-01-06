@@ -275,6 +275,7 @@ export class Battle extends Phaser.Scene {
 
     this.sound.play('choice-select');
     this.battleStore.setCaster(ally);
+    this.events.emit('caster-set', ally);
     this.battleStore.menus.push(ally.folder);
   }
 

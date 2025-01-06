@@ -137,16 +137,31 @@ const Plane = () => {
   )
 }
 
+
+const CASTER_X_POSITION_MAP = {
+  ['Cloud']: -4.7,
+  ['Barret']: 1.1,
+  ['Tifa']: 7.2,
+}
+
 const Camera = (props: { battle: Battle }) => {
+  const { battle } = props;
   const { camera } = useThree();
 
   React.useEffect(() => {
-    camera.position.set(0.9, 0, 3); //-4.7 0.9 7.4
-    camera.lookAt(0, 0, -15); // get enemy pos     
-  }, [camera]);
+    camera.position.set(1., 0, 3); 
+    camera.lookAt(0, 0, -10); 
+
+    battle.events.on('caster-set', (caster: Ally) => {
+      const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
+      camera.position.set(xPosition, 0, 3); 
+      camera.lookAt(0, 0, -10); 
+    });
+  }, []);
 
   return null; 
 }
+
 
 export const Stage = (props: { scene: Battle }) => {
     const { scene } = props;

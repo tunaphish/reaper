@@ -211,7 +211,7 @@ export class Battle extends Phaser.Scene {
 
   // potentially split function
   resolveDeferredActions(delta: number): void {
-    this.battleStore.deferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions}) => {
+    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -244,6 +244,8 @@ export class Battle extends Phaser.Scene {
         reactions,
       }
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
+    
+    this.battleStore.setDeferredActions(newDeferredActions);
   }
   // #endregion
 

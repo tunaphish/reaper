@@ -60,6 +60,10 @@ export class BattleStore {
     this.text = text;
   }
 
+  setDeferredActions(deferredActions: DeferredAction[]) {
+    this.deferredActions = deferredActions;
+  }
+
   emptyMenu(): void {
     this.menus.splice(0, this.menus.length);
   }

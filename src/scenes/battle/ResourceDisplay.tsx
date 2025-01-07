@@ -59,7 +59,7 @@ const ActionView = (props: { action: DeferredAction }) => {
         <div className={styles.reactionContainer}>
           {
             action.reactions.map((reaction, idx) => 
-              <img src='/ui/icons/magic.png' className={styles.reaction}key={idx} />
+              <img src='/reaper/ui/icons/magic.png' className={styles.reaction}key={idx} />
             )
           }
         </div>

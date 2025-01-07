@@ -33,8 +33,8 @@ export const Eji: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
   
-  spritePath: '/sprites/allies/charizard.png',
-  menuPortraitPath: '/characters/menu/cloud.png',
+  spritePath: '/reaper/sprites/allies/charizard.png',
+  menuPortraitPath: '/reaper/characters/menu/cloud.png',
 };
 
 
@@ -62,8 +62,8 @@ export const Keshi: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
   
-  spritePath: '/sprites/allies/gengar.png',
-  menuPortraitPath: '/characters/menu/barret.png',
+  spritePath: '/reaper/sprites/allies/gengar.png',
+  menuPortraitPath: '/reaper/characters/menu/barret.png',
 };
 
 const eliseFolder: Folder = {
@@ -90,8 +90,8 @@ export const Elise: Ally = {
   timeInStateInMs: 0,
   juggleDuration: 0,
 
-  spritePath: '/sprites/allies/snorlax.png',
-  menuPortraitPath: '/characters/menu/tifa.png',
+  spritePath: '/reaper/sprites/allies/snorlax.png',
+  menuPortraitPath: '/reaper/characters/menu/tifa.png',
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Elise];

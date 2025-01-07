@@ -76,7 +76,7 @@ export class Dialogue extends Phaser.Scene {
           <div className={styles.dialogueBox}>
             <div className={styles.dialogueBackground} />
             <div className={styles.dialoguePortrait}>
-              <img src={'/characters/rise.png'}></img>
+              <img src={'/reaper/characters/rise.png'}></img>
             </div>
             <div className={styles.dialogueName}>{DIALOGUE_NAME}</div>
             <span onClick={onClick} className={styles.dialogueText}>

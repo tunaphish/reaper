@@ -27,7 +27,7 @@ export class World extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.json('shizuka-sprite-data', '/sprites/shizuka-full.json');
+    this.load.json('shizuka-sprite-data', '/reaper/sprites/shizuka-full.json');
   }
 
   init(): void {

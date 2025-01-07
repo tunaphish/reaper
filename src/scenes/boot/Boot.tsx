@@ -60,43 +60,43 @@ export class Boot extends Phaser.Scene {
   }
 
   private loadAssets() {
-    this.load.aseprite('shizuka', '/sprites/shizuka-full.png', '/sprites/shizuka-full.json');
+    this.load.aseprite('shizuka', '/reaper/sprites/shizuka-full.png', '/reaper/sprites/shizuka-full.json');
 
-    this.load.image('rise', '/characters/rise.png');
-    this.load.image('eji', '/characters/eji.png');
+    this.load.image('rise', '/reaper/characters/rise.png');
+    this.load.image('eji', '/reaper/characters/eji.png');
 
-    this.load.image('slime', '/sprites/slime.png');
+    this.load.image('slime', '/reaper/sprites/slime.png');
 
-    this.load.image('main-menu', '/backgrounds/main-menu.png');
+    this.load.image('main-menu', '/reaper/backgrounds/main-menu.png');
 
-    this.load.image('crosshair', '/ui/crosshair.png');
-    this.load.image('pointer', '/ui/pointer.png');
+    this.load.image('crosshair', '/reaper/ui/crosshair.png');
+    this.load.image('pointer', '/reaper/ui/pointer.png');
 
-    this.load.audio('choice-hover', '/sounds/choice-hover.wav');
-    this.load.audio('choice-select', '/sounds/choice-select.wav');
-    this.load.audio('dialogue-advance', '/sounds/dialogue-advance.wav');
-    this.load.audio('battle-start', '/sounds/battle-start-2.mp3');
+    this.load.audio('choice-hover', '/reaper/sounds/choice-hover.wav');
+    this.load.audio('choice-select', '/reaper/sounds/choice-select.wav');
+    this.load.audio('dialogue-advance', '/reaper/sounds/dialogue-advance.wav');
+    this.load.audio('battle-start', '/reaper/sounds/battle-start-2.mp3');
 
-    this.load.audio('heal', '/sounds/heal.mp3');
-    this.load.audio('block', '/sounds/block.wav');
-    this.load.audio('attack', '/sounds/attack.wav');
-    this.load.audio('debuff', '/sounds/debuff.wav');
-    this.load.audio('smirk', '/sounds/smirk.mp3');
-    this.load.audio('charged', '/sounds/charged.mp3');
+    this.load.audio('heal', '/reaper/sounds/heal.mp3');
+    this.load.audio('block', '/reaper/sounds/block.wav');
+    this.load.audio('attack', '/reaper/sounds/attack.wav');
+    this.load.audio('debuff', '/reaper/sounds/debuff.wav');
+    this.load.audio('smirk', '/reaper/sounds/smirk.mp3');
+    this.load.audio('charged', '/reaper/sounds/charged.mp3');
 
-    this.load.audio('slime-noise', '/sounds/slime-noise.mp3');
+    this.load.audio('slime-noise', '/reaper/sounds/slime-noise.mp3');
 
-    this.load.audio('stamina-depleted', '/sounds/stamina-depleted.wav');
+    this.load.audio('stamina-depleted', '/reaper/sounds/stamina-depleted.wav');
 
     // #region effects
-    this.load.image('heal', '/effects/heal.gif');
+    this.load.image('heal', '/reaper/effects/heal.gif');
 
-    this.load.audio('main-menu-music', '/music/isolate.exe.mp3');
-    this.load.audio('knight', '/music/knight.mp3');
+    this.load.audio('main-menu-music', '/reaper/music/isolate.exe.mp3');
+    this.load.audio('knight', '/reaper/music/knight.mp3');
 
-    this.load.text('mission-4', '/scripts/mission-4.yaml');
-    this.load.text('mission-6', '/scripts/mission-6.yaml');
-    this.load.text('mission-7', '/scripts/mission-7.yaml');
-    this.load.text('random-scripts', '/scripts/random-scripts.yaml');
+    this.load.text('mission-4', '/reaper/scripts/mission-4.yaml');
+    this.load.text('mission-6', '/reaper/scripts/mission-6.yaml');
+    this.load.text('mission-7', '/reaper/scripts/mission-7.yaml');
+    this.load.text('random-scripts', '/reaper/scripts/random-scripts.yaml');
   }
 }

@@ -122,7 +122,7 @@ const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number,
 }
 
 const Plane = () => {
-  const checkerTexture = useLoader(TextureLoader, '/textures/checker.svg')
+  const checkerTexture = useLoader(TextureLoader, '/reaper/textures/checker.svg')
   checkerTexture.wrapS = checkerTexture.wrapT = RepeatWrapping;
   checkerTexture.repeat.set(10, 10); // Adjust the repeat for more tiles
 

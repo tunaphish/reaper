@@ -52,7 +52,7 @@ export const thief: Enemy = {
     { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
   ],
 
-  spritePath: '/sprites/enemies/thief-idle.png',
+  spritePath: '/reaper/sprites/enemies/thief-idle.png',
 
   // temp props
   optionQueue: [],
@@ -82,7 +82,7 @@ export const thief2: Enemy = {
     { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
   ],
 
-  spritePath: '/sprites/enemies/thief-idle.png',
+  spritePath: '/reaper/sprites/enemies/thief-idle.png',
 
   // temp props
   optionQueue: [],

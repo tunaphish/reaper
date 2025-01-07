@@ -36,6 +36,7 @@ export type Executable = Action | Item | Folder;
 export class Battle extends Phaser.Scene {
   private reactOverlay: ReactOverlay; // initialized by plugin manager
   private music: Phaser.Sound.BaseSound;
+  backgroundImageUrl: string;
 
   battleStore: BattleStore;
 
@@ -49,6 +50,7 @@ export class Battle extends Phaser.Scene {
 
   init(data: { enemies: Enemy[] }): void {
     this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'), 'hihi');
+    this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
       volume: 0.5  

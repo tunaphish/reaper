@@ -43,7 +43,7 @@ const ShizukaSprite = observer((props: { world: World, player?: RapierRigidBody 
   const animation = getState(props.player) + '-' + getVerticalDirection(direction) + '-' +  getHorizontalDirection(direction);
 
   const [texture] = useAseprite(
-    '/sprites/shizuka-full.png',
+    '/reaper/sprites/shizuka-full.png',
     props.world.cache.json.get('shizuka-sprite-data') as AsepriteJson,
     animation,
     false,

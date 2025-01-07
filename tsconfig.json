@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",           
+    "module": "ESNext",           
+    "moduleResolution": "Node",  
+    "esModuleInterop": true,     
     "sourceMap": true,
     "experimentalDecorators": true,
     "jsx": "react-jsx",
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "downlevelIteration": true
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "webpack.config.js"]
 }

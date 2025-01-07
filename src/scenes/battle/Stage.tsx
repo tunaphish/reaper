@@ -53,7 +53,7 @@ const Dialogue = observer((props: { enemy: Enemy }) => {
 });
 
 
-const Enemy = (props: {enemy: Enemy, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
+const EnemyView = (props: {enemy: Enemy, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
   const { enemy, battleScene } = props;
   const [beingEffected, setBeingEffected] = React.useState(false);
   
@@ -94,7 +94,7 @@ const Enemy = (props: {enemy: Enemy, battleScene: Battle, position: [x: number, 
   )
 }
 
-const Ally = (props: {ally: Ally, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
+const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
   const { ally } = props;
 
   return (
@@ -122,7 +122,7 @@ const Ally = (props: {ally: Ally, battleScene: Battle, position: [x: number, y: 
 }
 
 const Plane = () => {
-  const checkerTexture = useLoader(TextureLoader, '/reaper/assets/textures/checker.svg')
+  const checkerTexture = useLoader(TextureLoader, '/textures/checker.svg')
   checkerTexture.wrapS = checkerTexture.wrapT = RepeatWrapping;
   checkerTexture.repeat.set(10, 10); // Adjust the repeat for more tiles
 
@@ -178,8 +178,8 @@ export const Stage = (props: { scene: Battle }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-          {scene.battleStore.enemies.map((enemy, idx) => <Enemy key={enemy.name} enemy={enemy} battleScene={scene} position={[idx*5, 0, -15]}/>)}
-          {scene.battleStore.allies.map((ally, idx) => <Ally key={ally.name} ally={ally} battleScene={scene} position={[idx*5 -5, 0, 2]}/>)}
+          {scene.battleStore.enemies.map((enemy, idx) => <EnemyView key={enemy.name} enemy={enemy} battleScene={scene} position={[idx*5, 0, -15]}/>)}
+          {scene.battleStore.allies.map((ally, idx) => <AllyView key={ally.name} ally={ally} battleScene={scene} position={[idx*5 -5, 0, 2]}/>)}
           <Plane/>
         </Physics>
     </Canvas>

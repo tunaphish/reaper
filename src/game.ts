@@ -18,10 +18,5 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   },
 };
 
-const game = new Phaser.Game(gameConfig);
 
-export default game;
-
-window.addEventListener('resize', () => {
-  game.scale.refresh();
-});
+export default new Phaser.Game(gameConfig);

@@ -60,46 +60,46 @@ export class Boot extends Phaser.Scene {
   }
 
   private loadAssets() {
-    this.load.image('tiles', '../reaper/assets/tilesets/tuxmon-sample-32px-extruded.png');
-    this.load.tilemapTiledJSON('map', '../reaper/assets/tilemaps/tuxemon-town.json');
+    this.load.image('tiles', '../tilesets/tuxmon-sample-32px-extruded.png');
+    this.load.tilemapTiledJSON('map', '../tilemaps/tuxemon-town.json');
 
-    this.load.aseprite('shizuka', '/reaper/assets/sprites/shizuka-full.png', '/reaper/assets/sprites/shizuka-full.json');
+    this.load.aseprite('shizuka', '/sprites/shizuka-full.png', '/sprites/shizuka-full.json');
 
-    this.load.image('rise', '/reaper/assets/characters/rise.png');
-    this.load.image('eji', '/reaper/assets/characters/eji.png');
+    this.load.image('rise', '/characters/rise.png');
+    this.load.image('eji', '/characters/eji.png');
 
-    this.load.image('slime', '/reaper/assets/sprites/slime.png');
+    this.load.image('slime', '/sprites/slime.png');
 
-    this.load.image('main-menu', '/reaper/assets/backgrounds/main-menu.png');
+    this.load.image('main-menu', '/backgrounds/main-menu.png');
 
-    this.load.image('crosshair', '/reaper/assets/ui/crosshair.png');
-    this.load.image('pointer', '/reaper/assets/ui/pointer.png');
+    this.load.image('crosshair', '/ui/crosshair.png');
+    this.load.image('pointer', '/ui/pointer.png');
 
-    this.load.audio('choice-hover', '/reaper/assets/sounds/choice-hover.wav');
-    this.load.audio('choice-select', '/reaper/assets/sounds/choice-select.wav');
-    this.load.audio('dialogue-advance', '/reaper/assets/sounds/dialogue-advance.wav');
-    this.load.audio('battle-start', '/reaper/assets/sounds/battle-start-2.mp3');
+    this.load.audio('choice-hover', '/sounds/choice-hover.wav');
+    this.load.audio('choice-select', '/sounds/choice-select.wav');
+    this.load.audio('dialogue-advance', '/sounds/dialogue-advance.wav');
+    this.load.audio('battle-start', '/sounds/battle-start-2.mp3');
 
-    this.load.audio('heal', '/reaper/assets/sounds/heal.mp3');
-    this.load.audio('block', '/reaper/assets/sounds/block.wav');
-    this.load.audio('attack', '/reaper/assets/sounds/attack.wav');
-    this.load.audio('debuff', '/reaper/assets/sounds/debuff.wav');
-    this.load.audio('smirk', '/reaper/assets/sounds/smirk.mp3');
-    this.load.audio('charged', '/reaper/assets/sounds/charged.mp3');
+    this.load.audio('heal', '/sounds/heal.mp3');
+    this.load.audio('block', '/sounds/block.wav');
+    this.load.audio('attack', '/sounds/attack.wav');
+    this.load.audio('debuff', '/sounds/debuff.wav');
+    this.load.audio('smirk', '/sounds/smirk.mp3');
+    this.load.audio('charged', '/sounds/charged.mp3');
 
-    this.load.audio('slime-noise', '/reaper/assets/sounds/slime-noise.mp3');
+    this.load.audio('slime-noise', '/sounds/slime-noise.mp3');
 
-    this.load.audio('stamina-depleted', '/reaper/assets/sounds/stamina-depleted.wav');
+    this.load.audio('stamina-depleted', '/sounds/stamina-depleted.wav');
 
     // #region effects
-    this.load.image('heal', '/reaper/assets/effects/heal.gif');
+    this.load.image('heal', '/effects/heal.gif');
 
-    this.load.audio('main-menu-music', '/reaper/assets/music/isolate.exe.mp3');
-    this.load.audio('knight', '/reaper/assets/music/knight.mp3');
+    this.load.audio('main-menu-music', '/music/isolate.exe.mp3');
+    this.load.audio('knight', '/music/knight.mp3');
 
-    this.load.text('mission-4', '/reaper/assets/scripts/mission-4.yaml');
-    this.load.text('mission-6', '/reaper/assets/scripts/mission-6.yaml');
-    this.load.text('mission-7', '/reaper/assets/scripts/mission-7.yaml');
-    this.load.text('random-scripts', '/reaper/assets/scripts/random-scripts.yaml');
+    this.load.text('mission-4', '/scripts/mission-4.yaml');
+    this.load.text('mission-6', '/scripts/mission-6.yaml');
+    this.load.text('mission-7', '/scripts/mission-7.yaml');
+    this.load.text('random-scripts', '/scripts/random-scripts.yaml');
   }
 }

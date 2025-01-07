@@ -93,8 +93,7 @@ export class Battle extends Phaser.Scene {
            enemy.stamina -= action.staminaCost;
        
            const newDeferredAction = {
-              // @ts-ignore
-             id: self.crypto.randomUUID(),
+             id: generateID(),
              timeTilExecute: action.animTimeInMs || 0,
              caster: enemy,
              action,
@@ -195,8 +194,7 @@ export class Battle extends Phaser.Scene {
       combatant.stamina -= combatant.queuedOption.staminaCost;
       
       const newDeferredAction = {
-         // @ts-ignore
-        id: self.crypto.randomUUID(),
+        id: generateID(),
         timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
         caster: combatant,
         action: combatant.queuedOption,
@@ -351,4 +349,8 @@ export class Battle extends Phaser.Scene {
   }
 
   // #endregion
+}
+
+const generateID = () => {
+  return Date.now().toString(36); 
 }

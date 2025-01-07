@@ -60,9 +60,6 @@ export class Boot extends Phaser.Scene {
   }
 
   private loadAssets() {
-    this.load.image('tiles', '../tilesets/tuxmon-sample-32px-extruded.png');
-    this.load.tilemapTiledJSON('map', '../tilemaps/tuxemon-town.json');
-
     this.load.aseprite('shizuka', '/sprites/shizuka-full.png', '/sprites/shizuka-full.json');
 
     this.load.image('rise', '/characters/rise.png');

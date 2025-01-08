@@ -276,11 +276,11 @@ export class Battle extends Phaser.Scene {
     this.sound.play('choice-select');
     this.battleStore.setCaster(ally);
     this.events.emit('caster-set', ally);
-    this.battleStore.menus.push(ally.folder);
+    this.battleStore.pushMenu(ally.folder);
   }
 
   closeMenu(): void {
-    this.battleStore.menus.pop();
+    this.battleStore.popMenu();
 
     if (this.battleStore.menus.length === 0) {
       this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
@@ -296,10 +296,10 @@ export class Battle extends Phaser.Scene {
       //   this.battleStore.setExecutable(item);
       //   if (item.targetType === TargetType.SELF) {
       //     const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-      //     this.battleStore.menus.push(targetFolder);
+      //     this.battleStore.pushMenu(targetFolder);
       //   } else {
       //     const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-      //     this.battleStore.menus.push(targetFolder);
+      //     this.battleStore.pushMenu(targetFolder);
       //   }
       //   this.battleStore.setText(item.description);
       //   break;
@@ -308,10 +308,10 @@ export class Battle extends Phaser.Scene {
         this.battleStore.setExecutable(action);
         if (action.targetType === TargetType.SELF) {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-          this.battleStore.menus.push(targetFolder);
+          this.battleStore.pushMenu(targetFolder);
         } else {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          this.battleStore.menus.push(targetFolder);
+          this.battleStore.pushMenu(targetFolder);
         }
         const restrictionText = action.restriction ? 
         'RESTRCTION: ' + action.restriction.desc + '. '
@@ -323,10 +323,10 @@ export class Battle extends Phaser.Scene {
         this.battleStore.setReaction(reaction);
         if (reaction.targetType === TargetType.SELF) {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-          this.battleStore.menus.push(targetFolder);
+          this.battleStore.pushMenu(targetFolder);
         } else {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          this.battleStore.menus.push(targetFolder);
+          this.battleStore.pushMenu(targetFolder);
         }
         this.battleStore.setText(reaction.description);
         break;
@@ -342,7 +342,7 @@ export class Battle extends Phaser.Scene {
           this.battleStore.setExecutable(folder);
           this.battleStore.setTarget(this.battleStore.caster);
         } else {
-          this.battleStore.menus.push(folder);
+          this.battleStore.pushMenu(folder);
         }
         break;
     }

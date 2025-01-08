@@ -64,6 +64,14 @@ export class BattleStore {
     this.deferredActions = deferredActions;
   }
 
+  pushMenu(folder: Folder): void {
+    this.menus.push(folder);
+  }
+
+  popMenu(): Folder {
+    return this.menus.pop();
+  }
+
   emptyMenu(): void {
     this.menus.splice(0, this.menus.length);
   }

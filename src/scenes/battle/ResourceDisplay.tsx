@@ -6,6 +6,16 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { DeferredAction } from './BattleStore';
 
+const Meter = (props: { value: number, max: number, className?: string }) => {
+  const { className, value, max } = props;
+
+  return (
+    <div className={[styles.meterBackground, className].join(' ')}>
+      <div className={styles.meter} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
+    </div>
+  )
+}
+
 const ActionView = (props: { action: DeferredAction }) => {
     const { action } = props;
   
@@ -46,11 +56,7 @@ const ActionView = (props: { action: DeferredAction }) => {
           exit={{ scaleY: 0 }}
           transition={{ duration: .1, ease: 'easeOut' }} 
         >
-          <motion.div 
-            className={styles.actionWindow}
-            animate={{ width: Math.min(Math.round(action.timeTilExecute / (action.action.animTimeInMs || 1) * 100), 100) + "%"  }}
-            transition={{ duration: 0 }}
-          />
+          <Meter value={action.timeTilExecute} max={action.action.animTimeInMs || 1}/>
           <legend style={{ fontSize: '12px' }}>{action.caster.name}</legend>
           <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
             {action.action.name}
@@ -85,16 +91,15 @@ const ActionView = (props: { action: DeferredAction }) => {
     }
   
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', flex: '1' }}>
         {
           actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} />)
         }
         <div className={style.join(' ')} onClick={props.onClickCell} 
           style={{ 
-            aspectRatio: 1, 
             display: "grid",
             gridTemplateColumns: "1fr",
-            gridTemplateRows: "1fr",  
+            gridTemplateRows: "1fr", 
           }}>
           <motion.div 
             className={styles.castingWindow}
@@ -105,16 +110,16 @@ const ActionView = (props: { action: DeferredAction }) => {
             <div className={styles.windowName}>{props.combatant.name}</div>
             <div className={styles.resourceContainer}>
               <div className={styles.meterContainer}>
-                <meter className={styles.bleedMeter} min={0} value={props.combatant.health} max={props.combatant.maxHealth}></meter>
-                <meter className={styles.healthMeter} min={0} value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth}></meter>
+                <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={styles.bleedMeter}/>
+                <Meter value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth} className={styles.healthMeter}/>
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
               </div>
               <div className={styles.meterContainer}>
-                <meter className={styles.staminaMeter} min={0} value={props.combatant.stamina} max={props.combatant.maxStamina}></meter>
+                <Meter value={props.combatant.stamina} max={props.combatant.maxStamina} className={styles.staminaMeter}/>
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
               </div>
               <div className={styles.meterContainer}>
-                <meter className={styles.magicMeter} min={0} value={props.combatant.magic} max={props.combatant.maxMagic}></meter>
+                <Meter value={props.combatant.magic} max={props.combatant.maxMagic} className={styles.magicMeter}/>
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
               </div>
             </div>

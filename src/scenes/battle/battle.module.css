@@ -59,12 +59,21 @@
   grid-row: 1;
 }
 
-.actionWindow {
+.meterContainer {
+  width: 100%;
+}
+
+.meterBackground {
   height: 100%;
-  width: 0;
-  background-color: white;
+  width: 100%;
+  background-color: transparent;
   grid-column: 1;
   grid-row: 1;
+}
+
+.meter {
+  background: white;
+  height: 100%;
 }
 
 .resourceContainer {
@@ -131,41 +140,31 @@
   animation: shake 0.5s ease-in-out;
 }
 
-meter {
-  appearance: none;
-  border-radius: 5px;
-}
-
 .meterContainer {
   display: grid;
   grid-template-columns: 1fr; 
   grid-template-rows: 1fr;
-  margin-bottom: 3px;    
+  margin-bottom: 3px;   
 }
 
-.healthMeter {
-  background: transparent;
-}
-
-.healthMeter, .bleedMeter, .magicMeter, .staminaMeter, .meterNumber {
+.meterNumber {
   grid-column: 1;
   grid-row: 1;
 }
 
-.healthMeter:-moz-meter-optimum::-moz-meter-bar, .healthMeter::-webkit-meter-optimum-value {
+.healthMeter > div {
   background: red;
 }
 
-.bleedMeter:-moz-meter-optimum::-moz-meter-bar, .bleedMeter::-webkit-meter-optimum-value {
+.bleedMeter > div{
   background: yellow;
 }
 
-.staminaMeter:-moz-meter-optimum::-moz-meter-bar, .staminaMeter::-webkit-meter-optimum-value {
+.staminaMeter > div{
   background: green;
 }
 
-
-.magicMeter:-moz-meter-optimum::-moz-meter-bar, .magicMeter::-webkit-meter-optimum-value {
+.magicMeter > div {
   background: blue;
 }
 

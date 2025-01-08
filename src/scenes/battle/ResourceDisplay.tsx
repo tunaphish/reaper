@@ -115,7 +115,7 @@ const ActionView = (props: { action: DeferredAction }) => {
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
               </div>
               <div className={styles.meterContainer}>
-                <Meter value={props.combatant.stamina} max={props.combatant.maxStamina} className={styles.staminaMeter}/>
+                <Meter value={props.combatant.stamina < 0 ? 0 : props.combatant.stamina } max={props.combatant.maxStamina} className={styles.staminaMeter}/>
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
               </div>
               <div className={styles.meterContainer}>

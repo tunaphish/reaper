@@ -150,8 +150,10 @@ const Camera = (props: { battle: Battle }) => {
   const [targetPosition, setTargetPosition] = React.useState<Vector3Like>(camera.position)
 
   React.useEffect(() => {
-    camera.position.set(1., 0, 3); 
-    camera.lookAt(0, 0, -10); 
+    // camera.position.set(1, 0, 3); 
+    camera.position.set(1, 0, -5); 
+
+    camera.lookAt(0, 0, -8); 
 
     battle.events.on('caster-set', (caster: Ally) => {
       const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;

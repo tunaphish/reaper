@@ -22,7 +22,7 @@ export default class ReactOverlay extends Plugins.BasePlugin {
   }
 
   init(): void {
-    const container = this.game.domContainer;
+    const container = document.getElementById("game");
 
     if (!container) {
       return console.error(

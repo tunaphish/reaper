@@ -13,7 +13,6 @@ export class MainMenu extends Phaser.Scene {
   private reactOverlay: ReactOverlay;
   private choiceSelectSound: Phaser.Sound.BaseSound;
   private menuMusic: Phaser.Sound.BaseSound;
-  private backgroundImage;
 
   constructor() {
     super(sceneConfig);
@@ -21,21 +20,14 @@ export class MainMenu extends Phaser.Scene {
 
   public create(): void {
     this.choiceSelectSound = this.sound.add('choice-select');
-    this.backgroundImage = this.add.image(0, 0, 'main-menu').setOrigin(0, 0).setAlpha(0);
 
     this.menuMusic = this.sound.add('main-menu-music', { loop: true });
     this.menuMusic.play();
 
     const Ui = () => {
-      const [opacity, setOpacity] = React.useState(0.001);
+      const [opacity, setOpacity] = React.useState(1);
 
       const onClickStart = () => {
-        this.tweens.add({
-          targets: this.backgroundImage,   
-          alpha: 0,         
-          duration: 1000,   
-          ease: 'Linear',   
-        });
         this.tweens.add({
           targets:  this.menuMusic,
           volume:   0,
@@ -58,16 +50,17 @@ export class MainMenu extends Phaser.Scene {
         this.scene.start('DialogueList');
       };
 
-      React.useEffect(() => {
-        this.fadeInImage(() => setOpacity(1));
-      })
-
       return (
         <motion.div
-          initial={{ opacity }}
+          initial={{ opacity: 0 }}
           animate={{ opacity }}     
           transition={{ duration: 1 }} 
           onAnimationComplete={onAnimationComplete}
+          style={{
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'black',
+          }}
         >
           <h1 className={styles.title}>
             r e a p e r
@@ -84,18 +77,7 @@ export class MainMenu extends Phaser.Scene {
 
     this.reactOverlay.create(<Ui/>, this);
   }
-  
-  fadeInImage(onCompleteCallback: () => void): void {
-    this.tweens.add({
-      targets: this.backgroundImage,   
-      alpha: 1,         
-      duration: 1000,   
-      ease: 'Linear',   
-      onComplete: () => {
-        onCompleteCallback();
-      }
-    });
-  }
+
 }
 
 

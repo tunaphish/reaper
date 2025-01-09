@@ -38,9 +38,19 @@ const Plane = () => {
   )
 }
 
-export const WorldStage = (props: { world: World }) => {
+export const WorldStage = (props: { world: World }): JSX.Element => {
+  const [frameloop, setFrameloop] = React.useState<"always" | "demand" | "never">("always");
+  React.useEffect(() => {
+    props.world.events.on('pause', () => {
+      setFrameloop("never");
+    });
+    props.world.events.on('resume', () => {
+      setFrameloop("always");
+    });
+  })
+
   return (
-      <Canvas>
+      <Canvas frameloop={frameloop}>
         <Stats />
         <Camera world={props.world}/>
         <ambientLight intensity={0.5} />

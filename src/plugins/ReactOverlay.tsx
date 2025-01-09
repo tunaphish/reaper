@@ -45,7 +45,6 @@ export default class ReactOverlay extends Plugins.BasePlugin {
   }
 
   pause(system: Phaser.Scenes.Systems, data): void {
-    console.log(this.uiMap.get(system.scenePlugin.key));
     // this.uiMap.set(system.scenePlugin.key, child);
   }
 

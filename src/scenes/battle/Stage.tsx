@@ -95,7 +95,16 @@ const EnemyView = (props: {enemy: Enemy, battleScene: Battle, position: [x: numb
 }
 
 const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
-  const { ally } = props;
+  const { ally, battleScene } = props;
+  const [beingEffected, setBeingEffected] = React.useState(false);
+  
+  React.useEffect(() => {
+    battleScene.events.on('combatant-effected', (effectedCombatant: Combatant) => {
+      if (effectedCombatant.name !== ally.name) return;
+      setBeingEffected(true);
+    });
+  }, []);
+
 
   return (
     <RigidBody type="dynamic">
@@ -109,9 +118,8 @@ const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number,
           pointerEvents='none'
         >
             <div>
-              <img  src={ally.spritePath} />
-            </div>
-          
+             <img className={beingEffected ? styles.shake : ''} src={ally.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
+            </div> 
         </Html>
       </mesh>
       <CuboidCollider args={[0.5, 0.5, 0.5]} />
@@ -139,9 +147,9 @@ const Plane = () => {
 
 
 const CASTER_X_POSITION_MAP = {
-  ['Cloud']: -4.7,
+  ['Cloud']: -1.5,
   ['Barret']: 1.1,
-  ['Tifa']: 7.2,
+  ['Tifa']: 4.5,
 }
 
 const Camera = (props: { battle: Battle }) => {
@@ -181,7 +189,7 @@ export const Stage = (props: { scene: Battle }) => {
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
           {scene.battleStore.enemies.map((enemy, idx) => <EnemyView key={enemy.name} enemy={enemy} battleScene={scene} position={[idx*5, 0, -15]}/>)}
-          {scene.battleStore.allies.map((ally, idx) => <AllyView key={ally.name} ally={ally} battleScene={scene} position={[idx*5 -5, 0, 2]}/>)}
+          {scene.battleStore.allies.map((ally, idx) => <AllyView key={ally.name} ally={ally} battleScene={scene} position={[idx*2 - 2, 0, 2]}/>)}
           <Plane/>
         </Physics>
     </Canvas>

@@ -10,7 +10,7 @@ import { TargetType } from "../model/targetType";
 export const closeToExecution: ReactionRestriction = {
     desc: 'Action must close to executing',
     isRestricted: (deferredAction: DeferredAction, caster: Combatant) => { 
-      return deferredAction.timeTilExecute < 500;
+      return deferredAction.timeTilExecute > 500;
     },
 }
 

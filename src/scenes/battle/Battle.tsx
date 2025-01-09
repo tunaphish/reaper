@@ -44,6 +44,8 @@ export class Battle extends Phaser.Scene {
   firstActionTaken = false;
   splinterUsed = false;
 
+  private enemyReactionTimer = 0;
+
   constructor() {
     super(sceneConfig);
   }
@@ -70,11 +72,43 @@ export class Battle extends Phaser.Scene {
     this.resetDeadAllyCasterMenu();
     
     // this.selectEnemyBehavior(delta);
+    this.checkEnemyReactions(delta);
+
     this.castActions();    
     this.reactToActions();
 
     this.executeActions();    
     this.resolveDeferredActions(delta);
+  }
+
+  checkEnemyReactions(delta: number): void {
+    this.enemyReactionTimer += delta;
+    if (this.enemyReactionTimer < 300) return;
+    this.enemyReactionTimer = 0;
+
+    this.battleStore.enemies.forEach((enemy) => {
+      if (enemy.status !== Status.NORMAL) return;
+      const selectedReaction = enemy.reactions.find(reaction => reaction.valid(enemy, this));
+      if (!selectedReaction) return;
+
+      this.sound.play('slime-noise'); 
+      enemy.dialogue = selectedReaction.text;
+
+      selectedReaction.options.forEach(option => {
+        const reaction =  option as Reaction;
+        enemy.stamina -= reaction.staminaCost;
+
+        const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === enemy.name);
+        actionsTargetingTarget.forEach(action => {
+          if (reaction.restriction && reaction.restriction.isRestricted(action, enemy)) {
+            this.sound.play('stamina-depleted');
+          } else {
+            this.sound.play(reaction.soundKeyName);
+            action.reactions.push(reaction);
+          }
+        })
+      }) 
+    });
   }
 
 
@@ -97,7 +131,7 @@ export class Battle extends Phaser.Scene {
              timeTilExecute: action.animTimeInMs || 0,
              caster: enemy,
              action,
-             target: enemy.targetFn(this), 
+             target: enemy.targetFn(this, enemy), 
              reactions: [],
            };
            this.battleStore.deferredActions.push(newDeferredAction);
@@ -160,7 +194,7 @@ export class Battle extends Phaser.Scene {
 
     const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === this.battleStore.target.name);
     actionsTargetingTarget.forEach(action => {
-      if (this.battleStore.reaction.restriction.isRestricted &&
+      if (this.battleStore.reaction.restriction &&
           this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)
         ) {
         this.sound.play('stamina-depleted');
@@ -169,7 +203,6 @@ export class Battle extends Phaser.Scene {
         action.reactions.push(this.battleStore.reaction);
       }
     })
-
 
     this.battleStore.resetSelections();  
   }

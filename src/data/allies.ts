@@ -13,7 +13,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Actions.attack, Reactions.block, Actions.stanch],
+  options: [Actions.attack, Reactions.parry, Actions.stanch],
 }
 
 export const Eji: Ally = {
@@ -42,7 +42,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Barret',
   desc: 'Soul of Barret',
-  options: [Actions.attack, Reactions.block, Actions.stanch],
+  options: [Actions.attack, Reactions.parry, Actions.stanch, Reactions.evade],
 }
 
 export const Keshi: Ally = {
@@ -70,7 +70,7 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Tifa',
   name: 'Tifa',
-  options: [Actions.attack, Reactions.block, Actions.stanch],
+  options: [Actions.attack, Reactions.parry, Actions.stanch],
 };
 
 export const Elise: Ally = {

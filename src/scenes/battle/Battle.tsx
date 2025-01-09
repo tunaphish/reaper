@@ -69,7 +69,7 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    // this.selectEnemyBehavior(delta);
+    this.selectEnemyBehavior(delta);
     this.castActions();    
     this.reactToActions();
 
@@ -160,7 +160,9 @@ export class Battle extends Phaser.Scene {
 
     const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === this.battleStore.target.name);
     actionsTargetingTarget.forEach(action => {
-      if (this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)) {
+      if (this.battleStore.reaction.restriction.isRestricted &&
+          this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)
+        ) {
         this.sound.play('stamina-depleted');
       } else {
         this.sound.play(this.battleStore.reaction.soundKeyName);

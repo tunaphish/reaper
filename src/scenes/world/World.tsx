@@ -41,8 +41,6 @@ export class World extends Phaser.Scene {
     this.reactOverlay.create(<WorldView scene={this}/>, this);
   }
 
-
-
   pause(): void {
     this.choiceSelectSound.play();
     this.scene.pause('World');

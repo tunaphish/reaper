@@ -1,4 +1,4 @@
-import { Combatant } from "../model/combatant";
+import { Combatant, updateStamina } from "../model/combatant";
 import { Effect } from "../model/effect";
 import { OptionType } from "../model/option"
 import { DeferredAction } from "../scenes/battle/BattleStore";
@@ -7,12 +7,14 @@ import * as Effects from './effects';
 import { TargetType } from "../model/targetType";
 
 // #region ReactionRestriction
-export const reactionOnSelf: ReactionRestriction = {
-    desc: 'Reaction must target action targeting self',
+export const closeToExecution: ReactionRestriction = {
+    desc: 'Action must close to executing',
     isRestricted: (deferredAction: DeferredAction, caster: Combatant) => { 
-      return deferredAction.target.name !== caster.name;
+      return deferredAction.timeTilExecute < 500;
     },
 }
+
+
 
 // #endregion
 
@@ -22,15 +24,45 @@ export const block: Reaction = {
     targetType: TargetType.SELF,
     staminaCost: 10,
     soundKeyName: 'block',
-    description: 'Modify damage effects to damage stamina',
-    restriction: reactionOnSelf,
+    description: 'Modify damage effects to damage stamina at reduced potency',
     modifyEffects: (effects: Effect[]) => {
         return effects.map((effect) => {
             if (effect.execute.toString() != Effects.dealDamage.toString()) return effect;
             return {
                 execute: Effects.healStamina,
-                potency: effect.potency * -1,
+                potency: (effect.potency - 10) * -1,
             }
         });
+    },
+}
+
+export const evade: Reaction = {
+    type: OptionType.REACTION,
+    name: 'Evade',
+    targetType: TargetType.SELF,
+    staminaCost: 25,
+    soundKeyName: 'block',
+    description: 'Evade all effects',
+    restriction: closeToExecution,
+    modifyEffects: (effects: Effect[]) => [],
+}
+
+export const parry: Reaction = {
+    type: OptionType.REACTION,
+    name: 'Parry',
+    targetType: TargetType.SELF,
+    staminaCost: 25,
+    soundKeyName: 'block',
+    description: 'Evade all Effects and Damage Caster Stamina',
+    restriction: closeToExecution,
+    modifyEffects: (effects: Effect[]) => {
+        return [
+            {
+                execute: (target, source, potency, scene) => {
+                    updateStamina(source, -potency);
+                },
+                potency: 25,
+            }
+        ];
     },
 }

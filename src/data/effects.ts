@@ -6,6 +6,8 @@ export const dealDamage = (target, source, potency) => {
     target.juggleDuration += 500;
   }
 };
+
+// these are potentially confusing lol
 export const healStamina = (target, source, potency) => {
   updateStamina(target, potency);
 };

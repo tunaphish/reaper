@@ -15,6 +15,6 @@ export type Reaction = Option & {
   staminaCost: number;
   description: string;
   soundKeyName: string;
-  restriction: ReactionRestriction;
+  restriction?: ReactionRestriction;
   modifyEffects: (effects: Effect[]) => Effect[];
 }

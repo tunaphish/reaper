@@ -37,7 +37,7 @@ const enoughStamina = (enemy: Enemy, scene: Battle) => {
 export const thief: Enemy = {
   type: OptionType.ENEMY,
   name: 'Thief',
-  health: 10,
+  health: 100,
   maxHealth: 200,
   bleed: 0,
   stamina: 0,

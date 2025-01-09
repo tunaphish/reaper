@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>r e a p e r</title>
+    <style>
+      @font-face {
+        font-family: rainyhearts;
+        src: url('/reaper/fonts/rainyhearts.ttf');
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      html,
+      body {
+        height: 100%;
+
+        color: white;
+        font-family: 'rainyhearts';
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      canvas {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #game {
+        height: 100vh;
+        width: 100vw;
+      }
+
+      #game > div {
+        height: 100% !important;
+        width: 100% !important;
+        display: flex;
+        align-items: flex-end;
+      }
+
+      #game > div > * {
+        pointer-events: auto;
+      }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta http-equiv="cleartype" content="on" />
+
+    <link rel="shortcut icon" type="image/jpg" href="/assets/favicon.ico" />
+    <script type="module" crossorigin src="/reaper/assets/index-BmooCmPF.js"></script>
+    <link rel="stylesheet" crossorigin href="/reaper/assets/index-DV6lMu3m.css">
+  </head>
+
+  <body>
+    <div id="game"></div>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+briefing:
+  - show pikrepo
+  - enter sei
+  - play apathy
+  - announce | before this eji receives his target
+  - announce | it's revealed to be sei
+  - says eji | I suppose this is the time that I try to know more about my target.
+  - display | It would appear that way.
+  - display | What do you want to know?
+  - says eji | Elise said we should use this time...
+  - says eji |  not for work. But to get to know each other.
+  - display | Well now you can do both.
+  - choose | seis_past * Your Past ~ seis_mentor * Your Mentor ~ move_on * Move On
+
+seis_past:
+  - display | If I'm being honest Eji.
+  - display | I've been doing this so long.
+  - display | I barely even remember who I was before I died.
+
+seis_mentor:
+  - display | They've all moved on.
+  - display | Mentors.
+  - display | Mentees.
+  - display | Friends.
+  - display | Family
+  - display | Usually by my hand
+  - display | We all have to move on...
+
+move_on:
+  - announce | Usually you drink coffee as read the dossier
+  - announce | There's a few scenes and sounds effects of drinking coffee. As there's nothing left to discuss
+  - announce | Next scene is moving to a snowfield in silence
+
+start:
+  - show pikrepo
+  - enter eji
+  - says eji | We saved those souls... Without reaping them.
+  - display | What was the point?
+  - display | Everyone's still dead.
+  - display | Did it even matter?
+  - display | Or did it just feel good.
+  - display | What did it change, Eji?
+  - choose | fight * Fight On ~ giveup * Give Up
+
+fight:
+  - play knight
+  - enter eji angry
+  - says eji | It changed me.
+  - announce | > ... the wind is howling
+  - display | I see
+  - initiate
+
+giveup:
+  - display | Glad you found reason again
+
+fuck_you:
+  - display | Do you know how many times I've done this
+  - display | You think if there was any other way
+  - display | any other possibility
+  - display | that I wouldn't have tried it
+  - display | Know your place
+  - initiate
+
+death:
+  - display | I knew you had it in you
+  - display | Had that mf dawg in you
+  - initiate

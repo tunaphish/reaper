@@ -22,11 +22,12 @@ export type Combatant = Option & {
   maxMagic: number;
   staminaRegenRatePerSecond: number; 
 
+  spritePath: string;
+
   status: Status;
   queuedOption?: Action | Item | Folder;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
-
   juggleDuration: number;
 }
 

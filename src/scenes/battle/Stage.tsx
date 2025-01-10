@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { Battle } from './Battle';
 import { Enemy } from '../../model/enemy';
-import { ResourceDisplay } from './ResourceDisplay';
+import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
@@ -52,55 +52,13 @@ const Dialogue = observer((props: { enemy: Enemy }) => {
   )
 });
 
-
-const EnemyView = (props: {enemy: Enemy, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
-  const { enemy, battleScene } = props;
+const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, position: [x: number, y: number, z: number], isEnemy: boolean }) => {
+  const { combatant, battleScene, isEnemy } = props;
   const [beingEffected, setBeingEffected] = React.useState(false);
   
   React.useEffect(() => {
     battleScene.events.on('combatant-effected', (effectedCombatant: Combatant) => {
-      if (effectedCombatant.name !== enemy.name) return;
-      setBeingEffected(true);
-    });
-  }, []);
-
-  return (
-    <RigidBody type="dynamic">
-      <mesh position={props.position} >
-        <Html 
-          transform
-          sprite
-          occlude
-          castShadow
-          receiveShadow
-          pointerEvents='none'
-        >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <ResourceDisplay combatant={enemy} battleScene={battleScene}/>
-              <Dialogue enemy={enemy} />
-              <img className={beingEffected ? styles.shake : ''} src={enemy.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
-            </div>
-          
-        </Html>
-      </mesh>
-      <CuboidCollider args={[0.5, 0.5, 0.5]} />
-
-    </RigidBody>
-  )
-}
-
-const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number, y: number, z: number] }) => {
-  const { ally, battleScene } = props;
-  const [beingEffected, setBeingEffected] = React.useState(false);
-  
-  React.useEffect(() => {
-    battleScene.events.on('combatant-effected', (effectedCombatant: Combatant) => {
-      if (effectedCombatant.name !== ally.name) return;
+      if (effectedCombatant.name !== combatant.name) return;
       setBeingEffected(true);
     });
   }, []);
@@ -117,9 +75,12 @@ const AllyView = (props: {ally: Ally, battleScene: Battle, position: [x: number,
           receiveShadow
           pointerEvents='none'
         >
-            <div>
-             <img className={beingEffected ? styles.shake : ''} src={ally.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
-            </div> 
+          <div style={{position: 'relative'}}>
+            { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
+            <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
+            { isEnemy &&  <ResourceDisplay combatant={combatant} battleScene={battleScene}/>  }
+          </div>
+          
         </Html>
       </mesh>
       <CuboidCollider args={[0.5, 0.5, 0.5]} />
@@ -147,9 +108,9 @@ const Plane = () => {
 
 
 const CASTER_X_POSITION_MAP = {
-  ['Cloud']: -1.5,
+  ['Cloud']: -2,
   ['Barret']: 1.1,
-  ['Tifa']: 4.5,
+  ['Tifa']: 5.5,
 }
 
 const Camera = (props: { battle: Battle }) => {
@@ -158,21 +119,21 @@ const Camera = (props: { battle: Battle }) => {
   const [targetPosition, setTargetPosition] = React.useState<Vector3Like>(camera.position)
 
   React.useEffect(() => {
-    // camera.position.set(1, 0, 3); 
-    camera.position.set(1, 0, -5); 
+    // camera.position.set(1, 0, 0); 
+    camera.position.set(1, 10, 0); 
 
-    camera.lookAt(0, 0, -8); 
+    camera.lookAt(0, 0, -1); 
 
-    battle.events.on('caster-set', (caster: Ally) => {
-      const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
-      setTargetPosition({x: xPosition, y: 0, z: 3 });
-    });
+    // battle.events.on('caster-set', (caster: Ally) => {
+    //   const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
+    //   setTargetPosition({x: xPosition, y: 10, z: 3 });
+    // });
   }, []);
 
   useFrame(() => {
     const newPosition = camera.position.lerp(targetPosition, 0.2);
     camera.position.set(newPosition.x, newPosition.y, newPosition.z); 
-    camera.lookAt(0, 0, -10); 
+    camera.lookAt(0, 0, -1); 
   })
 
   return null; 
@@ -188,8 +149,8 @@ export const Stage = (props: { scene: Battle }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-          {scene.battleStore.enemies.map((enemy, idx) => <EnemyView key={enemy.name} enemy={enemy} battleScene={scene} position={[idx*5, 0, -15]}/>)}
-          {scene.battleStore.allies.map((ally, idx) => <AllyView key={ally.name} ally={ally} battleScene={scene} position={[idx*2 - 2, 0, 2]}/>)}
+          {scene.battleStore.enemies.map((enemy, idx) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} position={[idx*5, 0, -2]} isEnemy={true}/>)}
+          {scene.battleStore.allies.map((ally, idx) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} position={[idx*2 - 2, 0, 2]} isEnemy={false}/>)}
           <Plane/>
         </Physics>
     </Canvas>

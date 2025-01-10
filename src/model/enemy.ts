@@ -20,8 +20,6 @@ export type Enemy = Combatant & {
   behaviors: Behavior[];
   cadence: number;
 
-  spritePath: string;
-
   // temp vars
   optionQueue: (Action | Item | Folder | Reaction)[];
   targetFn: (scene: Battle, caster: Combatant) => Combatant;

@@ -5,7 +5,6 @@ import { OptionType } from './option';
 export type Ally = Combatant & {
   folder: Folder;
   type: OptionType.ALLY;  
-  spritePath: string;
   menuPortraitPath: string;
 };
 

@@ -66,7 +66,7 @@ export const thief: Enemy = {
     { options: [Reactions.evade], valid: isCloseToBeingAttacked, getTarget: self, text: 'Thief avoids your attack!' },
   ],
 
-  spritePath: '/reaper/sprites/enemies/thief-idle.png',
+  spritePath: '/reaper/sprites/enemies/ninetails.png',
 
   // temp props
   optionQueue: [],

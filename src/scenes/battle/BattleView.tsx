@@ -10,7 +10,7 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage } from './Stage';
-import { ResourceDisplay } from './ResourceDisplay';
+import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 
 
 const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
@@ -159,7 +159,12 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
           <Description text={props.scene.battleStore.text} isEnemy={false}/>
           <div className={styles.combatantBar}>
               {allies.map((member) => {
-                return <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
+                return( 
+                  <div style={{ position: 'relative', flex: '1' }} key={member.name}>
+                    <ActionsViewManager battleScene={props.scene} combatant={member} />
+                    <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
+                  </div>
+                )
               })}
           </div>
           <MenuContainer battleScene={props.scene}/>

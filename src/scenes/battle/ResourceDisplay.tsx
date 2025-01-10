@@ -16,23 +16,16 @@ const Meter = (props: { value: number, max: number, className?: string }) => {
   )
 }
 
-const ActionView = (props: { action: DeferredAction }) => {
+export const ActionView = (props: { action: DeferredAction }) => {
     const { action } = props;
   
     const getRandomBorderPoint = () => {
       const boxSize = 100;
-      const side = Math.floor(Math.random() * 4);  
-  
-      switch (side) {
-        case 0: // Top edge
-          return [Math.random() * boxSize, 0];
-        case 1: // Right edge
-          return [boxSize, Math.random() * boxSize];
-        case 2: // Bottom edge
-          return [Math.random() * boxSize, boxSize];
-        case 3: // Left edge
-          return [0, Math.random() * boxSize];
-      }
+      const y = Math.random() * boxSize;
+      const center = boxSize / 2;
+      const heightFactor = 4; // Adjust this for how high the arc is
+      const x = heightFactor * (1 - Math.pow((y - center) / center, 2)); // Parabolic formula
+      return [x, y];
     }
   
     const style: React.CSSProperties = React.useMemo(() => {
@@ -72,6 +65,14 @@ const ActionView = (props: { action: DeferredAction }) => {
       </div>
     )
   }
+
+  export const ActionsViewManager = observer(((props: {combatant: Combatant, battleScene: Battle }) => {
+    const { combatant, battleScene } = props;
+    const actionsDirectedAtCombatant = battleScene.battleStore.deferredActions.filter(action => action.target.name === combatant.name);
+    return (
+      actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} />)      
+    )
+  })); 
   
   export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
     const statusToStylesMap = {
@@ -84,17 +85,13 @@ const ActionView = (props: { action: DeferredAction }) => {
       statusToStylesMap[props.combatant.status],
     ];
   
-    const actionsDirectedAtCombatant = props.battleScene.battleStore.deferredActions.filter(action => action.target.name === props.combatant.name);
     
     const juggleWidth = {
       width: `${props.combatant.juggleDuration * .1}px`
     }
   
     return (
-      <div style={{ position: 'relative', flex: '1' }}>
-        {
-          actionsDirectedAtCombatant.map((action) => <ActionView key={action.id} action={action} />)
-        }
+      <div style={{ flex: '1' }}>
         <div className={style.join(' ')} onClick={props.onClickCell} 
           style={{ 
             display: "grid",
@@ -118,15 +115,10 @@ const ActionView = (props: { action: DeferredAction }) => {
                 <Meter value={props.combatant.stamina < 0 ? 0 : props.combatant.stamina } max={props.combatant.maxStamina} className={styles.staminaMeter}/>
                 <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
               </div>
-              <div className={styles.meterContainer}>
-                <Meter value={props.combatant.magic} max={props.combatant.maxMagic} className={styles.magicMeter}/>
-                <div className={styles.meterNumber}>{Math.ceil(props.combatant.magic)}</div>
-              </div>
             </div>
           </div>
         </div>
         <div className={styles.juggleMeter} style={juggleWidth}/>
       </div>
-  
     )
   });

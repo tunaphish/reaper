@@ -20,6 +20,6 @@ export type Action = Option & {
 
   effects: Effect[];
   restriction?: Restriction; 
-  animTimeInMs?: number;
+  animTimeInMs: number;
   airtime?: number;
 }

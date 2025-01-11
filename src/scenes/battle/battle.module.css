@@ -26,6 +26,20 @@
   flex-direction: column;
 }
 
+.enemyWindow {
+  background: linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -moz-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -webkit-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -o-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+
+  border: 2px ridge white;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
+
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
 .windowName {
   padding: 3px;
 }

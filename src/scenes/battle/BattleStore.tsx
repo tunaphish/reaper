@@ -14,6 +14,7 @@ export type DeferredAction = {
   target: Combatant; 
   caster: Combatant; 
   reactions: Reaction[];
+  isEnemyCaster: boolean;
 };
 
 export class BattleStore {

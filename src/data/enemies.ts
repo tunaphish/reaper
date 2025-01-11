@@ -48,7 +48,7 @@ const isCloseToBeingAttacked = (enemy: Enemy, scene: Battle) => {
 export const thief: Enemy = {
   type: OptionType.ENEMY,
   name: 'Thief',
-  health: 100,
+  health: 200,
   maxHealth: 200,
   bleed: 0,
   stamina: 0,
@@ -63,7 +63,8 @@ export const thief: Enemy = {
     { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
   ],
   reactions: [
-    { options: [Reactions.evade], valid: isCloseToBeingAttacked, getTarget: self, text: 'Thief avoids your attack!' },
+    // { options: [Reactions.evade], valid: isCloseToBeingAttacked, getTarget: self, text: 'Thief avoids your attack!' },
+    { options: [Reactions.block], valid: isCloseToBeingAttacked, getTarget: self, text: 'Thief blocks your attack!' },
   ],
 
   spritePath: '/reaper/sprites/enemies/ninetails.png',

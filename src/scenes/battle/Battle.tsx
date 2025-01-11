@@ -71,7 +71,7 @@ export class Battle extends Phaser.Scene {
     this.resetDeadAllyCasterMenu();
     
     this.selectEnemyBehavior(delta);
-    this.checkEnemyReactions(delta);
+    // this.checkEnemyReactions(delta);
 
     this.castActions();    
     this.reactToActions();
@@ -127,12 +127,11 @@ export class Battle extends Phaser.Scene {
        
            const newDeferredAction = {
              id: generateID(),
-             timeTilExecute: action.animTimeInMs,
+             timeTilExecute: action.animTimeInMs || 0,
              caster: enemy,
              action,
              target: enemy.targetFn(this, enemy), 
              reactions: [],
-             isEnemyCaster: true
            };
            this.battleStore.deferredActions.push(newDeferredAction);
         } else {
@@ -230,12 +229,11 @@ export class Battle extends Phaser.Scene {
       
       const newDeferredAction = {
         id: generateID(),
-        timeTilExecute: combatant.queuedOption.animTimeInMs,
+        timeTilExecute: combatant.queuedOption.animTimeInMs || 0,
         caster: combatant,
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
         reactions: [],
-        isEnemyCaster: false
       };
       this.battleStore.deferredActions.push(newDeferredAction);
     }
@@ -245,7 +243,7 @@ export class Battle extends Phaser.Scene {
 
   // potentially split function
   resolveDeferredActions(delta: number): void {
-    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions, isEnemyCaster}) => {
+    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -276,7 +274,6 @@ export class Battle extends Phaser.Scene {
         action, 
         caster,
         reactions,
-        isEnemyCaster
       }
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
     

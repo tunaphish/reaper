@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { Battle } from './Battle';
 import { Enemy } from '../../model/enemy';
-import { ResourceDisplay } from './ResourceDisplay';
+import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
@@ -76,8 +76,9 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, posi
           pointerEvents='none'
         >
           <div style={{position: 'relative'}}>
-            { isEnemy &&  <ResourceDisplay combatant={combatant} battleScene={battleScene}/>  }
+            { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
             <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
+            { isEnemy &&  <ResourceDisplay combatant={combatant} battleScene={battleScene}/>  }
           </div>
           
         </Html>
@@ -125,15 +126,15 @@ const Camera = (props: { battle: Battle }) => {
 
     // battle.events.on('caster-set', (caster: Ally) => {
     //   const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
-    //   setTargetPosition({x: xPosition, y: 0, z: 3 });
+    //   setTargetPosition({x: xPosition, y: 10, z: 3 });
     // });
   }, []);
 
-  // useFrame(() => {
-  //   const newPosition = camera.position.lerp(targetPosition, 0.2);
-  //   camera.position.set(newPosition.x, newPosition.y, newPosition.z); 
-  //   camera.lookAt(0, 0, -1); 
-  // })
+  useFrame(() => {
+    const newPosition = camera.position.lerp(targetPosition, 0.2);
+    camera.position.set(newPosition.x, newPosition.y, newPosition.z); 
+    camera.lookAt(0, 0, -1); 
+  })
 
   return null; 
 }

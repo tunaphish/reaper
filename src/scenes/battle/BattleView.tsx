@@ -10,8 +10,7 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage } from './Stage';
-import { ResourceDisplay } from './ResourceDisplay';
-import { Timeline } from './Timeline';
+import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 
 
 const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
@@ -147,7 +146,7 @@ const Description = observer((props: { text: string, isEnemy: boolean }) => {
 });
 
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies } = props.scene.battleStore;
+    const { enemies, allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
     }
@@ -158,12 +157,13 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
             <Stage scene={props.scene} />
           </div>
           <Description text={props.scene.battleStore.text} isEnemy={false}/>
-          <Timeline battle={props.scene}/>
-          
           <div className={styles.combatantBar}>
               {allies.map((member) => {
                 return( 
-                  <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
+                  <div style={{ position: 'relative', flex: '1' }} key={member.name}>
+                    <ActionsViewManager battleScene={props.scene} combatant={member} />
+                    <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
+                  </div>
                 )
               })}
           </div>

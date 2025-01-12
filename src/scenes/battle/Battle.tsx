@@ -65,6 +65,7 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.battleStore.updateNotifications(delta);
+
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     
@@ -91,13 +92,12 @@ export class Battle extends Phaser.Scene {
       const selectedReaction = enemy.reactions.find(reaction => reaction.valid(enemy, this));
       if (!selectedReaction) return;
 
-      this.sound.play('slime-noise'); 
-
       this.battleStore.addNotification({
         text: selectedReaction.text, 
         source: enemy.name,
         timeSinceAdded: 0,
         isEnemy: true,
+        id: generateID(),
       });
 
       selectedReaction.options.forEach(option => {
@@ -147,13 +147,13 @@ export class Battle extends Phaser.Scene {
           enemy.timeSinceLastAction = 0;
           const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
           if (!selectedBehavior) return;
-          this.sound.play('slime-noise'); // TODO: have event system instead
 
           this.battleStore.addNotification({
             text: selectedBehavior.text, 
             source: enemy.name,
             timeSinceAdded: 0,
             isEnemy: true,
+            id: generateID(),
           });
           
           enemy.dialogue = selectedBehavior.text;
@@ -365,15 +365,6 @@ export class Battle extends Phaser.Scene {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.pushMenu(targetFolder);
         }
-        const restrictionText = action.restriction ? 
-        'RESTRCTION: ' + action.restriction.desc + '. '
-        : ''
-        this.battleStore.addNotification({
-          text: restrictionText + action.description, 
-          source: this.battleStore.caster.name,
-          timeSinceAdded: 0,
-          isEnemy: false,
-        });
         break;
       case OptionType.REACTION:
         const reaction = option as Reaction;
@@ -384,14 +375,7 @@ export class Battle extends Phaser.Scene {
         } else {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.pushMenu(targetFolder);
-        }
-        this.battleStore.addNotification({
-          text: reaction.description, 
-          source: this.battleStore.caster.name,
-          timeSinceAdded: 0,
-          isEnemy: false,
-        });
-        
+        }        
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:

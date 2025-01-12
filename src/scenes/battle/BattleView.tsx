@@ -105,42 +105,55 @@ const NotificationsManager = observer((props: {  battle: Battle }) => {
   const { battle } = props;
 
   return (
-    <AnimatePresence>
-      { 
-        battle.battleStore.notifications.map(({ text, source, isEnemy }, idx: number) =>  {
-          const height = battle.battleStore.notifications.length*20 - (idx*20);
+    <div style={{
+      position: 'relative',
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        width: "50%",
+        fontSize: '16px',
+        display: 'flex',
+        flexDirection: 'column', 
+        alignItems: 'flex-start',       
+        justifyContent: 'flex-end',
+        zIndex: 2,   
+      }}>
+        <AnimatePresence >
+          { 
+            battle.battleStore.notifications.map(({ text, source, isEnemy, id }, idx: number) =>  {
+              
 
-          const style: React.CSSProperties = isEnemy ? {
-            padding: 5,
-            position: "absolute",
-            bottom: 0,
-            right: "5%",
-            width: "70%",
-            fontSize: '16px',
-          } : {
-            padding: 5,
-            position: "absolute",
-            bottom: 0,
-            left: "5%",
-            width: "70%",
-            fontSize: '16px',
-          };
+              const style: React.CSSProperties = isEnemy ? {
+                padding: 5,
+                right: "5%",
+                marginTop: "-2%",
+                alignSelf: 'flex-end',
+              } : {
+                padding: 5,
+                left: "5%",
+                marginTop: "-2%",
+              };
 
-          return (
-            <motion.div
-              key={idx}
-              style={{ position: "relative" }}
-              initial={{ scaleY: 0 }} 
-              animate={{ scaleY: 1, bottom: `${height}px` }} 
-              exit={{ opacity: 0 }}
-              transition={{ duration: .1, ease: 'easeOut' }} 
-            >
-              <div className={isEnemy ? styles.enemyWindow : styles.window} style={style}>{text}</div>
-          </motion.div>
-          )
-        })
-      }
-    </AnimatePresence>
+              return (
+                <motion.fieldset
+                  key={id}
+                  className={ isEnemy ? styles.enemyWindow : styles.window }
+                  style={style}
+                  layout='preserve-aspect'
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: .1, ease: 'easeOut' }} 
+                >
+                  <legend>{source}</legend>
+                  {text}
+              </motion.fieldset>
+              )
+            })
+          }
+        </AnimatePresence>
+      </div>
+    </div>
   )
 });
 

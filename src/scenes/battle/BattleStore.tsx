@@ -18,6 +18,7 @@ export type DeferredAction = {
 };
 
 export type Notification = {
+  id: string;
   text: string;
   source: string;
   timeSinceAdded: number;

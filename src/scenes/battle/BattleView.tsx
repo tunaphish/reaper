@@ -11,6 +11,7 @@ import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage } from './Stage';
 import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
+import { Combatant } from '../../model/combatant';
 
 
 const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
@@ -100,53 +101,51 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
 
 
 
-const Description = observer((props: { text: string, isEnemy: boolean }) => {
-  const [isVisible, setIsVisible] = React.useState(true);
-
-  const style: React.CSSProperties =  props.isEnemy ?
-  {
-    padding: 5,
-    position: "absolute",
-    top: 0,
-    right: "5%",
-    width: "50%"
-  } : {
-    padding: 5,
-    position: "absolute",
-    bottom: 0,
-    left: "5%",
-    width: "50%"
-  };
-
-  React.useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [props.text]);
+const NotificationsManager = observer((props: {  battle: Battle }) => {
+  const { battle } = props;
 
   return (
     <AnimatePresence>
-    { isVisible && (
-        <motion.div 
-          style={{ position: "relative" }}
-          initial={{ scaleY: 0 }} 
-          animate={{ scaleY: 1 }} 
-          exit={{ scaleY: 0 }}
-          transition={{ duration: .1, ease: 'easeOut' }} 
-        >
-            <div className={styles.window} style={style}>
-              {props.text}
-            </div>
-        </motion.div>
-    )}
+      { 
+        battle.battleStore.notifications.map(({ text, source, isEnemy }, idx: number) =>  {
+          const height = battle.battleStore.notifications.length*20 - (idx*20);
+
+          const style: React.CSSProperties = isEnemy ? {
+            padding: 5,
+            position: "absolute",
+            bottom: 0,
+            right: "5%",
+            width: "70%",
+            fontSize: '16px',
+          } : {
+            padding: 5,
+            position: "absolute",
+            bottom: 0,
+            left: "5%",
+            width: "70%",
+            fontSize: '16px',
+          };
+
+          return (
+            <motion.div
+              key={idx}
+              style={{ position: "relative" }}
+              initial={{ scaleY: 0 }} 
+              animate={{ scaleY: 1, bottom: `${height}px` }} 
+              exit={{ opacity: 0 }}
+              transition={{ duration: .1, ease: 'easeOut' }} 
+            >
+              <div className={isEnemy ? styles.enemyWindow : styles.window} style={style}>{text}</div>
+          </motion.div>
+          )
+        })
+      }
     </AnimatePresence>
   )
 });
 
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { enemies, allies } = props.scene.battleStore;
+    const { allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
     }
@@ -156,7 +155,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
           <div style={{ flex: 4, zIndex: -1 }}> 
             <Stage scene={props.scene} />
           </div>
-          <Description text={props.scene.battleStore.text} isEnemy={false}/>
+          <NotificationsManager battle={props.scene}/>
           <div className={styles.combatantBar}>
               {allies.map((member) => {
                 return( 

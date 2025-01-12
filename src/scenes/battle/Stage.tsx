@@ -4,53 +4,12 @@ import styles from './battle.module.css';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping, Vector3Like } from 'three';
-import { CameraControls, Stats, Html } from '@react-three/drei';
-import { observer } from 'mobx-react-lite';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Stats, Html } from '@react-three/drei';
+
 
 import { Battle } from './Battle';
-import { Enemy } from '../../model/enemy';
 import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
-import { Ally } from '../../model/ally';
-
-
-const Dialogue = observer((props: { enemy: Enemy }) => {
-  const [isVisible, setIsVisible] = React.useState(true);
-  const style: React.CSSProperties = {
-    padding: 5,
-    position: "absolute",
-    top: "20px",
-    right: "-180%",
-    width: "200%",
-  }
-
-  React.useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [props.enemy.dialogue]);
-
-  return (
-    <AnimatePresence>
-    { isVisible && (
-        <motion.div 
-          style={{ position: "relative" }}
-          initial={{ scaleY: 0 }} 
-          animate={{ scaleY: 1 }} 
-          exit={{ scaleY: 0 }}
-          transition={{ duration: .1, ease: 'easeOut' }} 
-        >
-            <div className={styles.window} style={style}>
-              {props.enemy.dialogue}
-            </div>
-        </motion.div>
-    )}
-    </AnimatePresence>
-  )
-});
 
 const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, position: [x: number, y: number, z: number], isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;

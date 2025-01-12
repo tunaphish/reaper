@@ -17,6 +17,13 @@ export type DeferredAction = {
   isEnemyCaster: boolean;
 };
 
+export type Notification = {
+  text: string;
+  source: string;
+  timeSinceAdded: number;
+  isEnemy: boolean;
+}
+
 export class BattleStore {
   // battle vars
   enemies: Enemy[];
@@ -30,14 +37,14 @@ export class BattleStore {
   deferredActions: DeferredAction[] = [];
 
   menus: Folder[] = [];
-  text: string;
 
   resonance = 0;
 
-  constructor(enemies: Enemy[], allies: Allies, text: string) {
+  notifications: Notification[] = [];
+
+  constructor(enemies: Enemy[], allies: Allies) {
     this.enemies = enemies;
     this.allies = allies;
-    this.text = text;
     makeAutoObservable(this);
   }
 
@@ -55,10 +62,6 @@ export class BattleStore {
 
   setReaction(reaction?: Reaction): void {
     this.reaction = reaction;
-  }
-
-  setText(text: string): void {
-    this.text = text;
   }
 
   setDeferredActions(deferredActions: DeferredAction[]) {
@@ -124,6 +127,19 @@ export class BattleStore {
 
   getCombatants(): Combatant[] {
     return [...this.enemies, ...this.allies];
+  }
+
+  addNotification(notification: Notification): void {
+    this.notifications.push(notification);
+  }
+
+  updateNotifications(delta: number) {
+    this.notifications = this.notifications
+      .map((notification: Notification) => {
+        notification.timeSinceAdded += delta;
+        return notification;
+      })
+      .filter((notification) => notification.timeSinceAdded < 5000);
   }
 }
 

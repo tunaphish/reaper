@@ -24,7 +24,7 @@ export const block: Reaction = {
     targetType: TargetType.SELF,
     staminaCost: 10,
     soundKeyName: 'block',
-    description: 'Modify damage effects to damage stamina at reduced potency',
+    description: 'Blocks damage to stamina',
     modifyEffects: (effects: Effect[]) => {
         return effects.map((effect) => {
             if (effect.execute.toString() != Effects.dealDamage.toString()) return effect;

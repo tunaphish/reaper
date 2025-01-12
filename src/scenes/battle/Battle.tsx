@@ -51,7 +51,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'), 'hihi');
+    this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -64,6 +64,7 @@ export class Battle extends Phaser.Scene {
   // #region Time Based Updates
 
   update(time: number, delta: number): void {
+    this.battleStore.updateNotifications(delta);
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     
@@ -91,7 +92,13 @@ export class Battle extends Phaser.Scene {
       if (!selectedReaction) return;
 
       this.sound.play('slime-noise'); 
-      enemy.dialogue = selectedReaction.text;
+
+      this.battleStore.addNotification({
+        text: selectedReaction.text, 
+        source: enemy.name,
+        timeSinceAdded: 0,
+        isEnemy: true,
+      });
 
       selectedReaction.options.forEach(option => {
         const reaction =  option as Reaction;
@@ -141,6 +148,14 @@ export class Battle extends Phaser.Scene {
           const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
           if (!selectedBehavior) return;
           this.sound.play('slime-noise'); // TODO: have event system instead
+
+          this.battleStore.addNotification({
+            text: selectedBehavior.text, 
+            source: enemy.name,
+            timeSinceAdded: 0,
+            isEnemy: true,
+          });
+          
           enemy.dialogue = selectedBehavior.text;
           enemy.optionQueue = [...selectedBehavior.options];
           enemy.targetFn = selectedBehavior.getTarget;
@@ -353,7 +368,12 @@ export class Battle extends Phaser.Scene {
         const restrictionText = action.restriction ? 
         'RESTRCTION: ' + action.restriction.desc + '. '
         : ''
-        this.battleStore.setText(restrictionText + action.description);
+        this.battleStore.addNotification({
+          text: restrictionText + action.description, 
+          source: this.battleStore.caster.name,
+          timeSinceAdded: 0,
+          isEnemy: false,
+        });
         break;
       case OptionType.REACTION:
         const reaction = option as Reaction;
@@ -365,7 +385,13 @@ export class Battle extends Phaser.Scene {
           const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
           this.battleStore.pushMenu(targetFolder);
         }
-        this.battleStore.setText(reaction.description);
+        this.battleStore.addNotification({
+          text: reaction.description, 
+          source: this.battleStore.caster.name,
+          timeSinceAdded: 0,
+          isEnemy: false,
+        });
+        
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:

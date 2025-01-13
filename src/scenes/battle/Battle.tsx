@@ -72,8 +72,8 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyBehavior(delta);
-    this.checkEnemyReactions(delta);
+    // this.selectEnemyBehavior(delta);
+    // this.checkEnemyReactions(delta);
 
     this.castActions();    
     this.reactToActions();
@@ -336,6 +336,10 @@ export class Battle extends Phaser.Scene {
 
     if (this.battleStore.menus.length === 0) {
       this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
+    }
+    else if (this.battleStore.menus.length === 1) {
+      this.battleStore.setReaction(null); 
+      this.battleStore.setExecutable(null);
     }
     this.sound.play('dialogue-advance');
   }

@@ -11,7 +11,36 @@ import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage } from './Stage';
 import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
-import { Combatant } from '../../model/combatant';
+import { Action } from '../../model/action';
+
+const Description = observer((props: { battle: Battle }) => {
+  const text = props.battle.battleStore.reaction?.description || (props.battle.battleStore.executable as Action)?.description;
+  console.log(text);
+  const style: React.CSSProperties = {
+    padding: 5,
+    position: "absolute",
+    top: 0,
+    width: "100%"
+  };
+
+  return (
+    <AnimatePresence>
+    { text && (
+        <motion.fieldset 
+          style={style}
+          initial={{ scaleY: 0 }} 
+          animate={{ scaleY: 1 }} 
+          exit={{ scaleY: 0 }}
+          transition={{ duration: .1, ease: 'easeOut' }} 
+          className={styles.window}
+        >
+          <legend>Help</legend>
+          {text}
+        </motion.fieldset>
+    )}
+    </AnimatePresence>
+  )
+});
 
 
 const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
@@ -165,6 +194,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
 
     return (
         <div className={styles.container}>
+          <Description battle={props.scene} />
           <div style={{ flex: 4, zIndex: -1 }}> 
             <Stage scene={props.scene} />
           </div>

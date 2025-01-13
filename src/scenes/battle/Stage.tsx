@@ -10,6 +10,7 @@ import { Stats, Html } from '@react-three/drei';
 import { Battle } from './Battle';
 import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
+import { Ally } from '../../model/ally';
 
 const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, position: [x: number, y: number, z: number], isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;
@@ -36,8 +37,8 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, posi
         >
           <div style={{position: 'relative'}}>
             { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-            <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
             { isEnemy &&  <ResourceDisplay combatant={combatant} battleScene={battleScene}/>  }
+            <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
           </div>
           
         </Html>
@@ -78,15 +79,13 @@ const Camera = (props: { battle: Battle }) => {
   const [targetPosition, setTargetPosition] = React.useState<Vector3Like>(camera.position)
 
   React.useEffect(() => {
-    // camera.position.set(1, 0, 0); 
-    camera.position.set(1, 10, 0); 
-
+    camera.position.set(1, 0, 0); 
     camera.lookAt(0, 0, -1); 
 
-    // battle.events.on('caster-set', (caster: Ally) => {
-    //   const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
-    //   setTargetPosition({x: xPosition, y: 10, z: 3 });
-    // });
+    battle.events.on('caster-set', (caster: Ally) => {
+      const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
+      setTargetPosition({x: xPosition, y: 0, z: 3 });
+    });
   }, []);
 
   useFrame(() => {

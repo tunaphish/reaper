@@ -84,6 +84,7 @@ export class BattleStore {
   resetSelections(): void {
     this.emptyMenu();
     this.setCaster(null);
+    this.setReaction(null);
     this.setExecutable(null);
     this.setTarget(null);
   }

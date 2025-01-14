@@ -5,12 +5,31 @@ import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping, Vector3Like } from 'three';
 import { Stats, Html } from '@react-three/drei';
-
+import { observer } from 'mobx-react-lite';
 
 import { Battle } from './Battle';
-import { ActionsViewManager } from './ActionsViewManager';
+import { ActionsViewManager, Meter } from './ActionsViewManager';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
+
+
+export const ResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
+  const { combatant } = props;
+
+  return (
+    <div className={styles.enemyResourceDisplay}>
+      <div className={styles.windowName}>{combatant.name}</div>
+      <div className={styles.enemyMeterContainer}>
+        <Meter value={combatant.health} max={combatant.maxHealth} className={styles.bleedMeter}/>
+        <Meter value={combatant.health-combatant.bleed} max={combatant.maxHealth} className={styles.healthMeter}/>
+      </div>
+      <div className={styles.enemyMeterContainer}>
+        <Meter value={combatant.stamina < 0 ? 0 : combatant.stamina } max={combatant.maxStamina} className={styles.staminaMeter}/>
+      </div>
+    </div>
+  )
+});
+
 
 const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, position: [x: number, y: number, z: number], isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;
@@ -37,6 +56,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, posi
         >
           <div style={{position: 'relative'}}>
             { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
+            { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
             <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
           </div>
           

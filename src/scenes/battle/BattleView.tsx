@@ -49,16 +49,18 @@ const NotificationsManager = observer((props: {  battle: Battle }) => {
     <div style={{
       position: 'relative',
       pointerEvents: 'none',
+      flex: 7,
+      width: '100%',
     }}>
       <div style={{
         position: 'absolute',
         bottom: 0,
-        width: "50%",
         fontSize: '16px',
         display: 'flex',
         flexDirection: 'column', 
         alignItems: 'flex-start',       
         justifyContent: 'flex-end',
+        width: '100%',
         zIndex: 2,   
       }}>
         <AnimatePresence >

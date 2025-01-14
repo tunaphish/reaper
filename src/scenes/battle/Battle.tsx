@@ -72,8 +72,8 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    // this.selectEnemyBehavior(delta);
-    // this.checkEnemyReactions(delta);
+    this.selectEnemyBehavior(delta);
+    this.checkEnemyReactions(delta);
 
     this.castActions();    
     this.reactToActions();

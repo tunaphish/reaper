@@ -29,6 +29,7 @@ export type Combatant = Option & {
   queuedTarget?: Combatant;
   timeInStateInMs: number;
   juggleDuration: number;
+  position: [x: number, y: number, z: number];
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

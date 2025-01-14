@@ -65,7 +65,6 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.battleStore.updateNotifications(delta);
-
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     

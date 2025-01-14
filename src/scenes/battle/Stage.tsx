@@ -3,7 +3,7 @@ import styles from './battle.module.css';
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { TextureLoader, RepeatWrapping, Vector3Like } from 'three';
+import { TextureLoader, RepeatWrapping, Vector3Like, Vector3 } from 'three';
 import { Stats, Html } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 
@@ -31,7 +31,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, battleSce
 });
 
 
-const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, position: [x: number, y: number, z: number], isEnemy: boolean }) => {
+const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;
   const [beingEffected, setBeingEffected] = React.useState(false);
   
@@ -45,7 +45,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, posi
 
   return (
     <RigidBody type="dynamic">
-      <mesh position={props.position}>
+      <mesh position={combatant.position}>
         <Html 
           transform
           sprite
@@ -85,32 +85,27 @@ const Plane = () => {
   )
 }
 
-
-const CASTER_X_POSITION_MAP = {
-  ['Cloud']: -2,
-  ['Barret']: 1.1,
-  ['Tifa']: 5.5,
-}
-
 const Camera = (props: { battle: Battle }) => {
   const { battle } = props;
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = React.useState<Vector3Like>(camera.position)
 
+
   React.useEffect(() => {
     camera.position.set(1, 0, 0); 
-    camera.lookAt(0, 0, -1); 
+    camera.lookAt(0, 0, -7); 
 
     battle.events.on('caster-set', (caster: Ally) => {
-      const xPosition = CASTER_X_POSITION_MAP[caster.name] || 1.1;
-      setTargetPosition({x: xPosition, y: 0, z: 3 });
+      const [x,y,z] = caster.position;
+      const newTargetPosition = new Vector3(1+x,y,2+z);
+      setTargetPosition(newTargetPosition);
     });
   }, []);
 
   useFrame(() => {
-    const newPosition = camera.position.lerp(targetPosition, 0.2);
-    camera.position.set(newPosition.x, newPosition.y, newPosition.z); 
-    camera.lookAt(0, 0, -1); 
+    const {x,y,z} = camera.position.lerp(targetPosition, 0.2);
+    camera.position.set(x, y, z); 
+    camera.lookAt(0, 0, -7);
   })
 
   return null; 
@@ -126,8 +121,8 @@ export const Stage = (props: { scene: Battle }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
         <Physics>
-          {scene.battleStore.enemies.map((enemy, idx) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} position={[idx*5, 0, -2]} isEnemy={true}/>)}
-          {scene.battleStore.allies.map((ally, idx) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} position={[idx*2 - 2, 0, 2]} isEnemy={false}/>)}
+          {scene.battleStore.enemies.map((enemy, idx) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} isEnemy={true}/>)}
+          {scene.battleStore.allies.map((ally, idx) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} isEnemy={false}/>)}
           <Plane/>
         </Physics>
     </Canvas>

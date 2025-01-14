@@ -24,5 +24,4 @@ export type Enemy = Combatant & {
   optionQueue: (Action | Item | Folder | Reaction)[];
   targetFn: (scene: Battle, caster: Combatant) => Combatant;
   timeSinceLastAction: number;
-  dialogue: string;
 };

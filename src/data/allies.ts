@@ -32,6 +32,7 @@ export const Eji: Ally = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,
+  position: [-2, 0, 2],
   
   spritePath: '/reaper/sprites/allies/charizard.png',
   menuPortraitPath: '/reaper/characters/menu/cloud.png',
@@ -61,6 +62,7 @@ export const Keshi: Ally = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,
+  position: [0, 0, 2],
   
   spritePath: '/reaper/sprites/allies/gengar.png',
   menuPortraitPath: '/reaper/characters/menu/barret.png',
@@ -89,6 +91,7 @@ export const Elise: Ally = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,
+  position: [2, 0, 2],
 
   spritePath: '/reaper/sprites/allies/snorlax.png',
   menuPortraitPath: '/reaper/characters/menu/tifa.png',

@@ -75,6 +75,7 @@ export const thief: Enemy = {
   timeInStateInMs: 0,
   juggleDuration: 0,  
   timeSinceLastAction: 0,
+  position: [0, 0, -10],
 };
 
 export const thief2: Enemy = {
@@ -105,7 +106,8 @@ export const thief2: Enemy = {
   timeInStateInMs: 0,
   juggleDuration: 0,  
   timeSinceLastAction: 0,
-  dialogue: '...',
+  position: [0, 0, -5],
+
 };
 
 

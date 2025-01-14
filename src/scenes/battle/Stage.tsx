@@ -8,7 +8,7 @@ import { Stats, Html } from '@react-three/drei';
 
 
 import { Battle } from './Battle';
-import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
+import { ActionsViewManager } from './ActionsViewManager';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
@@ -37,7 +37,6 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, posi
         >
           <div style={{position: 'relative'}}>
             { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-            { isEnemy &&  <ResourceDisplay combatant={combatant} battleScene={battleScene}/>  }
             <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
           </div>
           

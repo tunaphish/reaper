@@ -1,8 +1,31 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
   height: 100%;
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  position: 'relative';
+}
+
+.stageContainer {
+  height: 100%;
+  grid-column: 1;
+  grid-row: 1;
+  z-index: -1;
+}
+
+.uiContainer {
+  height: 100%;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  position: relative;
+}
+
+.interactionContainer {
+  align-content: flex-end;
+  display: flex;
+  width: 100%;
+  align-self: flex-end;
 }
 
 .menu {
@@ -42,13 +65,14 @@
 
 .windowName {
   padding: 3px;
+  font-size: 16px;
 }
 
 
 .combatantBar {
   flex: 1;
-  background-color: black;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
 }
 
@@ -88,14 +112,6 @@
   height: 100%;
 }
 
-.resourceContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-
 .statContainer {
   display: flex;
 }
@@ -129,16 +145,8 @@
 }
 
 .modalContainer {
-  position: absolute;
   width: 100%;
   height: 100%;
-  left: 0;
-  top: 0;
-  pointer-events: all;
-}
-
-.modalMenu {
-  position: absolute;
 }
 
 @keyframes shake {
@@ -162,6 +170,7 @@
 .meterNumber {
   grid-column: 1;
   grid-row: 1;
+  font-size: 16px;
 }
 
 .healthMeter > div {

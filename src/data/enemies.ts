@@ -66,8 +66,8 @@ export const fencer: Enemy = {
   strategies: [
     {
       potentialOptions: [
-        { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 500 },
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500 }
+        { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 50, singleUse: true },
+        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
       ],
       potentialReactions: [],
       notification: 'Fencer attacks!',
@@ -79,6 +79,13 @@ export const fencer: Enemy = {
       potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
       notification: 'Fencer takes an evasive stance...',
       strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
+      conditionFulfilled: (enemy): boolean => enemy.stamina > 50,
+    },
+    {
+      potentialOptions: [],
+      potentialReactions: [],
+      notification: 'Fencer is conserving aura...',
+      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 50,
       conditionFulfilled: (): boolean => true,
     }
   ],
@@ -108,7 +115,7 @@ export const cleric: Enemy = {
   strategies: [
     {
       potentialOptions: [
-        { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500 },
+        { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
       ],
       potentialReactions: [],
       notification: 'Cleric is healing enemies...',
@@ -125,7 +132,7 @@ export const cleric: Enemy = {
     },
     {
       potentialOptions: [
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500  }
+        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
       potentialReactions: [],
       notification: 'Cleric attacks!',
@@ -135,7 +142,7 @@ export const cleric: Enemy = {
     {
       potentialOptions: [],
       potentialReactions: [],
-      notification: 'Cleric is conserving energy...',
+      notification: 'Cleric is conserving aura...',
       strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
       conditionFulfilled: (): boolean => true,
     }

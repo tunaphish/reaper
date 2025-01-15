@@ -108,6 +108,12 @@ export class Battle extends Phaser.Scene {
       if (enemy.timeTilNextAction > 0 || enemy.status !== Status.NORMAL) return;
       const potentialOptions = enemy.strategies[enemy.strategyIndex].potentialOptions;
       potentialOptions.find((potentialOption) => {
+        if (
+          potentialOption.singleUse && 
+          this.battleStore.deferredActions.some(deferredAction => deferredAction.action.name === potentialOption.option.name && deferredAction.caster.name === enemy.name)
+        ) {
+          return false;
+        }
         const potentialTarget = potentialOption.getTarget(this, enemy);
         if (!potentialTarget) return false;
         const action = (potentialOption.option as Action);

@@ -19,7 +19,7 @@ const ejiFolder: Folder = {
 export const Eji: Ally = {
   type: OptionType.ALLY,
   name: 'Cloud',
-  health: 99,
+  health: 100,
   maxHealth: 100,
   bleed: 0,
   stamina: 0,
@@ -49,7 +49,7 @@ const keshiFolder: Folder = {
 export const Keshi: Ally = {
   type: OptionType.ALLY,
   name: 'Barret',
-  health: 99,
+  health: 100,
   maxHealth: 100,
   bleed: 0,
   stamina: 0,
@@ -78,7 +78,7 @@ const eliseFolder: Folder = {
 export const Elise: Ally = {
   type: OptionType.ALLY,
   name: 'Tifa',
-  health: 99,
+  health: 100,
   bleed: 0,
   maxHealth: 100,
   stamina: 0,

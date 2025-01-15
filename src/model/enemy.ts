@@ -13,6 +13,7 @@ export interface PotentialOption {
   option: (Action | Item | Folder);
   getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
   cadence: number;
+  singleUse: boolean;
 }
 
 export interface PotentialReaction {

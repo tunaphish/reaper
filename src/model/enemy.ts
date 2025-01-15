@@ -25,8 +25,8 @@ export interface Strategy {
   potentialOptions: PotentialOption[];
   potentialReactions: PotentialReaction[];
   notification: string;
-  strategyFulFilled: (enemy: Enemy, battle: Battle) => boolean;
-  conditionFulfilled: (enemy: Enemy, battle: Battle) => boolean;
+  toExit: (enemy: Enemy, battle: Battle) => boolean;
+  toEnter: (enemy: Enemy, battle: Battle) => boolean;
 }
 
 // reaction

@@ -15,7 +15,7 @@ import * as Actions from '../../data/actions';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { fencer, cleric } from '../../data/enemies';
+import { fencer, cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
@@ -51,7 +51,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [fencer, cleric], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [knight, cleric], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -86,9 +86,9 @@ export class Battle extends Phaser.Scene {
     this.battleStore.enemies.forEach((enemy) => {
       if (
         enemy.strategyIndex !== undefined && 
-        !enemy.strategies[enemy.strategyIndex].strategyFulFilled(enemy, this)
+        !enemy.strategies[enemy.strategyIndex].toExit(enemy, this)
       ) return;
-      enemy.strategyIndex = enemy.strategies.findIndex(strategy => strategy.conditionFulfilled(enemy, this));
+      enemy.strategyIndex = enemy.strategies.findIndex(strategy => strategy.toEnter(enemy, this));
       this.battleStore.addNotification({
         text: enemy.strategies[enemy.strategyIndex].notification, 
         source: enemy.name,

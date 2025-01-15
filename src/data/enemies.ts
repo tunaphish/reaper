@@ -38,6 +38,14 @@ export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
 
 export const self = (scene: Battle, caster: Combatant) => caster;
 
+const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
+  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
+    deferredAction => deferredAction.target.name === caster.name &&
+    deferredAction.reactions.length === 0
+  );
+  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
+};
+
 const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
   const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
     deferredAction => deferredAction.target.name === caster.name &&
@@ -71,22 +79,22 @@ export const fencer: Enemy = {
       ],
       potentialReactions: [],
       notification: 'Fencer attacks!',
-      strategyFulFilled: (enemy, battle): boolean => enemy.stamina < 25,
-      conditionFulfilled: (enemy): boolean => enemy.stamina > 100,
+      toExit: (enemy, battle): boolean => enemy.stamina < 25,
+      toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
       potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
       notification: 'Fencer takes an evasive stance...',
-      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
-      conditionFulfilled: (enemy): boolean => enemy.stamina > 50,
+      toExit: (enemy, battle): boolean => enemy.stamina > 100,
+      toEnter: (enemy): boolean => enemy.stamina > 50,
     },
     {
       potentialOptions: [],
       potentialReactions: [],
       notification: 'Fencer is conserving aura...',
-      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 50,
-      conditionFulfilled: (): boolean => true,
+      toExit: (enemy, battle): boolean => enemy.stamina > 50,
+      toEnter: (): boolean => true,
     }
   ],
 
@@ -97,7 +105,7 @@ export const fencer: Enemy = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  position: [-3, 0, -10],
+  position: [-1, 0, -10],
 };
 
 export const cleric: Enemy = {
@@ -119,12 +127,12 @@ export const cleric: Enemy = {
       ],
       potentialReactions: [],
       notification: 'Cleric is healing enemies...',
-      strategyFulFilled: (enemy, battle): boolean => {
+      toExit: (enemy, battle): boolean => {
         if (enemy.stamina < 25) return true;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
         return bleedingEnemy === undefined;
       },
-      conditionFulfilled: (enemy, battle): boolean => {
+      toEnter: (enemy, battle): boolean => {
         if (enemy.stamina < 25) return false;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
         return bleedingEnemy !== undefined;
@@ -136,15 +144,15 @@ export const cleric: Enemy = {
       ],
       potentialReactions: [],
       notification: 'Cleric attacks!',
-      strategyFulFilled: (enemy, battle): boolean => enemy.stamina < 50,
-      conditionFulfilled: (enemy): boolean => enemy.stamina > 100,
+      toExit: (enemy, battle): boolean => enemy.stamina < 50,
+      toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
       potentialReactions: [],
       notification: 'Cleric is conserving aura...',
-      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
-      conditionFulfilled: (): boolean => true,
+      toExit: (enemy, battle): boolean => enemy.stamina > 100,
+      toEnter: (): boolean => true,
     }
   ],
 
@@ -156,8 +164,52 @@ export const cleric: Enemy = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  position: [3, 0, -5],
+  position: [3, 0, -10],
 };
 
+export const knight: Enemy = {
+  type: OptionType.ENEMY,
+  name: 'Knight',
+  health: 200,
+  maxHealth: 200,
+  bleed: 0,
+  stamina: 0,
+  maxStamina: 125,
+  magic: 100,
+  maxMagic: 100,
+  staminaRegenRatePerSecond: 5,
+
+  strategies: [
+    {
+      potentialOptions: [
+        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
+      ],
+      potentialReactions: [
+        // cover
+        { reaction: Reactions.block, getTarget: selfBeingAttacked }
+      ],
+      notification: 'Knight takes a defensive stance!',
+      toExit: (enemy, battle): boolean => enemy.stamina < 25,
+      toEnter: (enemy): boolean => enemy.stamina > 75,
+    },
+    {
+      potentialOptions: [],
+      potentialReactions: [],
+      notification: 'Knight is conserving aura...',
+      toExit: (enemy, battle): boolean => enemy.stamina > 75,
+      toEnter: (): boolean => true,
+    }
+  ],
+
+  spritePath: '/reaper/sprites/enemies/golem.png',
+
+  // temp props
+  timeTilNextAction: 0,
+
+  status: Status.NORMAL,
+  timeInStateInMs: 0,
+  juggleDuration: 0,  
+  position: [1, 0, -10],
+};
 
 // #endregion

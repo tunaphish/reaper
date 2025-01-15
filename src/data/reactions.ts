@@ -7,7 +7,7 @@ import * as Effects from './effects';
 import { TargetType } from "../model/targetType";
 
 // #region ReactionRestriction
-export const closeToExecution: ReactionRestriction = {
+const closeToExecution: ReactionRestriction = {
     desc: 'Action must close to executing',
     isRestricted: (deferredAction: DeferredAction, caster: Combatant) => { 
       return deferredAction.timeTilExecute > 500;

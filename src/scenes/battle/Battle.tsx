@@ -15,7 +15,7 @@ import * as Actions from '../../data/actions';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { thief } from '../../data/enemies';
+import { fencer, cleric } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
@@ -51,7 +51,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [thief], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [fencer, cleric], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -71,8 +71,9 @@ export class Battle extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyBehavior(delta);
-    this.checkEnemyReactions(delta);
+    this.selectEnemyStrategy();
+    this.selectEnemyAction(delta);
+    this.selectEnemyReactions(delta);
 
     this.castActions();    
     this.reactToActions();
@@ -81,26 +82,65 @@ export class Battle extends Phaser.Scene {
     this.resolveDeferredActions(delta);
   }
 
-  checkEnemyReactions(delta: number): void {
+  selectEnemyStrategy(): void {
+    this.battleStore.enemies.forEach((enemy) => {
+      if (
+        enemy.strategyIndex !== undefined && 
+        !enemy.strategies[enemy.strategyIndex].strategyFulFilled(enemy, this)
+      ) return;
+      enemy.strategyIndex = enemy.strategies.findIndex(strategy => strategy.conditionFulfilled(enemy, this));
+      this.battleStore.addNotification({
+        text: enemy.strategies[enemy.strategyIndex].notification, 
+        source: enemy.name,
+        timeSinceAdded: 0,
+        isEnemy: true,
+        id: generateID(),
+      });
+      enemy.timeTilNextAction = 500;
+    });
+  }
+
+
+  selectEnemyAction(delta: number): void {
+    // TODO: update for spells and items
+    this.battleStore.enemies.forEach((enemy) => {
+      enemy.timeTilNextAction -= delta;
+      if (enemy.timeTilNextAction > 0 || enemy.status !== Status.NORMAL) return;
+      const potentialOptions = enemy.strategies[enemy.strategyIndex].potentialOptions;
+      potentialOptions.find((potentialOption) => {
+        const potentialTarget = potentialOption.getTarget(this, enemy);
+        if (!potentialTarget) return false;
+        const action = (potentialOption.option as Action);
+        enemy.stamina -= action.staminaCost;
+        const newDeferredAction = {
+          id: generateID(),
+          timeTilExecute: action.animTimeInMs,
+          caster: enemy,
+          action,
+          target: potentialTarget, 
+          reactions: [],
+          isEnemyCaster: true,
+        };
+        this.battleStore.deferredActions.push(newDeferredAction);
+        enemy.timeTilNextAction = potentialOption.cadence;
+        return true;
+      });
+      
+    });
+  }
+
+  selectEnemyReactions(delta: number): void {
     this.enemyReactionTimer += delta;
     if (this.enemyReactionTimer < 300) return;
     this.enemyReactionTimer = 0;
 
     this.battleStore.enemies.forEach((enemy) => {
       if (enemy.status !== Status.NORMAL) return;
-      const selectedReaction = enemy.reactions.find(reaction => reaction.valid(enemy, this));
-      if (!selectedReaction) return;
-
-      this.battleStore.addNotification({
-        text: selectedReaction.text, 
-        source: enemy.name,
-        timeSinceAdded: 0,
-        isEnemy: true,
-        id: generateID(),
-      });
-
-      selectedReaction.options.forEach(option => {
-        const reaction =  option as Reaction;
+      const { potentialReactions } = enemy.strategies[enemy.strategyIndex];
+      potentialReactions.find(potentialReaction => {
+        const potentialTarget = potentialReaction.getTarget(this, enemy)
+        if (!potentialTarget) return false;
+        const { reaction } = potentialReaction;
         enemy.stamina -= reaction.staminaCost;
 
         const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === enemy.name);
@@ -111,57 +151,12 @@ export class Battle extends Phaser.Scene {
             this.sound.play(reaction.soundKeyName);
             action.reactions.push(reaction);
           }
-        })
-      }) 
+        });
+        return true;
+      });
     });
   }
 
-
-  selectEnemyBehavior(delta: number): void {
-    // TODO: update for spells and items
-
-    this.battleStore.enemies.forEach((enemy) => {
-        enemy.timeSinceLastAction += delta 
-        if (enemy.status !== Status.NORMAL) return;
-        if (enemy.optionQueue.length > 0) {
-          if (enemy.timeSinceLastAction < 500) return;
-          enemy.timeSinceLastAction = 0;
-
-           // Handle Actions
-           const action =  enemy.optionQueue.pop() as Action;
-           enemy.stamina -= action.staminaCost;
-       
-           const newDeferredAction = {
-             id: generateID(),
-             timeTilExecute: action.animTimeInMs,
-             caster: enemy,
-             action,
-             target: enemy.targetFn(this, enemy), 
-             reactions: [],
-             isEnemyCaster: true,
-           };
-           this.battleStore.deferredActions.push(newDeferredAction);
-        } else {
-          if (enemy.timeSinceLastAction < enemy.cadence) return;
-          enemy.timeSinceLastAction = 0;
-          const selectedBehavior = enemy.behaviors.find(behavior => behavior.valid(enemy, this));
-          if (!selectedBehavior) return;
-
-          this.battleStore.addNotification({
-            text: selectedBehavior.text, 
-            source: enemy.name,
-            timeSinceAdded: 0,
-            isEnemy: true,
-            id: generateID(),
-          });
-          
-          enemy.dialogue = selectedBehavior.text;
-          enemy.optionQueue = [...selectedBehavior.options];
-          enemy.targetFn = selectedBehavior.getTarget;
-
-        }
-      });
-  }
 
   resetDeadAllyCasterMenu(): void {
     if (this.battleStore.caster && this.battleStore?.caster.status === Status.DEAD) {

@@ -71,7 +71,7 @@ export const attack: Action = {
   name: 'Attack',
   staminaCost: 50,
   castTimeInMs: 0,
-  animTimeInMs: 5000,
+  animTimeInMs: 3000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -84,7 +84,7 @@ export const stanch: Action = {
   name: 'Stanch',
   staminaCost: 25,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 2000,
   targetType: TargetType.SELF,
   soundKeyName: 'attack',
 
@@ -109,14 +109,14 @@ export const ambush: Action = {
 export const bandage: Action = {
   type: OptionType.ACTION,
   name: 'Bandage',
-  staminaCost: 100,
+  staminaCost: 25,
   castTimeInMs: 0,
-  animTimeInMs: 5000,
+  animTimeInMs: 3000,
   targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack',
+  soundKeyName: 'heal',
 
   description: 'Heals bleed',
-  effects: [{execute: healBleed, potency: 50}],
+  effects: [{execute: healBleed, potency: 25}],
 };
 
 export const bloodlust: Action = {
@@ -137,7 +137,7 @@ export const debilitate: Action = {
   name: 'Debilitate',
   staminaCost: 100,
   castTimeInMs: 0,
-  animTimeInMs: 5000,
+  animTimeInMs: 3000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -149,9 +149,9 @@ export const debilitate: Action = {
 export const engage: Action = {
   type: OptionType.ACTION,
   name: 'Engage',
-  staminaCost: 100,
+  staminaCost: 50,
   castTimeInMs: 0,
-  animTimeInMs: 1000,
+  animTimeInMs: 3000,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 

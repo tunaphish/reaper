@@ -17,37 +17,43 @@ const randomEnemy = (scene: Battle, caster: Combatant) => {
   const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
 };
+const highestBleedEnemy = (scene: Battle, caster: Combatant) => {
+  const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
+  return aliveEnemies.reduce((highest, enemy) => {
+    return enemy.bleed > highest.bleed ? enemy : highest;
+  });
+};
 
 export const randomAlly = (scene: Battle, caster: Combatant) => {
-  const aliveEnemies = scene.battleStore.allies.filter(isAlive);
-  return aliveEnemies.at(getRandomInt(aliveEnemies.length));
+  const aliveAlly = scene.battleStore.allies.filter(isAlive);
+  return aliveAlly.at(getRandomInt(aliveAlly.length));
+};
+
+export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
+  const fullHealthAlly = scene.battleStore.allies
+    .filter(isAlive)
+    .filter(combatant => combatant.health === combatant.maxHealth);
+  return fullHealthAlly.length === 0 ? null : fullHealthAlly.at(getRandomInt(fullHealthAlly.length));
 };
 
 export const self = (scene: Battle, caster: Combatant) => caster;
 
-// #endregion
-
-
-// #region Valid 
-const isTrue = (enemy: Enemy, scene: Battle) => true;
-const enoughStamina = (enemy: Enemy, scene: Battle) => {
-  return enemy.stamina > 75;
-}
-const isCloseToBeingAttacked = (enemy: Enemy, scene: Battle) => {
+const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
   const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === enemy.name &&
+    deferredAction => deferredAction.target.name === caster.name &&
     deferredAction.timeTilExecute < 500 &&
     deferredAction.reactions.length === 0
   );
-  return actionsAtEnemyCloseToExecution.length > 0;
+  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
 };
 
 // #endregion
 
+
 // #region Enemies
-export const thief: Enemy = {
+export const fencer: Enemy = {
   type: OptionType.ENEMY,
-  name: 'Thief',
+  name: 'Fencer',
   health: 100,
   maxHealth: 200,
   bleed: 0,
@@ -55,32 +61,41 @@ export const thief: Enemy = {
   maxStamina: 125,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 10,
+  staminaRegenRatePerSecond: 8,
   
-  cadence: 5000,
-  behaviors: [
-    { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'Thief is attacking randomly!' },
-    { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
-  ],
-  reactions: [
-    { options: [Reactions.evade], valid: isCloseToBeingAttacked, getTarget: self, text: 'Thief avoids your attack!' },
+  strategies: [
+    {
+      potentialOptions: [
+        { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 500 },
+        { option: Actions.attack, getTarget: randomAlly, cadence: 500 }
+      ],
+      potentialReactions: [],
+      notification: 'Fencer attacks!',
+      strategyFulFilled: (enemy, battle): boolean => enemy.stamina < 25,
+      conditionFulfilled: (enemy): boolean => enemy.stamina > 100,
+    },
+    {
+      potentialOptions: [],
+      potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
+      notification: 'Fencer takes an evasive stance...',
+      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
+      conditionFulfilled: (): boolean => true,
+    }
   ],
 
   spritePath: '/reaper/sprites/enemies/ninetails.png',
 
   // temp props
-  optionQueue: [],
-  targetFn: randomAlly,
+  timeTilNextAction: 0,
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  timeSinceLastAction: 0,
-  position: [0, 0, -10],
+  position: [-3, 0, -10],
 };
 
-export const thief2: Enemy = {
+export const cleric: Enemy = {
   type: OptionType.ENEMY,
-  name: 'Thief2',
+  name: 'Cleric',
   health: 200,
   maxHealth: 200,
   bleed: 0,
@@ -88,26 +103,53 @@ export const thief2: Enemy = {
   maxStamina: 125,
   magic: 100,
   maxMagic: 100,
-  staminaRegenRatePerSecond: 10,
-  cadence: 5000,
+  staminaRegenRatePerSecond: 5,
 
-  behaviors: [
-    { options: [Actions.attack, Actions.attack], valid: enoughStamina, getTarget: randomAlly, text: 'Thief is attacking randomly!' },
-    { options: [], valid: isTrue, getTarget: randomAlly, text: 'Thief is waiting...' },
+  strategies: [
+    {
+      potentialOptions: [
+        { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500 },
+      ],
+      potentialReactions: [],
+      notification: 'Cleric is healing enemies...',
+      strategyFulFilled: (enemy, battle): boolean => {
+        if (enemy.stamina < 25) return true;
+        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
+        return bleedingEnemy === undefined;
+      },
+      conditionFulfilled: (enemy, battle): boolean => {
+        if (enemy.stamina < 25) return false;
+        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
+        return bleedingEnemy !== undefined;
+      },
+    },
+    {
+      potentialOptions: [
+        { option: Actions.attack, getTarget: randomAlly, cadence: 500  }
+      ],
+      potentialReactions: [],
+      notification: 'Cleric attacks!',
+      strategyFulFilled: (enemy, battle): boolean => enemy.stamina < 50,
+      conditionFulfilled: (enemy): boolean => enemy.stamina > 100,
+    },
+    {
+      potentialOptions: [],
+      potentialReactions: [],
+      notification: 'Cleric is conserving energy...',
+      strategyFulFilled: (enemy, battle): boolean => enemy.stamina > 100,
+      conditionFulfilled: (): boolean => true,
+    }
   ],
-  reactions: [],
 
-  spritePath: '/reaper/sprites/enemies/thief-idle.png',
+  spritePath: '/reaper/sprites/enemies/chansey.png',
 
   // temp props
-  optionQueue: [],
-  targetFn: randomAlly,
+  timeTilNextAction: 0,
+
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  timeSinceLastAction: 0,
-  position: [0, 0, -5],
-
+  position: [3, 0, -5],
 };
 
 

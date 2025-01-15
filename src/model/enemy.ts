@@ -6,22 +6,36 @@ import { Item } from './item';
 import { Folder } from './folder';
 import { Reaction } from './reaction';
 
-export interface Behavior {
-  options: (Action | Item | Folder | Reaction)[];
-  valid: (enemy: Enemy, scene: Battle) => boolean;
-  getTarget: (scene: Battle, caster: Combatant) => Combatant;
-  text: string;
+  // valid: (enemy: Enemy, scene: Battle) => boolean;
+  // getTarget: (scene: Battle, caster: Combatant) => Combatant;
+
+export interface PotentialOption {
+  option: (Action | Item | Folder);
+  getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
+  cadence: number;
 }
+
+export interface PotentialReaction {
+  reaction: Reaction;
+  getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
+}
+
+export interface Strategy {
+  potentialOptions: PotentialOption[];
+  potentialReactions: PotentialReaction[];
+  notification: string;
+  strategyFulFilled: (enemy: Enemy, battle: Battle) => boolean;
+  conditionFulfilled: (enemy: Enemy, battle: Battle) => boolean;
+}
+
+// reaction
 
 export type Enemy = Combatant & {
   type: OptionType.ENEMY;
 
-  reactions: Behavior[];
-  behaviors: Behavior[];
-  cadence: number;
-
+  strategies: Strategy[];
+  
   // temp vars
-  optionQueue: (Action | Item | Folder | Reaction)[];
-  targetFn: (scene: Battle, caster: Combatant) => Combatant;
-  timeSinceLastAction: number;
+  strategyIndex?: number;
+  timeTilNextAction: number;
 };

@@ -94,7 +94,7 @@ export class Battle extends Phaser.Scene {
         source: enemy.name,
         timeSinceAdded: 0,
         isEnemy: true,
-        id: generateID(),
+        id: generateID() + enemy.name,
       });
       enemy.timeTilNextAction = 500;
     });

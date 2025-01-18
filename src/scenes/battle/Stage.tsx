@@ -1,10 +1,11 @@
 import * as React from 'react';
+import * as THREE from 'three';
 import styles from './battle.module.css';
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping, Vector3Like, Vector3 } from 'three';
-import { Stats, Html } from '@react-three/drei';
+import { Stats, Html, useTexture, } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 
 import { Battle } from './Battle';
@@ -30,11 +31,11 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, battleSce
   )
 });
 
-
 const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;
   const [beingEffected, setBeingEffected] = React.useState(false);
-  
+  const texture = useTexture(combatant.spritePath);
+
   React.useEffect(() => {
     battleScene.events.on('combatant-effected', (effectedCombatant: Combatant) => {
       if (effectedCombatant.name !== combatant.name) return;
@@ -42,25 +43,34 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
     });
   }, []);
 
+  const customDepthMaterial = new THREE.MeshDepthMaterial({
+    depthPacking: THREE.RGBADepthPacking,
+    map: texture,
+    alphaTest: 0.5
+  });
+  const [x,y,z] = combatant.position
 
   return (
     <RigidBody type="dynamic">
-      <mesh position={combatant.position}>
-        <Html 
-          transform
-          sprite
-          occlude
-          castShadow
-          receiveShadow
-          pointerEvents='none'
-        >
-          <div style={{position: 'relative'}}>
-            { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-            { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
-            <img className={beingEffected ? styles.shake : ''} src={combatant.spritePath} onAnimationEnd={() => setBeingEffected(false)}/>
-          </div>
-          
-        </Html>
+      <Html 
+        transform
+        sprite
+        pointerEvents='none'
+        position={[x,y+1,z]}
+      >
+        <div style={{position: 'relative'}}>
+          { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
+          { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+        </div>
+      </Html>
+      <mesh customDepthMaterial={customDepthMaterial} position={combatant.position} castShadow >
+        <planeGeometry args={[1,1]} />
+        <meshBasicMaterial
+          side={THREE.DoubleSide}
+          map={texture}
+          transparent={true}
+          alphaTest={0.5}
+        />
       </mesh>
       <CuboidCollider args={[0.5, 0.5, 0.5]} />
     </RigidBody>
@@ -76,7 +86,7 @@ const Plane = () => {
 
   return (
     <RigidBody type="fixed" >
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
         <planeGeometry args={[100, 100]} /> 
         <meshStandardMaterial map={checkerTexture} />
       </mesh>
@@ -112,19 +122,19 @@ const Camera = (props: { battle: Battle }) => {
 }
 
 
-export const Stage = (props: { scene: Battle }) => {
-    const { scene } = props;
-    return (
-    <Canvas>
-        <Stats />
-        <Camera battle={scene}/>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 10, 5]} castShadow />
-        <Physics>
-          {scene.battleStore.enemies.map((enemy, idx) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} isEnemy={true}/>)}
-          {scene.battleStore.allies.map((ally, idx) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} isEnemy={false}/>)}
-          <Plane/>
-        </Physics>
-    </Canvas>
-    )
-  }
+export const Stage = (props: { scene: Battle }): JSX.Element => {
+  const { scene } = props;
+  return (
+  <Canvas shadows>
+    <Stats />
+    <Camera battle={scene}/>
+    <ambientLight intensity={0.5} />
+    <pointLight position={[0, 1, 0]} intensity={100} castShadow />
+    <Physics>
+      {scene.battleStore.enemies.map((enemy) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} isEnemy={true}/>)}
+      {scene.battleStore.allies.map((ally) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} isEnemy={false}/>)}
+      <Plane/>
+    </Physics>
+  </Canvas>
+  )
+}

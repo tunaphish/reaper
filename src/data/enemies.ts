@@ -164,7 +164,7 @@ export const cleric: Enemy = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  position: [3, 0, -10],
+  position: [3, 0, -5],
 };
 
 export const knight: Enemy = {
@@ -209,7 +209,7 @@ export const knight: Enemy = {
   status: Status.NORMAL,
   timeInStateInMs: 0,
   juggleDuration: 0,  
-  position: [1, 0, -10],
+  position: [1, 0, -5],
 };
 
 // #endregion

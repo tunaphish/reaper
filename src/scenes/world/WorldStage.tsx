@@ -10,19 +10,15 @@ import { World } from './World';
 
 const Thing = () =>{
   const ref = React.useRef()
-  const [batchRenderer, setBatchRenderer] = React.useState(new BatchedRenderer())
+  const [batchRenderer] = React.useState(new BatchedRenderer())
 
-  useFrame((state, delta) => {
-    if (ref === undefined) return;
-    ref.current.rotation.x = ref.current.rotation.y += 0.01
-    batchRenderer.update(delta)
-  })
   const { scene } = useThree()
-
   React.useEffect(() => {
     const loader = new QuarksLoader()
 
-    loader.setCrossOrigin('')
+    // load effect
+    // traverse json file, add particles to batch renderer (which is used to render particles each step above)
+    // add batchRenderer to scene
     loader.load(
       '/reaper/effects/atom.json',
       (obj) => {
@@ -34,18 +30,17 @@ const Thing = () =>{
         obj.scale.set(0.1, 0.1, 0.1)
         scene.add(obj)
       },
-      () => {}, 
-      () => {}
     )
     scene.add(batchRenderer)
   }, [])
 
+  useFrame((state, delta) => {
+    if (!ref.current) return;
+    batchRenderer.update(delta)
+  })
+
   return (
-    <mesh
-      ref={ref}
-      onClick={(e) => console.log('click')}
-      onPointerOver={(e) => console.log('hover')}
-      onPointerOut={(e) => console.log('unhover')}>
+    <mesh ref={ref}>
       <boxGeometry attach="geometry" args={[1, 1, 1]} />
       <meshNormalMaterial attach="material" />
     </mesh>

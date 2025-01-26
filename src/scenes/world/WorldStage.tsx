@@ -2,12 +2,55 @@ import * as React from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { TextureLoader, RepeatWrapping } from 'three';
-import { Stats } from '@react-three/drei';
+import { BatchedRenderer, QuarksLoader } from 'three.quarks'
+import { OrbitControls, Stats } from '@react-three/drei';
 import { Player } from './player';
 import { observer } from 'mobx-react-lite';
 import { World } from './World';
 
+const Thing = () =>{
+  const ref = React.useRef()
+  const [batchRenderer, setBatchRenderer] = React.useState(new BatchedRenderer())
+
+  useFrame((state, delta) => {
+    if (ref === undefined) return;
+    ref.current.rotation.x = ref.current.rotation.y += 0.01
+    batchRenderer.update(delta)
+  })
+  const { scene } = useThree()
+
+  React.useEffect(() => {
+    const loader = new QuarksLoader()
+
+    loader.setCrossOrigin('')
+    loader.load(
+      '/reaper/effects/atom.json',
+      (obj) => {
+        obj.traverse((child) => {
+          if (child.type === 'ParticleEmitter') {
+            batchRenderer.addSystem(child.system)
+          }
+        })
+        obj.scale.set(0.1, 0.1, 0.1)
+        scene.add(obj)
+      },
+      () => {}, 
+      () => {}
+    )
+    scene.add(batchRenderer)
+  }, [])
+
+  return (
+    <mesh
+      ref={ref}
+      onClick={(e) => console.log('click')}
+      onPointerOver={(e) => console.log('hover')}
+      onPointerOut={(e) => console.log('unhover')}>
+      <boxGeometry attach="geometry" args={[1, 1, 1]} />
+      <meshNormalMaterial attach="material" />
+    </mesh>
+  )
+}
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);
 const Camera = observer((props: { world: World }) => {
@@ -23,8 +66,8 @@ const Camera = observer((props: { world: World }) => {
 });
 
 const Plane = () => {
-  const checkerTexture = useLoader(TextureLoader, '/reaper/textures/checker.svg')
-  checkerTexture.wrapS = checkerTexture.wrapT = RepeatWrapping;
+  const checkerTexture = useLoader(THREE.TextureLoader, '/reaper/textures/checker.svg')
+  checkerTexture.wrapS = checkerTexture.wrapT = THREE.RepeatWrapping;
   checkerTexture.repeat.set(10, 10); // Adjust the repeat for more tiles
 
   return (
@@ -52,13 +95,16 @@ export const WorldStage = (props: { world: World }): JSX.Element => {
   return (
       <Canvas frameloop={frameloop}>
         <Stats />
-        <Camera world={props.world}/>
+        {/* <Camera world={props.world}/> */}
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
+        <Thing />
         <Physics>
           <Player world={props.world}/>              
           <Plane/>
         </Physics>
+
+        <OrbitControls />
       </Canvas>
   )
 };

@@ -2,44 +2,12 @@ import * as React from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { BatchedRenderer, QuarksLoader, QuarksUtil } from 'three.quarks'
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Player } from './player';
 import { observer } from 'mobx-react-lite';
 import { World } from './World';
 
-const Thing = (props: { world: World }) =>{
-  // how does it know what position?
-  // why is state necessary
-  const { world } = props;
-  const [batchRenderer] = React.useState(new BatchedRenderer())
 
-  const { scene } = useThree()
-  React.useEffect(() => {
-    const loader = new QuarksLoader();
-
-    world.events.on('play-particle', () => {
-      loader.load(
-        '/reaper/effects/ps.json',
-        (obj) => {
-          QuarksUtil.addToBatchRenderer(obj, batchRenderer);
-          QuarksUtil.setAutoDestroy(obj, true);
-          obj.scale.set(0.1, 0.1, 0.1);
-          QuarksUtil.play(obj);
-          scene.add(obj);
-        },
-      )
-      scene.add(batchRenderer);
-    });
-
-  }, [])
-
-  useFrame((state, delta) => {
-    batchRenderer.update(delta)
-  })
-
-  return null;
-}
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);
 const Camera = observer((props: { world: World }) => {
@@ -85,16 +53,13 @@ export const WorldStage = (props: { world: World }): JSX.Element => {
   return (
       <Canvas frameloop={frameloop}>
         <Stats />
-        {/* <Camera world={world}/> */}
+        <Camera world={world}/>
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
-        <Thing world={world}/>
         <Physics>
           <Player world={world}/>              
           <Plane/>
         </Physics>
-
-        <OrbitControls />
       </Canvas>
   )
 };

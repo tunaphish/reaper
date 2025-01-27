@@ -7,12 +7,44 @@ import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping, Vector3Like, Vector3 } from 'three';
 import { Stats, Html, useTexture, } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
+import { QuarksUtil, BatchedRenderer, QuarksLoader } from 'three.quarks';
 
 import { Battle } from './Battle';
 import { ActionsViewManager, Meter } from './ActionsViewManager';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
+const ParticleManager = (props: { battle: Battle }) =>{
+  const { battle } = props;
+  const [batchRenderer] = React.useState(new BatchedRenderer()); // why is state necessary
+
+  const { scene } = useThree()
+  React.useEffect(() => {
+    const loader = new QuarksLoader();
+
+    battle.events.on('particle-effect', (jsonPath: string, position: [x: number, y: number, z: number]) => { 
+      const [x,y,z] = position;
+      loader.load(
+        jsonPath,
+        (obj) => {
+          QuarksUtil.addToBatchRenderer(obj, batchRenderer);
+          QuarksUtil.setAutoDestroy(obj, true);
+          obj.scale.set(0.1, 0.1, 0.1);
+          obj.position.set(x,y,z);
+          QuarksUtil.play(obj);
+          scene.add(obj);
+        },
+      )
+      scene.add(batchRenderer);
+    });
+  }, [])
+
+  useFrame((state, delta) => {
+    batchRenderer.update(delta)
+  })
+
+  return null;
+}
 
 export const ResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
   const { combatant } = props;
@@ -51,19 +83,20 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
   const [x,y,z] = combatant.position
 
   return (
-    <RigidBody type="dynamic">
-      <Html 
-        transform
-        sprite
-        pointerEvents='none'
-        position={[x,y+1,z]}
-      >
-        <div style={{position: 'relative'}}>
-          { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-          { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
-        </div>
-      </Html>
+    // <RigidBody type="dynamic">
+
       <mesh customDepthMaterial={customDepthMaterial} position={combatant.position} castShadow >
+        <Html 
+          transform
+          sprite
+          pointerEvents='none'
+          position={[x,y+1,z]}
+        >
+          <div style={{position: 'relative'}}>
+            { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
+            { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+          </div>
+        </Html>
         <planeGeometry args={[1,1]} />
         <meshBasicMaterial
           side={THREE.DoubleSide}
@@ -72,8 +105,8 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
           alphaTest={0.5}
         />
       </mesh>
-      <CuboidCollider args={[0.5, 0.5, 0.5]} />
-    </RigidBody>
+      // <CuboidCollider args={[0.5, 0.5, 0.5]} />
+    // </RigidBody>
 
 
   )
@@ -130,6 +163,7 @@ export const Stage = (props: { scene: Battle }): JSX.Element => {
     <Camera battle={scene}/>
     <ambientLight intensity={0.5} />
     <pointLight position={[0, 1, 0]} intensity={100} castShadow />
+    <ParticleManager battle={scene} />
     <Physics>
       {scene.battleStore.enemies.map((enemy) => <CombatantSprite key={enemy.name} combatant={enemy} battleScene={scene} isEnemy={true}/>)}
       {scene.battleStore.allies.map((ally) => <CombatantSprite key={ally.name} combatant={ally} battleScene={scene} isEnemy={false}/>)}

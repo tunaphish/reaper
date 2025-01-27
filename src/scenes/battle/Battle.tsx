@@ -19,6 +19,7 @@ import { fencer, cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
+import { MediaEffectType } from '../../model/mediaEffect';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -276,7 +277,18 @@ export class Battle extends Phaser.Scene {
           effects.forEach(effect => {
             effect.execute(target, caster, effect.potency, this);
             this.events.emit('combatant-effected', target);
+
+            action.mediaEffects.forEach((mediaEffect) => {
+              //
+              switch(mediaEffect.type) {
+                case MediaEffectType.PARTICLE:
+                  this.events.emit('particle-effect', mediaEffect.jsonPath, target.position);
+                  break;
+              }
+            });
           })
+
+
           
           this.sound.play(action.soundKeyName);
         }

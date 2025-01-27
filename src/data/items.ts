@@ -10,7 +10,6 @@ export const bomb: Item = {
   name: 'Bomb',
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
-  imageKeyName: 'attack.gif',
   description: 'Deals damage to target',
   execute: (target, source) => {
     updateDamage(target, 50);
@@ -26,7 +25,6 @@ export const potion: Item = {
   name: 'Potion',
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'heal',
-  imageKeyName: 'heal.gif',
   description: 'Heals target',
   execute: (target) => {
     updateHealth(target, 50);

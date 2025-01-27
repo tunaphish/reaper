@@ -6,7 +6,7 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'World';
+const SCENE_TO_START = 'Battle';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -89,7 +89,6 @@ export class Boot extends Phaser.Scene {
     this.load.audio('stamina-depleted', '/reaper/sounds/stamina-depleted.wav');
 
     // #region effects
-    this.load.image('heal', '/reaper/effects/heal.gif');
 
     this.load.audio('main-menu-music', '/reaper/music/isolate.exe.mp3');
     this.load.audio('knight', '/reaper/music/knight.mp3');

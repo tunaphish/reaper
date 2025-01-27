@@ -1,5 +1,6 @@
 import { Action, Restriction } from '../model/action';
 import { Status } from '../model/combatant';
+import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget, launch } from './effects';
@@ -77,6 +78,7 @@ export const attack: Action = {
 
   description: 'Deals damage',
   effects: [{execute: dealDamage, potency: 50}],
+  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/ps.json' }],
 };
 
 export const stanch: Action = {
@@ -90,6 +92,7 @@ export const stanch: Action = {
 
   description: 'Heals bleed on self',
   effects: [{execute: healBleed, potency: 25}],
+  mediaEffects: [],
 };
 
 export const ambush: Action = {
@@ -104,6 +107,7 @@ export const ambush: Action = {
   description: 'Deals damage, refunds stamina cost',
   effects: [{execute: dealDamage, potency: 50,}, {execute: healStamina, potency: 100}],
   restriction: firstActionTaken,
+  mediaEffects: [],
 };
 
 export const bandage: Action = {
@@ -117,6 +121,7 @@ export const bandage: Action = {
 
   description: 'Heals bleed',
   effects: [{execute: healBleed, potency: 25}],
+  mediaEffects: [],
 };
 
 export const bloodlust: Action = {
@@ -130,6 +135,7 @@ export const bloodlust: Action = {
 
   description: 'Damage scales with each damaged combatant',
   effects: [{execute: scaleDamageOnBleedCombatants, potency: 25}],
+  mediaEffects: [],
 };
 
 export const debilitate: Action = {
@@ -144,6 +150,7 @@ export const debilitate: Action = {
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
   restriction: targetExhausted,
+  mediaEffects: [],
 };
 
 export const engage: Action = {
@@ -158,6 +165,7 @@ export const engage: Action = {
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
   restriction: targetFullHealth,
+  mediaEffects: [],
 };
 
 export const flank: Action = {
@@ -171,7 +179,8 @@ export const flank: Action = {
 
   description: 'Deals medium damage',
   effects: [{execute: dealDamage, potency: 75}],
-  restriction: targetTargetingOther
+  restriction: targetTargetingOther,
+  mediaEffects: [],
 };
 
 export const flourish: Action = {
@@ -186,6 +195,7 @@ export const flourish: Action = {
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
   restriction: casterFullHealth,
+  mediaEffects: [],
 };
 
 export const gangup: Action = {
@@ -198,6 +208,7 @@ export const gangup: Action = {
   soundKeyName: 'attack',
   description: 'Deals scaling damage based on number of combatants acting on target',
   effects: [{execute: scaleDamageOnCombatantsTargetingTarget, potency: 30}],
+  mediaEffects: [],
 };
 
 export const prick: Action = {
@@ -211,6 +222,7 @@ export const prick: Action = {
 
   description: 'Deals low damage to target with quick attack time',
   effects: [{execute: dealDamage, potency: 5}],
+  mediaEffects: [],
 };
 
 export const resurrect: Action = {
@@ -225,6 +237,7 @@ export const resurrect: Action = {
   description: 'Heals target, target must be dead',
   effects: [{execute: healHealth, potency: 50}],
   restriction: targetDead,
+  mediaEffects: [],
 };
 
 export const revenge: Action = {
@@ -238,6 +251,7 @@ export const revenge: Action = {
 
   description: 'Deal scaling damage equal to bleed on caster',
   effects: [{execute: scaleDamageOnCasterBleed, potency: 50}],
+  mediaEffects: [],
 };
 
 export const salve: Action = {
@@ -252,6 +266,7 @@ export const salve: Action = {
   description: 'Heals high bleed, target must be dying',
   effects: [{execute: healBleed, potency: 100}],
   restriction: targetDying,
+  mediaEffects: [],
 };
 
 export const splinter: Action = {
@@ -266,6 +281,7 @@ export const splinter: Action = {
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
   restriction: actionSingleUse,
+  mediaEffects: [],
 };
 
 // #endregion
@@ -283,6 +299,7 @@ export const jab: Action = {
 
   description: 'Deals damage',
   effects: [{execute: dealDamage, potency: 10}],
+  mediaEffects: [],
 };
 
 export const uppercut: Action = {
@@ -296,6 +313,7 @@ export const uppercut: Action = {
 
   description: 'Deals damage, launches',
   effects: [{execute: dealDamage, potency: 50}, {execute: launch, potency: 1000}],
+  mediaEffects: [],
 };
 
 // #endregion

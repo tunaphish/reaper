@@ -8,7 +8,6 @@ export type Item = Option & {
     execute: (target: Combatant, source: Combatant) => void;
     targetType: TargetType;
     soundKeyName: string;
-    imageKeyName?: string;
     charges: number;
     maxCharges: number;
     castTimeInMs: number;

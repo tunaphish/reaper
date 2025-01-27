@@ -3,6 +3,7 @@ import { Combatant } from "./combatant";
 import { Effect } from "./effect";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
+import { MediaEffect, ParticleEffect } from "./mediaEffect";
 
 export type Restriction = {
   desc: string;
@@ -15,11 +16,13 @@ export type Action = Option & {
   description: string;
   
   targetType: TargetType;
-  soundKeyName: string;
   castTimeInMs: number;
 
   effects: Effect[];
   restriction?: Restriction; 
   animTimeInMs: number;
   airtime?: number;
+
+  soundKeyName: string;
+  mediaEffects: (ParticleEffect)[];
 }

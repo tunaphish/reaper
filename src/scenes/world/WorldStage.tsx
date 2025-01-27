@@ -2,49 +2,43 @@ import * as React from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
-import { BatchedRenderer, QuarksLoader } from 'three.quarks'
+import { BatchedRenderer, QuarksLoader, QuarksUtil } from 'three.quarks'
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Player } from './player';
 import { observer } from 'mobx-react-lite';
 import { World } from './World';
 
-const Thing = () =>{
-  const ref = React.useRef()
+const Thing = (props: { world: World }) =>{
+  // how does it know what position?
+  // why is state necessary
+  const { world } = props;
   const [batchRenderer] = React.useState(new BatchedRenderer())
 
   const { scene } = useThree()
   React.useEffect(() => {
-    const loader = new QuarksLoader()
+    const loader = new QuarksLoader();
 
-    // load effect
-    // traverse json file, add particles to batch renderer (which is used to render particles each step above)
-    // add batchRenderer to scene
-    loader.load(
-      '/reaper/effects/atom.json',
-      (obj) => {
-        obj.traverse((child) => {
-          if (child.type === 'ParticleEmitter') {
-            batchRenderer.addSystem(child.system)
-          }
-        })
-        obj.scale.set(0.1, 0.1, 0.1)
-        scene.add(obj)
-      },
-    )
-    scene.add(batchRenderer)
+    world.events.on('play-particle', () => {
+      loader.load(
+        '/reaper/effects/ps.json',
+        (obj) => {
+          QuarksUtil.addToBatchRenderer(obj, batchRenderer);
+          QuarksUtil.setAutoDestroy(obj, true);
+          obj.scale.set(0.1, 0.1, 0.1);
+          QuarksUtil.play(obj);
+          scene.add(obj);
+        },
+      )
+      scene.add(batchRenderer);
+    });
+
   }, [])
 
   useFrame((state, delta) => {
-    if (!ref.current) return;
     batchRenderer.update(delta)
   })
 
-  return (
-    <mesh ref={ref}>
-      <boxGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshNormalMaterial attach="material" />
-    </mesh>
-  )
+  return null;
 }
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 5, 10);
@@ -77,6 +71,7 @@ const Plane = () => {
 }
 
 export const WorldStage = (props: { world: World }): JSX.Element => {
+  const { world } = props;
   const [frameloop, setFrameloop] = React.useState<"always" | "demand" | "never">("always");
   React.useEffect(() => {
     props.world.events.on('pause', () => {
@@ -90,12 +85,12 @@ export const WorldStage = (props: { world: World }): JSX.Element => {
   return (
       <Canvas frameloop={frameloop}>
         <Stats />
-        {/* <Camera world={props.world}/> */}
+        {/* <Camera world={world}/> */}
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} castShadow />
-        <Thing />
+        <Thing world={world}/>
         <Physics>
-          <Player world={props.world}/>              
+          <Player world={world}/>              
           <Plane/>
         </Physics>
 

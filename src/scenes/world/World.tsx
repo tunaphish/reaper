@@ -43,7 +43,7 @@ export class World extends Phaser.Scene {
 
   pause(): void {
     this.choiceSelectSound.play();
-    this.scene.pause('World');
+    // this.scene.pause('World');
   }
 
   unpause(): void {
@@ -52,9 +52,10 @@ export class World extends Phaser.Scene {
   }
 
   battle(): void {
+    this.events.emit('play-particle');
     this.choiceSelectSound.play();
-    this.scene.pause();
-    this.scene.run('Battle', { enemies: [fencer] });
+    // this.scene.pause();
+    // this.scene.run('Battle', { enemies: [fencer] });
   }
 
   world(): void {

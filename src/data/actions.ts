@@ -78,7 +78,7 @@ export const attack: Action = {
 
   description: 'Deals damage',
   effects: [{execute: dealDamage, potency: 50}],
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/ps.json' }],
+  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/energy-explosion.json' }],
 };
 
 export const stanch: Action = {
@@ -88,11 +88,12 @@ export const stanch: Action = {
   castTimeInMs: 0,
   animTimeInMs: 2000,
   targetType: TargetType.SELF,
-  soundKeyName: 'attack',
 
   description: 'Heals bleed on self',
   effects: [{execute: healBleed, potency: 25}],
-  mediaEffects: [],
+
+  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
+  soundKeyName: 'heal',
 };
 
 export const ambush: Action = {

@@ -3,7 +3,7 @@ import { Combatant } from "./combatant";
 import { Effect } from "./effect";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
-import { MediaEffect, ParticleEffect } from "./mediaEffect";
+import { ParticleEffect } from "./mediaEffect";
 
 export type Restriction = {
   desc: string;

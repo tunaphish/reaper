@@ -5,14 +5,16 @@ import styles from './battle.module.css';
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import { TextureLoader, RepeatWrapping, Vector3Like, Vector3 } from 'three';
-import { Stats, Html, useTexture, } from '@react-three/drei';
+import { Stats, Html, useTexture, Billboard, OrbitControls, } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 import { QuarksUtil, BatchedRenderer, QuarksLoader } from 'three.quarks';
+import { renderToString } from 'react-dom/server'; 
 
 import { Battle } from './Battle';
 import { ActionsViewManager, Meter } from './ActionsViewManager';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
+import svgToTinyDataUri from 'mini-svg-data-uri';
 
 const ParticleManager = (props: { battle: Battle }) =>{
   const { battle } = props;
@@ -29,7 +31,6 @@ const ParticleManager = (props: { battle: Battle }) =>{
         (obj) => {
           QuarksUtil.addToBatchRenderer(obj, batchRenderer);
           QuarksUtil.setAutoDestroy(obj, true);
-          obj.scale.set(0.1, 0.1, 0.1);
           obj.position.set(x,y,z);
           QuarksUtil.play(obj);
           scene.add(obj);
@@ -63,6 +64,55 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, battleSce
   )
 });
 
+const convertHtmlToSvg = (htmlString: string): string => {
+  const svgFragment = `
+    <svg
+      viewBox='0 0 ${100} ${200}'
+      width="${100}"
+      height="${200}"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <foreignObject
+        x="0"
+        y="0"
+        width="${100}"
+        height="${200}"
+      >
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          ${htmlString}
+        </div>
+      </foreignObject>
+    </svg>
+  `
+  return svgFragment
+}
+
+const useHtmlTexture = (reactNode: React.ReactNode) => {
+  const htmlStr = renderToString(reactNode);
+  const svg = convertHtmlToSvg(htmlStr);
+  const uri = svgToTinyDataUri(svg);
+  const texture = useLoader(THREE.TextureLoader, uri);
+  console.log(texture);
+  return texture;
+}
+
+const HtmlPlane = (props: { children: React.ReactNode, position: [x:number,y:number,z:number] }) => {
+  const htmlTexture = useHtmlTexture(props.children);
+  const [time, setTime] = React.useState(0);
+  useFrame((state, delta) => {
+    setTime(time+delta);
+  })
+
+  return (
+    <Billboard>
+      <mesh position={props.position}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial map={htmlTexture} transparent />
+      </mesh>
+    </Billboard>
+  )
+};
+
 const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEnemy: boolean }) => {
   const { combatant, battleScene, isEnemy } = props;
   const [beingEffected, setBeingEffected] = React.useState(false);
@@ -80,31 +130,29 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
     map: texture,
     alphaTest: 0.5
   });
-  const [x,y,z] = combatant.position
+  const [x,y,z] = combatant.position;
 
   return (
     // <RigidBody type="dynamic">
-
-      <mesh customDepthMaterial={customDepthMaterial} position={combatant.position} castShadow >
-        <Html 
-          transform
-          sprite
-          pointerEvents='none'
-          position={[x,y+1,z]}
-        >
+      <group position={combatant.position}>
+        <HtmlPlane position={[x,y+1,z]}>
           <div style={{position: 'relative'}}>
             { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
             { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+            <div style={{ backgroundColor: 'blue', color: 'white' }}>{combatant.stamina}</div>
           </div>
-        </Html>
-        <planeGeometry args={[1,1]} />
-        <meshBasicMaterial
-          side={THREE.DoubleSide}
-          map={texture}
-          transparent={true}
-          alphaTest={0.5}
-        />
-      </mesh>
+        </HtmlPlane>
+        <mesh customDepthMaterial={customDepthMaterial}  castShadow >
+          <planeGeometry args={[1,1]} />
+          <meshBasicMaterial
+            side={THREE.DoubleSide}
+            map={texture}
+            transparent={true}
+            alphaTest={0.5}
+          />
+        </mesh>
+      </group>
+
       // <CuboidCollider args={[0.5, 0.5, 0.5]} />
     // </RigidBody>
 
@@ -135,14 +183,14 @@ const Camera = (props: { battle: Battle }) => {
 
 
   React.useEffect(() => {
-    camera.position.set(1, 0, 0); 
+    camera.position.set(1, 0, -2); 
     camera.lookAt(0, 0, -7); 
 
-    battle.events.on('caster-set', (caster: Ally) => {
-      const [x,y,z] = caster.position;
-      const newTargetPosition = new Vector3(1+x,y,2+z);
-      setTargetPosition(newTargetPosition);
-    });
+    // battle.events.on('caster-set', (caster: Ally) => {
+    //   const [x,y,z] = caster.position;
+    //   const newTargetPosition = new Vector3(x,y,2+z);
+    //   setTargetPosition(newTargetPosition);
+    // });
   }, []);
 
   useFrame(() => {
@@ -172,3 +220,7 @@ export const Stage = (props: { scene: Battle }): JSX.Element => {
   </Canvas>
   )
 }
+
+// https://github.com/gnikoloff/html-to-webgl-demo/blob/04ce06bdcd091b21a40d3d5186679697b77d2453/app/index.js#L52
+// https://discourse.threejs.org/t/lets-solve-pixelated-svg-texture-rendering-in-three-js/30819
+// https://discourse.threejs.org/t/problem-rendering-svg-to-texture/22626

@@ -179,6 +179,8 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   );
 }) 
 
+const TIMELINE_LENGTH = 5000;
+
 export const ActionView = (props: { action: TimelineAction }): JSX.Element => {
   const { action } = props;
   const left = `${100 - (action.timeTilExecute / action.action.castTimeInMs * 100)}%`;
@@ -229,10 +231,19 @@ export const ActionView = (props: { action: TimelineAction }): JSX.Element => {
 
 export const Timeline = observer((props: { battle: Battle }) => {
   const { battle } = props;
-  const { timelineActions } = battle.battleStore;
+  const { timelineActions, time } = battle.battleStore;
+  const currentTime = time % TIMELINE_LENGTH;
 
+  const right = `${100 - (currentTime/TIMELINE_LENGTH * 100)}%`;
+
+  const style: React.CSSProperties = {
+      position: 'absolute', 
+      right,
+      transform: "translateX(-50%)",
+  }
   return (
       <div className={styles.window} style={{ flex: .3, position: 'relative' }}>
+          <div className={styles.timelinePositionIndicator} style={style}/>
           { timelineActions.map((action) => <ActionView key={action.id} action={action} />)      }
       </div>
   )

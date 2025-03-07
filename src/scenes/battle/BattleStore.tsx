@@ -26,7 +26,8 @@ export type Notification = {
 }
 
 export class BattleStore {
-  // battle vars
+  time = 0;
+
   enemies: Enemy[];
   allies: Allies;
 
@@ -39,7 +40,6 @@ export class BattleStore {
 
   menus: Folder[] = [];
 
-  resonance = 0;
 
   notifications: Notification[] = [];
 
@@ -47,6 +47,10 @@ export class BattleStore {
     this.enemies = enemies;
     this.allies = allies;
     makeAutoObservable(this);
+  }
+
+  setTime(time: number): void {
+    this.time = time;
   }
 
   setCaster(member?: Combatant): void {

@@ -269,3 +269,13 @@
   height: 12px;
   position: absolute;
 }
+
+.timelinePositionIndicator::after {
+  content: "";
+  display: inline-block;
+  border-bottom: 10px solid;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  bottom: 0;
+  transform: translateX(-50%);
+}

@@ -63,6 +63,7 @@ export class Battle extends Phaser.Scene {
   // #region Time Based Updates
 
   update(time: number, delta: number): void {
+    this.battleStore.setTime(time);
     this.battleStore.updateNotifications(delta);
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();

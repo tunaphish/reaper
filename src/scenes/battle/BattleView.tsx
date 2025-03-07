@@ -194,18 +194,17 @@ export const ActionView = (props: { action: TimelineAction }): JSX.Element => {
 
   return (
     <div style={style}>
-      <motion.div
+      <motion.fieldset
         className={action.isEnemyCaster ? styles.enemyWindow : styles.window} 
-        style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+        style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 5 }}
         initial={{ scaleY: 0 }} 
         animate={{ scaleY: 1 }} 
         exit={{ scaleY: 0 }}
         transition={{ duration: .1, ease: 'easeOut' }} 
       >
-        <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
-          {action.action.name} on {action.target.name}
-        </div>
-      </motion.div>
+        <legend style={{fontSize: 12,}}>{action.target.name}</legend>
+        {action.action.name}
+      </motion.fieldset>
       {/* <div className={styles.reactionContainer}>
         {
           action.reactions.map((reaction, idx) => 

@@ -1,7 +1,7 @@
 import { Combatant, updateStamina } from "../model/combatant";
 import { Effect } from "../model/effect";
 import { OptionType } from "../model/option"
-import { DeferredAction } from "../scenes/battle/BattleStore";
+import { TimelineAction } from "../scenes/battle/BattleStore";
 import { Reaction, ReactionRestriction } from "../model/reaction";
 import * as Effects from './effects';
 import { TargetType } from "../model/targetType";
@@ -9,8 +9,8 @@ import { TargetType } from "../model/targetType";
 // #region ReactionRestriction
 const closeToExecution: ReactionRestriction = {
     desc: 'Action must close to executing',
-    isRestricted: (deferredAction: DeferredAction, caster: Combatant) => { 
-      return deferredAction.timeTilExecute > 500;
+    isRestricted: (timelineAction: TimelineAction, caster: Combatant) => { 
+      return timelineAction.timeTilExecute > 500;
     },
 }
 

@@ -39,18 +39,18 @@ export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
 export const self = (scene: Battle, caster: Combatant) => caster;
 
 const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.reactions.length === 0
+  const actionsAtEnemyCloseToExecution = scene.battleStore.timelineActions.filter(
+    timelineAction => timelineAction.target.name === caster.name &&
+    timelineAction.reactions.length === 0
   );
   return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
 };
 
 const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.timeTilExecute < 500 &&
-    deferredAction.reactions.length === 0
+  const actionsAtEnemyCloseToExecution = scene.battleStore.timelineActions.filter(
+    timelineAction => timelineAction.target.name === caster.name &&
+    timelineAction.timeTilExecute < 500 &&
+    timelineAction.reactions.length === 0
   );
   return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
 };
@@ -103,7 +103,6 @@ export const fencer: Enemy = {
   // temp props
   timeTilNextAction: 0,
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   juggleDuration: 0,  
   position: [-1, 0, -10],
 };

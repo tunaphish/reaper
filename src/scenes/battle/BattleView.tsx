@@ -7,12 +7,13 @@ import { Ally } from '../../model/ally';
 import { OptionType } from '../../model/option';
 import { MenuOption } from '../../model/menuOption';
 import { Action } from '../../model/action';
-import { Status } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 
 import { Battle } from './Battle';
 import { Stage } from './Stage';
-import { ActionsViewManager, Meter } from './ActionsViewManager';
+import { Meter } from './Meter';
+import { TimelineAction } from './BattleStore';
 
 const Description = observer((props: { battle: Battle }) => {
   const text = props.battle.battleStore.reaction?.description || (props.battle.battleStore.executable as Action)?.description;
@@ -99,8 +100,8 @@ const NotificationsManager = observer((props: {  battle: Battle }) => {
   )
 });
 
-export const ResourceDisplay = observer((props: {ally: Ally, battleScene: Battle }) => {
-  const { ally } = props;
+export const ResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
+  const { combatant } = props;
 
   const statusToStylesMap = {
     [Status.NORMAL]: '',
@@ -109,37 +110,32 @@ export const ResourceDisplay = observer((props: {ally: Ally, battleScene: Battle
   };
   const style = [
     styles.window,
-    statusToStylesMap[ally.status],
+    statusToStylesMap[combatant.status],
   ];
 
   
   const juggleWidth = {
-    width: `${ally.juggleDuration * .1}px`
+    width: `${combatant.juggleDuration * .1}px`
   }
 
   return (
     <div style={{ flex: '1', margin: '5px' }}>
-      <div className={style.join(' ')} onClick={() => props.battleScene.openInitialMenu(ally)} 
+      <div className={style.join(' ')} onClick={() => props.battleScene.openInitialMenu((combatant as Ally))} 
         style={{ 
           display: "grid",
           gridTemplateColumns: "1fr",
           gridTemplateRows: "1fr", 
         }}>
-        <motion.div 
-          className={styles.castingWindow}
-          animate={{ height: ally.status === Status.CASTING ? Math.min(Math.round(ally.timeInStateInMs / ally.queuedOption.castTimeInMs * 100), 100) + "%" : 0  }}
-          transition={{ duration: 0 }}
-        />
         <div className={styles.characterCellContainer}>
-          <div className={styles.windowName}>{ally.name}</div>
+          <div className={styles.windowName}>{combatant.name}</div>
           <div className={styles.meterContainer}>
-            <Meter value={ally.health} max={ally.maxHealth} className={styles.bleedMeter}/>
-            <Meter value={ally.health-ally.bleed} max={ally.maxHealth} className={styles.healthMeter}/>
-            <div className={styles.meterNumber}>{Math.ceil(ally.health)}</div>
+            <Meter value={combatant.health} max={combatant.maxHealth} className={styles.bleedMeter}/>
+            <Meter value={combatant.health-combatant.bleed} max={combatant.maxHealth} className={styles.healthMeter}/>
+            <div className={styles.meterNumber}>{Math.ceil(combatant.health)}</div>
           </div>
           <div className={styles.meterContainer}>
-            <Meter value={ally.stamina < 0 ? 0 : ally.stamina } max={ally.maxStamina} className={styles.staminaMeter}/>
-            <div className={styles.meterNumber}>{Math.ceil(ally.stamina)}</div>
+            <Meter value={combatant.stamina < 0 ? 0 : combatant.stamina } max={combatant.maxStamina} className={styles.staminaMeter}/>
+            <div className={styles.meterNumber}>{Math.ceil(combatant.stamina)}</div>
           </div>
         </div>
       </div>
@@ -183,33 +179,101 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   );
 }) 
 
+export const ActionView = (props: { action: TimelineAction }): JSX.Element => {
+  const { action } = props;
+  const left = `${100 - (action.timeTilExecute / action.action.castTimeInMs * 100)}%`;
+
+  const style: React.CSSProperties = {
+      position: 'absolute', 
+      bottom: action.isEnemyCaster ? '25%' : 0, 
+      left,
+      transform: "translateX(-50%)",
+  }
+
+  return (
+    <div style={style}>
+      <motion.div
+        className={action.isEnemyCaster ? styles.enemyWindow : styles.window} 
+        style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+        initial={{ scaleY: 0 }} 
+        animate={{ scaleY: 1 }} 
+        exit={{ scaleY: 0 }}
+        transition={{ duration: .1, ease: 'easeOut' }} 
+      >
+        <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+          {action.action.name} on {action.target.name}
+        </div>
+      </motion.div>
+      {/* <div className={styles.reactionContainer}>
+        {
+          action.reactions.map((reaction, idx) => 
+            <motion.div 
+            className={action.isEnemyCaster ? styles.window : styles.enemyWindow } // bug here, need to include correct color.... potentially this ui might suck lol 
+            style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+            initial={{ scaleY: 0 }} 
+            animate={{ scaleY: 1 }} 
+            exit={{ scaleY: 0 }}
+            transition={{ duration: .1, ease: 'easeOut' }} 
+            key={idx}
+          >
+            <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+              {reaction.name}
+            </div>
+          </motion.div>
+          )
+        }
+      </div> */}
+    </div>
+  )
+}
+
+export const Timeline = observer((props: { battle: Battle }) => {
+  const { battle } = props;
+  const { timelineActions } = battle.battleStore;
+
+  return (
+      <div className={styles.window} style={{ flex: .3, position: 'relative' }}>
+          { timelineActions.map((action) => <ActionView key={action.id} action={action} />)      }
+      </div>
+  )
+});
+
 
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies } = props.scene.battleStore;
+  
+  const { allies, enemies } = props.scene.battleStore;
 
-
-    return (
-        <div className={styles.container}>
-          <div className={styles.stageContainer}> 
-            <Stage scene={props.scene} />
+  return (
+      <div className={styles.container}>
+        <div className={styles.stageContainer}> 
+          {/* <Stage scene={props.scene} /> */}
+        </div>
+        <div className={styles.uiContainer}>
+          <div className={styles.combatantBar}>
+                {enemies.map((enemy) => {
+                  return( 
+                    <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
+                      <ResourceDisplay battleScene={props.scene} combatant={enemy} />
+                    </div>
+                  )
+                })}
           </div>
-          <div className={styles.uiContainer}>
-            <Description battle={props.scene} />
-            <NotificationsManager battle={props.scene}/>
-            <div className={styles.interactionContainer}>
-              <div className={styles.combatantBar}>
-                  {allies.map((ally) => {
-                    return( 
-                      <div style={{ position: 'relative', flex: '1' }} key={ally.name}>
-                        <ActionsViewManager battleScene={props.scene} combatant={ally} />
-                        <ResourceDisplay battleScene={props.scene} ally={ally} key={ally.name}/>
-                      </div>
-                    )
-                  })}
-              </div>
-              <MenuContainer battleScene={props.scene}/>
+          <Description battle={props.scene} />
+          <NotificationsManager battle={props.scene}/>
+          <Timeline battle={props.scene}/>
+          <div className={styles.interactionContainer}>
+            <div className={styles.combatantBar}>
+                {allies.map((ally) => {
+                  return( 
+                    <div style={{ position: 'relative', flex: '1' }} key={ally.name}>
+                      <ResourceDisplay battleScene={props.scene} combatant={ally} key={ally.name}/>
+                    </div>
+                  )
+                })}
             </div>
+            <MenuContainer battleScene={props.scene}/>
           </div>
         </div>
-      )
+      </div>
+    )
 });

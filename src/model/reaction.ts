@@ -1,4 +1,4 @@
-import { DeferredAction } from "../scenes/battle/BattleStore";
+import { TimelineAction } from "../scenes/battle/BattleStore";
 import { Combatant } from "./combatant";
 import { Effect } from "./effect";
 import { Option, OptionType } from "./option";
@@ -6,7 +6,7 @@ import { TargetType } from "./targetType";
 
 export type ReactionRestriction = {
   desc: string;
-  isRestricted: (deferredAction: DeferredAction, caster: Combatant) => boolean;
+  isRestricted: (timelineAction: TimelineAction, caster: Combatant) => boolean;
 }
 
 export type Reaction = Option & {

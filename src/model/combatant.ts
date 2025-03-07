@@ -8,7 +8,6 @@ export enum Status {
   NORMAL = 'NORMAL',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
-  CASTING = 'CASTING',  
 }
 
 
@@ -25,10 +24,9 @@ export type Combatant = Option & {
   spritePath: string;
 
   status: Status;
-  queuedOption?: Action | Item | Folder;
-  queuedTarget?: Combatant;
-  timeInStateInMs: number;
   juggleDuration: number;
+
+  // render
   position: [x: number, y: number, z: number];
 }
 
@@ -75,10 +73,3 @@ export const updateMagic = (caster: Combatant, change: number): void => {
   caster.magic -= magicCost;
   caster.health -= healthCost;
 };
-
-export const resetCombatantBattleState = (combatant: Combatant): void => {
-  combatant.status = Status.NORMAL;
-  combatant.queuedOption = null;
-  combatant.queuedTarget = null;
-  combatant.timeInStateInMs = 0;
-}

@@ -7,7 +7,7 @@ import { Folder } from "../../model/folder";
 import { Reaction } from "../../model/reaction";
 import { Action } from "../../model/action";
 
-export type DeferredAction = { 
+export type TimelineAction = { 
   id: string; 
   timeTilExecute: number; 
   action: Action; 
@@ -35,7 +35,7 @@ export class BattleStore {
   target?: Combatant;
 
   reaction?: Reaction;
-  deferredActions: DeferredAction[] = [];
+  timelineActions: TimelineAction[] = [];
 
   menus: Folder[] = [];
 
@@ -65,8 +65,8 @@ export class BattleStore {
     this.reaction = reaction;
   }
 
-  setDeferredActions(deferredActions: DeferredAction[]) {
-    this.deferredActions = deferredActions;
+  setDeferredActions(timelineActions: TimelineAction[]) {
+    this.timelineActions = timelineActions;
   }
 
   pushMenu(folder: Folder): void {
@@ -92,8 +92,6 @@ export class BattleStore {
 
   tickStats(delta: number): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
-      combatant.timeInStateInMs = Math.min(combatant.timeInStateInMs+delta, 1000000);
-
       if (combatant.status === Status.DEAD) return;
       if (combatant.bleed > 0) {
         const DAMAGE_TICK_RATE = (delta / 1000) * 5;
@@ -101,10 +99,9 @@ export class BattleStore {
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }
       
-      if (combatant.status !== Status.CASTING) {
-          const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-          combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
-      }
+        const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
+        combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+
 
       combatant.juggleDuration = Math.max(0, combatant.juggleDuration -= delta);
     });
@@ -112,18 +109,13 @@ export class BattleStore {
 
   updateCombatantsState(): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
-      const prevStatus = combatant.status;
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {
         combatant.status = Status.EXHAUSTED;
-      } else if (combatant.status !== Status.CASTING) {
-        combatant.status = Status.NORMAL;
-      }
-
-      if (prevStatus !== combatant.status) {
-        combatant.timeInStateInMs = 0;
-      }
+      } 
+      
+      combatant.status = Status.NORMAL;
     });
   }
 

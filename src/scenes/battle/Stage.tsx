@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { QuarksUtil, BatchedRenderer, QuarksLoader } from 'three.quarks';
 
 import { Battle } from './Battle';
-import { ActionsViewManager, Meter } from './ActionsViewManager';
+import { ActionsViewManager, Meter } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 

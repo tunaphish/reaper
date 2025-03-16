@@ -336,7 +336,6 @@ export class Battle extends Phaser.Scene {
       this.sound.play('stamina-depleted');
       return;
     }
-    this.battleStore.resetSelections();
 
     this.sound.play('choice-select');
     this.battleStore.setCaster(ally);

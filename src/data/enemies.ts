@@ -78,21 +78,18 @@ export const fencer: Enemy = {
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
       ],
       potentialReactions: [],
-      notification: 'Fencer attacks!',
       toExit: (enemy, battle): boolean => enemy.stamina < 25,
       toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
       potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
-      notification: 'Fencer takes an evasive stance...',
       toExit: (enemy, battle): boolean => enemy.stamina > 100,
       toEnter: (enemy): boolean => enemy.stamina > 50,
     },
     {
       potentialOptions: [],
       potentialReactions: [],
-      notification: 'Fencer is conserving aura...',
       toExit: (enemy, battle): boolean => enemy.stamina > 50,
       toEnter: (): boolean => true,
     }
@@ -126,7 +123,6 @@ export const cleric: Enemy = {
         { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
       ],
       potentialReactions: [],
-      notification: 'Cleric is healing enemies...',
       toExit: (enemy, battle): boolean => {
         if (enemy.stamina < 25) return true;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
@@ -143,14 +139,12 @@ export const cleric: Enemy = {
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
       potentialReactions: [],
-      notification: 'Cleric attacks!',
       toExit: (enemy, battle): boolean => enemy.stamina < 50,
       toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
       potentialReactions: [],
-      notification: 'Cleric is conserving aura...',
       toExit: (enemy, battle): boolean => enemy.stamina > 100,
       toEnter: (): boolean => true,
     }
@@ -188,14 +182,12 @@ export const knight: Enemy = {
         // cover
         { reaction: Reactions.block, getTarget: selfBeingAttacked }
       ],
-      notification: 'Knight takes a defensive stance!',
       toExit: (enemy, battle): boolean => enemy.stamina < 25,
       toEnter: (enemy): boolean => enemy.stamina > 75,
     },
     {
       potentialOptions: [],
       potentialReactions: [],
-      notification: 'Knight is conserving aura...',
       toExit: (enemy, battle): boolean => enemy.stamina > 75,
       toEnter: (): boolean => true,
     }

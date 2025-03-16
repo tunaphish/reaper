@@ -65,16 +65,15 @@ export class Battle extends Phaser.Scene {
   // #region Time Based Updates
 
   update(time: number, delta: number): void {
-    this.battleStore.updateNotifications(delta);
     this.battleStore.tickStats(delta);
     this.battleStore.updateCombatantsState();
     
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     
-    this.selectEnemyStrategy();
-    this.selectEnemyAction(delta);
-    this.selectEnemyReactions(delta);
+    // this.selectEnemyStrategy();
+    // this.selectEnemyAction(delta);
+    // this.selectEnemyReactions(delta);
 
     this.castActions();    
     this.reactToActions();
@@ -90,13 +89,7 @@ export class Battle extends Phaser.Scene {
         !enemy.strategies[enemy.strategyIndex].toExit(enemy, this)
       ) return;
       enemy.strategyIndex = enemy.strategies.findIndex(strategy => strategy.toEnter(enemy, this));
-      this.battleStore.addNotification({
-        text: enemy.strategies[enemy.strategyIndex].notification, 
-        source: enemy.name,
-        timeSinceAdded: 0,
-        isEnemy: true,
-        id: generateID() + enemy.name,
-      });
+
       enemy.timeTilNextAction = 500;
     });
   }

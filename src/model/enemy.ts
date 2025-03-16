@@ -24,7 +24,6 @@ export interface PotentialReaction {
 export interface Strategy {
   potentialOptions: PotentialOption[];
   potentialReactions: PotentialReaction[];
-  notification: string;
   toExit: (enemy: Enemy, battle: Battle) => boolean;
   toEnter: (enemy: Enemy, battle: Battle) => boolean;
 }

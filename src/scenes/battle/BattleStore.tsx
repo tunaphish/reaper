@@ -17,14 +17,6 @@ export type DeferredAction = {
   isEnemyCaster: boolean;
 };
 
-export type Notification = {
-  id: string;
-  text: string;
-  source: string;
-  timeSinceAdded: number;
-  isEnemy: boolean;
-}
-
 export class BattleStore {
   // battle vars
   enemies: Enemy[];
@@ -41,7 +33,6 @@ export class BattleStore {
 
   resonance = 0;
 
-  notifications: Notification[] = [];
 
   constructor(enemies: Enemy[], allies: Allies) {
     this.enemies = enemies;
@@ -131,17 +122,5 @@ export class BattleStore {
     return [...this.enemies, ...this.allies];
   }
 
-  addNotification(notification: Notification): void {
-    this.notifications.push(notification);
-  }
-
-  updateNotifications(delta: number) {
-    this.notifications = this.notifications
-      .map((notification: Notification) => {
-        notification.timeSinceAdded += delta;
-        return notification;
-      })
-      .filter((notification) => notification.timeSinceAdded < 5000);
-  }
 }
 

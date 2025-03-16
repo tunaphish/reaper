@@ -6,7 +6,7 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { DeferredAction } from './BattleStore';
 
-const Meter = (props: { value: number, max: number, className?: string }) => {
+export const Meter = (props: { value: number, max: number, className?: string }) => {
   const { className, value, max } = props;
 
   return (

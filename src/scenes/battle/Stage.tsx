@@ -88,7 +88,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
       <mesh customDepthMaterial={customDepthMaterial} position={combatant.position} castShadow >
         <Html 
           transform
-          sprite
+          occlude='blending'
           pointerEvents='none'
           position={[x,y+1,z]}
         >

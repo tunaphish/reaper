@@ -1,4 +1,23 @@
 .container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  position: relative;
+}
+
+.stageContainer {
+  height: 100%;
+  grid-column: 1;
+  grid-row: 1;
+  z-index: -1;
+}
+
+.uiContainer {
+  height: 100%;
+  grid-column: 1;
+  grid-row: 1;
+
   display: flex;
   flex-direction: column;
   position: relative;

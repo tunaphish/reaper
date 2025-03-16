@@ -63,7 +63,7 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   }
 
   const HORIZONTAL_OFFSET = 50;
-  const VERTICAL_OFFSET = 200;
+  const VERTICAL_OFFSET = 100;
   const style: React.CSSProperties = {
     right: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
     bottom: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
@@ -104,7 +104,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   }
 
   return (
-    <div style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
+    <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
         {
           props.battleScene.battleStore.menus.map((menu, idx) => {
           return (
@@ -129,65 +129,6 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
 }) 
 
 
-
-const NotificationsManager = observer((props: {  battle: Battle }) => {
-  const { battle } = props;
-
-  return (
-    <div style={{
-      position: 'relative',
-      pointerEvents: 'none',
-      flex: 7,
-      width: '100%',
-    }}>
-      <div style={{
-        position: 'absolute',
-        bottom: 0,
-        fontSize: '16px',
-        display: 'flex',
-        flexDirection: 'column', 
-        alignItems: 'flex-start',       
-        justifyContent: 'flex-end',
-        width: '100%',
-        zIndex: 2,   
-      }}>
-        <AnimatePresence >
-          { 
-            battle.battleStore.notifications.map(({ text, source, isEnemy, id }, idx: number) =>  {
-              
-
-              const style: React.CSSProperties = isEnemy ? {
-                padding: 5,
-                right: "5%",
-                marginTop: "-2%",
-                alignSelf: 'flex-end',
-              } : {
-                padding: 5,
-                left: "5%",
-                marginTop: "-2%",
-              };
-
-              return (
-                <motion.fieldset
-                  key={id}
-                  className={ isEnemy ? styles.enemyWindow : styles.window }
-                  style={style}
-                  layout='preserve-aspect'
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: .1, ease: 'easeOut' }} 
-                >
-                  <legend>{source}</legend>
-                  {text}
-              </motion.fieldset>
-              )
-            })
-          }
-        </AnimatePresence>
-      </div>
-    </div>
-  )
-});
-
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
     const { allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
@@ -200,7 +141,6 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
           <div style={{ flex: 4, zIndex: -1 }}> 
             <Stage scene={props.scene} />
           </div>
-          <NotificationsManager battle={props.scene}/>
           <div className={styles.combatantBar}>
               {allies.map((member) => {
                 return( 

@@ -34,8 +34,6 @@ export class Battle extends Phaser.Scene {
   firstActionTaken = false;
   splinterUsed = false;
 
-  private enemyReactionTimer = 0;
-
   constructor() {
     super(sceneConfig);
   }
@@ -55,6 +53,7 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.battleStore.tickStamina(delta);
+    this.battleStore.updateAllyStatus();
   }
 
   // #endregion
@@ -93,7 +92,6 @@ export class Battle extends Phaser.Scene {
   closeMenu(): void {
     this.battleStore.setCaster(null);
     this.battleStore.setMenu(null);
-    this.battleStore.setQueue([]);
     this.sound.play('dialogue-advance');
   }
 
@@ -105,14 +103,17 @@ export class Battle extends Phaser.Scene {
   selectAction(action: Action): void {
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
+    if (this.battleStore.caster.status === Status.EXHAUSTED) this.closeMenu();
   }
 
   confirmQueue(): void {
     this.closeMenu();
+    this.battleStore.setQueue([]);
   }
 
   cancelQueue(): void {
     this.closeMenu();
+    this.battleStore.setQueue([]);
   }
   
 

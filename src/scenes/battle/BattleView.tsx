@@ -5,11 +5,12 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 import { Ally } from '../../model/ally';
 
 
-import styles from './battle.module.css';
+import classNames from './battle.module.css';
 import { Battle } from './Battle';
 import {  EnemyResourceDisplay } from './Stage';
-import { ResourceDisplay } from './ResourceDisplay';
+import { Meter } from './Meter';
 import { Action } from '../../model/action';
+import { Status } from '../../model/combatant';
 
 
 const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
@@ -17,9 +18,9 @@ const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
   const onClickaction = () => props.battleScene.selectAction(action);
   
   return ( 
-    <button key={action.name} onClick={onClickaction} className={styles.menuOption} >
+    <button key={action.name} onClick={onClickaction} className={classNames.menuOption} >
         <div>{action.name}</div>
-        <div className={styles.optionCost}>{action.staminaCost}</div>
+        <div className={classNames.optionCost}>{action.staminaCost}</div>
     </button>
   )
 }
@@ -32,15 +33,15 @@ const MenuView = observer((props: { battleScene: Battle }) => {
   }
 
   return (
-      <div className={styles.modalMenu} onClick={onClickMenu}>
-        <div className={styles.window} 
+      <div className={classNames.modalMenu} onClick={onClickMenu}>
+        <div className={classNames.window} 
           style={{ 
             minWidth: "100px",
             width:" 100%",
           }}
         >
-        <div className={styles.windowName}>{menu.name}</div>
-        <div className={styles.menuContent}>
+        <div className={classNames.windowName}>{menu.name}</div>
+        <div className={classNames.menuContent}>
           {
             menu.actions.map((action: Action) => <MenuActionView key={action.name} action={action} battleScene={props.battleScene}/>)
           }
@@ -53,8 +54,6 @@ const MenuView = observer((props: { battleScene: Battle }) => {
 });
 
 const QueueView = observer((props: { battleScene: Battle}) => {
-  if (props.battleScene.battleStore.queue.length === 0) return null;
-  
   const onClickCancelQueue = () => {
     props.battleScene.cancelQueue();
   }
@@ -64,13 +63,13 @@ const QueueView = observer((props: { battleScene: Battle}) => {
   }
 
   return (
-    <div className={styles.queueContainer}>
-      <div className={styles.actionContainer}>
+    <div className={classNames.queueContainer}>
+      <div className={classNames.actionContainer}>
         {
           props.battleScene.battleStore.queue.map((queueAction, idx) => {
             return (
                 <motion.fieldset
-                  className={styles.window}
+                  className={classNames.window}
                   key={idx} 
                   style={{padding: 0}}
                   initial={{ scaleY: 0 }} 
@@ -90,13 +89,58 @@ const QueueView = observer((props: { battleScene: Battle}) => {
       </div>
 
 
-      <div className={styles.queueOperations}>
-        <div className={styles.window} onClick={onClickCancelQueue}>Cancel</div>
-        <div className={styles.window} onClick={onClickConfirmQueue}>Confirm</div>
+      <div className={classNames.queueOperations}>
+        <div className={classNames.window} onClick={onClickCancelQueue}>Cancel</div>
+        <div className={classNames.window} onClick={onClickConfirmQueue}>Confirm</div>
       </div>
     </div>
   )
 })
+
+export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void, battleScene: Battle }) => {
+  const statusToStylesMap = {
+    [Status.NORMAL]: '',
+    [Status.DEAD]: classNames.DEAD,
+    [Status.EXHAUSTED]: classNames.EXHAUSTED,
+  };
+  const style = [
+    classNames.window,
+    statusToStylesMap[props.ally.status],
+  ];
+
+
+
+  return (
+    <div style={{ flex: '1' }}>
+      <div className={style.join(' ')} onClick={props.onClickCell} 
+        style={{ 
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gridTemplateRows: "1fr", 
+        }}>
+
+        <div className={classNames.characterCellContainer}>
+          <div className={classNames.windowName}>{props.ally.name}</div>
+          <div className={classNames.resourceContainer}>
+            <div className={classNames.meterContainer}>
+              <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
+              <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter}/>
+              <div className={classNames.meterNumber}>{Math.ceil(props.ally.health)}</div>
+            </div>
+            <div className={classNames.meterContainer}>
+              <Meter value={props.ally.stamina < 0 ? 0 : props.ally.stamina } max={props.ally.maxStamina} className={classNames.staminaMeter}/>
+              <div className={classNames.meterNumber}>{Math.ceil(props.ally.stamina)}</div>
+            </div>
+            <div className={classNames.meterContainer}>
+              <Meter value={ props.battleScene.battleStore.getStaminaUsed(props.ally) } max={props.ally.maxStamina} className={classNames.staminaUsedMeter}/>
+              <div className={classNames.meterNumber}>{props.battleScene.battleStore.getStaminaUsed(props.ally)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+});
 
 const MenuContainer = observer((props: { battleScene: Battle }) => {
 
@@ -109,18 +153,16 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
     },    
   }
 
-  if (!props.battleScene.battleStore.menu) return null;
-
   return (
     <motion.div 
-      className={styles.modalContainer} 
+      className={classNames.modalContainer} 
       variants={variants}
       initial="initial"
       animate="animate"
       exit="exit"
     >
-      <QueueView battleScene={props.battleScene} />
-      <MenuView battleScene={props.battleScene} />
+      {props.battleScene.battleStore.queue.length !== 0 && <QueueView battleScene={props.battleScene} />}
+      {props.battleScene.battleStore.menu && <MenuView battleScene={props.battleScene} />}
     </motion.div>        
   ) 
 }) 
@@ -133,9 +175,9 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={classNames.container}>
           {/* <Description battle={props.scene} /> */}
-          <div className={styles.combatantBar}>
+          <div className={classNames.combatantBar}>
               {enemies.map((enemy) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
@@ -148,7 +190,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
             {/* <Stage scene={props.scene} /> */}
           </div>
           <MenuContainer battleScene={props.scene}/>
-          <div className={styles.combatantBar}>
+          <div className={classNames.combatantBar}>
               {allies.map((ally) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={ally.name}>

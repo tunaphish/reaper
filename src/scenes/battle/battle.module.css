@@ -136,6 +136,16 @@
   display: flex;
 }
 
+.EXHAUSTED {
+  border: 1px solid yellow;
+  color: yellow;
+}
+
+.DEAD {
+  border: 1px solid red;
+  color: red;
+}
+
 .tvContainer {
   flex: 1;
   display: grid;
@@ -206,7 +216,7 @@
   background: green;
 }
 
-.magicMeter > div {
+.staminaUsedMeter > div {
   background: blue;
 }
 

@@ -1,11 +1,12 @@
+import { Action } from './action';
 import { Combatant } from './combatant';
-import { Folder } from './folder';
-import { OptionType } from './option';
 
 export type Ally = Combatant & {
-  folder: Folder;
-  type: OptionType.ALLY;  
+  stamina: number;
+  maxStamina: number;
+  staminaRegenRatePerSecond: number;
+  actions: Action[];
+
+
   menuPortraitPath: string;
 };
-
-export type Allies = Ally[];

@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { QuarksUtil, BatchedRenderer, QuarksLoader } from 'three.quarks';
 
 import { Battle } from './Battle';
-import { ActionsViewManager, Meter } from './ResourceDisplay';
+import { Meter } from './ResourceDisplay';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
@@ -46,7 +46,7 @@ const ParticleManager = (props: { battle: Battle }) =>{
   return null;
 }
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
+export const EnemyResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
   const { combatant } = props;
 
   return (
@@ -93,8 +93,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
           position={[x,y+1,z]}
         >
           <div style={{position: 'relative'}}>
-            { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-            { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+            { isEnemy && <EnemyResourceDisplay combatant={combatant} battleScene={battleScene}/> }
           </div>
         </Html>
         <planeGeometry args={[1,1]} />

@@ -136,16 +136,6 @@
   display: flex;
 }
 
-.EXHAUSTED {
-  border: 1px solid yellow;
-  color: yellow;
-}
-
-.DEAD {
-  border: 1px solid red;
-  color: red;
-}
-
 .tvContainer {
   flex: 1;
   display: grid;
@@ -164,17 +154,28 @@
   grid-row: 1;
 }
 
+
+
 .modalContainer {
+  position: relative;
+}
+
+.queueContainer {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  pointer-events: all;
+  left: 100px;
+  bottom: 0;
+}
+
+.actionContainer {
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .modalMenu {
   position: absolute;
+  right: 100px;
+  bottom: 0;
+  pointer-events: all;
 }
 
 @keyframes shake {
@@ -243,10 +244,6 @@
   text-shadow: 3px 2px 2px rgba(251, 12, 12,1), 0px -1px 3px rgba(12, 79, 251,.5),-3px 0px 2px rgba(52, 251, 12, 1);
 }
 
-.magicCostFulfilled {
-  color: gray;
-}
-
 .unclickable {
   pointer-events: none;
 }
@@ -266,20 +263,6 @@
   50% { opacity: 1; }
 }
 
-.reactionContainer {
-  position: absolute;
-  bottom: -5px;
+.queueOperations {
   display: flex;
-}
-
-.reaction {
-  margin-right: 1px;
-  max-width: 12px;
-  max-height: 12px;
-}
-
-.juggleMeter {
-  background-color: white;
-  height: 12px;
-  position: absolute;
 }

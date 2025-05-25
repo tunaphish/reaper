@@ -4,7 +4,6 @@ import { WorldView } from './WorldView';
 import { fencer } from '../../data/enemies';
 
 import { Ally } from '../../model/ally';
-import { Inventory } from '../../model/inventory';
 import { WorldStore } from './WorldStore';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -20,7 +19,6 @@ export class World extends Phaser.Scene {
   choiceSelectSound: Phaser.Sound.BaseSound;
 
   allies: Ally[];
-  inventory: Inventory
 
   constructor() {
     super(sceneConfig);
@@ -36,7 +34,6 @@ export class World extends Phaser.Scene {
 
   create(): void {
     this.allies = this.registry.get('allies');
-    this.inventory = this.registry.get('inventory');
     this.choiceSelectSound = this.sound.add('choice-select');
     this.reactOverlay.create(<WorldView scene={this}/>, this);
   }

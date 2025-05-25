@@ -14,7 +14,6 @@ const PartyWindow = (props: { scene: World }) => {
             <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
             <div>{ally.name}</div>
             <div>HP {ally.health}/{ally.maxHealth}</div>
-            <div>MP {ally.magic}/{ally.maxMagic}</div>
           </div>
         )
       })}
@@ -35,25 +34,25 @@ const Party = (props: { scene: World }) => {
 }
 
 const Inventory = (props: { scene: World }) => {
-  return (
-    <div className={styles.inventoryContainer}>
-      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
-      <PartyWindow scene={props.scene} />
-      <div className={styles.window} style={{ flex: 1, padding: '5px', marginTop: '5px' }}>
-        {
-          props.scene.inventory.map(item => {
-            return (
-              <div key={item.name}>
-                <button className={styles.item} disabled={!item.canUseOutsideBattle || item.charges === 0}>
-                  { `${item.name} ${item.charges}/${item.maxCharges}` }
-                </button>
-              </div>
-            )
-          })
-        }
-      </div>
-    </div>
-   )
+  // return (
+  //   <div className={styles.inventoryContainer}>
+  //     <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
+  //     <PartyWindow scene={props.scene} />
+  //     <div className={styles.window} style={{ flex: 1, padding: '5px', marginTop: '5px' }}>
+  //       {
+  //         props.scene.inventory.map(item => {
+  //           return (
+  //             <div key={item.name}>
+  //               <button className={styles.item} disabled={!item.canUseOutsideBattle || item.charges === 0}>
+  //                 { `${item.name} ${item.charges}/${item.maxCharges}` }
+  //               </button>
+  //             </div>
+  //           )
+  //         })
+  //       }
+  //     </div>
+  //   </div>
+  //  )
 }
 
 export const WorldView = (props: { scene: World }): JSX.Element => {
@@ -73,10 +72,10 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
     setMenuContent(<Party scene={props.scene}/>);
   }
 
-  const onInventoryClick = () => {
-    props.scene.choiceSelectSound.play();
-    setMenuContent(<Inventory scene={props.scene}/>);
-  }
+  // const onInventoryClick = () => {
+  //   props.scene.choiceSelectSound.play();
+  //   setMenuContent(<Inventory scene={props.scene}/>);
+  // }
 
   const onExitClick = () => {
     props.scene.choiceSelectSound.play();
@@ -103,7 +102,6 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
             menuOpen ?
             (<>
               <div className={styles.navigationButton} onClick={onPartyClick}>party</div>
-              <div className={styles.navigationButton} onClick={onInventoryClick}>inv</div>
               <div className={styles.navigationButton} onClick={() => props.scene.battle()}>battle</div>
               <div className={styles.navigationButton} onClick={onExitClick}>exit</div>
             </>) :

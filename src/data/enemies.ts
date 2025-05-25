@@ -1,11 +1,9 @@
 import { Enemy } from '../model/enemy';
 import { Status } from '../model/combatant';
 import { Combatant } from '../model/combatant';
-import { OptionType } from '../model/option';
 import { getRandomInt } from '../model/math';
 
-import * as Actions from './actions';
-import * as Reactions from './reactions';
+
 
 import { Battle } from '../scenes/battle/Battle';
 
@@ -38,170 +36,39 @@ export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
 
 export const self = (scene: Battle, caster: Combatant) => caster;
 
-const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.reactions.length === 0
-  );
-  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
-};
-
-const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.timeTilExecute < 500 &&
-    deferredAction.reactions.length === 0
-  );
-  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
-};
 
 // #endregion
 
 
 // #region Enemies
 export const fencer: Enemy = {
-  type: OptionType.ENEMY,
   name: 'Fencer',
   health: 100,
   maxHealth: 200,
-  bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
-  staminaRegenRatePerSecond: 8,
-  
-  strategies: [
-    {
-      potentialOptions: [
-        { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 50, singleUse: true },
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
-      ],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina < 25,
-      toEnter: (enemy): boolean => enemy.stamina > 100,
-    },
-    {
-      potentialOptions: [],
-      potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
-      toExit: (enemy, battle): boolean => enemy.stamina > 100,
-      toEnter: (enemy): boolean => enemy.stamina > 50,
-    },
-    {
-      potentialOptions: [],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 50,
-      toEnter: (): boolean => true,
-    }
-  ],
 
   spritePath: '/reaper/sprites/enemies/ninetails.png',
 
   // temp props
-  timeTilNextAction: 0,
+  bleed: 0,
   status: Status.NORMAL,
-  timeInStateInMs: 0,
-  juggleDuration: 0,  
   position: [-1, 0, -10],
 };
 
 export const cleric: Enemy = {
-  type: OptionType.ENEMY,
   name: 'Cleric',
   health: 200,
   maxHealth: 200,
   bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
-  staminaRegenRatePerSecond: 5,
 
-  strategies: [
-    {
-      potentialOptions: [
-        { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
-      ],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => {
-        if (enemy.stamina < 25) return true;
-        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
-        return bleedingEnemy === undefined;
-      },
-      toEnter: (enemy, battle): boolean => {
-        if (enemy.stamina < 25) return false;
-        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
-        return bleedingEnemy !== undefined;
-      },
-    },
-    {
-      potentialOptions: [
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
-      ],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina < 50,
-      toEnter: (enemy): boolean => enemy.stamina > 100,
-    },
-    {
-      potentialOptions: [],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 100,
-      toEnter: (): boolean => true,
-    }
-  ],
+
+
 
   spritePath: '/reaper/sprites/enemies/chansey.png',
 
   // temp props
-  timeTilNextAction: 0,
 
   status: Status.NORMAL,
-  timeInStateInMs: 0,
-  juggleDuration: 0,  
   position: [3, 0, -5],
-};
-
-export const knight: Enemy = {
-  type: OptionType.ENEMY,
-  name: 'Knight',
-  health: 200,
-  maxHealth: 200,
-  bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
-  staminaRegenRatePerSecond: 5,
-
-  strategies: [
-    {
-      potentialOptions: [
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
-      ],
-      potentialReactions: [
-        // cover
-        { reaction: Reactions.block, getTarget: selfBeingAttacked }
-      ],
-      toExit: (enemy, battle): boolean => enemy.stamina < 25,
-      toEnter: (enemy): boolean => enemy.stamina > 75,
-    },
-    {
-      potentialOptions: [],
-      potentialReactions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 75,
-      toEnter: (): boolean => true,
-    }
-  ],
-
-  spritePath: '/reaper/sprites/enemies/golem.png',
-
-  // temp props
-  timeTilNextAction: 0,
-
-  status: Status.NORMAL,
-  timeInStateInMs: 0,
-  juggleDuration: 0,  
-  position: [1, 0, -5],
 };
 
 // #endregion

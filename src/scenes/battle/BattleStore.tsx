@@ -1,126 +1,59 @@
 import { makeAutoObservable } from "mobx";
-import { Allies } from "../../model/ally";
+import { Ally } from "../../model/ally";
 import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
-import { Executable } from "./Battle";
-import { Folder } from "../../model/folder";
-import { Reaction } from "../../model/reaction";
+import { Menu } from "./menu";
 import { Action } from "../../model/action";
 
-export type DeferredAction = { 
-  id: string; 
-  timeTilExecute: number; 
-  action: Action; 
-  target: Combatant; 
-  caster: Combatant; 
-  reactions: Reaction[];
-  isEnemyCaster: boolean;
-};
+export type QueueAction = {
+  caster: Ally,
+  action: Action,
+}
 
 export class BattleStore {
-  // battle vars
   enemies: Enemy[];
-  allies: Allies;
+  allies: Ally[];
 
-  caster?: Combatant;
-  executable?: Executable;
-  target?: Combatant;
+  caster?: Ally = null;
+  menu?: Menu = null;
 
-  reaction?: Reaction;
-  deferredActions: DeferredAction[] = [];
+  queue?: QueueAction[] = [];
 
-  menus: Folder[] = [];
-
-  resonance = 0;
-
-
-  constructor(enemies: Enemy[], allies: Allies) {
+  constructor(enemies: Enemy[], allies: Ally[]) {
     this.enemies = enemies;
     this.allies = allies;
     makeAutoObservable(this);
   }
 
-  setCaster(member?: Combatant): void {
-    this.caster = member;
-  }
-
-  setTarget(target?: Combatant): void {
-    this.target = target;
-  }
-
-  setExecutable(executable?: Executable): void {
-    this.executable = executable;
-  }
-
-  setReaction(reaction?: Reaction): void {
-    this.reaction = reaction;
-  }
-
-  setDeferredActions(deferredActions: DeferredAction[]) {
-    this.deferredActions = deferredActions;
-  }
-
-  pushMenu(folder: Folder): void {
-    this.menus.push(folder);
-  }
-
-  popMenu(): Folder {
-    return this.menus.pop();
-  }
-
-  emptyMenu(): void {
-    this.menus.splice(0, this.menus.length);
-  }
-
-  resetSelections(): void {
-    this.emptyMenu();
-    this.setCaster(null);
-    this.setReaction(null);
-    this.setExecutable(null);
-    this.setTarget(null);
-  }
-
-
-  tickStats(delta: number): void {
-    [...this.allies, ...this.enemies].forEach((combatant) => {
-      combatant.timeInStateInMs = Math.min(combatant.timeInStateInMs+delta, 1000000);
-
-      if (combatant.status === Status.DEAD) return;
-      if (combatant.bleed > 0) {
-        const DAMAGE_TICK_RATE = (delta / 1000) * 5;
-        combatant.bleed -= DAMAGE_TICK_RATE;
-        combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
-      }
-      
-      if (combatant.status !== Status.CASTING) {
-          const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-          combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
-      }
-
-      combatant.juggleDuration = Math.max(0, combatant.juggleDuration -= delta);
+  tickStamina(delta: number): void {
+    this.allies.forEach((ally) => {
+      if (ally.status === Status.DEAD) return;
+      const regenPerTick = ally.staminaRegenRatePerSecond * (delta / 1000);
+      ally.stamina = Math.min(ally.maxStamina, ally.stamina + regenPerTick);
     });
   }
 
-  updateCombatantsState(): void {
-    [...this.allies, ...this.enemies].forEach((combatant) => {
-      const prevStatus = combatant.status;
-      if (combatant.health <= 0) {
-        combatant.status = Status.DEAD;
-      } else if (combatant.stamina <= 0) {
-        combatant.status = Status.EXHAUSTED;
-      } else if (combatant.status !== Status.CASTING) {
-        combatant.status = Status.NORMAL;
-      }
+  setCaster(caster?: Ally): void {
+    this.caster = caster;
+  }
 
-      if (prevStatus !== combatant.status) {
-        combatant.timeInStateInMs = 0;
-      }
-    });
+  setMenu(menu?: Menu): void {
+    this.menu = menu;
+  }
+
+  setQueue(queue: QueueAction[]): void {
+    this.queue = queue;
+  }
+
+  pushAction(action: Action): void {
+    this.queue.push({
+      action,
+      caster: this.caster
+    })
   }
 
   getCombatants(): Combatant[] {
     return [...this.enemies, ...this.allies];
   }
-
 }
 

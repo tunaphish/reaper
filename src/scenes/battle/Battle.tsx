@@ -8,7 +8,7 @@ import { Status } from '../../model/combatant';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { cleric } from '../../data/enemies';
+import { cleric, fencer } from '../../data/enemies';
 import { MenuOption } from './menu';
 import { Action } from '../../model/action';
 
@@ -39,7 +39,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [cleric], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [cleric, fencer], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -52,8 +52,7 @@ export class Battle extends Phaser.Scene {
   // #region Time Based Updates
 
   update(time: number, delta: number): void {
-    this.battleStore.tickStamina(delta);
-    this.battleStore.updateAllyStatus();
+    this.battleStore.tickBattle(delta);
   }
 
   // #endregion

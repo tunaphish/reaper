@@ -181,7 +181,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               {enemies.map((enemy) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
-                    <EnemyResourceDisplay battleScene={props.scene} combatant={enemy} />
+                    <EnemyResourceDisplay battleScene={props.scene} enemy={enemy} />
                   </div>
                 )
               })}

@@ -176,6 +176,12 @@
   bottom: 0;
 }
 
+.enemyQueueContainer {
+  position: absolute;
+  left: 50%;
+  top: 0;
+}
+
 .actionContainer {
   display: flex;
   flex-direction: column-reverse;

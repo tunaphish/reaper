@@ -2,7 +2,7 @@ import { Enemy } from '../model/enemy';
 import { Status } from '../model/combatant';
 import { Combatant } from '../model/combatant';
 import { getRandomInt } from '../model/math';
-
+import * as Actions from './actions';
 
 
 import { Battle } from '../scenes/battle/Battle';
@@ -43,32 +43,56 @@ export const self = (scene: Battle, caster: Combatant) => caster;
 // #region Enemies
 export const fencer: Enemy = {
   name: 'Fencer',
-  health: 100,
+  health: 200,
   maxHealth: 200,
+  spritePath: '/reaper/sprites/enemies/chansey.png',
+  strategies: [
+    {
+      actions: [Actions.attack, Actions.attack, Actions.stanch],
+      timeTilExecute: 5000,
+    },
+    {
+      actions: [Actions.attack, Actions.attack],
+      timeTilExecute: 4000,
+    },
+  ],
 
-  spritePath: '/reaper/sprites/enemies/ninetails.png',
-
-  // temp props
-  bleed: 0,
-  status: Status.NORMAL,
-  position: [-1, 0, -10],
-};
+    // temp
+    bleed: 0,
+    timeSinceLastStrategy: 0,
+    status: Status.NORMAL,
+    position: [3, 0, -5],
+    selectedStrategy: {
+      actions: [Actions.attack, Actions.attack, Actions.stanch],
+      timeTilExecute: 5000,
+    },
+}
 
 export const cleric: Enemy = {
   name: 'Cleric',
   health: 200,
   maxHealth: 200,
-  bleed: 0,
-
-
-
-
   spritePath: '/reaper/sprites/enemies/chansey.png',
+  strategies: [
+    {
+      actions: [Actions.attack, Actions.attack, Actions.stanch],
+      timeTilExecute: 5000,
+    },
+    {
+      actions: [Actions.attack, Actions.attack],
+      timeTilExecute: 4000,
+    },
+  ],
 
-  // temp props
-
+  // temp
+  bleed: 0,
+  timeSinceLastStrategy: 0,
   status: Status.NORMAL,
   position: [3, 0, -5],
+  selectedStrategy: {
+    actions: [Actions.attack, Actions.attack, Actions.stanch],
+    timeTilExecute: 5000,
+  },
 };
 
 // #endregion

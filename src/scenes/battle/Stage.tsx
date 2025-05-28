@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as THREE from 'three';
-import styles from './battle.module.css';
+import classNames from './battle.module.css';
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
@@ -8,11 +8,13 @@ import { TextureLoader, RepeatWrapping, Vector3Like, Vector3 } from 'three';
 import { Stats, Html, useTexture, } from '@react-three/drei';
 import { observer } from 'mobx-react-lite';
 import { QuarksUtil, BatchedRenderer, QuarksLoader } from 'three.quarks';
+import { motion } from 'framer-motion';
 
 import { Battle } from './Battle';
 import { Meter } from './Meter';
 import { Combatant } from '../../model/combatant';
 import { Ally } from '../../model/ally';
+import { Enemy } from '../../model/enemy';
 
 const ParticleManager = (props: { battle: Battle }) =>{
   const { battle } = props;
@@ -46,18 +48,50 @@ const ParticleManager = (props: { battle: Battle }) =>{
   return null;
 }
 
-export const EnemyResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
-  const { combatant } = props;
+export const EnemyResourceDisplay = observer((props: {enemy: Enemy, battleScene: Battle }) => {
+  const { enemy } = props;
 
   return (
-    <div className={styles.enemyResourceDisplay}>
-      <div className={styles.windowName}>{combatant.name}</div>
-      <div className={styles.enemyMeterContainer}>
-        <Meter value={combatant.health} max={combatant.maxHealth} className={styles.bleedMeter}/>
-        <Meter value={combatant.health-combatant.bleed} max={combatant.maxHealth} className={styles.healthMeter}/>
+    <div className={classNames.enemyWindow}>
+      <div className={classNames.windowName}>{enemy.name}</div>
+      <div className={classNames.enemyMeterContainer}>
+        <Meter value={enemy.health} max={enemy.maxHealth} className={classNames.bleedMeter}/>
+        <Meter value={enemy.health-enemy.bleed} max={enemy.maxHealth} className={classNames.healthMeter}/>
       </div>
-      <div className={styles.enemyMeterContainer}>
-        <Meter value={combatant.stamina < 0 ? 0 : combatant.stamina } max={combatant.maxStamina} className={styles.staminaMeter}/>
+      <div className={classNames.enemyMeterContainer}>
+        <Meter value={enemy.timeSinceLastStrategy} max={enemy.selectedStrategy.timeTilExecute} className={classNames.staminaMeter}/>
+      </div>
+      <EnemyQueueContainer enemy={enemy} />
+    </div>
+  )
+});
+
+export const EnemyQueueContainer = observer((props: {enemy: Enemy}) => {
+  
+  return (
+    <div className={classNames.enemyQueueContainer}>
+      <div className={classNames.actionContainer}>
+        {
+          props.enemy.selectedStrategy.actions.map((action, idx) => {
+            return (
+                <motion.fieldset
+                  className={classNames.enemyWindow}
+                  key={idx} 
+                  style={{padding: 0}}
+                  initial={{ scaleY: 0 }} 
+                  animate={{ scaleY: 1 }} 
+                  exit={{ scaleY: 0 }}
+                  transition={{ duration: .1, ease: 'easeOut' }} 
+              
+                >
+                  <legend style={{ fontSize: '12px' }}>{props.enemy.name}</legend>
+                  <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+                    {action.name}
+                  </div>
+                </motion.fieldset>
+            )
+          })
+        }
       </div>
     </div>
   )
@@ -93,7 +127,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
           position={[x,y+1,z]}
         >
           <div style={{position: 'relative'}}>
-            { isEnemy && <EnemyResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+            { isEnemy && <EnemyResourceDisplay enemy={combatant as Enemy} battleScene={battleScene}/> }
           </div>
         </Html>
         <planeGeometry args={[1,1]} />

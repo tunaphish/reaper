@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 import { Ally } from '../../model/ally';
 
@@ -11,6 +11,8 @@ import {  EnemyResourceDisplay } from './Stage';
 import { Meter } from './Meter';
 import { Action } from '../../model/action';
 import { Status } from '../../model/combatant';
+import { ActionMenu, MenuType, TargetMenu } from './menu';
+import { Enemy } from '../../model/enemy';
 
 
 const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
@@ -21,6 +23,17 @@ const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
     <button key={action.name} onClick={onClickaction} className={classNames.menuOption} >
         <div>{action.name}</div>
         <div className={classNames.optionCost}>{action.staminaCost}</div>
+    </button>
+  )
+}
+
+const MenuTargetView = (props: { target: Enemy, battleScene: Battle }) => {
+  const { target } = props;
+  const onClickaction = () => props.battleScene.selectTarget(target);
+  
+  return ( 
+    <button key={target.name} onClick={onClickaction} className={classNames.menuOption} >
+        <div>{target.name}</div>
     </button>
   )
 }
@@ -43,7 +56,10 @@ const MenuView = observer((props: { battleScene: Battle }) => {
         <div className={classNames.windowName}>{menu.name}</div>
         <div className={classNames.menuContent}>
           {
-            menu.actions.map((action: Action) => <MenuActionView key={action.name} action={action} battleScene={props.battleScene}/>)
+            menu.type === MenuType.ACTION && (menu as ActionMenu).actions.map((action: Action) => <MenuActionView key={action.name} action={action} battleScene={props.battleScene}/>)
+          }
+          {
+            menu.type === MenuType.TARGET && (menu as TargetMenu).targets.map((target: Enemy) => <MenuTargetView key={target.name} target={target} battleScene={props.battleScene}/>)
           }
         </div>
         </div>

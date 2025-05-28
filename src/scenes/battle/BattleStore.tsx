@@ -16,6 +16,7 @@ export class BattleStore {
   allies: Ally[];
 
   caster?: Ally = null;
+  target?: Enemy = null;
   menu?: Menu = null;
 
   queue?: QueueAction[] = [];
@@ -45,6 +46,7 @@ export class BattleStore {
 
         enemy.selectedStrategy = getRandomItem(enemy.strategies);
         enemy.timeSinceLastStrategy = 0;
+        enemy.status = Status.NORMAL;
       }
     });
   }
@@ -86,6 +88,10 @@ export class BattleStore {
       action,
       caster: this.caster
     })
+  }
+
+  setTarget(target: Enemy) {
+    this.target = target;
   }
 
   getCombatants(): Combatant[] {

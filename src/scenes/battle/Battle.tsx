@@ -8,8 +8,8 @@ import { Status } from '../../model/combatant';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { cleric, fencer } from '../../data/enemies';
-import { MenuOption } from './menu';
+import { cleric } from '../../data/enemies';
+import { MenuType } from './menu';
 import { Action } from '../../model/action';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -39,7 +39,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [cleric, fencer], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [cleric], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  
@@ -53,6 +53,16 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.battleStore.tickBattle(delta);
+    this.initiateRound();
+  }
+
+  initiateRound() {
+    if (!this.battleStore.target) return;
+
+    // reset selections
+    this.battleStore.target.status = Status.EXHAUSTED;
+    this.battleStore.setTarget(null);
+    this.battleStore.setQueue([]);
   }
 
   // #endregion
@@ -73,13 +83,10 @@ export class Battle extends Phaser.Scene {
 
     this.battleStore.setCaster(caster);
     this.battleStore.setMenu({
+      type: MenuType.ACTION,
       name: caster.name,
       actions: caster.actions,
     })
-  }
-
-  setTarget(combatant: Enemy | Ally): void {
-    //
   }
 
   playSong(songKey: string): void {
@@ -94,20 +101,24 @@ export class Battle extends Phaser.Scene {
     this.sound.play('dialogue-advance');
   }
 
-  selectOption(option: MenuOption): void {
-    this.sound.play('choice-select');
-
-  }
-
   selectAction(action: Action): void {
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
     if (this.battleStore.caster.status === Status.EXHAUSTED) this.closeMenu();
   }
 
+  selectTarget(target: Enemy): void {
+    this.battleStore.setTarget(target);
+    this.closeMenu();
+  }
+
   confirmQueue(): void {
     this.closeMenu();
-    this.battleStore.setQueue([]);
+    this.battleStore.setMenu({
+      type: MenuType.TARGET,
+      targets: this.battleStore.enemies,
+      name: 'Targets',
+    })
   }
 
   cancelQueue(): void {

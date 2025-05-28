@@ -76,11 +76,11 @@ export const cleric: Enemy = {
   strategies: [
     {
       actions: [Actions.attack, Actions.attack, Actions.stanch],
-      timeTilExecute: 5000,
+      timeTilExecute: 7000,
     },
     {
       actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 4000,
+      timeTilExecute: 6000,
     },
   ],
 
@@ -91,7 +91,7 @@ export const cleric: Enemy = {
   position: [3, 0, -5],
   selectedStrategy: {
     actions: [Actions.attack, Actions.attack, Actions.stanch],
-    timeTilExecute: 5000,
+    timeTilExecute: 7000,
   },
 };
 

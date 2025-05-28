@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 
 import { Battle } from './Battle';
 import { Meter } from './Meter';
-import { Combatant } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 import { Enemy } from '../../model/enemy';
 
@@ -51,8 +51,18 @@ const ParticleManager = (props: { battle: Battle }) =>{
 export const EnemyResourceDisplay = observer((props: {enemy: Enemy, battleScene: Battle }) => {
   const { enemy } = props;
 
+    const statusToStylesMap = {
+      [Status.NORMAL]: '',
+      [Status.DEAD]: classNames.DEAD,
+      [Status.EXHAUSTED]: classNames.EXHAUSTED,
+    };
+    const style = [
+      classNames.enemyWindow,
+      statusToStylesMap[enemy.status],
+    ];
+
   return (
-    <div className={classNames.enemyWindow}>
+    <div className={style.join(' ')}>
       <div className={classNames.windowName}>{enemy.name}</div>
       <div className={classNames.enemyMeterContainer}>
         <Meter value={enemy.health} max={enemy.maxHealth} className={classNames.bleedMeter}/>
@@ -67,6 +77,7 @@ export const EnemyResourceDisplay = observer((props: {enemy: Enemy, battleScene:
 });
 
 export const EnemyQueueContainer = observer((props: {enemy: Enemy}) => {
+  if (props.enemy.status !== Status.NORMAL) return null;
   
   return (
     <div className={classNames.enemyQueueContainer}>

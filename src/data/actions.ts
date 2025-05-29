@@ -6,7 +6,18 @@ export const attack: Action = {
 
     soundKeyName: 'attack',  
     description: 'Deals damage',
+    effect: (battle, caster, target) => {
+        //
+    }
 };
+
+// export const block: Action = {
+//     name: 'Block',
+//     staminaCost: 50,
+
+//     soundKeyName: 'block',  
+//     description: 'Blocks incoming damage',
+// };
 
 export const stanch: Action = {
     name: 'Stanch',
@@ -14,4 +25,7 @@ export const stanch: Action = {
 
     soundKeyName: 'heal',  
     description: 'Heals bleed',
+    effect: (battle, caster, target) => {
+        //
+    }
 };

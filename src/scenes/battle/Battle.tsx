@@ -7,7 +7,7 @@ import { Status } from '../../model/combatant';
 
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
-import { BattleStore } from './BattleStore';
+import { BattleState, BattleStore } from './BattleStore';
 import { cleric } from '../../data/enemies';
 import { MenuType } from './menu';
 import { Action } from '../../model/action';
@@ -57,9 +57,28 @@ export class Battle extends Phaser.Scene {
   }
 
   initiateRound() {
-    if (!this.battleStore.target) return;
+    if (this.battleStore.state !== BattleState.RESOLUTION) return;
+
+    // handle resolution
+    for (let i=0; i<this.battleStore.queue.length || i<this.battleStore.target.selectedStrategy.actions.length; i++) {
+      if (i<this.battleStore.queue.length) {
+        const queueAction = this.battleStore.queue[i];
+        this.sound.play(queueAction.action.soundKeyName);
+        queueAction.caster.stamina -= queueAction.action.staminaCost;
+        // wait a second
+      }
+      if (i<this.battleStore.target.selectedStrategy.actions.length) {
+        // enemy target is either caster for current action or whoever the fuck they want... 
+        // todo: enemy target strategy
+      }
+    }
+
+    // clean up
+    // apply bleed
+    // select a strategy
 
     // reset selections
+    this.battleStore.setState(BattleState.SELECTION);
     this.battleStore.target.status = Status.EXHAUSTED;
     this.battleStore.setTarget(null);
     this.battleStore.setQueue([]);
@@ -70,6 +89,7 @@ export class Battle extends Phaser.Scene {
   // #region Input Based Updates
 
   setCaster(caster: Ally): void {
+    if (this.battleStore.state !== BattleState.SELECTION) return;
     const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
     if (CANNOT_OPEN_STATUS.includes(caster.status)) {
       this.sound.play('stamina-depleted');
@@ -89,12 +109,6 @@ export class Battle extends Phaser.Scene {
     })
   }
 
-  playSong(songKey: string): void {
-    this.music = this.sound.add(songKey, { loop: true });
-    this.music.play();
-  }
-
-
   closeMenu(): void {
     this.battleStore.setCaster(null);
     this.battleStore.setMenu(null);
@@ -102,17 +116,15 @@ export class Battle extends Phaser.Scene {
   }
 
   selectAction(action: Action): void {
+    if (this.battleStore.state !== BattleState.SELECTION) return;
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
     if (this.battleStore.caster.status === Status.EXHAUSTED) this.closeMenu();
   }
 
-  selectTarget(target: Enemy): void {
-    this.battleStore.setTarget(target);
-    this.closeMenu();
-  }
 
   confirmQueue(): void {
+    if (this.battleStore.state !== BattleState.SELECTION) return;
     this.closeMenu();
     this.battleStore.setMenu({
       type: MenuType.TARGET,
@@ -122,12 +134,24 @@ export class Battle extends Phaser.Scene {
   }
 
   cancelQueue(): void {
+    if (this.battleStore.state !== BattleState.SELECTION) return;
     this.closeMenu();
     this.battleStore.setQueue([]);
   }
   
+  selectTarget(target: Enemy): void {
+    if (this.battleStore.state !== BattleState.SELECTION) return;
+    this.battleStore.setTarget(target);
+    this.closeMenu();
+    this.battleStore.setState(BattleState.RESOLUTION);
+  }
 
   // #endregion
+
+  playSong(songKey: string): void {
+    this.music = this.sound.add(songKey, { loop: true });
+    this.music.play();
+  }
 }
 
 // const generateID = () => {

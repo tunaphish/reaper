@@ -11,6 +11,11 @@ export type QueueAction = {
   action: Action,
 }
 
+export enum BattleState {
+  SELECTION = 'Selection',
+  RESOLUTION = 'Resolution',
+}
+
 export class BattleStore {
   enemies: Enemy[];
   allies: Ally[];
@@ -18,6 +23,8 @@ export class BattleStore {
   caster?: Ally = null;
   target?: Enemy = null;
   menu?: Menu = null;
+
+  state: BattleState = BattleState.SELECTION;
 
   queue?: QueueAction[] = [];
 
@@ -28,6 +35,8 @@ export class BattleStore {
   }
 
   tickBattle(delta: number): void {
+    if (this.state !== BattleState.SELECTION) return;
+    
     this.allies.forEach((ally) => {
       if (ally.status === Status.DEAD) return;
       const regenPerTick = ally.staminaRegenRatePerSecond * (delta / 1000);
@@ -41,13 +50,14 @@ export class BattleStore {
       if (enemy.status === Status.DEAD) return;
       enemy.timeSinceLastStrategy += delta;
 
-      if (enemy.timeSinceLastStrategy > enemy.selectedStrategy.timeTilExecute) {
-        // todo: if not exhausted execute strat
+      if (enemy.timeSinceLastStrategy < enemy.selectedStrategy.timeTilExecute) return;
 
-        enemy.selectedStrategy = getRandomItem(enemy.strategies);
-        enemy.timeSinceLastStrategy = 0;
-        enemy.status = Status.NORMAL;
-      }
+      
+
+      enemy.selectedStrategy = getRandomItem(enemy.strategies);
+      enemy.timeSinceLastStrategy = 0;
+      enemy.status = Status.NORMAL;
+
     });
   }
 
@@ -90,8 +100,12 @@ export class BattleStore {
     })
   }
 
-  setTarget(target: Enemy) {
+  setTarget(target: Enemy): void {
     this.target = target;
+  }
+
+  setState(state: BattleState): void {
+    this.state = state;
   }
 
   getCombatants(): Combatant[] {

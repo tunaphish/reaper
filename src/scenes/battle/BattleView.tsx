@@ -177,7 +177,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
       animate="animate"
       exit="exit"
     >
-      {props.battleScene.battleStore.queue.length !== 0 && <QueueView battleScene={props.battleScene} />}
+      {props.battleScene.battleStore.menu &&  <QueueView battleScene={props.battleScene} />}
       {props.battleScene.battleStore.menu && <MenuView battleScene={props.battleScene} />}
     </motion.div>        
   ) 

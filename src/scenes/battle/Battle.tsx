@@ -11,6 +11,7 @@ import { BattleState, BattleStore } from './BattleStore';
 import { cleric } from '../../data/enemies';
 import { MenuType } from './menu';
 import { Action } from '../../model/action';
+import { getRandomItem } from '../../model/random';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -28,11 +29,11 @@ export class Battle extends Phaser.Scene {
   private music: Phaser.Sound.BaseSound;
   backgroundImageUrl: string;
 
-  battleStore: BattleStore;
+  // round resolution 
+  timeSinceLastAction = 0;
+  isAllyTurn = true;
 
-  // restriction vars
-  firstActionTaken = false;
-  splinterUsed = false;
+  battleStore: BattleStore;
 
   constructor() {
     super(sceneConfig);
@@ -46,42 +47,47 @@ export class Battle extends Phaser.Scene {
       volume: 0.5  
     });
     this.reactOverlay.create(<BattleView scene={this}/>, this);
-    // this.music.play();
+    this.music.play();
   }
 
   // #region Time Based Updates
 
   update(time: number, delta: number): void {
     this.battleStore.tickBattle(delta);
-    this.initiateRound();
+    this.resolveRound(delta);
   }
 
-  initiateRound() {
+  resolveRound(delta: number) {
     if (this.battleStore.state !== BattleState.RESOLUTION) return;
+    // if queues are empty cleanup
+    if (this.battleStore.queue.length === 0 && this.battleStore.target.selectedStrategy.actions.length === 0) {
+      this.battleStore.target.selectedStrategy = getRandomItem(this.battleStore.target.strategies);
+      this.battleStore.applyBleed();    
+      // reset selections
+      this.battleStore.setState(BattleState.SELECTION);
+      this.battleStore.target.status = Status.EXHAUSTED;
+      this.battleStore.setTarget(null);
+      this.battleStore.setQueue([]);
+      return;
+    }
+    
+    this.timeSinceLastAction += delta;
+    if (this.timeSinceLastAction < 500) return;
 
-    // handle resolution
-    for (let i=0; i<this.battleStore.queue.length || i<this.battleStore.target.selectedStrategy.actions.length; i++) {
-      if (i<this.battleStore.queue.length) {
-        const queueAction = this.battleStore.queue[i];
-        this.sound.play(queueAction.action.soundKeyName);
-        queueAction.caster.stamina -= queueAction.action.staminaCost;
-        // wait a second
-      }
-      if (i<this.battleStore.target.selectedStrategy.actions.length) {
-        // enemy target is either caster for current action or whoever the fuck they want... 
-        // todo: enemy target strategy
-      }
+    if (this.isAllyTurn) {
+      const queueAction = this.battleStore.queue[0];
+      this.sound.play(queueAction.action.soundKeyName);
+      queueAction.caster.stamina -= queueAction.action.staminaCost;
+      this.battleStore.dequeueAction();
+      if (this.battleStore.target.selectedStrategy.actions.length > 0) this.isAllyTurn = false;
+    } else {
+      const action = this.battleStore.target.selectedStrategy.actions[0];
+      this.sound.play(action.soundKeyName);
+      this.battleStore.target.selectedStrategy.actions.shift();
+      if (this.battleStore.queue.length > 0) this.isAllyTurn = true;
     }
 
-    // clean up
-    // apply bleed
-    // select a strategy
-
-    // reset selections
-    this.battleStore.setState(BattleState.SELECTION);
-    this.battleStore.target.status = Status.EXHAUSTED;
-    this.battleStore.setTarget(null);
-    this.battleStore.setQueue([]);
+    this.timeSinceLastAction = 0;
   }
 
   // #endregion

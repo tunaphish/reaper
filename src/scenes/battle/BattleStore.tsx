@@ -100,6 +100,10 @@ export class BattleStore {
     })
   }
 
+  dequeueAction(): void {
+    this.queue.shift();
+  }
+
   setTarget(target: Enemy): void {
     this.target = target;
   }
@@ -108,8 +112,16 @@ export class BattleStore {
     this.state = state;
   }
 
+  applyBleed(): void {
+    this.getCombatants().forEach(combatant => {
+      combatant.health = Math.max(0, combatant.health - combatant.bleed);
+      combatant.bleed = 0;
+    });
+  }
+
   getCombatants(): Combatant[] {
     return [...this.enemies, ...this.allies];
   }
+
 }
 

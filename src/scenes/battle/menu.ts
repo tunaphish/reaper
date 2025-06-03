@@ -1,9 +1,10 @@
-import { Enemy } from "../../model/enemy";
 import { Action } from "../../model/action";
+import { Combatant } from "../../model/combatant";
 
 export enum MenuType {
-    ACTION = 'ACTION',
+    ACTION = 'action',
     TARGET = 'target',
+    CATEGORY = 'category',
 }
 
 export type BaseMenu = {
@@ -18,7 +19,11 @@ export type ActionMenu = BaseMenu & {
 
 export type TargetMenu = BaseMenu & {
     type: MenuType.TARGET,
-    targets: Enemy[],
+    targets: Combatant[],
 }
 
-export type Menu = ActionMenu | TargetMenu;
+export type CategoryMenu = BaseMenu & {
+    type: MenuType.CATEGORY,
+}
+
+export type Menu = ActionMenu | TargetMenu | CategoryMenu;

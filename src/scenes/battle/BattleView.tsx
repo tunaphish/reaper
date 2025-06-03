@@ -17,10 +17,10 @@ import { Enemy } from '../../model/enemy';
 
 const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
   const { action } = props;
-  const onClickaction = () => props.battleScene.selectAction(action);
+  const onClickAction = () => props.battleScene.selectAction(action);
   
   return ( 
-    <button key={action.name} onClick={onClickaction} className={classNames.menuOption} >
+    <button key={action.name} onClick={onClickAction} className={classNames.menuOption} >
         <div>{action.name}</div>
         <div className={classNames.optionCost}>{action.staminaCost}</div>
     </button>
@@ -29,12 +29,23 @@ const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
 
 const MenuTargetView = (props: { target: Enemy, battleScene: Battle }) => {
   const { target } = props;
-  const onClickaction = () => props.battleScene.selectTarget(target);
+  const onClickTarget = () => props.battleScene.selectTarget(target);
   
   return ( 
-    <button key={target.name} onClick={onClickaction} className={classNames.menuOption} >
+    <button key={target.name} onClick={onClickTarget} className={classNames.menuOption} >
         <div>{target.name}</div>
     </button>
+  )
+}
+
+const MenuCategoryListView = (props: { battleScene: Battle}) => {
+  const { battleScene } = props;
+  return (
+    <>
+      <button onClick={() => battleScene.selectAttack()} className={classNames.menuOption}><div>Attack</div></button>
+      <button onClick={() => battleScene.selectDefend()} className={classNames.menuOption}><div>Defend</div></button>
+      <button className={classNames.menuOption} disabled><div>Item</div></button>
+    </>
   )
 }
 
@@ -60,6 +71,9 @@ const MenuView = observer((props: { battleScene: Battle }) => {
           }
           {
             menu.type === MenuType.TARGET && (menu as TargetMenu).targets.map((target: Enemy) => <MenuTargetView key={target.name} target={target} battleScene={props.battleScene}/>)
+          }
+          {
+            menu.type === MenuType.CATEGORY && <MenuCategoryListView battleScene={battleScene} />
           }
         </div>
         </div>
@@ -168,7 +182,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
       x: "-5%",
     },    
   }
-
+  // TODO: Better Logic for determing queue view visible
   return (
     <motion.div 
       className={classNames.modalContainer} 
@@ -177,7 +191,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
       animate="animate"
       exit="exit"
     >
-      {props.battleScene.battleStore.menu &&  <QueueView battleScene={props.battleScene} />}
+      {props.battleScene.battleStore.queue.length > 0 && <QueueView battleScene={props.battleScene} /> }
       {props.battleScene.battleStore.menu && <MenuView battleScene={props.battleScene} />}
     </motion.div>        
   ) 

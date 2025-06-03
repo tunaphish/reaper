@@ -12,7 +12,9 @@ export type QueueAction = {
 }
 
 export enum BattleState {
-  SELECTION = 'Selection',
+  NEUTRAL = 'Neutral',
+  ATTACK = 'Attack',
+  DEFEND = 'Defend',
   RESOLUTION = 'Resolution',
 }
 
@@ -24,7 +26,7 @@ export class BattleStore {
   target?: Enemy = null;
   menu?: Menu = null;
 
-  state: BattleState = BattleState.SELECTION;
+  state: BattleState = BattleState.NEUTRAL;
 
   queue?: QueueAction[] = [];
 
@@ -35,7 +37,7 @@ export class BattleStore {
   }
 
   tickBattle(delta: number): void {
-    if (this.state !== BattleState.SELECTION) return;
+    if (this.state === BattleState.RESOLUTION) return;
     
     this.allies.forEach((ally) => {
       if (ally.status === Status.DEAD) return;
@@ -51,8 +53,6 @@ export class BattleStore {
       enemy.timeSinceLastStrategy += delta;
 
       if (enemy.timeSinceLastStrategy < enemy.selectedStrategy.timeTilExecute) return;
-
-      
 
       enemy.selectedStrategy = getRandomItem(enemy.strategies);
       enemy.timeSinceLastStrategy = 0;

@@ -10,7 +10,7 @@ import { BattleView } from './BattleView';
 import { BattleState, BattleStore } from './BattleStore';
 import { cleric } from '../../data/enemies';
 import { MenuType } from './menu';
-import { Action } from '../../model/action';
+import { Action, ActionType } from '../../model/action';
 import { getRandomItem } from '../../model/random';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -31,7 +31,6 @@ export class Battle extends Phaser.Scene {
 
   // round resolution 
   timeSinceLastAction = 0;
-  isAllyTurn = true;
 
   battleStore: BattleStore;
 
@@ -60,11 +59,10 @@ export class Battle extends Phaser.Scene {
   resolveRound(delta: number) {
     if (this.battleStore.state !== BattleState.RESOLUTION) return;
     // if queues are empty cleanup
-    if (this.battleStore.queue.length === 0 && this.battleStore.target.selectedStrategy.actions.length === 0) {
-      this.battleStore.target.selectedStrategy = getRandomItem(this.battleStore.target.strategies);
+    if (this.battleStore.queue.length === 0 ) {
       this.battleStore.applyBleed();    
       // reset selections
-      this.battleStore.setState(BattleState.SELECTION);
+      this.battleStore.setState(BattleState.NEUTRAL);
       this.battleStore.target.status = Status.EXHAUSTED;
       this.battleStore.setTarget(null);
       this.battleStore.setQueue([]);
@@ -74,18 +72,10 @@ export class Battle extends Phaser.Scene {
     this.timeSinceLastAction += delta;
     if (this.timeSinceLastAction < 500) return;
 
-    if (this.isAllyTurn) {
-      const queueAction = this.battleStore.queue[0];
-      this.sound.play(queueAction.action.soundKeyName);
-      queueAction.caster.stamina -= queueAction.action.staminaCost;
-      this.battleStore.dequeueAction();
-      if (this.battleStore.target.selectedStrategy.actions.length > 0) this.isAllyTurn = false;
-    } else {
-      const action = this.battleStore.target.selectedStrategy.actions[0];
-      this.sound.play(action.soundKeyName);
-      this.battleStore.target.selectedStrategy.actions.shift();
-      if (this.battleStore.queue.length > 0) this.isAllyTurn = true;
-    }
+    const queueAction = this.battleStore.queue[0];
+    this.sound.play(queueAction.action.soundKeyName);
+    queueAction.caster.stamina -= queueAction.action.staminaCost;
+    this.battleStore.dequeueAction();
 
     this.timeSinceLastAction = 0;
   }
@@ -95,7 +85,7 @@ export class Battle extends Phaser.Scene {
   // #region Input Based Updates
 
   setCaster(caster: Ally): void {
-    if (this.battleStore.state !== BattleState.SELECTION) return;
+    if (this.battleStore.state === BattleState.RESOLUTION) return;
     const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
     if (CANNOT_OPEN_STATUS.includes(caster.status)) {
       this.sound.play('stamina-depleted');
@@ -108,11 +98,22 @@ export class Battle extends Phaser.Scene {
     this.events.emit('caster-set', caster);
 
     this.battleStore.setCaster(caster);
-    this.battleStore.setMenu({
-      type: MenuType.ACTION,
-      name: caster.name,
-      actions: caster.actions,
-    })
+    if (this.battleStore.state === BattleState.NEUTRAL) {
+      this.battleStore.setMenu({
+        type: MenuType.CATEGORY,
+        name: caster.name,
+      });
+    } else {
+      const actions = this.battleStore.state === BattleState.ATTACK ?
+      caster.actions.filter((action) => action.actionType === ActionType.ATTACK) :
+      caster.actions.filter((action) => action.actionType === ActionType.DEFENSE);
+
+      this.battleStore.setMenu({
+        type: MenuType.ACTION,
+        name: caster.name,
+        actions,
+      });
+    }
   }
 
   closeMenu(): void {
@@ -122,16 +123,46 @@ export class Battle extends Phaser.Scene {
   }
 
   selectAction(action: Action): void {
-    if (this.battleStore.state !== BattleState.SELECTION) return;
+    if (this.battleStore.state === BattleState.RESOLUTION) return;
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
+    // bug, this resolves before the change to exhausted
     if (this.battleStore.caster.status === Status.EXHAUSTED) this.closeMenu();
   }
 
 
   confirmQueue(): void {
-    if (this.battleStore.state !== BattleState.SELECTION) return;
+    if (this.battleStore.state === BattleState.RESOLUTION) return;
     this.closeMenu();
+    this.battleStore.setState(BattleState.RESOLUTION);
+  }
+
+  cancelQueue(): void {
+    if (this.battleStore.state === BattleState.RESOLUTION) return;
+    this.closeMenu();
+    this.battleStore.setQueue([]);
+    this.battleStore.setState(BattleState.NEUTRAL);
+  }
+  
+  selectTarget(target: Enemy): void {
+    if (this.battleStore.state === BattleState.RESOLUTION) return;
+    this.battleStore.setTarget(target);
+    this.sound.play('choice-select');
+
+    const actions = this.battleStore.state === BattleState.ATTACK ?
+      this.battleStore.caster.actions.filter((action) => action.actionType === ActionType.ATTACK) :
+      this.battleStore.caster.actions.filter((action) => action.actionType === ActionType.DEFENSE);
+
+    this.battleStore.setMenu({
+      type: MenuType.ACTION,
+      name: this.battleStore.caster.name,
+      actions,
+    });
+  }
+
+  selectAttack(): void {
+    this.battleStore.setState(BattleState.ATTACK);
+    this.sound.play('choice-select');
     this.battleStore.setMenu({
       type: MenuType.TARGET,
       targets: this.battleStore.enemies,
@@ -139,17 +170,14 @@ export class Battle extends Phaser.Scene {
     })
   }
 
-  cancelQueue(): void {
-    if (this.battleStore.state !== BattleState.SELECTION) return;
-    this.closeMenu();
-    this.battleStore.setQueue([]);
-  }
-  
-  selectTarget(target: Enemy): void {
-    if (this.battleStore.state !== BattleState.SELECTION) return;
-    this.battleStore.setTarget(target);
-    this.closeMenu();
-    this.battleStore.setState(BattleState.RESOLUTION);
+  selectDefend(): void {
+    this.battleStore.setState(BattleState.DEFEND);
+    this.sound.play('choice-select');
+    this.battleStore.setMenu({
+      type: MenuType.TARGET,
+      targets: this.battleStore.allies,
+      name: 'Targets',
+    })
   }
 
   // #endregion

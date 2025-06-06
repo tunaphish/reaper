@@ -120,8 +120,8 @@ const QueueView = observer((props: { battleScene: Battle}) => {
 
 
       <div className={classNames.queueOperations}>
-        <div className={classNames.window} onClick={onClickCancelQueue}>Cancel</div>
-        <div className={classNames.window} onClick={onClickConfirmQueue}>Confirm</div>
+        {(props.battleScene.battleStore.menu || props.battleScene.battleStore.queue.length > 0) && <div className={classNames.window} onClick={onClickCancelQueue}>Cancel</div>}
+        {props.battleScene.battleStore.queue.length > 0 && <div className={classNames.window} onClick={onClickConfirmQueue}>Confirm</div>}
       </div>
     </div>
   )
@@ -191,7 +191,7 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
       animate="animate"
       exit="exit"
     >
-      {props.battleScene.battleStore.queue.length > 0 && <QueueView battleScene={props.battleScene} /> }
+      {<QueueView battleScene={props.battleScene} /> }
       {props.battleScene.battleStore.menu && <MenuView battleScene={props.battleScene} />}
     </motion.div>        
   ) 

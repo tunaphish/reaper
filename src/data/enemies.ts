@@ -9,12 +9,13 @@ import { Battle } from '../scenes/battle/Battle';
 
 
 // #region Target
-const isAlive = (unit: Combatant) => unit.health !== 0;
+const isAlive = (combatant: Combatant) => combatant.health !== 0;
 
 const randomEnemy = (scene: Battle, caster: Combatant) => {
   const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
   return aliveEnemies.at(getRandomInt(aliveEnemies.length));
 };
+
 const highestBleedEnemy = (scene: Battle, caster: Combatant) => {
   const aliveEnemies = scene.battleStore.enemies.filter(isAlive);
   return aliveEnemies.reduce((highest, enemy) => {
@@ -48,23 +49,30 @@ export const fencer: Enemy = {
   spritePath: '/reaper/sprites/enemies/chansey.png',
   strategies: [
     {
-      actions: [Actions.attack, Actions.attack, Actions.stanch],
+      actions: [Actions.attack, Actions.attack],
       timeTilExecute: 5000,
+      name: 'Dual Attack',
+      selectTarget: randomAlly,
     },
     {
-      actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 4000,
+      actions: [Actions.attack, Actions.attack, Actions.attack],
+      timeTilExecute: 7000,
+      name: 'Triple Attack',
+      selectTarget: randomAlly,
     },
   ],
 
     // temp
     bleed: 0,
-    timeSinceLastStrategy: 0,
+    timeSinceLastAction: 0,
     status: Status.NORMAL,
     position: [3, 0, -5],
+    actionIdx: 0,
     selectedStrategy: {
-      actions: [Actions.attack, Actions.attack, Actions.stanch],
+      actions: [Actions.attack, Actions.attack],
       timeTilExecute: 5000,
+      name: 'Dual Attack',
+      selectTarget: randomAlly,
     },
 }
 
@@ -75,23 +83,30 @@ export const cleric: Enemy = {
   spritePath: '/reaper/sprites/enemies/chansey.png',
   strategies: [
     {
-      actions: [Actions.attack, Actions.attack, Actions.stanch],
-      timeTilExecute: 7000,
+      actions: [Actions.attack, Actions.attack],
+      timeTilExecute: 5000,
+      name: 'Dual Attack',
+      selectTarget: randomAlly,
     },
     {
-      actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 6000,
+      actions: [Actions.attack, Actions.attack, Actions.attack],
+      timeTilExecute: 7000,
+      name: 'Triple Attack',
+      selectTarget: randomAlly,
     },
   ],
 
   // temp
   bleed: 0,
-  timeSinceLastStrategy: 0,
+  timeSinceLastAction: 0,
   status: Status.NORMAL,
   position: [3, 0, -5],
+  actionIdx: 0,
   selectedStrategy: {
-    actions: [Actions.attack, Actions.attack, Actions.stanch],
-    timeTilExecute: 7000,
+    actions: [Actions.attack, Actions.attack],
+    timeTilExecute: 5000,
+    name: 'Dual Attack',
+    selectTarget: randomAlly,
   },
 };
 

@@ -8,7 +8,7 @@ export const attack: Action = {
     soundKeyName: 'attack',  
     description: 'Deals damage',
     effect: (battle, caster, target) => {
-        caster.bleed = Math.max(0, caster.bleed+50);    
+        target.bleed = Math.max(0, target.bleed+50);    
     }
 };
 
@@ -20,7 +20,7 @@ export const block: Action = {
     soundKeyName: 'block',  
     description: 'Blocks incoming damage',
     effect: (battle, caster, target) => {
-        caster.bleed = Math.max(0, caster.bleed-50);    
+        // caster.bleed = Math.max(0, caster.bleed-50);    
     }
 };
 
@@ -32,6 +32,6 @@ export const stanch: Action = {
     soundKeyName: 'heal',  
     description: 'Heals bleed',
     effect: (battle, caster, target) => {
-        caster.bleed = Math.max(0, caster.bleed-50);    
+        target.bleed = Math.max(0, target.bleed-50);    
     }
 };

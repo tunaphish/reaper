@@ -68,9 +68,6 @@ export const EnemyResourceDisplay = observer((props: {enemy: Enemy, battleScene:
         <Meter value={enemy.health} max={enemy.maxHealth} className={classNames.bleedMeter}/>
         <Meter value={enemy.health-enemy.bleed} max={enemy.maxHealth} className={classNames.healthMeter}/>
       </div>
-      <div className={classNames.enemyMeterContainer}>
-        <Meter value={enemy.timeSinceLastStrategy} max={enemy.selectedStrategy.timeTilExecute} className={classNames.staminaMeter}/>
-      </div>
       <EnemyQueueContainer enemy={enemy} />
     </div>
   )
@@ -78,31 +75,21 @@ export const EnemyResourceDisplay = observer((props: {enemy: Enemy, battleScene:
 
 export const EnemyQueueContainer = observer((props: {enemy: Enemy}) => {
   if (props.enemy.status !== Status.NORMAL) return null;
-  
+  const { enemy } = props;
+
   return (
     <div className={classNames.enemyQueueContainer}>
       <div className={classNames.actionContainer}>
-        {
-          props.enemy.selectedStrategy.actions.map((action, idx) => {
-            return (
-                <motion.fieldset
-                  className={classNames.enemyWindow}
-                  key={idx} 
-                  style={{padding: 0}}
-                  initial={{ scaleY: 0 }} 
-                  animate={{ scaleY: 1 }} 
-                  exit={{ scaleY: 0 }}
-                  transition={{ duration: .1, ease: 'easeOut' }} 
-              
-                >
-                  <legend style={{ fontSize: '12px' }}>{props.enemy.name}</legend>
-                  <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
-                    {action.name}
-                  </div>
-                </motion.fieldset>
-            )
-          })
-        }
+
+        <div
+            className={classNames.enemyWindow} 
+            style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
+          >
+            <Meter value={enemy.timeSinceLastAction} max={enemy.selectedStrategy.timeTilExecute}/>
+            <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
+              {enemy.selectedStrategy.name}
+            </div>
+          </div>
       </div>
     </div>
   )

@@ -12,7 +12,7 @@ export const Eji: Ally = {
   stamina: 0,
   maxStamina: 150,
 
-  staminaRegenRatePerSecond: 5,
+  staminaRegenRatePerSecond: 6,
 
   actions: [Actions.attack, Actions.stanch],
   
@@ -34,7 +34,7 @@ export const Keshi: Ally = {
   stamina: 0,
   maxStamina: 100,
 
-  staminaRegenRatePerSecond: 7,
+  staminaRegenRatePerSecond: 8,
   
   actions: [Actions.attack, Actions.stanch],
 
@@ -54,7 +54,7 @@ export const Elise: Ally = {
   stamina: 0,
   maxStamina: 200,
 
-  staminaRegenRatePerSecond: 4,
+  staminaRegenRatePerSecond: 5,
 
   status: Status.NORMAL,
 

@@ -53,10 +53,45 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.battleStore.tickBattle(delta);
-    this.resolveRound(delta);
+    this.resolvePlayerRound(delta);
+    this.resolveEnemyRound(delta);
   }
 
-  resolveRound(delta: number) {
+  resolveEnemyRound(delta: number): void {
+
+    // bug combine with tick enemy
+    this.battleStore.enemies.forEach((enemy) => {
+      if (enemy.status === Status.DEAD) return;
+      if (enemy.status === Status.ACTIONING) {
+        console.log(enemy.actionIdx, enemy.selectedStrategy.actions.length)
+        if (enemy.actionIdx >= enemy.selectedStrategy.actions.length) {
+          enemy.selectedStrategy = getRandomItem(enemy.strategies);
+          enemy.timeSinceLastAction = 0;
+          enemy.actionIdx = 0;
+          enemy.status = Status.NORMAL;
+          return;
+        }
+
+        if (enemy.timeSinceLastAction < 500) return;  
+        const action = enemy.selectedStrategy.actions[enemy.actionIdx];
+        const target = enemy.selectedStrategy.selectTarget(this, enemy);
+        this.sound.play(action.soundKeyName);
+        action.effect(this, enemy, target);
+        enemy.timeSinceLastAction = 0;
+        enemy.actionIdx += 1;
+        return;
+      }
+
+      if (enemy.timeSinceLastAction < enemy.selectedStrategy.timeTilExecute) return;
+      enemy.status = Status.ACTIONING;
+      enemy.timeSinceLastAction = 0;
+
+
+    });
+
+  }
+
+  resolvePlayerRound(delta: number): void {
     if (this.battleStore.state !== BattleState.RESOLUTION) return;
     // if queues are empty cleanup
     if (this.battleStore.queue.length === 0 ) {
@@ -73,6 +108,7 @@ export class Battle extends Phaser.Scene {
     if (this.timeSinceLastAction < 500) return;
 
     const queueAction = this.battleStore.queue[0];
+    queueAction.action.effect(this, queueAction.caster, this.battleStore.target);
     this.sound.play(queueAction.action.soundKeyName);
     queueAction.caster.stamina -= queueAction.action.staminaCost;
     this.battleStore.dequeueAction();
@@ -126,8 +162,8 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.state === BattleState.RESOLUTION) return;
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
-    // bug, this resolves before the change to exhausted
-    if (this.battleStore.caster.status === Status.EXHAUSTED) this.closeMenu();
+    if (this.battleStore.caster.maxStamina <= this.battleStore.getStaminaUsed(this.battleStore.caster)) this.closeMenu();
+
   }
 
 

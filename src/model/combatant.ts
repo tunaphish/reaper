@@ -2,6 +2,7 @@ export enum Status {
   NORMAL = 'NORMAL',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
+  ACTIONING = 'ACTIONING'
 }
 
 

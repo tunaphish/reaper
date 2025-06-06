@@ -43,21 +43,20 @@ export class BattleStore {
       if (ally.status === Status.DEAD) return;
       const regenPerTick = ally.staminaRegenRatePerSecond * (delta / 1000);
       ally.stamina = Math.min(ally.maxStamina, ally.stamina + regenPerTick);
+
+      if (ally.bleed > 0) {
+        const DAMAGE_TICK_RATE = (delta / 1000) * 5;
+        ally.bleed -= DAMAGE_TICK_RATE;
+        ally.health = Math.max(0, ally.health - DAMAGE_TICK_RATE);
+      }
     });
 
     this.updateAllyStatus();
-
-
+    
     this.enemies.forEach((enemy) => {
+      if (enemy.health === 0) enemy.status === Status.DEAD;
       if (enemy.status === Status.DEAD) return;
-      enemy.timeSinceLastStrategy += delta;
-
-      if (enemy.timeSinceLastStrategy < enemy.selectedStrategy.timeTilExecute) return;
-
-      enemy.selectedStrategy = getRandomItem(enemy.strategies);
-      enemy.timeSinceLastStrategy = 0;
-      enemy.status = Status.NORMAL;
-
+      enemy.timeSinceLastAction += delta;
     });
   }
 
@@ -113,7 +112,7 @@ export class BattleStore {
   }
 
   applyBleed(): void {
-    this.getCombatants().forEach(combatant => {
+    this.enemies.forEach(combatant => {
       combatant.health = Math.max(0, combatant.health - combatant.bleed);
       combatant.bleed = 0;
     });

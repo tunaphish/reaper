@@ -282,3 +282,7 @@
 .queueOperations {
   display: flex;
 }
+
+.actionBar {
+  display: flex;
+}

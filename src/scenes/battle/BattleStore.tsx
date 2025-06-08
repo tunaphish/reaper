@@ -23,7 +23,7 @@ export class BattleStore {
   allies: Ally[];
 
   caster?: Ally = null;
-  target?: Enemy = null;
+  target?: Combatant = null;
   menu?: Menu = null;
 
   state: BattleState = BattleState.NEUTRAL;
@@ -84,10 +84,10 @@ export class BattleStore {
     this.queue = queue;
   }
 
-  pushAction(action: Action): void {
+  pushAction(action: Action, caster: Ally): void {
     this.queue.push({
       action,
-      caster: this.caster
+      caster
     })
   }
 
@@ -95,7 +95,7 @@ export class BattleStore {
     this.queue.shift();
   }
 
-  setTarget(target: Enemy): void {
+  setTarget(target: Combatant): void {
     this.target = target;
   }
 

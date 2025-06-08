@@ -9,15 +9,16 @@ import classNames from './battle.module.css';
 import { Battle } from './Battle';
 import {  EnemyResourceDisplay } from './Stage';
 import { Meter } from './Meter';
-import { Action } from '../../model/action';
-import { Status } from '../../model/combatant';
+import { Action, ActionType } from '../../model/action';
+import { Combatant, Status } from '../../model/combatant';
 import { ActionMenu, MenuType, TargetMenu } from './menu';
 import { Enemy } from '../../model/enemy';
+import { BattleState } from './BattleStore';
 
 
-const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
-  const { action } = props;
-  const onClickAction = () => props.battleScene.selectAction(action);
+const MenuActionView = (props: { action: Action, battle: Battle, caster: Ally }) => {
+  const { action, caster, battle } = props;
+  const onClickAction = () => battle.selectAction(action, caster);
   
   return ( 
     <button key={action.name} onClick={onClickAction} className={classNames.menuOption} >
@@ -27,7 +28,7 @@ const MenuActionView = (props: { action: Action, battleScene: Battle }) => {
   )
 }
 
-const MenuTargetView = (props: { target: Enemy, battleScene: Battle }) => {
+const MenuTargetView = (props: { target: Combatant, battleScene: Battle }) => {
   const { target } = props;
   const onClickTarget = () => props.battleScene.selectTarget(target);
   
@@ -38,59 +39,8 @@ const MenuTargetView = (props: { target: Enemy, battleScene: Battle }) => {
   )
 }
 
-const MenuCategoryListView = (props: { battleScene: Battle}) => {
-  const { battleScene } = props;
-  return (
-    <>
-      <button onClick={() => battleScene.selectAttack()} className={classNames.menuOption}><div>Attack</div></button>
-      <button onClick={() => battleScene.selectDefend()} className={classNames.menuOption}><div>Defend</div></button>
-      <button className={classNames.menuOption} disabled><div>Item</div></button>
-    </>
-  )
-}
-
-const MenuView = observer((props: { battleScene: Battle }) => {
-  const { battleScene } = props;
-  const { menu } = battleScene.battleStore;
-  const onClickMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-  }
-
-  return (
-      <div className={classNames.modalMenu} onClick={onClickMenu}>
-        <div className={classNames.window} 
-          style={{ 
-            minWidth: "100px",
-            width:" 100%",
-          }}
-        >
-        <div className={classNames.windowName}>{menu.name}</div>
-        <div className={classNames.menuContent}>
-          {
-            menu.type === MenuType.ACTION && (menu as ActionMenu).actions.map((action: Action) => <MenuActionView key={action.name} action={action} battleScene={props.battleScene}/>)
-          }
-          {
-            menu.type === MenuType.TARGET && (menu as TargetMenu).targets.map((target: Enemy) => <MenuTargetView key={target.name} target={target} battleScene={props.battleScene}/>)
-          }
-          {
-            menu.type === MenuType.CATEGORY && <MenuCategoryListView battleScene={battleScene} />
-          }
-        </div>
-        </div>
-
-    </div>
-
-  );    
-});
 
 const QueueView = observer((props: { battleScene: Battle}) => {
-  const onClickCancelQueue = () => {
-    props.battleScene.cancelQueue();
-  }
-
-  const onClickConfirmQueue = () => {
-    props.battleScene.confirmQueue();
-  }
 
   return (
     <div className={classNames.queueContainer}>
@@ -117,17 +67,12 @@ const QueueView = observer((props: { battleScene: Battle}) => {
           })
         }
       </div>
-
-
-      <div className={classNames.queueOperations}>
-        {(props.battleScene.battleStore.menu || props.battleScene.battleStore.queue.length > 0) && <div className={classNames.window} onClick={onClickCancelQueue}>Cancel</div>}
-        {props.battleScene.battleStore.queue.length > 0 && <div className={classNames.window} onClick={onClickConfirmQueue}>Confirm</div>}
-      </div>
     </div>
   )
 })
 
-export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void, battleScene: Battle }) => {
+export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void, battle: Battle }) => {
+  const { battle, ally } = props;
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: classNames.DEAD,
@@ -138,11 +83,13 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
     statusToStylesMap[props.ally.status],
   ];
 
-
-
   return (
-    <fieldset className={style.join(' ')} style={{ padding: 0, flex: '1' }} onClick={props.onClickCell}>
+    <fieldset className={style.join(' ')} style={{ padding: 0, flex: '1' }}>
       <legend className={classNames.windowName}>{props.ally.name}</legend>
+      <div>
+        {battle.battleStore.state === BattleState.ATTACK && ally.actions.filter(action => action.actionType === ActionType.ATTACK).map(action => <MenuActionView action={action} key={action.name} battle={battle} caster={ally}/>)}
+        {battle.battleStore.state === BattleState.DEFEND && ally.actions.filter(action => action.actionType === ActionType.DEFENSE).map(action => <MenuActionView action={action} key={action.name} battle={battle} caster={ally}/>)}
+      </div>
       <div className={classNames.resourceContainer}>
         <div className={classNames.meterContainer}>
           <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
@@ -177,45 +124,86 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
       animate="animate"
       exit="exit"
     >
-      {<QueueView battleScene={props.battleScene} /> }
-      {props.battleScene.battleStore.menu && <MenuView battleScene={props.battleScene} />}
+      <QueueView battleScene={props.battleScene} /> 
     </motion.div>        
   ) 
 }) 
 
+export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
+  const { battle } = props;
 
-export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies, enemies } = props.scene.battleStore;
-    const onClickAlly = (ally: Ally) => {
-      props.scene.setCaster(ally);
-    }
 
+  if (battle.battleStore.state === BattleState.ATTACK) {
     return (
-        <div className={classNames.container}>
-          {/* <Description battle={props.scene} /> */}
-          <div className={classNames.combatantBar}>
-              {enemies.map((enemy) => {
-                return( 
-                  <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
-                    <EnemyResourceDisplay battleScene={props.scene} enemy={enemy} />
-                  </div>
-                )
-              })}
-          </div>
-          <div style={{ flex: 4, zIndex: -1 }}> 
-            {/* <Stage scene={props.scene} /> */}
-          </div>
-          <MenuContainer battleScene={props.scene}/>
-          <div className={classNames.combatantBar}>
-              {allies.map((ally) => {
-                return( 
-                  <div style={{ position: 'relative', flex: '1' }} key={ally.name}>
-                    <ResourceDisplay battleScene={props.scene} ally={ally} onClickCell={() => onClickAlly(ally)} key={ally.name}/>
-                  </div>
-                )
-              })}
-          </div>
- 
+      <div className={classNames.window}>
+        <div className={classNames.actionBar}>
+          {battle.battleStore.enemies.map(enemy => (
+            <MenuTargetView battleScene={battle} target={enemy} key={enemy.name} />
+          ))}
+          <button onClick={() => battle.cancel()} className={classNames.menuOption}><div>Cancel</div></button>
         </div>
-      )
+      </div>
+    )
+  }
+
+  if (battle.battleStore.state === BattleState.DEFEND) {
+    return (
+      <div className={classNames.window}>
+        <div className={classNames.actionBar}>
+          {battle.battleStore.allies.map(ally => (
+            <MenuTargetView battleScene={battle} target={ally} key={ally.name} />
+          ))}
+          <button onClick={() => battle.cancel()} className={classNames.menuOption}><div>Cancel</div></button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={classNames.window}>
+      <div className={classNames.actionBar}>
+        <button onClick={() => battle.selectAttack()} className={classNames.menuOption}><div>Attack</div></button>
+        <button onClick={() => battle.selectDefend()} className={classNames.menuOption}><div>Defend</div></button>
+        <button className={classNames.menuOption} disabled><div>Item</div></button>
+      </div>
+    </div>
+  )
+});
+
+export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
+  const { battle } = props;
+  const { allies, enemies } = battle.battleStore;
+  const onClickAlly = (ally: Ally) => {
+    battle.setCaster(ally);
+  }
+
+  return (
+      <div className={classNames.container}>
+        {/* <Description battle={battle} /> */}
+        <div className={classNames.combatantBar}>
+            {enemies.map((enemy) => {
+              return( 
+                <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
+                  <EnemyResourceDisplay battleScene={battle} enemy={enemy} />
+                </div>
+              )
+            })}
+        </div>
+        <div style={{ flex: 4, zIndex: -1 }}> 
+          {/* <Stage scene={battle} /> */}
+        </div>
+        <MenuContainer battleScene={battle}/>
+        <div className={classNames.combatantBar}>
+            {allies.map((ally) => {
+              return( 
+                <div style={{ position: 'relative', flex: '1' }} key={ally.name}>
+                  <ResourceDisplay battle={battle} ally={ally} onClickCell={() => onClickAlly(ally)} key={ally.name}/>
+                </div>
+              )
+            })}
+        </div>
+        <ActionBar battle={battle}/>
+
+      </div>
+    )
 });

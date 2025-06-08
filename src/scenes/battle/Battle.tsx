@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Enemy } from '../../model/enemy';
 import { Ally } from '../../model/ally';
 
-import { Status } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
@@ -45,8 +45,8 @@ export class Battle extends Phaser.Scene {
       loop: true,  
       volume: 0.5  
     });
-    this.reactOverlay.create(<BattleView scene={this}/>, this);
-    this.music.play();
+    this.reactOverlay.create(<BattleView battle={this}/>, this);
+    // this.music.play();
   }
 
   // #region Time Based Updates
@@ -156,62 +156,39 @@ export class Battle extends Phaser.Scene {
     this.sound.play('dialogue-advance');
   }
 
-  selectAction(action: Action): void {
+  selectAction(action: Action, caster: Ally): void {
     if (this.battleStore.state === BattleState.RESOLUTION) return;
-    this.battleStore.pushAction(action);
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
+    if (CANNOT_OPEN_STATUS.includes(caster.status)) {
+      this.sound.play('stamina-depleted');
+      return;
+    }
+    this.battleStore.pushAction(action, caster);
     this.sound.play('choice-select');
-    this.battleStore.caster.stamina -= action.staminaCost;
-    if (this.battleStore.caster.stamina < 0) this.closeMenu();
-  }
-
-
-  confirmQueue(): void {
-    if (this.battleStore.state === BattleState.RESOLUTION) return;
-    this.closeMenu();
-    this.battleStore.setState(BattleState.RESOLUTION);
-  }
-
-  cancelQueue(): void {
-    if (this.battleStore.state === BattleState.RESOLUTION) return;
-    this.closeMenu();
-    this.battleStore.setQueue([]);
-    this.battleStore.setState(BattleState.NEUTRAL);
+    caster.stamina -= action.staminaCost;
   }
   
-  selectTarget(target: Enemy): void {
+  selectTarget(target: Combatant): void {
     if (this.battleStore.state === BattleState.RESOLUTION) return;
     this.battleStore.setTarget(target);
     this.sound.play('choice-select');
-
-    const actions = this.battleStore.state === BattleState.ATTACK ?
-      this.battleStore.caster.actions.filter((action) => action.actionType === ActionType.ATTACK) :
-      this.battleStore.caster.actions.filter((action) => action.actionType === ActionType.DEFENSE);
-
-    this.battleStore.setMenu({
-      type: MenuType.ACTION,
-      name: this.battleStore.caster.name,
-      actions,
-    });
+    this.battleStore.setState(BattleState.RESOLUTION);
   }
 
   selectAttack(): void {
     this.battleStore.setState(BattleState.ATTACK);
     this.sound.play('choice-select');
-    this.battleStore.setMenu({
-      type: MenuType.TARGET,
-      targets: this.battleStore.enemies,
-      name: 'Targets',
-    })
+
   }
 
   selectDefend(): void {
     this.battleStore.setState(BattleState.DEFEND);
     this.sound.play('choice-select');
-    this.battleStore.setMenu({
-      type: MenuType.TARGET,
-      targets: this.battleStore.allies,
-      name: 'Targets',
-    })
+  }
+
+  cancel(): void {
+    this.battleStore.setState(BattleState.NEUTRAL);
+    this.sound.play('choice-select');
   }
 
   // #endregion

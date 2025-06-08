@@ -129,9 +129,9 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
   ) 
 }) 
 
-export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
+export const TargetBar = observer((props: { battle: Battle }): JSX.Element => {
   const { battle } = props;
-
+  if (battle.battleStore.queue.length === 0) return null;
 
   if (battle.battleStore.state === BattleState.ATTACK) {
     return (
@@ -140,7 +140,6 @@ export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
           {battle.battleStore.enemies.map(enemy => (
             <MenuTargetView battleScene={battle} target={enemy} key={enemy.name} />
           ))}
-          <button onClick={() => battle.cancel()} className={classNames.menuOption}><div>Cancel</div></button>
         </div>
       </div>
     )
@@ -153,11 +152,16 @@ export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
           {battle.battleStore.allies.map(ally => (
             <MenuTargetView battleScene={battle} target={ally} key={ally.name} />
           ))}
-          <button onClick={() => battle.cancel()} className={classNames.menuOption}><div>Cancel</div></button>
         </div>
       </div>
     )
   }
+
+  return null;
+});
+
+export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
+  const { battle } = props;
 
   return (
     <div className={classNames.window}>
@@ -165,6 +169,7 @@ export const ActionBar = observer((props: { battle: Battle }): JSX.Element => {
         <button onClick={() => battle.selectAttack()} className={classNames.menuOption}><div>Attack</div></button>
         <button onClick={() => battle.selectDefend()} className={classNames.menuOption}><div>Defend</div></button>
         <button className={classNames.menuOption} disabled><div>Item</div></button>
+        <button onClick={() => battle.cancel()} className={classNames.menuOption}><div>Cancel</div></button>
       </div>
     </div>
   )
@@ -193,6 +198,7 @@ export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
           {/* <Stage scene={battle} /> */}
         </div>
         <MenuContainer battleScene={battle}/>
+        <TargetBar battle={battle} />
         <div className={classNames.combatantBar}>
             {allies.map((ally) => {
               return( 

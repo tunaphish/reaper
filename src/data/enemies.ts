@@ -98,7 +98,7 @@ export const cleric: Enemy = {
   strategies: [
     {
       actions: [Actions.attack],
-      timeTilExecute: 4000,
+      timeTilExecute: 6000,
       name: 'Gamble',
       selectTarget: randomAlly,
     },
@@ -112,7 +112,7 @@ export const cleric: Enemy = {
   actionIdx: 0,
   selectedStrategy: {
     actions: [Actions.attack],
-    timeTilExecute: 4000,
+    timeTilExecute: 6000,
     name: 'Gamble',
     selectTarget: randomAlly,
   },

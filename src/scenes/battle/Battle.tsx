@@ -188,6 +188,7 @@ export class Battle extends Phaser.Scene {
 
   cancel(): void {
     this.battleStore.setState(BattleState.NEUTRAL);
+    this.battleStore.setQueue([]);
     this.sound.play('choice-select');
   }
 

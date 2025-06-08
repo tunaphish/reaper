@@ -141,34 +141,20 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
 
 
   return (
-    <div style={{ flex: '1' }}>
-      <div className={style.join(' ')} onClick={props.onClickCell} 
-        style={{ 
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gridTemplateRows: "1fr", 
-        }}>
-
-        <div className={classNames.characterCellContainer}>
-          <div className={classNames.windowName}>{props.ally.name}</div>
-          <div className={classNames.resourceContainer}>
-            <div className={classNames.meterContainer}>
-              <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
-              <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter}/>
-              <div className={classNames.meterNumber}>{Math.ceil(props.ally.health)}</div>
-            </div>
-            <div className={classNames.meterContainer}>
-              <Meter value={props.ally.stamina < 0 ? 0 : props.ally.stamina } max={props.ally.maxStamina} className={classNames.staminaMeter}/>
-              <div className={classNames.meterNumber}>{Math.ceil(props.ally.stamina)}</div>
-            </div>
-            <div className={classNames.meterContainer}>
-              <Meter value={ props.battleScene.battleStore.getStaminaUsed(props.ally) } max={props.ally.maxStamina} className={classNames.staminaUsedMeter}/>
-              <div className={classNames.meterNumber}>{props.battleScene.battleStore.getStaminaUsed(props.ally)}</div>
-            </div>
-          </div>
+    <fieldset className={style.join(' ')} style={{ padding: 0, flex: '1' }} onClick={props.onClickCell}>
+      <legend className={classNames.windowName}>{props.ally.name}</legend>
+      <div className={classNames.resourceContainer}>
+        <div className={classNames.meterContainer}>
+          <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
+          <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter}/>
+          <div className={classNames.meterNumber}>{Math.ceil(props.ally.health)}</div>
+        </div>
+        <div className={classNames.meterContainer}>
+          <Meter value={props.ally.stamina < 0 ? 0 : props.ally.stamina } max={props.ally.maxStamina} className={classNames.staminaMeter}/>
+          <div className={classNames.meterNumber}>{Math.ceil(props.ally.stamina)}</div>
         </div>
       </div>
-    </div>
+    </fieldset>
   )
 });
 

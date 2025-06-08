@@ -60,17 +60,9 @@ export class BattleStore {
     });
   }
 
-  getStaminaUsed(ally: Ally): number {
-    return this.queue
-      .filter((queueAction) => ally.name === queueAction.caster.name)
-      .reduce((total, queueAction) => {
-        return total + queueAction.action.staminaCost;
-      }, 0)
-  }
-
   getAllyStatus(ally: Ally): Status {
     if (ally.health === 0) return Status.DEAD;
-    if (this.getStaminaUsed(ally) >= ally.maxStamina || ally.stamina < 0) return Status.EXHAUSTED;
+    if (ally.stamina < 0) return Status.EXHAUSTED;
     return Status.NORMAL;
   } 
 

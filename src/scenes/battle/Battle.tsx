@@ -8,7 +8,7 @@ import { Status } from '../../model/combatant';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleState, BattleStore } from './BattleStore';
-import { cleric } from '../../data/enemies';
+import { cleric, fencer } from '../../data/enemies';
 import { MenuType } from './menu';
 import { Action, ActionType } from '../../model/action';
 import { getRandomItem } from '../../model/random';
@@ -63,7 +63,6 @@ export class Battle extends Phaser.Scene {
     this.battleStore.enemies.forEach((enemy) => {
       if (enemy.status === Status.DEAD) return;
       if (enemy.status === Status.ACTIONING) {
-        console.log(enemy.actionIdx, enemy.selectedStrategy.actions.length)
         if (enemy.actionIdx >= enemy.selectedStrategy.actions.length) {
           enemy.selectedStrategy = getRandomItem(enemy.strategies);
           enemy.timeSinceLastAction = 0;
@@ -110,7 +109,6 @@ export class Battle extends Phaser.Scene {
     const queueAction = this.battleStore.queue[0];
     queueAction.action.effect(this, queueAction.caster, this.battleStore.target);
     this.sound.play(queueAction.action.soundKeyName);
-    queueAction.caster.stamina -= queueAction.action.staminaCost;
     this.battleStore.dequeueAction();
 
     this.timeSinceLastAction = 0;
@@ -162,8 +160,8 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.state === BattleState.RESOLUTION) return;
     this.battleStore.pushAction(action);
     this.sound.play('choice-select');
-    if (this.battleStore.caster.maxStamina <= this.battleStore.getStaminaUsed(this.battleStore.caster)) this.closeMenu();
-
+    this.battleStore.caster.stamina -= action.staminaCost;
+    if (this.battleStore.caster.stamina < 0) this.closeMenu();
   }
 
 

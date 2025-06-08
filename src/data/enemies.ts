@@ -35,6 +35,20 @@ export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
   return fullHealthAlly.length === 0 ? null : fullHealthAlly.at(getRandomInt(fullHealthAlly.length));
 };
 
+const highestHealthAlly = (scene: Battle, caster: Combatant) => {
+  const aliveAllies = scene.battleStore.allies.filter(isAlive);
+  return aliveAllies.reduce((highest, ally) => {
+    return ally.health > highest.health ? ally : highest;
+  });
+};
+
+const lowestHealthAlly = (scene: Battle, caster: Combatant) => {
+  const aliveAllies = scene.battleStore.allies.filter(isAlive);
+  return aliveAllies.reduce((highest, ally) => {
+    return ally.health < highest.health ? ally : highest;
+  });
+};
+
 export const self = (scene: Battle, caster: Combatant) => caster;
 
 
@@ -49,16 +63,16 @@ export const fencer: Enemy = {
   spritePath: '/reaper/sprites/enemies/chansey.png',
   strategies: [
     {
-      actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 5000,
-      name: 'Dual Attack',
-      selectTarget: randomAlly,
+      actions: [Actions.attack],
+      timeTilExecute: 3000,
+      name: 'Exterminate',
+      selectTarget: lowestHealthAlly,
     },
     {
-      actions: [Actions.attack, Actions.attack, Actions.attack],
-      timeTilExecute: 7000,
-      name: 'Triple Attack',
-      selectTarget: randomAlly,
+      actions: [Actions.attack],
+      timeTilExecute: 3000,
+      name: 'Headhunter',
+      selectTarget: highestHealthAlly,
     },
   ],
 
@@ -69,9 +83,9 @@ export const fencer: Enemy = {
     position: [3, 0, -5],
     actionIdx: 0,
     selectedStrategy: {
-      actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 5000,
-      name: 'Dual Attack',
+      actions: [Actions.attack],
+      timeTilExecute: 3000,
+      name: 'Exterminate',
       selectTarget: randomAlly,
     },
 }
@@ -83,15 +97,9 @@ export const cleric: Enemy = {
   spritePath: '/reaper/sprites/enemies/chansey.png',
   strategies: [
     {
-      actions: [Actions.attack, Actions.attack],
-      timeTilExecute: 5000,
-      name: 'Dual Attack',
-      selectTarget: randomAlly,
-    },
-    {
-      actions: [Actions.attack, Actions.attack, Actions.attack],
-      timeTilExecute: 7000,
-      name: 'Triple Attack',
+      actions: [Actions.attack],
+      timeTilExecute: 4000,
+      name: 'Gamble',
       selectTarget: randomAlly,
     },
   ],
@@ -103,9 +111,9 @@ export const cleric: Enemy = {
   position: [3, 0, -5],
   actionIdx: 0,
   selectedStrategy: {
-    actions: [Actions.attack, Actions.attack],
-    timeTilExecute: 5000,
-    name: 'Dual Attack',
+    actions: [Actions.attack],
+    timeTilExecute: 4000,
+    name: 'Gamble',
     selectTarget: randomAlly,
   },
 };

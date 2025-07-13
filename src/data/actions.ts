@@ -1,69 +1,9 @@
-import { Action, Restriction } from '../model/action';
-import { Status } from '../model/combatant';
+import { Action } from '../model/action';
 import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget } from './effects';
 
-// #region Restrictions
-
-export const firstActionTaken: Restriction = {
-  desc: 'Action must be first in Battle',
-  isRestricted: (target, source, scene) => { 
-    return scene.firstActionTaken;
-  },
-}
-
-export const targetExhausted: Restriction = {
-  desc: 'Target must be exhausted',
-  isRestricted: (target, source, scene) => { 
-    return scene.firstActionTaken;
-  },
-}
-
-export const targetFullHealth: Restriction = {
-  desc: 'Target must have full health',
-  isRestricted: (target, source, scene) => { 
-    return target.health !== target.maxHealth
-  },
-}
-
-export const targetTargetingOther: Restriction = {
-  desc: 'Target must be acting on anyone besides caster',
-  isRestricted: (target, source, scene) => { 
-    return !target.queuedTarget || target.queuedTarget.name === source.name;
-  },
-}
-
-export const casterFullHealth: Restriction = {
-  desc: 'Caster must have full health',
-  isRestricted: (target, source, scene) => { 
-    return source.health !== source.maxHealth
-  },
-}
-
-export const targetDead: Restriction = {
-  desc: 'Target must be Dead',
-  isRestricted: (target, source, scene) => { 
-    return target.status !== Status.DEAD
-  },
-}
-
-export const actionSingleUse: Restriction = {
-  desc: 'Action must not have been previously used in battle',
-  isRestricted: (target, source, scene) => { 
-    return scene.splinterUsed;
-  },
-}
-
-export const targetDying: Restriction = {
-  desc: 'Target must be dying',
-  isRestricted: (target, source, scene) => { 
-    return target.bleed !== target.health;
-  },
-}
-
-// #endregion
 
 // #region Actions
 
@@ -101,7 +41,6 @@ export const ambush: Action = {
 
   description: 'Deals damage, refunds stamina cost',
   effects: [{execute: dealDamage, potency: 50,}, {execute: healStamina, potency: 100}],
-  restriction: firstActionTaken,
   mediaEffects: [],
 };
 
@@ -138,7 +77,6 @@ export const debilitate: Action = {
 
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
-  restriction: targetExhausted,
   mediaEffects: [],
 };
 
@@ -151,7 +89,6 @@ export const engage: Action = {
 
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
-  restriction: targetFullHealth,
   mediaEffects: [],
 };
 
@@ -164,7 +101,6 @@ export const flank: Action = {
 
   description: 'Deals medium damage',
   effects: [{execute: dealDamage, potency: 75}],
-  restriction: targetTargetingOther,
   mediaEffects: [],
 };
 
@@ -177,7 +113,6 @@ export const flourish: Action = {
 
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
-  restriction: casterFullHealth,
   mediaEffects: [],
 };
 
@@ -213,7 +148,6 @@ export const resurrect: Action = {
 
   description: 'Heals target, target must be dead',
   effects: [{execute: healHealth, potency: 50}],
-  restriction: targetDead,
   mediaEffects: [],
 };
 
@@ -238,7 +172,6 @@ export const salve: Action = {
 
   description: 'Heals high bleed, target must be dying',
   effects: [{execute: healBleed, potency: 100}],
-  restriction: targetDying,
   mediaEffects: [],
 };
 
@@ -251,7 +184,6 @@ export const splinter: Action = {
 
   description: 'Deals high damage',
   effects: [{execute: dealDamage, potency: 100}],
-  restriction: actionSingleUse,
   mediaEffects: [],
 };
 

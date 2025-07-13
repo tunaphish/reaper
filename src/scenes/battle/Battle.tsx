@@ -5,19 +5,16 @@ import { OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
-import { resetCombatantBattleState, Status, updateMagic } from '../../model/combatant';
-import { Combatant } from '../../model/combatant';
+import { Status } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { MenuOption } from '../../model/menuOption';
 
-import * as Actions from '../../data/actions';
 
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
 import { fencer, cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
-import { Effect } from '../../model/effect';
 import { MediaEffectType } from '../../model/mediaEffect';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -40,9 +37,6 @@ export class Battle extends Phaser.Scene {
 
   battleStore: BattleStore;
 
-  // restriction vars
-  firstActionTaken = false;
-  splinterUsed = false;
 
   constructor() {
     super(sceneConfig);
@@ -100,51 +94,43 @@ export class Battle extends Phaser.Scene {
 
   executeSelectedOption(): void {
     if (
-      this.battleStore.caster && 
-      this.battleStore.executable && 
-      this.battleStore.target
-    ) {
-  
-      // if (combatant.queuedOption.type === OptionType.ITEM) {
-      //   combatant.queuedOption.charges -= 1;
-      //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
-      //   this.sound.play(combatant.queuedOption.soundKeyName);
-      // } else
+      !this.battleStore.caster || 
+      !this.battleStore.executable || 
+      !this.battleStore.target
+    ) return; 
+    
 
-      if (this.battleStore.executable.type === OptionType.FOLDER) {
-        this.battleStore.executable.criteria.fulfilled = true;
-        this.sound.play('charged');
-        return;
-      }  
+    // if (combatant.queuedOption.type === OptionType.ITEM) {
+    //   combatant.queuedOption.charges -= 1;
+    //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    //   this.sound.play(combatant.queuedOption.soundKeyName);
+    // } else
 
-      const action = (this.battleStore.executable as Action);
-      if (action.restriction && action.restriction.isRestricted(this.battleStore.target, this.battleStore.caster, this)) {
-        this.sound.play('stamina-depleted');
-      } else {
-        // Update Battle Restrictions
-        if (!this.firstActionTaken) this.firstActionTaken = true;
-        if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
+    if (this.battleStore.executable.type === OptionType.FOLDER) {
+      this.sound.play('charged');
+      return;
+    }  
 
+    const action = (this.battleStore.executable as Action);
 
+    action.effects.forEach(effect => {
+      effect.execute(this.battleStore.target, this.battleStore.caster, effect.potency, this);
+      this.events.emit('combatant-effected', this.battleStore.target);
 
-        action.effects.forEach(effect => {
-          effect.execute(this.battleStore.target, this.battleStore.caster, effect.potency, this);
-          this.events.emit('combatant-effected', this.battleStore.target);
-
-          action.mediaEffects.forEach((mediaEffect) => {
-            //
-            switch(mediaEffect.type) {
-              case MediaEffectType.PARTICLE:
-                this.events.emit('particle-effect', mediaEffect.jsonPath, this.battleStore.target.position);
-                break;
-            }
-          });
-        })
-        
-        this.sound.play(action.soundKeyName);
-      }
-      this.battleStore.resetSelections();
-    }
+      action.mediaEffects.forEach((mediaEffect) => {
+        //
+        switch(mediaEffect.type) {
+          case MediaEffectType.PARTICLE:
+            this.events.emit('particle-effect', mediaEffect.jsonPath, this.battleStore.target.position);
+            break;
+        }
+      });
+    })
+    
+    this.sound.play(action.soundKeyName);
+    
+    this.battleStore.resetSelections();
+    
   }
 
   // #endregion
@@ -227,20 +213,12 @@ export class Battle extends Phaser.Scene {
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
-        if (folder.criteria && !folder.criteria.fulfilled) {
-          updateMagic(this.battleStore.caster, folder.criteria.magicCost);
-          this.battleStore.setExecutable(folder);
-          this.battleStore.setTarget(this.battleStore.caster);
-        } else {
-          this.battleStore.pushMenu(folder);
-        }
+ 
+        this.battleStore.pushMenu(folder);
+    
         break;
     }
   }
 
   // #endregion
-}
-
-const generateID = () => {
-  return Date.now().toString(36); 
 }

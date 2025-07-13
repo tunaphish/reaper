@@ -17,8 +17,7 @@ export type Combatant = Option & {
   bleed: number;
   stamina: number;
   maxStamina: number;
-  magic: number;
-  maxMagic: number;
+
   staminaRegenRatePerSecond: number; 
 
   spritePath: string;
@@ -63,17 +62,7 @@ export const updateDamage = (target: Combatant, change: number): void => {
   }
 };
 
-export const updateMagic = (caster: Combatant, change: number): void => {
-  const magicCost = clamp(0, change, caster.magic);
-  const healthCost = clamp(0, change - caster.magic, caster.health);
-  
-  caster.magic -= magicCost;
-  caster.health -= healthCost;
-};
 
 export const resetCombatantBattleState = (combatant: Combatant): void => {
   combatant.status = Status.NORMAL;
-  combatant.queuedOption = null;
-  combatant.queuedTarget = null;
-  combatant.timeInStateInMs = 0;
 }

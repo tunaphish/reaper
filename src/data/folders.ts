@@ -21,11 +21,6 @@ export const berserker: Folder = {
     name: 'Berserker',
     desc: 'Soul focused on bleed',
     options: [Actions.bloodlust, Actions.revenge],
-    criteria: {
-        magicCost: 25,
-        fulfilled: false,
-    },
-    castTimeInMs: 1000,
 }
 
 export const cleric: Folder = {

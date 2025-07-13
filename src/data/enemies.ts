@@ -50,8 +50,6 @@ export const fencer: Enemy = {
   bleed: 0,
   stamina: 0,
   maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 8,
   
   strategies: [
@@ -92,8 +90,6 @@ export const cleric: Enemy = {
   bleed: 0,
   stamina: 0,
   maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 5,
 
   strategies: [
@@ -144,8 +140,6 @@ export const knight: Enemy = {
   bleed: 0,
   stamina: 0,
   maxStamina: 125,
-  magic: 100,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 5,
 
   strategies: [

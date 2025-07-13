@@ -14,7 +14,6 @@ const PartyWindow = (props: { scene: World }) => {
             <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
             <div>{ally.name}</div>
             <div>HP {ally.health}/{ally.maxHealth}</div>
-            <div>MP {ally.magic}/{ally.maxMagic}</div>
           </div>
         )
       })}

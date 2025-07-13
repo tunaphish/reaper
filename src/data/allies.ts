@@ -23,13 +23,10 @@ export const Eji: Ally = {
   bleed: 0,
   stamina: 0,
   maxStamina: 150,
-  magic: 100,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 5,
   folder: ejiFolder,
   
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [-2, 0, 2],
   
   spritePath: '/reaper/sprites/allies/charizard.png',
@@ -52,13 +49,10 @@ export const Keshi: Ally = {
   bleed: 0,
   stamina: 0,
   maxStamina: 100,
-  magic: 100,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 7,
   folder: keshiFolder,
   
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [0, 0, 2],
   
   spritePath: '/reaper/sprites/allies/gengar.png',
@@ -80,13 +74,10 @@ export const Elise: Ally = {
   maxHealth: 100,
   stamina: 0,
   maxStamina: 200,
-  magic: 10,
-  maxMagic: 100,
   staminaRegenRatePerSecond: 4,
   folder: eliseFolder,
 
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [2, 0, 2],
 
   spritePath: '/reaper/sprites/allies/snorlax.png',

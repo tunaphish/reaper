@@ -5,10 +5,6 @@ import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 import { ParticleEffect } from "./mediaEffect";
 
-export type Restriction = {
-  desc: string;
-  isRestricted: (target: Combatant, source: Combatant, scene: Battle) => boolean;
-}
 
 export type Action = Option & {
   type: OptionType.ACTION;
@@ -18,7 +14,6 @@ export type Action = Option & {
   targetType: TargetType;
 
   effects: Effect[];
-  restriction?: Restriction; 
 
   soundKeyName: string;
   mediaEffects: (ParticleEffect)[];

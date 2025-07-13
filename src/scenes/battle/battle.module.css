@@ -265,21 +265,3 @@
 @keyframes blink-animation {
   50% { opacity: 1; }
 }
-
-.reactionContainer {
-  position: absolute;
-  bottom: -5px;
-  display: flex;
-}
-
-.reaction {
-  margin-right: 1px;
-  max-width: 12px;
-  max-height: 12px;
-}
-
-.juggleMeter {
-  background-color: white;
-  height: 12px;
-  position: absolute;
-}

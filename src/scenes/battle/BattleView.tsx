@@ -9,12 +9,13 @@ import { MenuOption } from '../../model/menuOption';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
-import { Stage } from './Stage';
+import { Stage, EnemyResourceDisplay } from './Stage';
 import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
+
 import { Action } from '../../model/action';
 
 const Description = observer((props: { battle: Battle }) => {
-  const text = props.battle.battleStore.reaction?.description || (props.battle.battleStore.executable as Action)?.description;
+  const text = (props.battle.battleStore.executable as Action)?.description;
   console.log(text);
   const style: React.CSSProperties = {
     padding: 5,
@@ -129,17 +130,28 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
 }) 
 
 
+
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies } = props.scene.battleStore;
+    const { allies, enemies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
     }
 
     return (
         <div className={styles.container}>
+          <div className={styles.combatantBar}>
+              {enemies.map((enemy) => {
+                return( 
+                  <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
+                    <ActionsViewManager battleScene={props.scene} combatant={enemy} />
+                    <EnemyResourceDisplay battleScene={props.scene} combatant={enemy} />
+                  </div>
+                )
+              })}
+          </div>
           <Description battle={props.scene} />
           <div style={{ flex: 4, zIndex: -1 }}> 
-            <Stage scene={props.scene} />
+            {/* <Stage scene={props.scene} /> */}
           </div>
           <div className={styles.combatantBar}>
               {allies.map((member) => {

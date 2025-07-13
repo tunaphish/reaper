@@ -17,7 +17,6 @@ import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
 import { fencer, cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
-import { Reaction } from '../../model/reaction';
 import { Effect } from '../../model/effect';
 import { MediaEffectType } from '../../model/mediaEffect';
 
@@ -45,8 +44,6 @@ export class Battle extends Phaser.Scene {
   firstActionTaken = false;
   splinterUsed = false;
 
-  private enemyReactionTimer = 0;
-
   constructor() {
     super(sceneConfig);
   }
@@ -73,10 +70,8 @@ export class Battle extends Phaser.Scene {
     
     // this.selectEnemyStrategy();
     // this.selectEnemyAction(delta);
-    // this.selectEnemyReactions(delta);
 
     this.castActions();    
-    this.reactToActions();
 
     this.executeActions();    
     this.resolveDeferredActions(delta);
@@ -118,7 +113,6 @@ export class Battle extends Phaser.Scene {
           caster: enemy,
           action,
           target: potentialTarget, 
-          reactions: [],
           isEnemyCaster: true,
         };
         this.battleStore.deferredActions.push(newDeferredAction);
@@ -126,34 +120,6 @@ export class Battle extends Phaser.Scene {
         return true;
       });
       
-    });
-  }
-
-  selectEnemyReactions(delta: number): void {
-    this.enemyReactionTimer += delta;
-    if (this.enemyReactionTimer < 300) return;
-    this.enemyReactionTimer = 0;
-
-    this.battleStore.enemies.forEach((enemy) => {
-      if (enemy.status !== Status.NORMAL) return;
-      const { potentialReactions } = enemy.strategies[enemy.strategyIndex];
-      potentialReactions.find(potentialReaction => {
-        const potentialTarget = potentialReaction.getTarget(this, enemy)
-        if (!potentialTarget) return false;
-        const { reaction } = potentialReaction;
-        enemy.stamina -= reaction.staminaCost;
-
-        const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === enemy.name);
-        actionsTargetingTarget.forEach(action => {
-          if (reaction.restriction && reaction.restriction.isRestricted(action, enemy)) {
-            this.sound.play('stamina-depleted');
-          } else {
-            this.sound.play(reaction.soundKeyName);
-            action.reactions.push(reaction);
-          }
-        });
-        return true;
-      });
     });
   }
 
@@ -196,25 +162,6 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  reactToActions(): void {
-    if (!this.battleStore.caster || !this.battleStore.reaction || !this.battleStore.target) return;  
-  
-    this.battleStore.caster.stamina -= this.battleStore.reaction.staminaCost
-
-    const actionsTargetingTarget = this.battleStore.deferredActions.filter(deferredAction => deferredAction.target.name === this.battleStore.target.name);
-    actionsTargetingTarget.forEach(action => {
-      if (this.battleStore.reaction.restriction &&
-          this.battleStore.reaction.restriction.isRestricted(action, this.battleStore.caster)
-        ) {
-        this.sound.play('stamina-depleted');
-      } else {
-        this.sound.play(this.battleStore.reaction.soundKeyName);
-        action.reactions.push(this.battleStore.reaction);
-      }
-    })
-
-    this.battleStore.resetSelections();  
-  }
 
   executeActions(): void {
     this.battleStore.getCombatants()
@@ -243,7 +190,6 @@ export class Battle extends Phaser.Scene {
         caster: combatant,
         action: combatant.queuedOption,
         target: combatant.queuedTarget,
-        reactions: [],
         isEnemyCaster: false,
       };
       this.battleStore.deferredActions.push(newDeferredAction);
@@ -254,7 +200,7 @@ export class Battle extends Phaser.Scene {
 
   // potentially split function
   resolveDeferredActions(delta: number): void {
-    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster, reactions, isEnemyCaster}) => {
+    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster,  isEnemyCaster}) => {
       if (timeTilExecute - delta <= 0) {
         if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
           this.sound.play('stamina-depleted');
@@ -263,11 +209,9 @@ export class Battle extends Phaser.Scene {
           if (!this.firstActionTaken) this.firstActionTaken = true;
           if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
 
-          const effects: Effect[] = reactions.reduce((previousEffects, reaction) => {
-            return reaction.modifyEffects(previousEffects);
-          }, action.effects);
 
-          effects.forEach(effect => {
+
+          action.effects.forEach(effect => {
             effect.execute(target, caster, effect.potency, this);
             this.events.emit('combatant-effected', target);
 
@@ -287,15 +231,13 @@ export class Battle extends Phaser.Scene {
         }
       }
 
-      // pause caster actions whilst juggled
-      const timeElapsed = caster.juggleDuration === 0 ? delta : 0;
+;
       return {
         id,
-        timeTilExecute: timeTilExecute - timeElapsed,
+        timeTilExecute: timeTilExecute - delta,
         target,
         action, 
         caster,
-        reactions,
         isEnemyCaster
       }
     }).filter(deferredAction => deferredAction.timeTilExecute > 0);
@@ -343,7 +285,6 @@ export class Battle extends Phaser.Scene {
       this.battleStore.setCaster(null); // hacky way of resetting selection if user clicks out
     }
     else if (this.battleStore.menus.length === 1) {
-      this.battleStore.setReaction(null); 
       this.battleStore.setExecutable(null);
     }
     this.sound.play('dialogue-advance');
@@ -375,17 +316,7 @@ export class Battle extends Phaser.Scene {
           this.battleStore.pushMenu(targetFolder);
         }
         break;
-      case OptionType.REACTION:
-        const reaction = option as Reaction;
-        this.battleStore.setReaction(reaction);
-        if (reaction.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-          this.battleStore.pushMenu(targetFolder);
-        } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          this.battleStore.pushMenu(targetFolder);
-        }        
-        break;
+
       case OptionType.ENEMY:
       case OptionType.ALLY:
         const combatant = option;

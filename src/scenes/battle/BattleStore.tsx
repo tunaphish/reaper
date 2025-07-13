@@ -4,7 +4,6 @@ import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
 import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
-import { Reaction } from "../../model/reaction";
 import { Action } from "../../model/action";
 
 export type DeferredAction = { 
@@ -13,7 +12,6 @@ export type DeferredAction = {
   action: Action; 
   target: Combatant; 
   caster: Combatant; 
-  reactions: Reaction[];
   isEnemyCaster: boolean;
 };
 
@@ -26,7 +24,6 @@ export class BattleStore {
   executable?: Executable;
   target?: Combatant;
 
-  reaction?: Reaction;
   deferredActions: DeferredAction[] = [];
 
   menus: Folder[] = [];
@@ -52,10 +49,6 @@ export class BattleStore {
     this.executable = executable;
   }
 
-  setReaction(reaction?: Reaction): void {
-    this.reaction = reaction;
-  }
-
   setDeferredActions(deferredActions: DeferredAction[]) {
     this.deferredActions = deferredActions;
   }
@@ -75,7 +68,6 @@ export class BattleStore {
   resetSelections(): void {
     this.emptyMenu();
     this.setCaster(null);
-    this.setReaction(null);
     this.setExecutable(null);
     this.setTarget(null);
   }
@@ -97,7 +89,6 @@ export class BattleStore {
           combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
       }
 
-      combatant.juggleDuration = Math.max(0, combatant.juggleDuration -= delta);
     });
   }
 

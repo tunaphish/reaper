@@ -56,25 +56,6 @@ export const ActionView = (props: { action: DeferredAction }) => {
             {action.action.name}
           </div>
         </motion.fieldset>
-        <div className={styles.reactionContainer}>
-          {
-            action.reactions.map((reaction, idx) => 
-              <motion.div 
-              className={action.isEnemyCaster ? styles.window : styles.enemyWindow } // bug here, need to include correct color.... potentially this ui might suck lol 
-              style={{ display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr", padding: 0  }}
-              initial={{ scaleY: 0 }} 
-              animate={{ scaleY: 1 }} 
-              exit={{ scaleY: 0 }}
-              transition={{ duration: .1, ease: 'easeOut' }} 
-              key={idx}
-            >
-              <div style={{ padding: 5, gridColumn: 1, gridRow: 1, fontSize: '16px' }}>
-                {reaction.name}
-              </div>
-            </motion.div>
-            )
-          }
-        </div>
       </div>
     )
   }
@@ -98,10 +79,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
     statusToStylesMap[props.combatant.status],
   ];
 
-  
-  const juggleWidth = {
-    width: `${props.combatant.juggleDuration * .1}px`
-  }
+
 
   return (
     <div style={{ flex: '1' }}>
@@ -131,7 +109,6 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
           </div>
         </div>
       </div>
-      <div className={styles.juggleMeter} style={juggleWidth}/>
     </div>
   )
 });

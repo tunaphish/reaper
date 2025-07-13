@@ -3,7 +3,7 @@ import { Status } from '../model/combatant';
 import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
-import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget, launch } from './effects';
+import { dealDamage, healStamina, healBleed, healHealth, scaleDamageOnBleedCombatants, scaleDamageOnCasterBleed, scaleDamageOnCombatantsTargetingTarget } from './effects';
 
 // #region Restrictions
 
@@ -303,18 +303,5 @@ export const jab: Action = {
   mediaEffects: [],
 };
 
-export const uppercut: Action = {
-  type: OptionType.ACTION,
-  name: 'Uppercut',
-  staminaCost: 10,
-  castTimeInMs: 0,
-  animTimeInMs: 4000,
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack',
-
-  description: 'Deals damage, launches',
-  effects: [{execute: dealDamage, potency: 50}, {execute: launch, potency: 1000}],
-  mediaEffects: [],
-};
 
 // #endregion

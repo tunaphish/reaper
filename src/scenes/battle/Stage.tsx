@@ -46,7 +46,7 @@ const ParticleManager = (props: { battle: Battle }) =>{
   return null;
 }
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
+export const EnemyResourceDisplay = observer((props: {combatant: Combatant, battleScene: Battle }) => {
   const { combatant } = props;
 
   return (
@@ -94,7 +94,7 @@ const CombatantSprite = (props: {combatant: Combatant, battleScene: Battle, isEn
         >
           <div style={{position: 'relative'}}>
             { isEnemy && <ActionsViewManager combatant={combatant} battleScene={battleScene}/> }
-            { isEnemy && <ResourceDisplay combatant={combatant} battleScene={battleScene}/> }
+            { isEnemy && <EnemyResourceDisplay combatant={combatant} battleScene={battleScene}/> }
           </div>
         </Html>
         <planeGeometry args={[1,1]} />

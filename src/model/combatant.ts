@@ -28,7 +28,6 @@ export type Combatant = Option & {
   queuedOption?: Action | Item | Folder;
   queuedTarget?: Combatant;
   timeInStateInMs: number;
-  juggleDuration: number;
   position: [x: number, y: number, z: number];
 }
 

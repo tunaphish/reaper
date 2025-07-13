@@ -4,7 +4,6 @@ import { Battle } from '../scenes/battle/Battle';
 import { Action } from './action';
 import { Item } from './item';
 import { Folder } from './folder';
-import { Reaction } from './reaction';
 
   // valid: (enemy: Enemy, scene: Battle) => boolean;
   // getTarget: (scene: Battle, caster: Combatant) => Combatant;
@@ -16,19 +15,14 @@ export interface PotentialOption {
   singleUse: boolean;
 }
 
-export interface PotentialReaction {
-  reaction: Reaction;
-  getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
-}
+
 
 export interface Strategy {
   potentialOptions: PotentialOption[];
-  potentialReactions: PotentialReaction[];
   toExit: (enemy: Enemy, battle: Battle) => boolean;
   toEnter: (enemy: Enemy, battle: Battle) => boolean;
 }
 
-// reaction
 
 export type Enemy = Combatant & {
   type: OptionType.ENEMY;

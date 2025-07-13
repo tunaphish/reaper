@@ -4,7 +4,6 @@ import { Status } from '../model/combatant';
 
 import * as Actions from './actions';
 import * as Folders from './folders'
-import * as Reactions from './reactions'
 import { OptionType } from '../model/option';
 
 
@@ -13,7 +12,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Actions.attack, Reactions.block, Actions.stanch],
+  options: [Actions.attack, Actions.stanch],
 }
 
 export const Eji: Ally = {
@@ -31,7 +30,6 @@ export const Eji: Ally = {
   
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,
   position: [-2, 0, 2],
   
   spritePath: '/reaper/sprites/allies/charizard.png',
@@ -43,7 +41,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Barret',
   desc: 'Soul of Barret',
-  options: [Actions.attack, Reactions.block, Actions.stanch, Reactions.evade],
+  options: [Actions.attack, Actions.stanch],
 }
 
 export const Keshi: Ally = {
@@ -61,7 +59,6 @@ export const Keshi: Ally = {
   
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,
   position: [0, 0, 2],
   
   spritePath: '/reaper/sprites/allies/gengar.png',
@@ -72,7 +69,7 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Tifa',
   name: 'Tifa',
-  options: [Actions.attack, Reactions.block, Actions.stanch],
+  options: [Actions.attack, Actions.stanch],
 };
 
 export const Elise: Ally = {
@@ -90,7 +87,6 @@ export const Elise: Ally = {
 
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,
   position: [2, 0, 2],
 
   spritePath: '/reaper/sprites/allies/snorlax.png',

@@ -5,7 +5,6 @@ import { OptionType } from '../model/option';
 import { getRandomInt } from '../model/math';
 
 import * as Actions from './actions';
-import * as Reactions from './reactions';
 
 import { Battle } from '../scenes/battle/Battle';
 
@@ -40,8 +39,7 @@ export const self = (scene: Battle, caster: Combatant) => caster;
 
 const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
   const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.reactions.length === 0
+    deferredAction => deferredAction.target.name === caster.name 
   );
   return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
 };
@@ -49,8 +47,7 @@ const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null =
 const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
   const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
     deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.timeTilExecute < 500 &&
-    deferredAction.reactions.length === 0
+    deferredAction.timeTilExecute < 500 
   );
   return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
 };
@@ -77,19 +74,16 @@ export const fencer: Enemy = {
         { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 50, singleUse: true },
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
       ],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => enemy.stamina < 25,
       toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
-      potentialReactions: [{ reaction: Reactions.evade, getTarget: selfCloseToBeingAttacked }],
       toExit: (enemy, battle): boolean => enemy.stamina > 100,
       toEnter: (enemy): boolean => enemy.stamina > 50,
     },
     {
       potentialOptions: [],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => enemy.stamina > 50,
       toEnter: (): boolean => true,
     }
@@ -101,7 +95,6 @@ export const fencer: Enemy = {
   timeTilNextAction: 0,
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,  
   position: [-1, 0, -10],
 };
 
@@ -122,7 +115,6 @@ export const cleric: Enemy = {
       potentialOptions: [
         { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
       ],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => {
         if (enemy.stamina < 25) return true;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
@@ -138,13 +130,11 @@ export const cleric: Enemy = {
       potentialOptions: [
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => enemy.stamina < 50,
       toEnter: (enemy): boolean => enemy.stamina > 100,
     },
     {
       potentialOptions: [],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => enemy.stamina > 100,
       toEnter: (): boolean => true,
     }
@@ -157,7 +147,6 @@ export const cleric: Enemy = {
 
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,  
   position: [3, 0, -5],
 };
 
@@ -178,16 +167,12 @@ export const knight: Enemy = {
       potentialOptions: [
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
-      potentialReactions: [
-        // cover
-        { reaction: Reactions.block, getTarget: selfBeingAttacked }
-      ],
+
       toExit: (enemy, battle): boolean => enemy.stamina < 25,
       toEnter: (enemy): boolean => enemy.stamina > 75,
     },
     {
       potentialOptions: [],
-      potentialReactions: [],
       toExit: (enemy, battle): boolean => enemy.stamina > 75,
       toEnter: (): boolean => true,
     }
@@ -200,7 +185,6 @@ export const knight: Enemy = {
 
   status: Status.NORMAL,
   timeInStateInMs: 0,
-  juggleDuration: 0,  
   position: [1, 0, -5],
 };
 

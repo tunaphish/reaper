@@ -67,60 +67,8 @@ export class Battle extends Phaser.Scene {
     
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
-    
-    // this.selectEnemyStrategy();
-    // this.selectEnemyAction(delta);
 
-    this.castActions();    
-
-    this.executeActions();    
-    this.resolveDeferredActions(delta);
-  }
-
-  selectEnemyStrategy(): void {
-    this.battleStore.enemies.forEach((enemy) => {
-      if (
-        enemy.strategyIndex !== undefined && 
-        !enemy.strategies[enemy.strategyIndex].toExit(enemy, this)
-      ) return;
-      enemy.strategyIndex = enemy.strategies.findIndex(strategy => strategy.toEnter(enemy, this));
-
-      enemy.timeTilNextAction = 500;
-    });
-  }
-
-
-  selectEnemyAction(delta: number): void {
-    // TODO: update for spells and items
-    this.battleStore.enemies.forEach((enemy) => {
-      enemy.timeTilNextAction -= delta;
-      if (enemy.timeTilNextAction > 0 || enemy.status !== Status.NORMAL) return;
-      const potentialOptions = enemy.strategies[enemy.strategyIndex].potentialOptions;
-      potentialOptions.find((potentialOption) => {
-        if (
-          potentialOption.singleUse && 
-          this.battleStore.deferredActions.some(deferredAction => deferredAction.action.name === potentialOption.option.name && deferredAction.caster.name === enemy.name)
-        ) {
-          return false;
-        }
-        const potentialTarget = potentialOption.getTarget(this, enemy);
-        if (!potentialTarget) return false;
-        const action = (potentialOption.option as Action);
-        enemy.stamina -= action.staminaCost;
-        const newDeferredAction = {
-          id: generateID(),
-          timeTilExecute: action.animTimeInMs,
-          caster: enemy,
-          action,
-          target: potentialTarget, 
-          isEnemyCaster: true,
-        };
-        this.battleStore.deferredActions.push(newDeferredAction);
-        enemy.timeTilNextAction = potentialOption.cadence;
-        return true;
-      });
-      
-    });
+    this.executeSelectedOption();    
   }
 
 
@@ -147,103 +95,58 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-  castActions(): void {
+
+
+
+  executeSelectedOption(): void {
     if (
       this.battleStore.caster && 
       this.battleStore.executable && 
       this.battleStore.target
     ) {
-      this.battleStore.caster.status = Status.CASTING;
-      this.battleStore.caster.queuedOption = this.battleStore.executable;
-      this.battleStore.caster.queuedTarget = this.battleStore.target;
-      this.battleStore.caster.timeInStateInMs = 0;
   
+      // if (combatant.queuedOption.type === OptionType.ITEM) {
+      //   combatant.queuedOption.charges -= 1;
+      //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+      //   this.sound.play(combatant.queuedOption.soundKeyName);
+      // } else
+
+      if (this.battleStore.executable.type === OptionType.FOLDER) {
+        this.battleStore.executable.criteria.fulfilled = true;
+        this.sound.play('charged');
+        return;
+      }  
+
+      const action = (this.battleStore.executable as Action);
+      if (action.restriction && action.restriction.isRestricted(this.battleStore.target, this.battleStore.caster, this)) {
+        this.sound.play('stamina-depleted');
+      } else {
+        // Update Battle Restrictions
+        if (!this.firstActionTaken) this.firstActionTaken = true;
+        if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
+
+
+
+        action.effects.forEach(effect => {
+          effect.execute(this.battleStore.target, this.battleStore.caster, effect.potency, this);
+          this.events.emit('combatant-effected', this.battleStore.target);
+
+          action.mediaEffects.forEach((mediaEffect) => {
+            //
+            switch(mediaEffect.type) {
+              case MediaEffectType.PARTICLE:
+                this.events.emit('particle-effect', mediaEffect.jsonPath, this.battleStore.target.position);
+                break;
+            }
+          });
+        })
+        
+        this.sound.play(action.soundKeyName);
+      }
       this.battleStore.resetSelections();
     }
   }
 
-
-  executeActions(): void {
-    this.battleStore.getCombatants()
-                    .filter(combatant => combatant.status === Status.CASTING && combatant.timeInStateInMs > combatant.queuedOption.castTimeInMs) 
-                    .forEach(combatant => this.execute(combatant));
-  }
-
-  execute(combatant: Combatant): void {
-    // if (combatant.queuedOption.type === OptionType.ITEM) {
-    //   combatant.queuedOption.charges -= 1;
-    //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
-    //   this.sound.play(combatant.queuedOption.soundKeyName);
-    // } else
-
-    if (combatant.queuedOption.type === OptionType.FOLDER) {
-      combatant.queuedOption.criteria.fulfilled = true;
-      this.sound.play('charged');
-    } else 
-    
-    if (combatant.queuedOption.type === OptionType.ACTION) {
-      combatant.stamina -= combatant.queuedOption.staminaCost;
-      
-      const newDeferredAction = {
-        id: generateID(),
-        timeTilExecute: combatant.queuedOption.animTimeInMs,
-        caster: combatant,
-        action: combatant.queuedOption,
-        target: combatant.queuedTarget,
-        isEnemyCaster: false,
-      };
-      this.battleStore.deferredActions.push(newDeferredAction);
-    }
-    
-    resetCombatantBattleState(combatant);
-  }
-
-  // potentially split function
-  resolveDeferredActions(delta: number): void {
-    const newDeferredActions = this.battleStore.deferredActions.map(({id, timeTilExecute, action, target, caster,  isEnemyCaster}) => {
-      if (timeTilExecute - delta <= 0) {
-        if (action.restriction && action.restriction.isRestricted(target, caster, this)) {
-          this.sound.play('stamina-depleted');
-        } else {
-          // Update Battle Restrictions
-          if (!this.firstActionTaken) this.firstActionTaken = true;
-          if (action.name === Actions.splinter.name && !this.splinterUsed) this.splinterUsed = true;
-
-
-
-          action.effects.forEach(effect => {
-            effect.execute(target, caster, effect.potency, this);
-            this.events.emit('combatant-effected', target);
-
-            action.mediaEffects.forEach((mediaEffect) => {
-              //
-              switch(mediaEffect.type) {
-                case MediaEffectType.PARTICLE:
-                  this.events.emit('particle-effect', mediaEffect.jsonPath, target.position);
-                  break;
-              }
-            });
-          })
-
-
-          
-          this.sound.play(action.soundKeyName);
-        }
-      }
-
-;
-      return {
-        id,
-        timeTilExecute: timeTilExecute - delta,
-        target,
-        action, 
-        caster,
-        isEnemyCaster
-      }
-    }).filter(deferredAction => deferredAction.timeTilExecute > 0);
-    
-    this.battleStore.setDeferredActions(newDeferredActions);
-  }
   // #endregion
 
   // #region Input Based Updates
@@ -266,7 +169,7 @@ export class Battle extends Phaser.Scene {
   }
 
   openInitialMenu(ally: Ally): void {
-    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED, Status.CASTING]
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
     if (CANNOT_OPEN_STATUS.includes(ally.status)) {
       this.sound.play('stamina-depleted');
       return;

@@ -86,13 +86,6 @@
   background-color: gray;
 }
 
-.castingWindow {
-  height: 0;
-  width: 100%;
-  background-color: gray;
-  grid-column: 1;
-  grid-row: 1;
-}
 
 .meterContainer {
   display: grid;

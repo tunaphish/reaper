@@ -6,14 +6,7 @@ import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
 import { Action } from "../../model/action";
 
-export type DeferredAction = { 
-  id: string; 
-  timeTilExecute: number; 
-  action: Action; 
-  target: Combatant; 
-  caster: Combatant; 
-  isEnemyCaster: boolean;
-};
+
 
 export class BattleStore {
   // battle vars
@@ -24,7 +17,6 @@ export class BattleStore {
   executable?: Executable;
   target?: Combatant;
 
-  deferredActions: DeferredAction[] = [];
 
   menus: Folder[] = [];
 
@@ -49,10 +41,6 @@ export class BattleStore {
     this.executable = executable;
   }
 
-  setDeferredActions(deferredActions: DeferredAction[]) {
-    this.deferredActions = deferredActions;
-  }
-
   pushMenu(folder: Folder): void {
     this.menus.push(folder);
   }
@@ -75,7 +63,6 @@ export class BattleStore {
 
   tickStats(delta: number): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
-      combatant.timeInStateInMs = Math.min(combatant.timeInStateInMs+delta, 1000000);
 
       if (combatant.status === Status.DEAD) return;
       if (combatant.bleed > 0) {
@@ -84,10 +71,9 @@ export class BattleStore {
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }
       
-      if (combatant.status !== Status.CASTING) {
-          const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-          combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
-      }
+        const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
+        combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+    
 
     });
   }
@@ -99,12 +85,8 @@ export class BattleStore {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {
         combatant.status = Status.EXHAUSTED;
-      } else if (combatant.status !== Status.CASTING) {
+      } else {
         combatant.status = Status.NORMAL;
-      }
-
-      if (prevStatus !== combatant.status) {
-        combatant.timeInStateInMs = 0;
       }
     });
   }

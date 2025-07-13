@@ -8,7 +8,6 @@ export enum Status {
   NORMAL = 'NORMAL',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
-  CASTING = 'CASTING',  
 }
 
 
@@ -25,9 +24,6 @@ export type Combatant = Option & {
   spritePath: string;
 
   status: Status;
-  queuedOption?: Action | Item | Folder;
-  queuedTarget?: Combatant;
-  timeInStateInMs: number;
   position: [x: number, y: number, z: number];
 }
 

@@ -10,13 +10,12 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage, EnemyResourceDisplay } from './Stage';
-import { ActionsViewManager, ResourceDisplay } from './ResourceDisplay';
+import { ResourceDisplay } from './ResourceDisplay';
 
 import { Action } from '../../model/action';
 
 const Description = observer((props: { battle: Battle }) => {
   const text = (props.battle.battleStore.executable as Action)?.description;
-  console.log(text);
   const style: React.CSSProperties = {
     padding: 5,
     position: "absolute",
@@ -143,7 +142,6 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               {enemies.map((enemy) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
-                    <ActionsViewManager battleScene={props.scene} combatant={enemy} />
                     <EnemyResourceDisplay battleScene={props.scene} combatant={enemy} />
                   </div>
                 )
@@ -157,7 +155,6 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               {allies.map((member) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={member.name}>
-                    <ActionsViewManager battleScene={props.scene} combatant={member} />
                     <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
                   </div>
                 )

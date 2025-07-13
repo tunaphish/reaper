@@ -37,20 +37,6 @@ export const randomFullHealthAlly = (scene: Battle, caster: Combatant) => {
 
 export const self = (scene: Battle, caster: Combatant) => caster;
 
-const selfBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name 
-  );
-  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
-};
-
-const selfCloseToBeingAttacked = (scene: Battle, caster: Combatant): Combatant | null => {
-  const actionsAtEnemyCloseToExecution = scene.battleStore.deferredActions.filter(
-    deferredAction => deferredAction.target.name === caster.name &&
-    deferredAction.timeTilExecute < 500 
-  );
-  return actionsAtEnemyCloseToExecution.length > 0 ? caster : null;
-};
 
 // #endregion
 

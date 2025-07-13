@@ -16,12 +16,9 @@ export type Action = Option & {
   description: string;
   
   targetType: TargetType;
-  castTimeInMs: number;
 
   effects: Effect[];
   restriction?: Restriction; 
-  animTimeInMs: number;
-  airtime?: number;
 
   soundKeyName: string;
   mediaEffects: (ParticleEffect)[];

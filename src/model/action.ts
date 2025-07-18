@@ -12,8 +12,9 @@ export type Action = Option & {
   description: string;
   
   targetType: TargetType;
-
   effects: Effect[];
+  resolve: (target, source, potency) => void;
+  potency: number;
 
   soundKeyName: string;
   mediaEffects: (ParticleEffect)[];

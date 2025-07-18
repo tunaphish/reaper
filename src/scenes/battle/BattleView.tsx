@@ -18,8 +18,6 @@ const Description = observer((props: { battle: Battle }) => {
   const text = (props.battle.battleStore.executable as Action)?.description;
   const style: React.CSSProperties = {
     padding: 5,
-    position: "absolute",
-    top: 0,
     width: "100%"
   };
 
@@ -52,7 +50,6 @@ const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
         <div>{option.name}</div>
         { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
         { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
-        { option.type === OptionType.FOLDER && option.criteria && <div className={option.criteria.fulfilled ? styles.magicCostFulfilled : styles.magicCost}>{option.criteria.magicCost}</div>}
     </button>
   )
 }
@@ -65,25 +62,36 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   const HORIZONTAL_OFFSET = 50;
   const VERTICAL_OFFSET = 100;
   const style: React.CSSProperties = {
-    right: 30 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
-    bottom: 30 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
+    right: 50 * (props.idx - 1) + HORIZONTAL_OFFSET + 'px',
+    bottom: 50 * (props.idx - 1) + VERTICAL_OFFSET + 'px',
   }
+
+
+  const effects = props.battleScene.battleStore.menus.flatMap(menu => menu.options).filter((option: MenuOption) => option.type === OptionType.EFFECT);
+
   return (
       <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
-        <div className={styles.window} 
-          style={{ 
-            minWidth: "100px",
-            width:" 100%",
-          }}
-        >
-        <div className={styles.windowName}>{props.menuContent.name}</div>
-        <div className={styles.menuContent}>
-          {
-            props.menuContent.options.map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
-          }
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            {props.idx === props.battleScene.battleStore.menus.length-1 && 
+              <Description battle={props.battleScene} /> 
+              
+            }
+            
+            <fieldset className={styles.window} 
+              style={{ 
+                minWidth: "100px",
+                width:" 100%",
+              }}
+            >
+              <legend>{props.menuContent.name}</legend>
+              <div className={styles.menuContent}>
+                {
+                  props.menuContent.options.filter((option: MenuOption) => option.type !== OptionType.EFFECT).map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
+                }
+              </div>
+              { props.idx === props.battleScene.battleStore.menus.length-1 &&  <div className={styles.effects}>{ effects.map(effect => effect.name).join(' / ')}</div>}
+          </fieldset>
         </div>
-        </div>
-
     </div>
 
   );    
@@ -147,7 +155,6 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
                 )
               })}
           </div>
-          <Description battle={props.scene} />
           <div style={{ flex: 4, zIndex: -1 }}> 
             {/* <Stage scene={props.scene} /> */}
           </div>

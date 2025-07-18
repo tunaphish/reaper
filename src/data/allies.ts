@@ -12,7 +12,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Actions.attack, Actions.stanch],
+  options: [Actions.attack, Actions.stanch, Folders.fighter],
 }
 
 export const Eji: Ally = {

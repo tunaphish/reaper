@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Enemy } from '../../model/enemy';
-import { OptionType } from '../../model/option';
+import { Option, OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
@@ -113,19 +113,8 @@ export class Battle extends Phaser.Scene {
 
     const action = (this.battleStore.executable as Action);
 
-    action.effects.forEach(effect => {
-      effect.execute(this.battleStore.target, this.battleStore.caster, effect.potency, this);
-      this.events.emit('combatant-effected', this.battleStore.target);
-
-      action.mediaEffects.forEach((mediaEffect) => {
-        //
-        switch(mediaEffect.type) {
-          case MediaEffectType.PARTICLE:
-            this.events.emit('particle-effect', mediaEffect.jsonPath, this.battleStore.target.position);
-            break;
-        }
-      });
-    })
+    // TODO: EXECUTE ACTION
+    action.resolve(this.battleStore.target, this.battleStore.caster, action.potency);
     
     this.sound.play(action.soundKeyName);
     

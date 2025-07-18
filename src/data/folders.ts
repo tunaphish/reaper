@@ -1,38 +1,12 @@
 import { Folder } from "../model/folder";
 import { OptionType } from "../model/option";
 import * as Actions from './actions';
+import * as Effects from './effects';
 
-export const hunter: Folder = {
+export const fighter: Folder = {
     type: OptionType.FOLDER,
-    name: 'Hunter',
-    desc: 'Soul focused on stamina',
-    options: [Actions.ambush, Actions.debilitate],
+    name: 'Fighter',
+    desc: 'Soul focused on fighting',
+    options: [Actions.attack, Effects.strengthen],
 }
 
-export const thief: Folder = {
-    type: OptionType.FOLDER,
-    name: 'Bandit',
-    desc: 'Soul focused on targeting',
-    options: [Actions.flank, Actions.gangup],
-}
-
-export const berserker: Folder = {
-    type: OptionType.FOLDER,
-    name: 'Berserker',
-    desc: 'Soul focused on bleed',
-    options: [Actions.bloodlust, Actions.revenge],
-}
-
-export const cleric: Folder = {
-    type: OptionType.FOLDER,
-    name: 'Cleric',
-    desc: 'Soul focused on healing',
-    options: [Actions.salve, Actions.resurrect, Actions.bandage],
-}
-
-export const fencer: Folder = {
-    type: OptionType.FOLDER,
-    name: 'Fencer',
-    desc: 'Soul focused on restricting attacks for power',
-    options: [Actions.engage, Actions.flourish, Actions.splinter, Actions.prick],
-}

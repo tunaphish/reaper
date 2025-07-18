@@ -1,8 +1,10 @@
 import { Battle } from "../scenes/battle/Battle";
 import { Combatant } from "./combatant";
+import { Option, OptionType } from "./option";
 
 
-export type Effect = {
-  execute: (target: Combatant, source: Combatant, potency: number, scene: Battle) => void;
-  potency: number;
+export type Effect = Option & {
+  type: OptionType.EFFECT,
+  description: string;
+  
 };

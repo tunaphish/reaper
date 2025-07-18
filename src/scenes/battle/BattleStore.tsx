@@ -4,8 +4,6 @@ import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
 import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
-import { Action } from "../../model/action";
-
 
 
 export class BattleStore {
@@ -80,7 +78,6 @@ export class BattleStore {
 
   updateCombatantsState(): void {
     [...this.allies, ...this.enemies].forEach((combatant) => {
-      const prevStatus = combatant.status;
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
       } else if (combatant.stamina <= 0) {

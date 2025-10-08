@@ -2,7 +2,7 @@ import { Action } from '../model/action';
 import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
-import { updateDamage, updateStamina, updateBleed, updateHealth } from "../model/combatant";
+import { updateDamage, updateActionPoints, updateBleed, updateHealth } from "../model/combatant";
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
@@ -10,7 +10,7 @@ export const dealDamage = (target, source, potency) => {
 
 // these are potentially confusing lol
 export const healStamina = (target, source, potency) => {
-  updateStamina(target, potency);
+  updateActionPoints(target, potency);
 };
 export const healBleed = (target, source, potency) => {
   updateBleed(target, -potency);
@@ -40,7 +40,7 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
-  staminaCost: 50,
+  actionPointsCost: 1,
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
 
@@ -56,7 +56,7 @@ export const attack: Action = {
 export const stanch: Action = {
   type: OptionType.ACTION,
   name: 'Stanch',
-  staminaCost: 25,
+  actionPointsCost: 1,
   targetType: TargetType.SELF,
 
   description: 'Heals bleed on self',

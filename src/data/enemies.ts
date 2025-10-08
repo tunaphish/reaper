@@ -48,9 +48,9 @@ export const fencer: Enemy = {
   health: 100,
   maxHealth: 200,
   bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  staminaRegenRatePerSecond: 8,
+  actionPoints: 0,
+  maxActionPoints: 125,
+  actionPointsRegenRatePerSecond: 8,
   
   strategies: [
     {
@@ -58,17 +58,17 @@ export const fencer: Enemy = {
         { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 50, singleUse: true },
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
       ],
-      toExit: (enemy, battle): boolean => enemy.stamina < 25,
-      toEnter: (enemy): boolean => enemy.stamina > 100,
+      toExit: (enemy, battle): boolean => enemy.actionPoints < 25,
+      toEnter: (enemy): boolean => enemy.actionPoints > 100,
     },
     {
       potentialOptions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 100,
-      toEnter: (enemy): boolean => enemy.stamina > 50,
+      toExit: (enemy, battle): boolean => enemy.actionPoints > 100,
+      toEnter: (enemy): boolean => enemy.actionPoints > 50,
     },
     {
       potentialOptions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 50,
+      toExit: (enemy, battle): boolean => enemy.actionPoints > 50,
       toEnter: (): boolean => true,
     }
   ],
@@ -88,9 +88,9 @@ export const cleric: Enemy = {
   health: 200,
   maxHealth: 200,
   bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  staminaRegenRatePerSecond: 5,
+  actionPoints: 0,
+  maxActionPoints: 125,
+  actionPointsRegenRatePerSecond: 5,
 
   strategies: [
     {
@@ -98,12 +98,12 @@ export const cleric: Enemy = {
         { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
       ],
       toExit: (enemy, battle): boolean => {
-        if (enemy.stamina < 25) return true;
+        if (enemy.actionPoints < 25) return true;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
         return bleedingEnemy === undefined;
       },
       toEnter: (enemy, battle): boolean => {
-        if (enemy.stamina < 25) return false;
+        if (enemy.actionPoints < 25) return false;
         const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
         return bleedingEnemy !== undefined;
       },
@@ -112,12 +112,12 @@ export const cleric: Enemy = {
       potentialOptions: [
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
-      toExit: (enemy, battle): boolean => enemy.stamina < 50,
-      toEnter: (enemy): boolean => enemy.stamina > 100,
+      toExit: (enemy, battle): boolean => enemy.actionPoints < 50,
+      toEnter: (enemy): boolean => enemy.actionPoints > 100,
     },
     {
       potentialOptions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 100,
+      toExit: (enemy, battle): boolean => enemy.actionPoints > 100,
       toEnter: (): boolean => true,
     }
   ],
@@ -138,9 +138,9 @@ export const knight: Enemy = {
   health: 200,
   maxHealth: 200,
   bleed: 0,
-  stamina: 0,
-  maxStamina: 125,
-  staminaRegenRatePerSecond: 5,
+  actionPoints: 0,
+  maxActionPoints: 125,
+  actionPointsRegenRatePerSecond: 5,
 
   strategies: [
     {
@@ -148,12 +148,12 @@ export const knight: Enemy = {
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
       ],
 
-      toExit: (enemy, battle): boolean => enemy.stamina < 25,
-      toEnter: (enemy): boolean => enemy.stamina > 75,
+      toExit: (enemy, battle): boolean => enemy.actionPoints < 25,
+      toEnter: (enemy): boolean => enemy.actionPoints > 75,
     },
     {
       potentialOptions: [],
-      toExit: (enemy, battle): boolean => enemy.stamina > 75,
+      toExit: (enemy, battle): boolean => enemy.actionPoints > 75,
       toEnter: (): boolean => true,
     }
   ],

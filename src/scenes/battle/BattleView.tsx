@@ -48,7 +48,7 @@ const MenuOptionView = (props: { option: MenuOption, battleScene: Battle }) => {
   return ( 
     <button key={option.name} onClick={onClickOption} className={styles.menuOption} disabled={option.type === OptionType.ITEM && option.charges === 0}>
         <div>{option.name}</div>
-        { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.staminaCost}</div>}
+        { option.type === OptionType.ACTION && <div className={styles.optionCost}>{option.actionPointsCost}</div>}
         { option.type === OptionType.ITEM && <div className={styles.optionCost}>{option.charges}/{option.maxCharges}</div>}
     </button>
   )
@@ -72,25 +72,20 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   return (
       <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-            {props.idx === props.battleScene.battleStore.menus.length-1 && 
-              <Description battle={props.battleScene} /> 
-              
-            }
-            
-            <fieldset className={styles.window} 
+            <div className={styles.window} 
               style={{ 
                 minWidth: "100px",
                 width:" 100%",
               }}
             >
-              <legend>{props.menuContent.name}</legend>
               <div className={styles.menuContent}>
+                {props.menuContent.name}
                 {
                   props.menuContent.options.filter((option: MenuOption) => option.type !== OptionType.EFFECT).map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
                 }
               </div>
               { props.idx === props.battleScene.battleStore.menus.length-1 &&  <div className={styles.effects}>{ effects.map(effect => effect.name).join(' / ')}</div>}
-          </fieldset>
+          </div>
         </div>
     </div>
 

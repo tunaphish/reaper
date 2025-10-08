@@ -15,6 +15,16 @@ export const Meter = (props: { value: number, max: number, className?: string })
   )
 }
 
+export const VerticalMeter = (props: { value: number, max: number, className?: string }) => {
+  const { className, value, max } = props;
+
+  return (
+    <div className={[styles.meterBackground, className].join(' ')}>
+      <div className={styles.meter} style={{ height: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
+    </div>
+  )
+}
+
 
 export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
   const statusToStylesMap = {
@@ -30,28 +40,27 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
 
 
   return (
-    <div style={{ flex: '1' }}>
-      <div className={style.join(' ')} onClick={props.onClickCell} 
-        style={{ 
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gridTemplateRows: "1fr", 
-        }}>
+    <div className={style.join(' ')} onClick={props.onClickCell} 
+      style={{ 
+        flex: '1',
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "1fr", 
+      }}>
+        <div className={styles.chargeMeterContainer}>
+          <VerticalMeter value={props.combatant.actionPoints%1} max={1} className={styles.chargeMeter}/>
+         </div>
         <div className={styles.characterCellContainer}>
-          <div className={styles.windowName}>{props.combatant.name}</div>
-          <div className={styles.resourceContainer}>
-            <div className={styles.meterContainer}>
-              <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={styles.bleedMeter}/>
-              <Meter value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth} className={styles.healthMeter}/>
-              <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
-            </div>
-            <div className={styles.meterContainer}>
-              <Meter value={props.combatant.stamina < 0 ? 0 : props.combatant.stamina } max={props.combatant.maxStamina} className={styles.staminaMeter}/>
-              <div className={styles.meterNumber}>{Math.ceil(props.combatant.stamina)}</div>
-            </div>
+          <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
+          <div className={styles.meterContainer}>
+            <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={styles.bleedMeter}/>
+            <Meter value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth} className={styles.healthMeter}/>
+            <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
           </div>
-        </div>
-      </div>
+       </div>
+       <div className={styles.actionPoints}>
+          {Math.floor(props.combatant.actionPoints)}
+       </div>
     </div>
   )
 });

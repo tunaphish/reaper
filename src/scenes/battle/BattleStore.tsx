@@ -69,8 +69,8 @@ export class BattleStore {
         combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
       }
       
-        const regenPerTick = combatant.staminaRegenRatePerSecond * (delta / 1000);
-        combatant.stamina = Math.min(combatant.maxStamina, combatant.stamina + regenPerTick);
+        const regenPerTick = combatant.actionPointsRegenRatePerSecond * (delta / 1000);
+        combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);
     
 
     });
@@ -80,7 +80,7 @@ export class BattleStore {
     [...this.allies, ...this.enemies].forEach((combatant) => {
       if (combatant.health <= 0) {
         combatant.status = Status.DEAD;
-      } else if (combatant.stamina <= 0) {
+      } else if (combatant.actionPoints <= 0) {
         combatant.status = Status.EXHAUSTED;
       } else {
         combatant.status = Status.NORMAL;

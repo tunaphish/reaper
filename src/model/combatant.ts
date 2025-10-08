@@ -15,10 +15,10 @@ export type Combatant = Option & {
   health: number;
   maxHealth: number;
   bleed: number;
-  stamina: number;
-  maxStamina: number;
 
-  staminaRegenRatePerSecond: number; 
+  actionPoints: number;
+  maxActionPoints: number;
+  actionPointsRegenRatePerSecond: number; 
 
   spritePath: string;
 
@@ -38,8 +38,8 @@ export const updateBleed = (target: Combatant, change: number): void => {
   target.bleed = clamp(0, newBleed, target.health);
 };
 
-export const updateStamina = (target: Combatant, change: number): void => {
-  target.stamina = Math.min(target.maxStamina, target.stamina + change);
+export const updateActionPoints = (target: Combatant, change: number): void => {
+  target.actionPoints = Math.min(target.maxActionPoints, target.actionPoints + change);
 };
 
 export const updateDamage = (target: Combatant, change: number): void => {

@@ -8,7 +8,7 @@ import { ParticleEffect } from "./mediaEffect";
 
 export type Action = Option & {
   type: OptionType.ACTION;
-  staminaCost: number;
+  actionPointsCost: number;
   description: string;
   
   targetType: TargetType;

@@ -56,9 +56,6 @@ export const EnemyResourceDisplay = observer((props: {combatant: Combatant, batt
         <Meter value={combatant.health} max={combatant.maxHealth} className={styles.bleedMeter}/>
         <Meter value={combatant.health-combatant.bleed} max={combatant.maxHealth} className={styles.healthMeter}/>
       </div>
-      <div className={styles.enemyMeterContainer}>
-        <Meter value={combatant.stamina < 0 ? 0 : combatant.stamina } max={combatant.maxStamina} className={styles.staminaMeter}/>
-      </div>
     </div>
   )
 });

@@ -5,7 +5,7 @@ import { Option, OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
-import { Status } from '../../model/combatant';
+import { Status, updateActionPoints } from '../../model/combatant';
 import { Item } from '../../model/item';
 import { MenuOption } from '../../model/menuOption';
 
@@ -112,8 +112,7 @@ export class Battle extends Phaser.Scene {
     }  
 
     const action = (this.battleStore.executable as Action);
-
-    // TODO: EXECUTE ACTION
+    updateActionPoints(this.battleStore.caster, -action.actionPointsCost);
     action.resolve(this.battleStore.target, this.battleStore.caster, action.potency);
     
     this.sound.play(action.soundKeyName);

@@ -3,7 +3,6 @@ import { Folder } from '../model/folder';
 import { Status } from '../model/combatant';
 
 import * as Actions from './actions';
-import * as Folders from './folders'
 import { OptionType } from '../model/option';
 
 
@@ -12,7 +11,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Actions.attack, Actions.stanch, Folders.fighter],
+  options: [Actions.attack, Actions.stanch],
 }
 
 export const Eji: Ally = {

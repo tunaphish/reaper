@@ -254,10 +254,6 @@
 }
 
 
-.effects  {
-  color: lightgray;
-  font-size: 18px;
-}
 
 .unclickable {
   pointer-events: none;

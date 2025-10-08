@@ -67,8 +67,6 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   }
 
 
-  const effects = props.battleScene.battleStore.menus.flatMap(menu => menu.options).filter((option: MenuOption) => option.type === OptionType.EFFECT);
-
   return (
       <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -81,10 +79,9 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
               <div className={styles.menuContent}>
                 {props.menuContent.name}
                 {
-                  props.menuContent.options.filter((option: MenuOption) => option.type !== OptionType.EFFECT).map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
+                  props.menuContent.options.map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
                 }
               </div>
-              { props.idx === props.battleScene.battleStore.menus.length-1 &&  <div className={styles.effects}>{ effects.map(effect => effect.name).join(' / ')}</div>}
           </div>
         </div>
     </div>

@@ -45,7 +45,6 @@ export const attack: Action = {
   soundKeyName: 'attack',
 
   description: 'Deals damage',
-  effects: [],
   resolve: dealDamage,
   potency: 50,
 
@@ -60,7 +59,6 @@ export const stanch: Action = {
   targetType: TargetType.SELF,
 
   description: 'Heals bleed on self',
-  effects: [],
   resolve: healBleed,
   potency: 50,
 

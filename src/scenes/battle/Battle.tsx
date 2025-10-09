@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Enemy } from '../../model/enemy';
-import { Option, OptionType } from '../../model/option';
+import { OptionType } from '../../model/option';
 import { Allies, Ally } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
@@ -13,9 +13,9 @@ import { MenuOption } from '../../model/menuOption';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { fencer, cleric, knight } from '../../data/enemies';
+import { cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
-import { MediaEffectType } from '../../model/mediaEffect';
+import { Technique } from '../../data/techniques';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -113,7 +113,9 @@ export class Battle extends Phaser.Scene {
 
     const action = (this.battleStore.executable as Action);
     updateActionPoints(this.battleStore.caster, -action.actionPointsCost);
-    action.resolve(this.battleStore.target, this.battleStore.caster, action.potency);
+
+    const potency = action.potency * (this.battleStore.caster.activeTechniques.has(Technique.BUFF) ? 2 : 1);
+    action.resolve(this.battleStore.target, this.battleStore.caster, potency);
     
     this.sound.play(action.soundKeyName);
     

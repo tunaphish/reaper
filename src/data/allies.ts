@@ -11,7 +11,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Cloud',
   desc: 'Soul of Cloud',
-  options: [Actions.attack, Actions.stanch],
+  options: [Actions.attack, Actions.stanch, Actions.haste, Actions.buff],
 }
 
 export const Eji: Ally = {
@@ -24,6 +24,8 @@ export const Eji: Ally = {
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
+
+  activeTechniques: new Set(),
   
   status: Status.NORMAL,
   position: [-2, 0, 2],
@@ -50,6 +52,8 @@ export const Keshi: Ally = {
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .12,
   folder: keshiFolder,
+
+  activeTechniques: new Set(),
   
   status: Status.NORMAL,
   position: [0, 0, 2],
@@ -75,6 +79,8 @@ export const Elise: Ally = {
   maxActionPoints: 3,
   actionPointsRegenRatePerSecond: .08,
   folder: eliseFolder,
+
+  activeTechniques: new Set(),
 
   status: Status.NORMAL,
   position: [2, 0, 2],

@@ -1,8 +1,6 @@
 import { Option } from './option';
-import { Action } from './action';
-import { Item } from './item';
 import { clamp } from './math';
-import { Folder } from './folder';
+import { Technique } from '../data/techniques';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -19,6 +17,8 @@ export type Combatant = Option & {
   actionPoints: number;
   maxActionPoints: number;
   actionPointsRegenRatePerSecond: number; 
+
+  activeTechniques: Set<Technique>;
 
   spritePath: string;
 

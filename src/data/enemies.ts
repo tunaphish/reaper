@@ -78,8 +78,9 @@ export const fencer: Enemy = {
   // temp props
   timeTilNextAction: 0,
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [-1, 0, -10],
+
+  activeTechniques: new Set(),
 };
 
 export const cleric: Enemy = {
@@ -128,8 +129,9 @@ export const cleric: Enemy = {
   timeTilNextAction: 0,
 
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [3, 0, -5],
+
+  activeTechniques: new Set(),
 };
 
 export const knight: Enemy = {
@@ -164,8 +166,9 @@ export const knight: Enemy = {
   timeTilNextAction: 0,
 
   status: Status.NORMAL,
-  timeInStateInMs: 0,
   position: [1, 0, -5],
+
+  activeTechniques: new Set(),
 };
 
 // #endregion

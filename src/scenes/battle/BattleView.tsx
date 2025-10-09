@@ -10,7 +10,7 @@ import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
 import { Stage, EnemyResourceDisplay } from './Stage';
-import { ResourceDisplay } from './ResourceDisplay';
+import { ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
 
 import { Action } from '../../model/action';
 
@@ -154,6 +154,7 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
               {allies.map((member) => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={member.name}>
+                    <TechniqueViewManager combatant={member} />
                     <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
                   </div>
                 )

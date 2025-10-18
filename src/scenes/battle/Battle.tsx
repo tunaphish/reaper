@@ -7,7 +7,7 @@ import { Folder } from '../../model/folder';
 import { Action, } from '../../model/action';
 import { Status, updateActionPoints } from '../../model/combatant';
 import { Item } from '../../model/item';
-import { MenuOption } from '../../model/menuOption';
+import { MenuOption } from './menuOption';
 
 
 import ReactOverlay from '../../plugins/ReactOverlay';

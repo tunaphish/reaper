@@ -4,7 +4,7 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { Ally } from '../../model/ally';
 import { OptionType } from '../../model/option';
-import { MenuOption } from '../../model/menuOption';
+import { MenuOption } from './menuOption';
 
 import styles from './battle.module.css';
 import { Battle } from './Battle';

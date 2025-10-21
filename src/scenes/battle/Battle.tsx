@@ -200,12 +200,23 @@ export class Battle extends Phaser.Scene {
       case OptionType.ACTION:
         const action = option as Action;
         this.battleStore.setExecutable(action);
-        if (action.targetType === TargetType.SELF) {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
-          this.battleStore.pushMenu(targetFolder);
-        } else {
-          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies, ...this.battleStore.enemies]};
-          this.battleStore.pushMenu(targetFolder);
+        switch (action.targetType) {
+          case TargetType.SELF:
+            const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
+            this.battleStore.pushMenu(targetFolder);
+            break;
+          case TargetType.ENEMIES:
+            const enemiesFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.enemies]};
+            this.battleStore.pushMenu(enemiesFolder);
+            break;
+          case TargetType.ALLIES:
+            const alliesFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [...this.battleStore.allies]};
+            this.battleStore.pushMenu(alliesFolder);
+            break;
+          case TargetType.SINGLE_TARGET:
+            const singleTargetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options:[...this.battleStore.allies, ...this.battleStore.enemies]};
+            this.battleStore.pushMenu(singleTargetFolder);
+            break;
         }
         break;
       case OptionType.TECHNIQUE:

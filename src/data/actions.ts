@@ -59,7 +59,7 @@ export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
   actionPointsCost: 1,
-  targetType: TargetType.SINGLE_TARGET,
+  targetType: TargetType.ENEMIES,
   soundKeyName: 'attack',
 
   description: 'Deals damage',

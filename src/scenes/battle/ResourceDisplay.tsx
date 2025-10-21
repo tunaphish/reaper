@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
-import { Technique } from '../../data/techniques';
+import {Technique} from '../../model/technique';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
   const { className, value, max } = props;
@@ -50,7 +50,7 @@ export const TechniqueView = (props: { technique: Technique }) => {
           exit={{ scaleY: 0 }}
           transition={{ duration: .1, ease: 'easeOut' }} 
         >
-          {technique}
+          {technique.name}
         </motion.div>
       </div>
     )
@@ -59,7 +59,7 @@ export const TechniqueView = (props: { technique: Technique }) => {
 export const TechniqueViewManager = observer(((props: {combatant: Combatant }) => {
   const { combatant } = props;
   return (
-    [...combatant.activeTechniques].map((technique) => <TechniqueView key={technique} technique={technique} />)      
+    [...combatant.activeTechniques].map((technique) => <TechniqueView key={technique.name} technique={technique} />)      
   )
 })); 
 

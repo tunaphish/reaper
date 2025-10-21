@@ -3,7 +3,6 @@ import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateActionPoints, updateBleed, updateHealth, Combatant } from "../model/combatant";
-import { Technique } from './techniques';
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
@@ -38,6 +37,24 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 
 // #region Actions
 
+export const shatter: Action = {
+  type: OptionType.ACTION,
+  name: 'Shatter',
+  actionPointsCost: 0,
+  targetType: TargetType.SELF,
+  soundKeyName: 'charged',
+
+  description: 'Deals damage',
+  resolve: (target, source: Combatant, potency) => {
+    const totalAp = [...source.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
+    source.actionPoints += totalAp;
+    source.activeTechniques = new Set();
+  },
+  potency: 50,
+
+  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/energy-explosion.json' }],
+}
+
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
@@ -66,36 +83,3 @@ export const stanch: Action = {
   mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
   soundKeyName: 'heal',
 }
-
-
-export const haste: Action = {
-  type: OptionType.ACTION,
-  name: 'Haste',
-  actionPointsCost: 1,
-  targetType: TargetType.SELF,
-
-  description: 'Technique: Increase Speed',
-  resolve: (target: Combatant, source, potency) => {
-    target.activeTechniques.add(Technique.HASTE)
-  },
-  potency: 0,
-
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
-  soundKeyName: 'smirk',
-};
-
-export const buff: Action = {
-  type: OptionType.ACTION,
-  name: 'Buff',
-  actionPointsCost: 1,
-  targetType: TargetType.SELF,
-
-  description: 'Technique: Increase Speed',
-  resolve: (target: Combatant, source, potency) => {
-    target.activeTechniques.add(Technique.BUFF)
-  },
-  potency: 0,
-
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
-  soundKeyName: 'smirk',
-};

@@ -4,8 +4,7 @@ import { Combatant, Status } from "../../model/combatant";
 import { Enemy } from "../../model/enemy";
 import { Executable } from "./Battle";
 import { Folder } from "../../model/folder";
-import { Technique } from "../../data/techniques";
-
+import * as Techniques from '../../data/techniques';
 
 export class BattleStore {
   // battle vars
@@ -71,7 +70,7 @@ export class BattleStore {
       }
       
         const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-          (combatant.activeTechniques.has(Technique.HASTE) ? 2 : 1) *
+          (combatant.activeTechniques.has(Techniques.haste) ? 2 : 1) *
           (delta / 1000) ;
 
         combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);

@@ -4,6 +4,7 @@ export enum OptionType {
     ALLY = "ally",
     ITEM = "item",
     ACTION = "action",
+    TECHNIQUE = "technique",
 }
 
 export interface Option {

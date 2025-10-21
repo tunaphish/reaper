@@ -1,6 +1,6 @@
 import { Option } from './option';
 import { clamp } from './math';
-import { Technique } from '../data/techniques';
+import { Technique } from './technique';
 
 export enum Status {
   NORMAL = 'NORMAL',

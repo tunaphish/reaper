@@ -15,7 +15,8 @@ import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
 import { cleric, knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
-import { Technique } from '../../data/techniques';
+import * as Techniques from '../../data/techniques';
+import { Technique } from '../../model/technique';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -28,7 +29,7 @@ export interface DialogueTrigger {
   scriptKeyName: string;
 }
 
-export type Executable = Action | Item | Folder;
+export type Executable = Action | Item | Technique;
 
 export class Battle extends Phaser.Scene {
   private reactOverlay: ReactOverlay; // initialized by plugin manager
@@ -106,15 +107,27 @@ export class Battle extends Phaser.Scene {
     //   this.sound.play(combatant.queuedOption.soundKeyName);
     // } else
 
-    if (this.battleStore.executable.type === OptionType.FOLDER) {
-      this.sound.play('charged');
+    if (this.battleStore.executable.type === OptionType.TECHNIQUE) {
+      const technique = (this.battleStore.executable as Technique);
+
+      if (this.battleStore.caster.activeTechniques.has(this.battleStore.executable)) {
+        updateActionPoints(this.battleStore.caster, technique.actionPointsCost);
+        this.battleStore.caster.activeTechniques.delete(this.battleStore.executable);
+      } else {
+        updateActionPoints(this.battleStore.caster, -technique.actionPointsCost);
+        this.battleStore.caster.activeTechniques.add(this.battleStore.executable);
+      }
+    
+      
+      this.sound.play(technique.soundKeyName);
+      this.battleStore.resetSelections();
       return;
-    }  
+    }
 
     const action = (this.battleStore.executable as Action);
     updateActionPoints(this.battleStore.caster, -action.actionPointsCost);
 
-    const potency = action.potency * (this.battleStore.caster.activeTechniques.has(Technique.BUFF) ? 2 : 1);
+    const potency = action.potency * (this.battleStore.caster.activeTechniques.has(Techniques.buff) ? 2 : 1);
     action.resolve(this.battleStore.target, this.battleStore.caster, potency);
     
     this.sound.play(action.soundKeyName);
@@ -195,6 +208,18 @@ export class Battle extends Phaser.Scene {
           this.battleStore.pushMenu(targetFolder);
         }
         break;
+      case OptionType.TECHNIQUE:
+        const technique = option as Technique;
+        this.battleStore.setExecutable(technique);
+        if (this.battleStore.caster.activeTechniques.has(technique)) {
+          const shatterFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Shatter', options: [this.battleStore.caster]};
+          this.battleStore.pushMenu(shatterFolder);
+        } else {
+          const targetFolder: Folder = { type: OptionType.FOLDER, name: option.name, desc: 'Targets', options: [this.battleStore.caster]};
+          this.battleStore.pushMenu(targetFolder);
+        }
+       
+        break;
 
       case OptionType.ENEMY:
       case OptionType.ALLY:
@@ -203,9 +228,7 @@ export class Battle extends Phaser.Scene {
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
- 
         this.battleStore.pushMenu(folder);
-    
         break;
     }
   }

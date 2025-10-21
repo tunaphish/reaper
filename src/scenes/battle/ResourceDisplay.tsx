@@ -88,7 +88,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
 
         <motion.div 
           className={styles.castingWindow}
-          animate={{ height: (props.combatant.actionPoints%1 * 100) + '%' }}
+          animate={{ height: (Math.abs(props.combatant.actionPoints%1) * 100) + '%' }}
           transition={{ duration: 0 }}
         />
 

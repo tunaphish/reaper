@@ -44,7 +44,7 @@ export class Battle extends Phaser.Scene {
   }
 
   init(data: { enemies: Enemy[] }): void {
-    this.battleStore = new BattleStore(data.enemies || [knight, cleric], this.registry.get('allies'));
+    this.battleStore = new BattleStore(data.enemies || [knight], this.registry.get('allies'));
     this.backgroundImageUrl = '/reaper/backgrounds/pikrepo.jpg';
     this.music = this.sound.add('knight', {
       loop: true,  

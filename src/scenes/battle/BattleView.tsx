@@ -70,19 +70,18 @@ const MenuView = observer((props: {menuContent: Folder, idx: number, battleScene
   return (
       <div className={styles.modalMenu} style={style} onClick={onClickMenu}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-            <div className={styles.window} 
+            <fieldset className={styles.window} 
               style={{ 
                 minWidth: "100px",
                 width:" 100%",
+                padding:"0",
               }}
             >
+              <legend>{props.menuContent.name}</legend>
               <div className={styles.menuContent}>
-                {props.menuContent.name}
-                {
-                  props.menuContent.options.map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>)
-                }
+                { props.menuContent.options.map((option: MenuOption) => <MenuOptionView key={option.name} option={option} battleScene={props.battleScene}/>) }
               </div>
-          </div>
+          </fieldset>
         </div>
     </div>
 

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "worklog/24-06-02 Old Notes.md",
+                "file": "todo/systems/battle triggers.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "24-06-02 Old Notes"
+              "title": "battle triggers"
             }
           }
         ]
@@ -160,6 +160,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -170,6 +171,42 @@
   },
   "active": "cfd3f23ef5f1c6c2",
   "lastOpenFiles": [
-    "Battle System.canvas"
+    "todo/systems/Battle Intros.md",
+    "todo/systems/battle triggers.md",
+    "todo/content/Game Intro.md",
+    "todo/content/Technique Lore.md",
+    "todo/Battle System.canvas",
+    "todo/artstyle/artstyle test.md",
+    "todo/content/Art Ideas.md",
+    "todo/systems/Shatter System.md",
+    "todo/content/metroidbrainia.md",
+    "todo/systems/ideating announcing attacks with windows.md",
+    "todo/systems/consider tapping enemy box for targeting and then confirm.md",
+    "todo/content/blog topics.md",
+    "todo/content/Class Ideation.md",
+    "todo/content/reaper classes.canvas",
+    "todo",
+    "todo/content/Rough Reaper Enemy Ideas.md",
+    "todo/content/Research Analog Horror.md",
+    "todo/systems/Reaper Progression System.md",
+    "todo/artstyle/Juice - VFX, SFX.md",
+    "worklog/Reaper Trigger Ideation and Class Notes.md",
+    "impl/Reaper VFX.md",
+    "todo/systems/React to Texture Test.md",
+    "todo/systems/Potential Reaper Refactors.md",
+    "todo/systems/Ideate Cutscene Designer.md",
+    "todo/systems/Defensive Gameplay Ideation.md",
+    "todo/content",
+    "todo/content/Reaper Content Ideas.md",
+    "todo/cutscene-designer.canvas",
+    "todo/artstyle/Reaper Artstyle NOT VFX.md",
+    "worklog/24-06-02 Old Notes.md",
+    "impl/Reaper Prototype 3 - Buffs Magic and Ultimates.md",
+    "worklog/11-20-23 Woof.png",
+    "worklog/11-12-23 UI Sketches.png",
+    "worklog/11-06-23 Crazy Eyes.png",
+    "worklog/10-31-23+Coffee+Shop+Sketch.png",
+    "worklog/concept art/Untitled_Artwork 2.png",
+    "worklog/concept art/Untitled_Artwork 1.png"
   ]
 }

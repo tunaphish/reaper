@@ -1,0 +1,8 @@
+{
+	"nodes":[
+		{"id":"0d060abe60b35a46","x":-147,"y":-404,"width":400,"height":272,"type":"file","file":"archive/media/bakugou.jpg"},
+		{"id":"8afdaa6bdb12c614","x":298,"y":-404,"width":266,"height":400,"type":"file","file":"archive/media/denji-door.jpg"},
+		{"id":"630e9293dbec50dd","x":743,"y":-404,"width":400,"height":281,"type":"file","file":"archive/media/tifa.jpeg"}
+	],
+	"edges":[]
+}

@@ -1,6 +1,6 @@
 ---
-finished: 
-tags: reaper, software-design
+finished:
+tags:
 ---
 
 - [ ] migrate to drei sprite
@@ -16,3 +16,11 @@ tags: reaper, software-design
 - [ ] smack studio game
 - [ ] check out leva - GUI for react state
 - [ ] And then I’m supposed to render scenes on top of each other…  do this in react overlay with zIndex?
+
+
+# Refactor Actions
+- maybe things to speed up execution
+- potentially a list of things that happens that includes whether active techniques are triggered.
+	- right now i have to do a check, but I probably could do checks later?
+	- also just check all active techniques for haste?
+- like a list of events

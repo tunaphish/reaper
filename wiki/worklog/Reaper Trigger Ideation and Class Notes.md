@@ -1,6 +1,6 @@
 ---
-finished: 
-tags: reaper, gameplay
+finished:
+tags:
 ---
 
 - Trapper - Triggers - Counter ==Turn into Triggers?==

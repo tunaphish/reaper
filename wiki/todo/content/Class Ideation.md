@@ -1,0 +1,79 @@
+---
+tags:
+  - reaper
+  - gamedev
+---
+## Class Ideation
+- Summoner - Auto Selecting Actions - Different ones perform different roles
+- Trapper - Triggered if enemy performs certain actions - status effects
+- Rogue - Dodge Buff - Removed on use
+- Unique Soul - Gunner Buff - Target Menu does not close - only closes when exhausted 
+- Shadow Clone - Copies actions at 25% Capacity - Not Buffed
+- Spellblade - Next physical action can shatter
+- Stance Switcher 
+- Super Saiyan Mode - Limited Buff, High Dmg, Attempting to Shatter gives reduced AP
+- Sharingan - Opens menu and can shows you targets next move
+- Mahoraga - High Health - Targets highest HP, you have to fight Hahoraga after defeating enemy
+- Counterspell - Cancels enemy spell - One time use buff
+- Charged - Requires clicking through menu to activate 2x buff
+- Spellcraft - Modifies Magic - (Convert to AOE at 50% efficacy)
+- Conditions - Hits anyone at full health
+- Gambler - Menu is a slot machine that changes ability and cost 
+	- Using sharingan class before it will slow down the slot machine
+- Sovereign - Nobility, bring others up, inspire (buffs on me apply to party)
+- Flagbearer - Inspires others by being to first to lead the charge (in combos)
+- Mime - Has last used ability available
+- Time Mage - Haste, Slow, Undo (reverses stats to one sec ago, can rez), Stop (applies to everyone except user, time limited)
+- Compounding Interest - damage on target accumulates compounding interest. can cash out at anytime - enemy damage on caster will reduce the damage though, also be careful it doesn't get shattered!
+- Maintaining time limited buffs char
+- Some kind chidori/rasengan fight between Eji and Keshi
+- Bankai - Unshatterable - Core Menu summons
+- Gamble. Chance to get more. Or lose AP. Short cast time. 
+- - Calculator.  - - remove cast time and targeting but adds a conditional target
+
+- stances
+	- switching through stances
+	- committing AP to a stance to get alternate skill
+	- completing a dance to get an ult skill?
+	- accidentally shatter a stance (or having it get shattered)
+	- switching between an offensive stance or a defensive stance or a speed stance 
+	- speed stance to lightning draw
+- back and forth between backline when opportune moment strikes... no backline in my game... threat?
+- cooldown
+	- an alternate menu that features a timer that unlocks after the timer unlocks. can use powerful attacks from there.
+- conditions to achieve power
+- conditional follow up, have to use certain kinds of skills
+- recursion. after image can spawn other after images
+
+- status effect 
+	- ignores defense 
+	- conflated with other techniques
+	- requires strong enough enemies 
+	- prevent being healed
+- spellblade
+	- enchant with spell to attach magic effects
+- bankais
+	- add conditional targeting
+	- gun reload 
+	- reverse the effects of techs (buffs -> debuff you, summons attack you)
+	- - Murder on my mind. Raven rock remix. Bankai. Endless ascent. Everybody’s speed goes up. Anyone who hits max AP detonates. Loses HP and all 
+
+- ability - increase max AP
+- haste - increase AP recovery rate, reduce max AP
+- sage mage -> charge -> fire -> tree. 
+- guard either time limited or phys shatterable
+- - https://finalfantasy.fandom.com/wiki/Judge_(Tactics_Advance)
+- - [ ] Credit card. Debt. Apr. 
+	- she gets herself into debt.
+	- drop credit card. initiate fight
+- donate - 2AP - give 1ap to each teammate. does not allow for continued AP accumulation
+- Chain User / Wire User
+
+
+- Tank - Sharingan
+	- Tools for mitigation
+- AP - Grant AP
+- Healer - Reciprocity
+- - need to apply pressure to status effect (1 ATB) to avoid taking dmg (poison?)
+- Bow Down
+- - - death. Countdown until death. Must break their technique 

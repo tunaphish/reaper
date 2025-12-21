@@ -1,0 +1,64 @@
+# greed and the fucking grind
+- lust
+- - lust should be a toxic relationship. 
+	- I had a bird. That bird would bite other people. But he never bit me. 
+	- assumed that she was someone who was stuck in abusive relationship someone who was violent. People would try to help her. 
+	- The twist was that she was an evil person actually. The bird analogy is shown and she’s smiling maniacally. 
+	- You helped her realize she was a sadist. That life was worth it so she can hurt other people. Lust.  
+	- - If you spend too much time thinking. She kisses the menu and it selects an option for you. 
+- Lust 
+	- Beauty
+		- What point is there for in war. Violence for violence sale. No because there’s something to be gained. Honor in battle is staked on the value in other things. But beauty. Beauty is pursued for its own sake. Nothing is more honest. More pure. Then the pursuit of beauty. 
+		- Someone who’s been beautiful their whole life. But never taken seriously. The assumption is that she does not like her beauty. However. She loves that she is beautiful. Beauty itself has meaning. 
+		- You look at her next to a mirror. And they both start staring at you. You have to fight two of them. In love with each other. 
+		- - When I finally saw the sun again. It hurt my eyes. Your shine. Who you are. How you glow. Someone who diminishes who you are. Your parents. Your lover. And finally. Yourself. When you let yourself shine again. Always told to hide yourself. I fear to stain your clothes with blood. If I am vulnerable. The harder I love. The harder I lose. 
+		- become softer still: https://www.tiktok.com/@growrotten/video/72290922721204667340
+		- stop. give me your hand. I am your friend
+			- i fear to stain your clothes with blood
+			- stain them. I do not care
+		- never got to live true to herself
+		- obsessed with beauty. 
+		- you died living a lie. 
+		- you were always beautiful?
+- Gluttony
+	- i feel like I was made to consume. I wanted to read everything. try everything. experience all the things.
+	- - Normal everyday things that you appreciate
+		- guy always walking into room to gf: https://www.tiktok.com/@lappuwu/video/7247791816446168326
+
+	- the cat cries. the cat cries. he cries. and he cries and he cries and he cries. from morning til evening. from evening til morning. he cries a million times. until one day. he stops crying. and he's motionless. the cat never opened his eyes again.
+- Envy
+	- Why don’t we play a game eji. See who has less grit. Whoever reaches for their antidote first. Loses.
+	- - Envy has a collection. Please.  We have to sell these toy zebra figurines. Why do you care. 
+	- 	- maybe envy
+		- the battle isn't with others. it's with yourself... the envy is from within. 
+
+
+- Pride 
+	- is a kid. Because of potential. Never had to live up to it. You have a future. What could have been. The infinite possibilities. It’s with more then what is actually happening. Or maybe it is a kid. Does being a kid not have value in itself. Just being happy. The joy of growing up itself. Not just what you can become. 
+		- A prodigy who had his whole life ahead of him. Got hit by a car. Potential potential potential. But I was always great. Hit by a car. Made retarded. Lost his sense of potential. 
+	- PRIDE - accept no help from others. 
+	- - why do my sketches always get more attention then the finished product
+		- because, people like filling in the lines themselves. what they imagine the piece could be. not what it is. but with every stroke. every idea becomes more defined. the farther it strays from what they imagined in their mind. 
+	- - pride's wheelchair becomes a throne -> prince.
+		- - He loved butterflies before and affection the accident. 
+	- Potential... potential... POTENTIAL
+	- Wasn't the life I lived enough?
+	- Wasn't... Wasn't I alive?
+	- Your son is in crippling pain
+	- Day 37. The sunset is so beautiful today. 
+	- never got to live up to his potential
+	- wants to grow older
+	- you died young, it was never worth it (reap him in his wheelchair state)
+	- or the life he lived had meaning. anything beyond it doesn't matter (reap him in his monarch  state)
+		- as his health ticks down. a butterfly lands on his cheek. and he smiles. and dissapates.
+	- - The story didn’t end there. 
+		- What do you mean. Didn’t you die. 
+		- No…
+		- I lived.  
+		- This is for your own good yeah. You don’t want to live like this. This is what you want. 
+		- Go through the same routine except while he’s disabled. From his mothers view point he hated it. But he truly lived. 
+		- The assumption in the first half of his story is that it’s about lost potential. Plenty of kids die when they’re young. 
+	- - pride phases
+		- 1: child prodigy, hit by car
+		- 2: was still alive, mentally challenged, actually dies
+		- 3: realizing that he still enjoyed his life, never cared about potential

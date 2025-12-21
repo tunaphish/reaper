@@ -1,0 +1,11 @@
+- modern surrealism.
+- enemies are normal people accentuated by colored ornamentation with how they actually wanted to live. what they wanted to do. their regrets. 
+- enemies are people who felt strongly and didn't want to die. 
+	- they are normal people who wear a mask of what they wanted out of life
+	- when you depress them it shows their true self. the emotions they felt. the way you talk to them during the fight changes. when you go to execute them. their emotions fade away. 
+	- otherwise if you fight them to the end and validate their emotions with empathy then their normal self fades away. but how they felt stays behind. 
+	- in battle eji has empathy. he immediately feels what his teammates feels twice as hard. but he has the option to stifle. which removes the emotions he feels so he can focus on the mission. 
+- only sins will leave behind a mask. in the sense that you have to execute them. maybe others can leave masks too. 
+	- others will leave badges... 
+	- you can only equip one mask at a time?
+	- gather the masks from all the fellow sins can you face sei and trigger his 3rd phase. 

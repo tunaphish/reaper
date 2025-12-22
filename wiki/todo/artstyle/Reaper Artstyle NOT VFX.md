@@ -1,6 +1,6 @@
 ---
-finished: 
-tags: reaper, artstyle
+finished:
+tags:
 ---
 # effect notices
 - when things happen
@@ -61,12 +61,6 @@ tags: reaper, artstyle
 - - https://www.reddit.com/r/JRPG/comments/17z9cg5/really_liked_when_some_of_the_older_jrpgs_had/
 - - [ ] By stacking layers, you can add a ton of depth to environments and even interface elements. One of my personal favorites is to add a nearly-transparent "dust layer" that mostly just drifts about, but responds to nearby movement and/or u interactions. It's subtle, but adds tangibility.
 
-# Juice
-- Balatro Pageantry of Combos
-- Hit Stop - Time delays on finisher
-- [Health Bar Juice](https://www.youtube.com/watch?v=YEZXVK1-tlU&t=438s)
-- - [ ] Small delay before health starts ticking
-- - [ ] There are also a ton of animation tricks, and even lighting tricks to make sprites look 3D. Terraria, for example, gets loads of mileage out of their sprites by tinkering with shaders
 
 
 # SFX
@@ -75,3 +69,17 @@ tags: reaper, artstyle
 - Impact Frames 
 	- https://www.youtube.com/watch?v=ZMOg_QEOF5w
 - vintage anime sfx and then new wave anime sfx
+
+
+- - https://www.youtube.com/@SmackStudioGame/shorts
+
+- consistent menus
+
+- overworld art
+    - anno mutationem
+    - signalis
+    - gba fire emblem
+
+- persona 3 gameplay
+	- www.youtube.com/watch?v=Z4VcLrPs1Y8&pp=ygUXcGVyc29uYSAzIHJlbG9hZCBjb21iYXQ%3D
+	- https://www.reddit.com/r/visualnovels/comments/qzmv3b/dohna_dohna_the_most_visually_stylish_visual/

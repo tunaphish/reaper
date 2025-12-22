@@ -17,6 +17,8 @@ archived: true
 - Visual cohesiveness between CG's and dialogue, 
 - how to handle movie style cuts... anno mutationem just swings shit in and out. I could spawn dialogue above their head. and it's up to player to ensure it's in frame?
 
+- I want to converge ideas together...
+
 # Research
 - Magus 2.5D fight - https://www.youtube.com/watch?v=yKca4X3AKR0
 -  HD-2D (Undreamed Panic) - https://www.youtube.com/watch?v=UvieXLnyw3M 

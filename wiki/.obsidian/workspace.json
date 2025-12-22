@@ -13,15 +13,44 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo/systems/battle triggers.md",
+                "file": "todo/systems/Battle Intros - Initiate Command.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "battle triggers"
+              "title": "Battle Intros - Initiate Command"
+            }
+          },
+          {
+            "id": "6f873eae98bec3ce",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "todo/systems/Ideate Cutscene Designer.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Ideate Cutscene Designer"
+            }
+          },
+          {
+            "id": "3643fe8c189f584e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "todo/systems/Battle Intros - Initiate Command.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Battle Intros - Initiate Command"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -169,44 +198,44 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "cfd3f23ef5f1c6c2",
+  "active": "3643fe8c189f584e",
   "lastOpenFiles": [
-    "todo/systems/Battle Intros.md",
-    "todo/systems/battle triggers.md",
+    "todo/systems/Ideate Cutscene Designer.md",
+    "todo/systems/Battle Intros - Initiate Command.md",
     "todo/content/Game Intro.md",
     "todo/content/Technique Lore.md",
-    "todo/Battle System.canvas",
+    "todo/content/Rough Reaper Enemy Ideas.md",
+    "todo/content/Research Analog Horror.md",
+    "todo/content/Reaper Content Ideas.md",
+    "todo/systems/battle triggers something happening.md",
+    "todo/systems/consider tapping enemy box for targeting and then confirm.md",
+    "todo/content/Blog Topics.md",
+    "todo/artstyle/Juice - VFX, SFX.md",
+    "todo/artstyle/Reaper Artstyle NOT VFX.md",
     "todo/artstyle/artstyle test.md",
+    "todo/artstyle/Overworld Artstyle - Knowledge Metroidvania.md",
+    "todo/Battle System.canvas",
     "todo/content/Art Ideas.md",
     "todo/systems/Shatter System.md",
     "todo/content/metroidbrainia.md",
     "todo/systems/ideating announcing attacks with windows.md",
-    "todo/systems/consider tapping enemy box for targeting and then confirm.md",
-    "todo/content/blog topics.md",
     "todo/content/Class Ideation.md",
     "todo/content/reaper classes.canvas",
     "todo",
-    "todo/content/Rough Reaper Enemy Ideas.md",
-    "todo/content/Research Analog Horror.md",
     "todo/systems/Reaper Progression System.md",
-    "todo/artstyle/Juice - VFX, SFX.md",
-    "worklog/Reaper Trigger Ideation and Class Notes.md",
+    "archive/Reaper Trigger Ideation and Class Notes.md",
     "impl/Reaper VFX.md",
     "todo/systems/React to Texture Test.md",
     "todo/systems/Potential Reaper Refactors.md",
-    "todo/systems/Ideate Cutscene Designer.md",
     "todo/systems/Defensive Gameplay Ideation.md",
     "todo/content",
-    "todo/content/Reaper Content Ideas.md",
     "todo/cutscene-designer.canvas",
-    "todo/artstyle/Reaper Artstyle NOT VFX.md",
-    "worklog/24-06-02 Old Notes.md",
-    "impl/Reaper Prototype 3 - Buffs Magic and Ultimates.md",
-    "worklog/11-20-23 Woof.png",
-    "worklog/11-12-23 UI Sketches.png",
-    "worklog/11-06-23 Crazy Eyes.png",
-    "worklog/10-31-23+Coffee+Shop+Sketch.png",
-    "worklog/concept art/Untitled_Artwork 2.png",
-    "worklog/concept art/Untitled_Artwork 1.png"
+    "archive/24-06-02 Old Notes.md",
+    "archive/11-20-23 Woof.png",
+    "archive/11-12-23 UI Sketches.png",
+    "archive/11-06-23 Crazy Eyes.png",
+    "archive/10-31-23+Coffee+Shop+Sketch.png",
+    "archive/concept art/Untitled_Artwork 2.png",
+    "archive/concept art/Untitled_Artwork 1.png"
   ]
 }

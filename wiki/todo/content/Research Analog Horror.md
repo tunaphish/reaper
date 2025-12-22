@@ -1,6 +1,6 @@
 ---
-finished: 
-tags: reaper, content
+finished:
+tags:
 ---
 
 # Intention

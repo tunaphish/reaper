@@ -160,6 +160,9 @@
 - other guy particle emitter. - https://github.com/simondevyoutube/ThreeJS_Tutorial_ParticleSystems/blob/master/main.js
 
 
-
-
-
+# Juice
+- Balatro Pageantry of Combos
+- Hit Stop - Time delays on finisher
+- [Health Bar Juice](https://www.youtube.com/watch?v=YEZXVK1-tlU&t=438s)
+- - [ ] Small delay before health starts ticking
+- - [ ] There are also a ton of animation tricks, and even lighting tricks to make sprites look 3D. Terraria, for example, gets loads of mileage out of their sprites by tinkering with shaders

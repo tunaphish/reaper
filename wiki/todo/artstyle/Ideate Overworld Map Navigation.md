@@ -1,0 +1,5 @@
+- overworld map ideation
+	- - ship in world map turns to cheap busted toyota corolla
+		- south side - liqa sto
+		- drunk driving
+		- press y to check rear view mirror - just girl tongue out for split second acting a foo

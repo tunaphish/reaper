@@ -3,7 +3,31 @@ tags:
   - reaper
   - gamedev
 ---
-## Class Ideation
+# TEchnique Lore
+- Techniques have conditions to fulfill. If you fulfill they go away. You try not to fulfill them. 
+- Fucking covenants. They’re a form of technique. Laws I follow. I grant haste but hitting max AP means you lose technique. 
+	- Techniques typically trade. Law of equivalent exchange - Power for defense. But I made it so I can change when that is. 
+- In order for technique to work you have to explain it. 
+
+- Examples
+	- Don’t let it hit MAX AP. The desire to efficiently use AP. Hitting max AP means that you are not efficiently using AP. Therefore you are not acting efficiently. Techniques are desire. Efficacy. They intentionally don’t achieve desires. This is the basis for techniques
+	- Flash step. No animation even plays. Player just starts taking damage lmao. 
+
+# Defensive Ideation
+- ﻿﻿perform whatever tasks you need to do to reduce damage incoming on you
+- ﻿﻿and finally do some damage or healing
+- This can all translate to a single player game. I find tanking more fun than dosing, and it often has higher skill requirements (or at least higher stakes if you get it wrong). I'd probably enjoy a game that focused on this while NPCs deal damage and healed me.
+
+
+- it shows how much you would've taken but enemy techniques will bring down the power
+
+- Atsu aura taunt 
+- getting hit while tired or no tech, knocks you down
+	- you recover when you emit a new tech
+	- maybe enemies emit new techs at once
+- - zzz parry, m1 garand ping 
+
+# Class Ideation
 - Summoner - Auto Selecting Actions - Different ones perform different roles
 - Trapper - Triggered if enemy performs certain actions - status effects
 - Rogue - Dodge Buff - Removed on use

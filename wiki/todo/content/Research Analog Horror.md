@@ -2,8 +2,16 @@
 finished:
 tags:
 ---
-
-# Intention
+# Analog Horror
+- Contradiction. You need to find contradictions in their world view. Triggers things. 
+- Did you notice that? Rules aren’t working. A distortion. 
+	- Things that never happen but you don’t realize
+	- Toilet paper is upside down 
+	- Social aversion. Only one chair for big space 
+- crickets at night
+	- someone visiting at night
+	- you constantly hear about greed and the shit he did throughout his life
+	- you never know it's the old man. he's the best of the boomers
 # Actions
 - Nostalgia. Finding clues. To their past. Lets you go further back. Flashback fights. 
 - Static noise that progressively gets louder as the video becomes more and more uncanny over time

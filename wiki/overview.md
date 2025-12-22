@@ -16,9 +16,6 @@ Your emotions are not an obstacle in the pursuit of purpose, they are in fact th
 
 Emotions and community provide purpose, not desire.
 
-# Gameplay
-- [[Battle System.canvas|Battle System]]
-
 # Aesthetics 
 - Nostalgia
 	- The trio and Mentor
@@ -43,12 +40,6 @@ Emotions and community provide purpose, not desire.
 		- Do you remember how we used to run
 - Try not to disrupt the cadence too much with Cutscenes
 	- Dialog during gameplay. While you are customizing. Or exploring. 
-## Art Style
-- [[Juice - VFX, SFX]]
-- [[Overworld Artstyle - Knowledge Metroidvania]]
-
-# World Building
-- [[Reaper Society]]
 
 # Character Web
 - stifle them - [[Sei - The Mentor The Reaper]] 
@@ -57,6 +48,7 @@ Emotions and community provide purpose, not desire.
 - act in the face of emotion - [[Eji - The Empath]]
 	- Eji's greatest benefit is his empathy. he can feel what others feel. help them walk through their tangled web of emotions. feel what they feel. ability (mirror) match your emotional state to the opponents. opponents always have a starting emotional state. most start out extremely hostile. (depression has to overwhelm hostility). 
 # Symbol Web
+- [[Reaper Society]]
 - [[Reaper Games - Arbitrariness of Life, Games, Meaning]]
 - [[Death - Deriving Meaning from Consequences versus Virtue]]
 - [[Coffee - Work versus Connection]]
@@ -68,19 +60,8 @@ Emotions and community provide purpose, not desire.
 - [[Enemies - Normalcy]]
 
 # Design Line 
-- Avoid Meta Stories
-	- Undertale, Doki Doki, Bioshock, Spec Ops, Earthbound. A lot of celebrated titles use the literal interactivity as part of the narrative by addressing the player. Even though it gets me every single time, I want to avoid relying on addressing the player directly in favor of using agency to tell a compelling character story
-- Revelations should be driving next action. Not mission structure. 
-- Right now: The plot is delivered via a series of seven episodic missions that form the skeleton. Every mission begins with a debriefing in a coffee shop where Eji and Sei go over their target. The Coffee shop takes place in a suburban hub area and targets are in different locations around the city. 
-- [ ] Plot is driven by Mission Structure and not Characters
-- [ ] Plot doesn't reflect latest writing
-- [ ] Lack of coherent World Building
-- [ ] No Character Arcs over course of game. 
-	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
+- The plot is delivered via a series of seven episodic missions that form the skeleton. Every mission begins with a debriefing in a coffee shop where Eji and Sei go over their target. The Coffee shop takes place in a suburban hub area and targets are in different locations around the city. 
 
-
-
-- Goes back to moment with Sei as Climax, when I first met sei
 
 
 

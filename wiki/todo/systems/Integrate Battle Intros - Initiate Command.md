@@ -22,3 +22,27 @@
 - Depending on situation it’s different for spawning aura. When there’s dialogue to be had you don’t auto start. When enemy is not conscious spirit everyone just auto starts. You can accuse people of being lost souls instead of just human btw
 - There’s a known asshole and all three immediately start posting up. 
 - keshi's intrinsic technique is that he gets a free tier 1 ability, basically a sucker punch. enemies are often caught off guard by this
+
+
+# Aesthetics
+# Character Intro
+- black hole boss introduction: https://www.tiktok.com/@sirio_universo/video/7226611192683416838
+	- mortal kombat intro https://www.tiktok.com/@ehebai/video/7242831651137457451
+- fucking sick animation intro animation: https://www.tiktok.com/@giyuusactualbf/video/7240176055330311451
+- before there was nothing, there were monsters: https://www.tiktok.com/@hey_im_moodie/video/7236481614312754475
+
+
+- https://www.tiktok.com/t/ZT8BBaKGP/
+	- The duplicate is revealed by their shadow 
+	- Duplicates run in three different directions. Have to pick the character you follow. Follow all three. 
+- Back to front dynamic camera movement with depth. 
+- Nobara edit. With the pause. Periodically pausing. Changes to rules should be reversible. 
+- Drunken master can opening sound 
+- YOMI Hustle: https://www.youtube.com/watch?v=JGqAA5XllvE
+- Changing Pitch as you get deeper into menu..
+	- giving gamey effects like knockback, impact, destruction upon selection
+- Hand drawn art trade offs are multiplicative for animation. color x frame.
+- - https://www.reddit.com/r/animation/comments/18474li/visuals_test_for_an_untitled_bug_rpg_thoughts/
+	- when someone dies animation
+- UX visual hierachy to distract during menu design (size, color, weight, movement)
+- - Getting shot and cutting aruptly to black and then getting shocked back to life

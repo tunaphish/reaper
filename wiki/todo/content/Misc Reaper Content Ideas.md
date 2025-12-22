@@ -1,6 +1,6 @@
 ---
-finished: 
-tags: reaper, content
+finished:
+tags:
 ---
 
 - there is no reward for taking the good path. 

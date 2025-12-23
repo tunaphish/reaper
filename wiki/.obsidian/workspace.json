@@ -11,14 +11,17 @@
             "id": "cfd3f23ef5f1c6c2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "todo/systems/Reaper Progression System.md",
-                "mode": "source",
-                "source": false
+                "file": "todo/cutscene-designer.canvas",
+                "viewState": {
+                  "x": 498,
+                  "y": -204,
+                  "zoom": -0.10761924380403724
+                }
               },
-              "icon": "lucide-file",
-              "title": "Reaper Progression System"
+              "icon": "lucide-layout-dashboard",
+              "title": "cutscene-designer"
             }
           }
         ]
@@ -171,12 +174,17 @@
   },
   "active": "cfd3f23ef5f1c6c2",
   "lastOpenFiles": [
-    "todo/artstyle/React to Texture Test.md",
+    "archive/media/tifa.jpeg",
+    "archive/media/denji-door.jpg",
+    "archive/media/bakugou.jpg",
+    "archive/media",
+    "todo/systems/Ideate Cutscene Designer.md",
     "todo/systems/Potential Reaper Refactors.md",
-    "todo/artstyle/Ideate Overworld Map Navigation.md",
     "todo/systems/Integrate Battle Intros - Initiate Command.md",
     "todo/systems/Implement Base Combat.md",
-    "todo/systems/Ideate Cutscene Designer.md",
+    "todo/systems/Reaper Progression System.md",
+    "todo/artstyle/React to Texture Test.md",
+    "todo/artstyle/Ideate Overworld Map Navigation.md",
     "todo/artstyle/Juice - VFX, SFX.md",
     "todo/artstyle/Environment Artstyle.md",
     "todo/systems/Ideate Battle Triggers and Combos.md",
@@ -192,12 +200,10 @@
     "todo/content/Art Ideas.md",
     "todo/artstyle/Sound Design.md",
     "todo/artstyle/Reaper Artstyle NOT VFX.md",
-    "todo/systems/Reaper Progression System.md",
     "todo/systems/Defensive Gameplay Ideation.md",
     "todo/content/Research Analog Horror.md",
     "overview.md",
     "design lines/Mission 2.md",
-    "design lines/Mission 1.md",
     "todo/Battle System.canvas",
     "todo",
     "todo/content",

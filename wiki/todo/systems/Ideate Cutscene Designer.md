@@ -18,6 +18,10 @@ archived: true
 - how to handle movie style cuts... anno mutationem just swings shit in and out. I could spawn dialogue above their head. and it's up to player to ensure it's in frame?
 
 - I want to converge ideas together...
+	- issue is that I want to have cutscenes and battle converge together?
+	- on top of that it also appears in the in game world lmao... so i have to be spawning or showing alternate things all the fucking time... and it gets to be a point... it shows up
+	- triggers a cutscene and then the camera takesover
+
 
 # Research
 - Magus 2.5D fight - https://www.youtube.com/watch?v=yKca4X3AKR0

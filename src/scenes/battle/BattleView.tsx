@@ -9,7 +9,7 @@ import { MenuOption } from './menuOption';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
-import { Stage, EnemyResourceDisplay } from './Stage';
+import { Stage } from './Stage';
 import { ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
 
 import { Action } from '../../model/action';
@@ -130,24 +130,16 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
 
 
 export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies, enemies } = props.scene.battleStore;
+    const { allies } = props.scene.battleStore;
     const onClickalliesMember = (member: Ally) => {
       props.scene.openInitialMenu(member);
     }
 
     return (
         <div className={styles.container}>
-          <div className={styles.combatantBar}>
-              {enemies.map((enemy) => {
-                return( 
-                  <div style={{ position: 'relative', flex: '1' }} key={enemy.name}>
-                    <EnemyResourceDisplay battleScene={props.scene} combatant={enemy} />
-                  </div>
-                )
-              })}
-          </div>
+
           <div style={{ flex: 4, zIndex: -1 }}> 
-            {/* <Stage scene={props.scene} /> */}
+            <Stage scene={props.scene} />
           </div>
           <div className={styles.combatantBar}>
               {allies.map((member) => {

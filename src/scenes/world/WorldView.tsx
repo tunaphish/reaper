@@ -88,7 +88,7 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
     <div className={styles.container}>
       <div className={styles.stageContainer}>
         <WorldStage world={props.scene} />
-        {/* <DynamicJoystick world={props.scene} /> */}
+        <DynamicJoystick world={props.scene} />
       </div>
       <div className={styles.menuContainer}>
         <div className={styles.menuContent}>

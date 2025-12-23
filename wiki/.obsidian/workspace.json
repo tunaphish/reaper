@@ -11,17 +11,14 @@
             "id": "cfd3f23ef5f1c6c2",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "todo/cutscene-designer.canvas",
-                "viewState": {
-                  "x": 498,
-                  "y": -204,
-                  "zoom": -0.10761924380403724
-                }
+                "file": "todo/systems/Ideate Cutscene Designer.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "cutscene-designer"
+              "icon": "lucide-file",
+              "title": "Ideate Cutscene Designer"
             }
           }
         ]
@@ -174,6 +171,7 @@
   },
   "active": "cfd3f23ef5f1c6c2",
   "lastOpenFiles": [
+    "todo/cutscene-designer.canvas",
     "archive/media/tifa.jpeg",
     "archive/media/denji-door.jpg",
     "archive/media/bakugou.jpg",
@@ -207,7 +205,6 @@
     "todo/Battle System.canvas",
     "todo",
     "todo/content",
-    "todo/cutscene-designer.canvas",
     "archive/11-20-23 Woof.png",
     "archive/11-12-23 UI Sketches.png",
     "archive/11-06-23 Crazy Eyes.png",

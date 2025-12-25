@@ -1,10 +1,5 @@
 ---
-finished: 
-tags:
-  - reaper
-  - artstyle
-goal: Reactive UI that can have shaders
-active: false
+date: 2025-12-25
 ---
 # react -> texture test
 - can i apply shaders to html css via drei?... I think so right lmao
@@ -30,3 +25,5 @@ active: false
 - tried test where i do onclick but i'm stupid and forgot that it's just a texutre now : )
 - FUCKING z-INDEX IS WHY I CAN"T USE ORBIT CONTROLS FUCK
 
+# Conclusion
+- it's janky and not supported... better to just bite the bullet and start writing the game in godot (or do something else than this)

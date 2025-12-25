@@ -20,7 +20,9 @@ archived: true
 - I want to converge ideas together...
 	- issue is that I want to have cutscenes and battle converge together?
 	- on top of that it also appears in the in game world lmao... so i have to be spawning or showing alternate things all the fucking time... and it gets to be a point... it shows up
-	- triggers a cutscene and then the camera takesover
+	- triggers a cutscene and then the camera takes over
+	- okay so there's the world layer... then the dialogue layer... 
+	- I guess the issue is that it's full body?
 
 
 # Research

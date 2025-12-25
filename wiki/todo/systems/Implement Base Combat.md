@@ -3,6 +3,7 @@ tags:
   - reaper
   - gamedev
 ---
+# Mind Dump
 - spellcrafting
 - multi menu ideation
 	- buffs

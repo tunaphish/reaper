@@ -23,3 +23,14 @@ artificial recreations of nature is a theme I like
 - There’s a statue hidden in the corner. It has a spirit there. 
 - Lots of hidden secrets
 
+
+## Lighting System
+- Shadow filters
+- Lighting Effects
+  - Passing Streetlamps
+  - Dappled Lighting
+  - The light from a cafe window shining onto their faces.
+- Point is Flashlight, Reveal Hidden Things in World
+- Rim Lighting
+- Normal Maps
+  - For 2D lighting

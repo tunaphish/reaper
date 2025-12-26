@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo/artstyle/Window Artstyle.md",
+                "file": "todo/systems/Ideate Overworld Map Navigation.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Window Artstyle"
+              "title": "Ideate Overworld Map Navigation"
             }
           }
         ],
@@ -186,11 +186,14 @@
   },
   "active": "2f0ea079adff8cc7",
   "lastOpenFiles": [
-    "todo/artstyle/Pixel 2.5.md",
-    "todo/artstyle/Window Artstyle.md",
-    "todo/content/Art Ideas.md",
-    "todo/artstyle/Sound Design.md",
+    "todo/misc",
     "todo/artstyle/Environment Artstyle.md",
+    "todo/systems/Ideate Overworld Map Navigation.md",
+    "todo/artstyle/Character Design for Animation.md",
+    "todo/artstyle/Window Artstyle.md",
+    "archive/Pixel 2.5.md",
+    "todo/content/Art Ideas.md",
+    "todo/misc/Sound Design.md",
     "archive/React to Texture Test.md",
     "todo/systems/Ideate Cutscene Designer.md",
     "todo/systems/Implement Base Combat.md",
@@ -202,7 +205,6 @@
     "todo/systems/Potential Reaper Refactors.md",
     "todo/systems/Integrate Battle Intros - Initiate Command.md",
     "todo/systems/Reaper Progression System.md",
-    "todo/artstyle/Ideate Overworld Map Navigation.md",
     "todo/systems/Ideate Battle Triggers and Combos.md",
     "todo/systems/ideating announcing attacks with windows.md",
     "todo/systems/Tap Enemies for Targetting and Confirm.md",
@@ -216,8 +218,6 @@
     "todo/artstyle/Reaper Artstyle NOT VFX.md",
     "todo/systems/Defensive Gameplay Ideation.md",
     "todo/content/Research Analog Horror.md",
-    "overview.md",
-    "design lines/Mission 2.md",
     "todo/Battle System.canvas",
     "todo",
     "todo/content",

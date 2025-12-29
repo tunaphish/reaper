@@ -8,6 +8,16 @@ tags:
 - Mine and missing textures sisters
 
 
+- All windows are interactable, there is a secret behind someone
+	- fatman bomb. you're trying to find the last bomb to defuse but you can't
+	- Drag and drop
+- Crow noir entrance
+- Overworld actions happening in background 
+- Polaroid window
+- Gilded (cyber sigilism) border for god character 
+
+- usually each enemy has their own frame
+	- twins have their own
 
 
 ## Character Visuals & Expression

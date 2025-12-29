@@ -3,7 +3,7 @@ tags:
   - reaper
   - gamedev
 ---
-# TEchnique Lore
+# Technique Lore
 - Techniques have conditions to fulfill. If you fulfill they go away. You try not to fulfill them. 
 - Fucking covenants. They’re a form of technique. Laws I follow. I grant haste but hitting max AP means you lose technique. 
 	- Techniques typically trade. Law of equivalent exchange - Power for defense. But I made it so I can change when that is. 

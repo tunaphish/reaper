@@ -1,10 +1,8 @@
-# Inbox
-- narrator explaining jjk abilities
-Doppleganger
-She’s listening. Do not talk about the incident. 
-Modify window. Scrollbar. 
-Need reference to window. May change. 
-Window presentation driving gameplay. Interact with windows 
+# Broadly Design
+- General Plot
+- Character Designs
+- Locations
+- Scenes 
 
 # Story Structure
 1. Weakness and Need: Eji can't control his emotions. Lashes out and picks actions randomly. In danger of becoming a lost soul. He has empathy. But that empathy forces him to look away from others. And look away from himself. This caused him to die without any meaning to his life. His death bed he looks back and he never gave it any meaning.At first he learns to stifle his emotions. Sei gives him purpose as a reaper. But that's not enough. The journey is to learn to act in the face of emotion. Because your actions aren't what give life meaning. Sure you can go through life like a robot. But what gives life meaning is what you feel. What you feel through others. The empathy. It's hard... caring for others. Helping them through their trauma, and them helping you through yours. But it's worth it. Therefore... the friends along the way.
@@ -24,30 +22,6 @@ Your emotions are not an obstacle in the pursuit of purpose, they are in fact th
 
 Emotions and community provide purpose, not desire.
 
-# Aesthetics 
-- Nostalgia
-	- The trio and Mentor
-		- They fulfill their typical shounen anime roles
-		- The expectation from this type of game is that they are subversions, however I want them to be celebrations of their characters and eventually represent the ideals of their character archtypes. 
-			- Keshi is the Edge Lord who goes down in flames. 
-			- Elise is the Support who with her help drives home the them of the game.
-			- Sei is the Mentor who passes on, leaving the world to the new generation.
-			- Eji is the protagonist who feels too deeply.
-		- Anime Moments
-			- Tatsumaki standing up and fighting even though she's unconscious
-			- eji, the caged bird
-			- air gear, kazu, second place 
-	- You could not step twice into the same rivers, for other waters are ever flowing on to you. - Hercalitus
-	- You can return to the past but noone else is there
-- Absurdism - Nihilistic Humor - Finding meaning in dumb things
-	- I killed on oyster on purpose once. Smashed it with a rock. It's my one life regret.
-		- Oyster's can't feel pain!
-		- What about my pain? What about my sorrow?
-	- This dog looks like my dog from my teenage years, Daisy. God I miss her.
-		- It's okay I was reincarnated into a real girl
-		- Do you remember how we used to run
-- Try not to disrupt the cadence too much with Cutscenes
-	- Dialog during gameplay. While you are customizing. Or exploring. 
 
 # Character Web
 - stifle them - [[Sei - The Mentor The Reaper]] 

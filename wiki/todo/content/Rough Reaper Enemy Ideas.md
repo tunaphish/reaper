@@ -78,3 +78,4 @@ tags: reaper, content
 	- Little Girl and Giant Protector (invert and do lil boy and muscle mommy)
 	- eye patch to hide heterochromia 
 -  Monster global heals to prevent kill self. 
+- - Doppleganger

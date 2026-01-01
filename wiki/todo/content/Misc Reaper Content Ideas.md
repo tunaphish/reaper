@@ -281,3 +281,9 @@ Millenial core music plays for eji. The reveal that you’re older. Holy shit. Y
 	- And then girl uses her thighs to crush it close. She's always been a wrestler. She can't reap. 
 - sei's head goes flying and it transitions back to intro screen
 	- from the bottom of my heart thank you for playing the reapers. 
+
+
+
+
+- narrator explaining jjk abilities
+- She’s listening. Do not talk about the incident. 

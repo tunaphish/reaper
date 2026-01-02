@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ideate Cutscene Designer.md",
+                "file": "overview.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Ideate Cutscene Designer"
+              "title": "overview"
             }
           }
         ]
@@ -171,11 +171,12 @@
   },
   "active": "cfd3f23ef5f1c6c2",
   "lastOpenFiles": [
+    "missions/Design Overview.canvas",
+    "Ideate Cutscene Designer.md",
     "overview.md",
     "Misc Reaper Content Ideas.md",
     "Story Refactor Based on Identified Issues.md",
     "missions/The Hikikomori - Shut In.md",
-    "missions/Design Overview.canvas",
     "todo/content/Dungeon Structures.md",
     "characters/Side Characters.md",
     "characters/Seven Sins Ideation.md",
@@ -196,7 +197,6 @@
     "todo/content/Art Ideas.md",
     "symbols/Aesthetics - Tone.md",
     "todo/systems/Integrate Battle Intros - Initiate Command.md",
-    "characters/Keshi - The Edge Lord.md",
     "todo/Class Ideation.canvas",
     "todo/Battle System.canvas",
     "todo/cutscene-designer.canvas",

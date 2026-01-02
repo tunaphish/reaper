@@ -1,8 +1,0 @@
-- [ ] Plot is driven by Mission Structure and not Characters
-- [ ] Plot doesn't reflect latest writing
-- [ ] Lack of coherent World Building
-- [ ] No Character Arcs over course of game. 
-	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
-
-
-- gunna do hubs with major bosses and sub bosses within the hubs. players can run around and do misc things within the hub and uncover additonal layers of the boss. 

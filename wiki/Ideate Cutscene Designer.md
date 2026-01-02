@@ -80,6 +80,16 @@ archived: true
 
 
 # Physical Implementation 
+- encounter
+	- threads
+	- enemies
+	- initiated (battle)
 
+- [ ] remove 3D setup
+- [ ] add back 2D setup
+- [ ] delete dialogue setup 
+- [ ] design cutscene generator
+	- [ ] step into area
+	- [ ] walk up to someone and have convo...
 
 # Reflection 

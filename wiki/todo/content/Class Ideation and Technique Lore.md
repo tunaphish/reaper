@@ -3,6 +3,21 @@ tags:
   - reaper
   - gamedev
 ---
+- Defend attack to summon. 
+	- Get a ten chain to summon Or do meteor suplex 
+- mimic + summoner = shadow clone
+- some kind of gambling bankai
+	- wager new attacks
+- nokia flip phones
+- Popups Bankai
+-  Rend  status effects change decision making process and visually effect menu  doesn’t just disable  
+- - Kills self to summon final Pokémon. Puts on timer. The final Pokémon disappears after she dies. 
+- The eight gates is a technique of destruction. He didn’t do it to die. He did it to be Alive 
+- One shot. All health is drained. Allies are feared. 
+- Drop weight. Halves physical attack cast time. Increase stamina regeneration.
+- Targets last player to attack him
+
+
 # Technique Lore
 - Techniques have conditions to fulfill. If you fulfill they go away. You try not to fulfill them. 
 - Fucking covenants. They’re a form of technique. Laws I follow. I grant haste but hitting max AP means you lose technique. 

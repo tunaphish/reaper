@@ -1,4 +1,3 @@
-# Mission 3 - The Hikikomori
 - Gluttony?
 - Reapers are rare. the type of person who feels strongly but is still able to operate and continue on. 
 - Some Strong Lost Souls Are Reapers
@@ -15,6 +14,5 @@ This the part of the Knowledge Metroidvania where you can get to know characters
 
 "how can I learn about him when he won't let us open the door..." There's a huge barrier between you and the doors. You go around the large house and learn more about him, cleaning up souls here and there. The place is a mansion yet they still produced a hikikomori. Sei assumes the parents did something and he's right. Put a fair amount of pressure on the lad.
 
-
-- Doppleganger is envy. If this attack kills, restore MP. Lowered attack
-	- Nostalgia with friend group. Establishes friend group. Enemy right before Greed.
+- Gluttony
+	- i feel like I was made to consume. I wanted to read everything. try everything. experience all the things.

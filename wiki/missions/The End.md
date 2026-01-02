@@ -187,3 +187,80 @@ Eji I have to die. Humans don’t change. Humanity changes. The young can only t
 		- Even the action of inaction.
 		- As an artist he had the weight of expression. The possibilities. Always had the freedom. 
 		- But he never chose for himself. He never lived the life he wanted. Now the rest of the world. The audience carries that weight. 
+
+
+# Eji Ending Idea
+- never participated in life
+	- Ultimate conflict. Never having done anything. It doesn't matter. Just start now. Right here. Right now. 
+- He lead a completely normal life. He graduated school. He fell in love. Got married. Bought a house. Had kids. Even loved them. It keeps baiting you into thinking something is coming. But it never does. He has a dog. That dog dies of old age. But. Nothing ever comes of it. There are seven doors. He goes through each of them. The rabbit is there. Letting you know. All roads lead to Rome. But everyone you go through a door you end up in the same place. Rome. And then you died. N
+Having nothing really ever happen. But having never lived either. 
+New age. Computers. 
+You’re just some old guy. You look at your past self and wonder. Why can’t that guy just be happy. There were things you need to do. 
+There was never a time in my life where I was happy. So why is it that I look back on these photos. And I see someone else. 
+
+Mirai dempa. The reveal that you’re a fat old guy. Crewing around with teenagers with their teenage problem and angst. Only an old man to old man convo with sei and eji. Old man to old man. But sei is much older than you thought. 
+Millenial core music plays for eji. The reveal that you’re older. Holy shit. You thought that was the big camaraderie you had with sei. But it wasn’t. He’s much older 
+
+
+
+
+
+
+# new ending
+- every time you boot the game it plays crystals - isolate.exe with an intro of the main characters of the game dancing
+- the tone throughout the story is that of absurdist, irrelevance, nothing matters. i'm just here to fuck shit up.
+	- for example there's a stealth section introduced but then while the mechanics are being introduced keshi just walks up and initiates a battle outright. 
+	- attacks in the game are harsh. there's something like Persona's all out attacks but instead the characters face stomp the enemies and blood splatters on your faces while you're laughing. 
+- - - 
+- you are set on a journey to reap the previous generation of reapers.
+	- the old generation of reapers still being there is presented as odd because typically that doesn't happen (normally sei does it himself)
+	- Sei has some disdain for that generation of reapers as they're just some old men clinging onto life and power. 
+- - each dungeon is you navigating through the most important memories in their life. so like you do a boss phase. and he has a flashback sending you down the rabbit hole and escalating emotions/stakes, etc. and increasing dungeon difficulty.
+- MAYBE: revealed that they're given purpose by Sei because this new generation genuinely just wants to die and move on. they're done with this shitty earth. 
+- in the end it's revealed as a plot by Sei. He orchestrated a series of increasingly emotionally difficult tasks to find the new Reaper because Sei is ready to die but he can't go on until he is sure that there is another reaper who can take his place. 
+	- he thinks that the way to do this is to emotionally detach from your work so that you can do what needs to be done. 
+	- first you go out and reap the previous generation of reapers.
+	- culminating in you reaping your fellow reaper
+	- it's why there's somewhat of a rivalry setup between Eji and Keshi
+- - - 
+- you're just like me (amnesia vs nothing of worth)
+- The culminating moment of all three of their stories. Someone who couldn't participate in life. Someone who was always fighting. Weighing down. All of this culminates in the most important moment. 
+- You're going through eji and Keshis life simultaneously. There's rivalry for who gets to be the reaper. You guys put girl to death. Maybe not. 
+	- Eji story is that if the of the observer. Just watching life. It was assumed that he was the one who experienced the trauma. It's why his innate ability is the sharingan. To observe. 
+	- You were there. You watched it happen. Maybe assumption is eji is the victim. 
+- Keshi's storyline is one that derives from abuse and having to fight his whole life. 
+	- his father taught him to fight. etc etc. 
+- Anyways it culminates with keshi being pissed because your life was nothing. 
+	- The saving grace for keshi is when the next memory is of meeting the team together. 
+- Sei is confused. How could a memory after death be a part of the journey. This triggers seis dungeon. - sei never lets go. Ascension. Spawns a shit ton of buffs. first phase
+	- "youre not like me at all."
+- sei thinks you are alike and that Eji can be the next reaper because they both have amnesia about their lived life yet paradoxically still live on as reapers.
+	- however sei realizes that Eji has amnesia is a loser who never did anything with his life worth remembering. his lingering feeling is that he didn't live.
+- You go through his memories. And it's of all the generations of reapers he had to put down. 
+	- Until it hits present memories coinciding with the beginning of your journey that Eji recalled. 
+- final ending sequence begins
+- - - 
+- crystal - isolate.exe starts playing and it mimics the intro video to game. 
+- That's when the the three of you navigate the journey you had together. Complete with the boss rush mode. 
+- you jump from memory to memory of each boss fight you had. the boss is dancing and encouraging you to finally defeat sei and end this with credits showing in the background like anime.
+	- each time Sei is astonished. this shit life of being a reaper was really a pivotal moments in your lives? how could that be?
+	- and each time the party is like fuck yeah.
+	- you go through memory through memory until it hits present day and the most important moment of your lives coincides with the present moment and the party announces.
+- RIGHT HERE. RIGHT NOW. THIS IS THE MOST IMPORTANT MOMENT OF OUR LIVES.  
+- "hey Sei... if you knew the world was gunna end... would you dance?"
+- Culminating in sei crushing his last and final binding of the reaper.
+- - overall theme of the story. 
+	- no matter what happens. no matter what life you lived. how you felt about it.
+	- you can feel what it is you feel. and then you can go on living. right here. right now. shatter. and begin anew. 
+- He shatters the 'reaper' technique himself and starts dancing. Exposing his break weakness. 
+- the progression system shows a final icon at the top and all three of them link to it.
+	- keshi gains reaper technique to execute sei with sword.
+	- then eji and he uses his sword on the other side of sei's neck
+	- And then girl uses her thighs to crush it close. She's always been a wrestler. She can't reap. 
+- sei's head goes flying and it transitions back to intro screen
+	- from the bottom of my heart thank you for playing the reapers. 
+
+
+- A personal story to a generational conflict
+	- I can't leave until it's fixed. It will be fixed. When you fucking leave. 
+	- have you considered, that nobody's been able to rise up to the reaper. because you're still here?

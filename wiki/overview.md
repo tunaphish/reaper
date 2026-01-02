@@ -1,8 +1,3 @@
-# Broadly Design
-- General Plot
-- Character Designs
-- Locations
-- Scenes 
 
 # Story Structure
 1. Weakness and Need: Eji can't control his emotions. Lashes out and picks actions randomly. In danger of becoming a lost soul. He has empathy. But that empathy forces him to look away from others. And look away from himself. This caused him to die without any meaning to his life. His death bed he looks back and he never gave it any meaning.At first he learns to stifle his emotions. Sei gives him purpose as a reaper. But that's not enough. The journey is to learn to act in the face of emotion. Because your actions aren't what give life meaning. Sure you can go through life like a robot. But what gives life meaning is what you feel. What you feel through others. The empathy. It's hard... caring for others. Helping them through their trauma, and them helping you through yours. But it's worth it. Therefore... the friends along the way.
@@ -43,9 +38,6 @@ Emotions and community provide purpose, not desire.
 
 # Design Line 
 - The plot is delivered via a series of seven episodic missions that form the skeleton. Every mission begins with a debriefing in a coffee shop where Eji and Sei go over their target. The Coffee shop takes place in a suburban hub area and targets are in different locations around the city. 
-
-
-
 
 
 

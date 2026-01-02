@@ -23,6 +23,8 @@
 - There’s a known asshole and all three immediately start posting up. 
 - keshi's intrinsic technique is that he gets a free tier 1 ability, basically a sucker punch. enemies are often caught off guard by this
 
+# battle intro with dancing
+- Dance intro - saved tiktok. guy slides in with the drinks (this is intro to battle where someone is already over max)
 
 # Aesthetics
 # Character Intro

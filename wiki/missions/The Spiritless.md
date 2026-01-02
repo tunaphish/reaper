@@ -1,4 +1,4 @@
-![[spiritless.png]]
+- I have no concept of MP in this game tho... 
 - There's a blind character. Who can sense magical energy. But all he sees is a void where there should be energy.
 	- Camera pans like 20 miles before it ends up behind your back
 		- Heavenly Restriction

@@ -21,3 +21,8 @@
 		- Do you remember how we used to run
 - Try not to disrupt the cadence too much with Cutscenes
 	- Dialog during gameplay. While you are customizing. Or exploring. 
+
+# theming - absurdism and just beating people's asses
+- absurdism, gameplay is just you beating on them, not really many weapons in game
+	- just fist fighting and stomping on their asses and standing on business
+	- 

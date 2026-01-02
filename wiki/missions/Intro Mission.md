@@ -1,4 +1,6 @@
-Mission 1 
+- Intro to the game is them trying to get eji to dance. The first time he dances is the first time the game intro plays. Exacerbated. Hey eji. If you knew the world was gunna end. Would you dance?  All that matters is right here. Right. Now. Culminates in dance moment vs first big boss and the dancing intro plays. 
+
+
 - Spirits are Souls are left behind when they die with regrets. Reapers come to excise these souls by beheading them. Souls are stronger and more dangerous the more regretful they are.
 - Reapers are also dead
 - Reaping souls require that you depress them first 

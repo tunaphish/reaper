@@ -1,17 +1,20 @@
 ---
-finished: 
-tags: reaper, content
+finished:
+tags:
 ---
+- Dopplegangers....
+	- - Doppleganger is envy. If this attack kills, restore MP. Lowered attack
+		- Nostalgia with friend group. Establishes friend group. Enemy right before Greed.
 
-- [x] Packrat
+- [ ] Packrat
 	- Kid with big backpack
 	- Uses lots of items during combat to heal and deal AOE damage
-- [x] Monk: uses MP to perform low cast time attacks to interrupt magic users
+- [ ] Monk: uses MP to perform low cast time attacks to interrupt magic users
 	- He gets pissed off and a nrmal fight triggers. Some fights are like this. Like limitless. You don’t die but you can’t proceed 
 	- drunken mamster?
 	- ethereal fists
-- [x] Gojo Satoru: targeting this enemy gives infinite cast time
-- [x] The Manipulator
+- [ ] Gojo Satoru: targeting this enemy gives infinite cast time
+- [ ] The Manipulator
 	- Glasses shine
 	- Hack complete. He controls you biiitch
 - - Shota and muscle mommy. Attack shota and muscle mommy reacts. 

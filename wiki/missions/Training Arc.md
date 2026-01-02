@@ -25,3 +25,13 @@ sei: I remember that company... it never even took off.
 eji: It's not about whether it took off. It's about doing it. Knowing that you gave it your all..
 
 like PT but instead of a traditional horror it's more of a surrealist existential horror. I'm going to do the same everything, everyday for the rest of my life until I die. is this what life is? you repeatedly go down the same hallway fighting the same enemies go through their life. at the end is the boss.. the regret on their death bed. each time you go through the hallway you have to figure out how it's changed?
+
+
+The Training Arc
+
+- training arc
+	- greed helps you train to defeat someone.
+	- HEAVENLY KEY - Apollo Rocky training vibes
+	- second place. always climbing to the top. it's you and greed. 
+	- ONE MORE set vibes
+- like gym sets. 3x8.  you have to do 3 waves of consecutive battles with some time to prep in between. you get lots of exp. 

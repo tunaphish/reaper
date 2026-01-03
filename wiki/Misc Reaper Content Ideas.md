@@ -9,6 +9,8 @@ tags:
 	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
 
 
+- Divine trauma.  My only regret is I couldn’t help more people. 
+- Throughout the game. Can you quit with the sharingan. It’s creeping me out. The reveal that you guys are going back in time and watching yourselves
 
 
 

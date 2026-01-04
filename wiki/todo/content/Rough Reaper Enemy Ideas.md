@@ -2,6 +2,8 @@
 finished:
 tags:
 ---
+- raizhell move your body - By my decree. You all will dance. What will you sacrifice? I need not sacrifice... something like that
+- Overflow - guy who traded power for attacking fast. He insta counters techniques and magic. But the thing is his attacks are weak. You just gotta beat his ass normally 
 - Dopplegangers....
 	- - Doppleganger is envy. If this attack kills, restore MP. Lowered attack
 		- Nostalgia with friend group. Establishes friend group. Enemy right before Greed.

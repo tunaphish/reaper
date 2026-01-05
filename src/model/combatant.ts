@@ -20,8 +20,6 @@ export type Combatant = Option & {
 
   activeTechniques: Set<Technique>;
 
-  spritePath: string;
-
   status: Status;
   position: [x: number, y: number, z: number];
 }

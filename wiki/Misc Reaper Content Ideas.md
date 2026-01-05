@@ -11,7 +11,12 @@ tags:
 
 - Divine trauma.  My only regret is I couldn’t help more people. 
 - Throughout the game. Can you quit with the sharingan. It’s creeping me out. The reveal that you guys are going back in time and watching yourselves
-
+- Intro to new area
+- Streaks in the bathroom
+- Watching her eat
+- Adrenaline
+- Flow 
+- Motion picture soundtrack. Cuts between crying and living your life normally. Having a cup of coffee
 
 
 

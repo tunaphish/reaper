@@ -1,9 +1,8 @@
+
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import styles from './world.module.css';
 import { World } from './World';
-import { WorldStage } from './WorldStage';
-import { DynamicJoystick } from './DynamicJoystick';
 
 const PartyWindow = (props: { scene: World }) => {
   return (
@@ -85,32 +84,27 @@ export const WorldView = (props: { scene: World }): JSX.Element => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.stageContainer}>
-        <WorldStage world={props.scene} />
-        <DynamicJoystick world={props.scene} />
+    <div className={styles.menuContainer}>
+      <div className={styles.menuContent}>
+        {menuContent}
       </div>
-      <div className={styles.menuContainer}>
-        <div className={styles.menuContent}>
-          {menuContent}
-        </div>
-        <motion.div 
-          animate={{ width: menuOpen ? '100%' : '100px' }}
-          className={styles.navigation}
-        >
-          {
-            menuOpen ?
-            (<>
-              <div className={styles.navigationButton} onClick={onPartyClick}>party</div>
-              <div className={styles.navigationButton} onClick={onInventoryClick}>inv</div>
-              <div className={styles.navigationButton} onClick={() => props.scene.battle()}>battle</div>
-              <div className={styles.navigationButton} onClick={onExitClick}>exit</div>
-            </>) :
-            <div className={styles.navigationButton} onClick={onMenuClick}>menu</div>
-          }
-          
-        </motion.div>
-      </div>
+      <motion.div 
+        animate={{ width: menuOpen ? '100%' : '100px' }}
+        className={styles.navigation}
+      >
+        {
+          menuOpen ?
+          (<>
+            <div className={styles.navigationButton} onClick={onPartyClick}>party</div>
+            <div className={styles.navigationButton} onClick={onInventoryClick}>inv</div>
+            <div className={styles.navigationButton} onClick={() => props.scene.battle()}>battle</div>
+            <div className={styles.navigationButton} onClick={onExitClick}>exit</div>
+          </>) :
+          <div className={styles.navigationButton} onClick={onMenuClick}>menu</div>
+        }
+        
+      </motion.div>
     </div>
+
   );
 }

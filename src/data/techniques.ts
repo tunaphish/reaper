@@ -1,5 +1,4 @@
 
-import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { Technique } from '../model/technique';
 
@@ -9,7 +8,6 @@ export const haste: Technique = {
   actionPointsCost: 1,
   description: 'Technique: Increase Speed',
 
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
   soundKeyName: 'smirk',
 };
 
@@ -19,6 +17,5 @@ export const buff: Technique = {
   actionPointsCost: 1,
   description: 'Technique: Increase Speed',
 
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
   soundKeyName: 'smirk',
 };

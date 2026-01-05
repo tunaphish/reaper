@@ -1,7 +1,5 @@
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
-import { ParticleEffect } from "./mediaEffect";
-
 
 export type Action = Option & {
   type: OptionType.ACTION;
@@ -13,5 +11,4 @@ export type Action = Option & {
   potency: number;
 
   soundKeyName: string;
-  mediaEffects: (ParticleEffect)[];
 }

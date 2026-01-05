@@ -9,7 +9,6 @@ import { MenuOption } from './menuOption';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
-import { Stage } from './Stage';
 import { ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
 
 import { Action } from '../../model/action';
@@ -139,7 +138,6 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
         <div className={styles.container}>
 
           <div style={{ flex: 4, zIndex: -1 }}> 
-            <Stage scene={props.scene} />
           </div>
           <div className={styles.combatantBar}>
               {allies.map((member) => {

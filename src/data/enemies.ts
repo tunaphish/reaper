@@ -55,7 +55,6 @@ export const fencer: Enemy = {
   strategies: [
     {
       potentialOptions: [
-        { option: Actions.engage, getTarget: randomFullHealthAlly, cadence: 50, singleUse: true },
         { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
       ],
       toExit: (enemy, battle): boolean => enemy.actionPoints < 25,
@@ -73,8 +72,6 @@ export const fencer: Enemy = {
     }
   ],
 
-  spritePath: '/reaper/sprites/enemies/ninetails.png',
-
   // temp props
   timeTilNextAction: 0,
   status: Status.NORMAL,
@@ -83,56 +80,7 @@ export const fencer: Enemy = {
   activeTechniques: new Set(),
 };
 
-export const cleric: Enemy = {
-  type: OptionType.ENEMY,
-  name: 'Cleric',
-  health: 200,
-  maxHealth: 200,
-  bleed: 0,
-  actionPoints: 0,
-  maxActionPoints: 125,
-  actionPointsRegenRatePerSecond: 5,
 
-  strategies: [
-    {
-      potentialOptions: [
-        { option: Actions.bandage, getTarget: highestBleedEnemy, cadence: 500, singleUse: true },
-      ],
-      toExit: (enemy, battle): boolean => {
-        if (enemy.actionPoints < 25) return true;
-        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
-        return bleedingEnemy === undefined;
-      },
-      toEnter: (enemy, battle): boolean => {
-        if (enemy.actionPoints < 25) return false;
-        const bleedingEnemy = battle.battleStore.enemies.find(enemy => enemy.bleed > 15);
-        return bleedingEnemy !== undefined;
-      },
-    },
-    {
-      potentialOptions: [
-        { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
-      ],
-      toExit: (enemy, battle): boolean => enemy.actionPoints < 50,
-      toEnter: (enemy): boolean => enemy.actionPoints > 100,
-    },
-    {
-      potentialOptions: [],
-      toExit: (enemy, battle): boolean => enemy.actionPoints > 100,
-      toEnter: (): boolean => true,
-    }
-  ],
-
-  spritePath: '/reaper/sprites/enemies/chansey.png',
-
-  // temp props
-  timeTilNextAction: 0,
-
-  status: Status.NORMAL,
-  position: [3, 0, -5],
-
-  activeTechniques: new Set(),
-};
 
 export const knight: Enemy = {
   type: OptionType.ENEMY,
@@ -159,8 +107,6 @@ export const knight: Enemy = {
       toEnter: (): boolean => true,
     }
   ],
-
-  spritePath: '/reaper/sprites/enemies/golem.png',
 
   // temp props
   timeTilNextAction: 0,

@@ -85,8 +85,9 @@ archived: true
 	- enemies
 	- initiated (battle)
 
-- [ ] remove 3D setup
+- [x] remove 3D setup
 - [ ] add back 2D setup
+- [ ] add back enemy display
 - [ ] delete dialogue setup 
 - [ ] design cutscene generator
 	- [ ] step into area

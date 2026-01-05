@@ -2,17 +2,6 @@ import { Plugins } from "phaser";
 import * as React from 'react';
 import { createRoot, Root } from "react-dom/client";
 
-const GameContainer = (props: { children? }) => {
-  return (
-    <div style={{
-      height: '100vh',
-      aspectRatio: '0.5625',
-    }}>
-      {props.children}
-    </div>
-  )
-}
-
 export default class ReactOverlay extends Plugins.BasePlugin {
   private root: Root;
   private uiMap: Map<string, React.ReactElement> = new Map();
@@ -22,7 +11,7 @@ export default class ReactOverlay extends Plugins.BasePlugin {
   }
 
   init(): void {
-    const container = document.getElementById("game");
+    const container = this.game.domContainer;
 
     if (!container) {
       return console.error(
@@ -31,12 +20,12 @@ export default class ReactOverlay extends Plugins.BasePlugin {
     }
 
     this.root = createRoot(container);
-    this.root.render(<GameContainer/>);
+    this.root.render(<></>);
   }
 
   create(child: React.ReactElement, scene: Phaser.Scene): void {
     this.uiMap.set(scene.scene.key, child);
-    this.root.render(<GameContainer>{child}</GameContainer>);
+    this.root.render(child);
     const eventEmitter = scene.events;
     eventEmitter.on('pause', this.pause, this);
     eventEmitter.on('resume', this.resume, this);
@@ -50,7 +39,7 @@ export default class ReactOverlay extends Plugins.BasePlugin {
 
   resume(system: Phaser.Scenes.Systems): void {
     const element = this.uiMap.get(system.scenePlugin.key);
-    this.root.render(<GameContainer>{element}</GameContainer>);
+    this.root.render(element);
   }
 
   shutdown(system: Phaser.Scenes.Systems): void {
@@ -63,6 +52,6 @@ export default class ReactOverlay extends Plugins.BasePlugin {
 
   private clearUi(key: string) {
     this.uiMap.delete(key);
-    this.root.render(<GameContainer/>);
+    this.root.render(<></>);
   }
 }

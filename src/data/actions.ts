@@ -1,5 +1,4 @@
 import { Action } from '../model/action';
-import { MediaEffectType } from '../model/mediaEffect';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateActionPoints, updateBleed, updateHealth, Combatant } from "../model/combatant";
@@ -51,8 +50,6 @@ export const shatter: Action = {
     source.activeTechniques = new Set();
   },
   potency: 50,
-
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/energy-explosion.json' }],
 }
 
 export const attack: Action = {
@@ -66,8 +63,6 @@ export const attack: Action = {
   resolve: dealDamage,
   potency: 50,
 
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/energy-explosion.json' }],
-
 };
 
 export const stanch: Action = {
@@ -79,7 +74,5 @@ export const stanch: Action = {
   description: 'Heals bleed on self',
   resolve: healBleed,
   potency: 50,
-
-  mediaEffects: [{ type: MediaEffectType.PARTICLE, jsonPath: '/reaper/effects/cartoon-starfield.json' }],
   soundKeyName: 'heal',
 }

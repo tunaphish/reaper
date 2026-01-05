@@ -6,7 +6,7 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'World';
+const SCENE_TO_START = 'MainMenu';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -60,7 +60,11 @@ export class Boot extends Phaser.Scene {
   }
 
   private loadAssets() {
-    this.load.aseprite('shizuka', '/reaper/sprites/shizuka-full.png', '/reaper/sprites/shizuka-full.json');
+    this.load.image('tiles', '../reaper/tilesets/tuxmon-sample-32px-extruded.png');
+    this.load.tilemapTiledJSON('map', '../reaper/tilemaps/tuxemon-town.json');
+    
+    this.load.aseprite('shizuka', '/reaper/sprites/shizuka.png', '/reaper/sprites/shizuka.json');
+    // this.load.aseprite('shizuka', '/reaper/sprites/shizuka-full.png', '/reaper/sprites/shizuka-full.json');
 
     this.load.image('rise', '/reaper/characters/rise.png');
     this.load.image('eji', '/reaper/characters/eji.png');

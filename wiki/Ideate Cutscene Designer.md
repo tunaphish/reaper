@@ -86,11 +86,24 @@ archived: true
 	- initiated (battle)
 
 - [x] remove 3D setup
-- [ ] add back 2D setup
+- [x] add back 2D setup
 - [ ] add back enemy display
 - [ ] delete dialogue setup 
+- [ ] design random cutscene
 - [ ] design cutscene generator
 	- [ ] step into area
 	- [ ] walk up to someone and have convo...
 
+# Windows
+- [ ] windows 
+
+# Interaction model
+- deciding where content and not content goes..
+
+# typewriter text
+- [ ] styled multi text
+
+# Bugs
+- [ ] fix TypewriterText advance bug
+- [ ] text speed bug
 # Reflection 

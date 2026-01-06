@@ -49,10 +49,6 @@ export const TypewriterText = ({ text, textSpeed = TextSpeed.NORMAL }: Typewrite
     setIsTyping(false);
   }, [displayIndex, text]);
 
-  return (
-    <span className={styles.dialogueText}>
-      {displayedText}
-      { !isTyping && <span className={styles.dialogueTextIndicator} />} 
-    </span>
-  )
+  return <span className={styles.dialogueText}>{displayedText}</span>
+  
 }

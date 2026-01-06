@@ -13,7 +13,7 @@ import { MenuOption } from './menuOption';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { BattleView } from './BattleView';
 import { BattleStore } from './BattleStore';
-import { cleric, knight } from '../../data/enemies';
+import { knight } from '../../data/enemies';
 import { TargetType } from '../../model/targetType';
 import * as Techniques from '../../data/techniques';
 import { Technique } from '../../model/technique';

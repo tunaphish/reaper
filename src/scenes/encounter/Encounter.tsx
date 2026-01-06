@@ -1,17 +1,16 @@
 /* eslint-disable react/jsx-key */
 import * as React from 'react';
-import { makeAutoObservable, toJS } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { observer } from 'mobx-react-lite';
-
+import { motion } from 'framer-motion';
 import ReactOverlay from '../../plugins/ReactOverlay';
-import styles from './encounter.module.css';
+import classNames from './encounter.module.css';
 import { TextSpeed, TypewriterText } from '../ui/TypewriterText';
 
 // #region UI
-
 const Ui = observer(({encounter}: {encounter: Encounter}) => {
   return (
-    <div className={styles.encounterContainer}>
+    <div className={classNames.encounterContainer}>
       {encounter.encounterStore.windows}
     </div>
   )
@@ -32,6 +31,29 @@ export class EncounterStore {
 // #endregion
 
 // #region Scene
+const expandFromCenterTransition = {
+  initial: {
+    scaleX: 0,
+    transformOrigin: "center",
+    
+  },
+  animate: {
+    scaleX: 1,
+    
+    transition: {
+      duration: 0.15,
+      ease: "easeOut",
+    },
+  },
+  exit: {
+    scaleX: 0,
+    transition: {
+      duration: 0.15,
+      ease: "easeIn",
+    },
+  },
+};
+
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -75,7 +97,18 @@ export class Encounter extends Phaser.Scene {
   }
 
   pushInteractableWindow(): void {
-    const InteractableWindow = <div onClick={() => this.advanceThread()} key={this.threadIndex}>{this.thread[this.threadIndex]}</div>
+    const InteractableWindow = (
+      <motion.div 
+        className={classNames.window} 
+        onClick={() => this.advanceThread()} key={this.threadIndex}
+        variants={expandFromCenterTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        {this.thread[this.threadIndex]}
+      </motion.div>
+    )
     this.encounterStore.pushWindow(InteractableWindow);
   }
 }

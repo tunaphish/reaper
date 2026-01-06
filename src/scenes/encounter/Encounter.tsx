@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import * as React from 'react';
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import ReactOverlay from '../../plugins/ReactOverlay';
@@ -8,29 +8,6 @@ import classNames from './encounter.module.css';
 import { TextSpeed, TypewriterText } from '../ui/TypewriterText';
 
 // #region UI
-const Ui = observer(({encounter}: {encounter: Encounter}) => {
-  return (
-    <div className={classNames.encounterContainer}>
-      {encounter.encounterStore.windows}
-    </div>
-  )
-});
-
-export class EncounterStore {
-  windows: React.ReactElement[] = [];
-
-  constructor() {
-    makeAutoObservable(this);
-  }
-
-   pushWindow(window: React.ReactElement): void {
-    this.windows.push(window);
-  }
-}
-
-// #endregion
-
-// #region Scene
 const expandFromCenterTransition = {
   initial: {
     scaleX: 0,
@@ -54,6 +31,74 @@ const expandFromCenterTransition = {
   },
 };
 
+function anchorToTransform(anchor: WindowLayout['anchor']) {
+  switch (anchor) {
+    case 'top-left': return 'translate(0, 0)'
+    case 'top-right': return 'translate(-100%, 0)'
+    case 'bottom-left': return 'translate(0, -100%)'
+    case 'bottom-right': return 'translate(-100%, -100%)'
+    case 'center':
+    default:
+      return 'translate(-50%, -50%)'
+  }
+}
+
+const InteractableWindow = (props: { encounter: Encounter, window: Window }) => {
+    // TODO: probably spin out to other types..
+    // ASSUMES TEXT WINDOW
+    const {layout, text, speed} = props.window;
+    const style: React.CSSProperties = {
+      position: 'absolute',
+      width: layout?.width ?? 380,
+      height: layout?.height ?? 140,
+      left: layout?.x ?? 225,
+      top: layout?.y ?? 620,
+      transform: anchorToTransform(layout?.anchor ?? 'center'),
+    }
+
+    const TextWindow = <TypewriterText text={text} textSpeed={speed || TextSpeed.NORMAL} />
+
+    return (
+      <div style={style}>
+        <motion.div 
+          className={classNames.window} 
+          onClick={() => props.encounter.advanceThread()} 
+          variants={expandFromCenterTransition}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          {TextWindow}
+        </motion.div>
+      </div>
+    )
+}
+
+const Ui = observer(({encounter}: {encounter: Encounter}) => {
+  return (
+    <div className={classNames.encounterContainer}>
+      {
+        encounter.encounterStore.displayedWindows.map(window => <InteractableWindow encounter={encounter} window={window} key={window.text}/>)
+      }
+    </div>
+  )
+});
+
+export class EncounterStore {
+  displayedWindows: Window[] = [];
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+   pushWindow(window: Window): void {
+    this.displayedWindows.push(window);
+  }
+}
+
+// #endregion
+
+// #region Scene
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -64,7 +109,7 @@ export class Encounter extends Phaser.Scene {
   private threadAdvanceSound: Phaser.Sound.BaseSound;
   private reactOverlay: ReactOverlay;
 
-  thread: React.ReactElement[] = THREAD;
+  thread: Thread = CONTENT_THREAD;
   threadIndex = -1; 
 
   encounterStore: EncounterStore;
@@ -92,35 +137,43 @@ export class Encounter extends Phaser.Scene {
     }
 
     this.threadAdvanceSound.play();
-    // work around to reference advanceThread itself lmao
-    this.pushInteractableWindow();
-  }
-
-  pushInteractableWindow(): void {
-    const InteractableWindow = (
-      <motion.div 
-        className={classNames.window} 
-        onClick={() => this.advanceThread()} key={this.threadIndex}
-        variants={expandFromCenterTransition}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        {this.thread[this.threadIndex]}
-      </motion.div>
-    )
-    this.encounterStore.pushWindow(InteractableWindow);
+    this.encounterStore.pushWindow(this.thread[this.threadIndex]);
   }
 }
 
 // #endregion
 
-// #region
-const THREAD: React.ReactElement[] = [
-  <TypewriterText text={'Hi, I am an arbitrarilly long string meant to showcase the wordwrap feature in text.'}/>,
-  <TypewriterText text={'I love you senpai. (Slow speed test)'} textSpeed={TextSpeed.SLOW}/>,
-  <TypewriterText text={'Random dialogue to test sound. (Fast speed test)'} textSpeed={TextSpeed.FAST}/>,
-  <TypewriterText text={'Hello, how are you?'}/>
-];
+// #region content
+type WindowLayout = {
+  x?: number // center
+  y?: number // bottom
+  width?: number // px, default: 480
+  height?: number // px, default: auto
+  anchor?: 'center' | 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right'
+};
+type TextWindow = {
+  text: string
+  speed?: TextSpeed
+  layout?: WindowLayout
+};
+type Window = TextWindow;
+type Thread = Window[];
+
+const CONTENT_THREAD: Thread = [
+  {
+    text: 'Hi, I am an arbitrarily long string meant to showcase the wordwrap feature in text.'
+  },
+  {
+    text: 'I love you senpai. (Slow speed test)',
+    speed: TextSpeed.SLOW
+  },
+  {
+    text: 'Random dialogue to test sound. (Fast speed test)',
+    speed: TextSpeed.FAST
+  },
+  {
+    text: 'Hello, how are you?'
+  }
+]
 
 // #endregion

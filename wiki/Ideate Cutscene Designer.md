@@ -87,21 +87,20 @@ archived: true
 
 - [x] remove 3D setup
 - [x] add back 2D setup
-- [ ] add back enemy display
-- [ ] delete dialogue setup 
-- [ ] design random cutscene
+- [x] delete dialogue setup 
 - [ ] design cutscene generator
 	- [ ] step into area
 	- [ ] walk up to someone and have convo...
+- [x] windows 
 
-# Windows
-- [ ] windows 
-
-# Interaction model
+# Interaction model and Design
 - deciding where content and not content goes..
 
 # typewriter text
 - [ ] styled multi text
+
+# Content
+- [ ] design random cutscene
 
 # Bugs
 - [ ] fix TypewriterText advance bug

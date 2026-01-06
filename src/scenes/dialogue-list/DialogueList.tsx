@@ -37,7 +37,7 @@ export class DialogueList extends Phaser.Scene {
           .map((scriptKey) => {
             const onClickSceneListItem = () => {
               this.choiceSelectSound.play();
-              this.scene.start('Dialogue', { scriptFileKey, scriptKey });
+              // this.scene.start('Dialogue', { scriptFileKey, scriptKey });
             };
             return <div key={scriptKey} className={styles.scriptButton} onClick={onClickSceneListItem}>- {scriptKey}</div>;
           });

@@ -33,13 +33,35 @@ export const BUNNY_MASK_SPREAD: Spread = [
       {
         src: '/reaper/public/images/eji.png',
         z: 1,
-      
       }
-    ]
+    ],
+    layout: {
+      width: 140,
+      height: 300,
+    }
+  },
+  {
+    type: WindowType.IMAGE,
+    layers: [
+      {
+        src: '/reaper/public/images/bun-mask.jpg',
+        z: 0,
+        fit: 'cover'
+      },
+    ],
+    layout: {
+      width: 80,
+      height: 110,
+    },
   },
   {
     type: WindowType.TEXT,
-    text: 'Random dialogue to test sound. (Fast speed test)',
-    speed: TextSpeed.FAST
+    text: "Don't worry about what I look like...",
+    layout: {
+      x: 300,
+      y: 550,
+      width: 150,
+      height: 100,
+    }
   },
 ]

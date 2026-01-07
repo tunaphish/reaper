@@ -91,13 +91,12 @@ archived: true
 - [x] windows 
 - [x] mask
 - [x] encounter list
-- [ ] play music
-- [ ] auto advance
+- [x] play music
+- [x] auto advance
+- [ ] BUG (old ones still interactable)
 - [ ] don't open the door
 - [ ] crows
 - [ ] animation
-- [ ] Interaction model and Design
-	- deciding where content and not content goes..
 - [ ] styled multi text
 - [ ] design random cutscene
 - [ ] interruption
@@ -108,6 +107,7 @@ archived: true
 - [ ] rename window... as it's shadowed
 - [ ] multiple spreads
 
+## Interaction model
 
 # Reflection 
 - need to develop cutscene tooling

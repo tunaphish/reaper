@@ -18,11 +18,15 @@ export enum EventType {
   SOUND,
 }
 
-export type TextWindow = {
+export type BaseWindow = {
+  layout?: WindowLayout
+  advanceTimerInMs?: number
+}
+
+export type TextWindow = BaseWindow & {
   type: EventType.TEXT
   text: string
   speed?: TextSpeed
-  layout?: WindowLayout
 };
 
 export type ImageLayer = {
@@ -32,10 +36,9 @@ export type ImageLayer = {
   // opacity?: number
 }
 
-export type ImageWindow = {
+export type ImageWindow = BaseWindow & {
   type: EventType.IMAGE
   layers: ImageLayer[]
-  layout?: WindowLayout
 }
 
 export type SoundEvent = {

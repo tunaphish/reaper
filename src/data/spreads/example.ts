@@ -53,7 +53,8 @@ export const BUNNY_MASK_SPREAD: Spread =
       layout: {
         width: 140,
         height: 300,
-      }
+      },
+      advanceTimerInMs: 200,
     },
     {
       type: EventType.IMAGE,

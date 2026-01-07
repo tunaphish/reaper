@@ -59,7 +59,7 @@ type InteractableWindowProps = {
 }
 
 const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
-  const {layout} = window;
+  const {layout, advanceTimerInMs} = window;
     const style: React.CSSProperties = {
       position: 'absolute',
       width: layout?.width ?? 380,
@@ -69,19 +69,33 @@ const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
       transform: anchorToTransform(layout?.anchor ?? 'center'),
     }
 
+    React.useEffect(() => {
+      if (!advanceTimerInMs) return;
+
+      const timer = setTimeout(() => {
+        encounter.advanceSpread()
+      }, advanceTimerInMs)
+
+      return () => clearTimeout(timer);
+    }, [advanceTimerInMs, encounter])
+
+    const onClickWindow = () => {
+      if (advanceTimerInMs) return;
+      encounter.advanceSpread()
+    }
+
     return (
-        <motion.div 
-          variants={expandFromCenterTransition}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          <div onClick={() => encounter.advanceSpread()} className={classNames.window} style={style}>
-            {
-              <WindowContentView window={window} />
-            }
-          </div>
-        </motion.div>
+      <motion.div 
+        variants={expandFromCenterTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        <div onClick={onClickWindow} className={classNames.window} style={style}>
+          <WindowContentView window={window} />
+          {!advanceTimerInMs && <div className={classNames.interactionIndicator}/>}
+        </div>
+      </motion.div>
       
     )
 }

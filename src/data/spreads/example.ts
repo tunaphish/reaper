@@ -31,7 +31,7 @@ export const BUNNY_MASK_SPREAD: Spread = [
         fit: 'cover'
       },
       {
-        src: '/reaper/public/characters/eji.png',
+        src: '/reaper/public/images/eji.png',
         z: 1,
       
       }

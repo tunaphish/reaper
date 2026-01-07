@@ -31,7 +31,7 @@ export const Eji: Ally = {
   status: Status.NORMAL,
   position: [-2, 0, 2],
   
-  menuPortraitPath: '/reaper/characters/menu/cloud.png',
+  menuPortraitPath: '/reaper/images/cloud.png',
 };
 
 
@@ -58,7 +58,7 @@ export const Keshi: Ally = {
   status: Status.NORMAL,
   position: [0, 0, 2],
   
-  menuPortraitPath: '/reaper/characters/menu/barret.png',
+  menuPortraitPath: '/reaper/images/barret.png',
 };
 
 const eliseFolder: Folder = {
@@ -84,7 +84,7 @@ export const Elise: Ally = {
   status: Status.NORMAL,
   position: [2, 0, 2],
 
-  menuPortraitPath: '/reaper/characters/menu/tifa.png',
+  menuPortraitPath: '/reaper/images/tifa.png',
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Elise];

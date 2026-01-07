@@ -66,9 +66,6 @@ export class Boot extends Phaser.Scene {
     this.load.aseprite('shizuka', '/reaper/sprites/shizuka.png', '/reaper/sprites/shizuka.json');
     // this.load.aseprite('shizuka', '/reaper/sprites/shizuka-full.png', '/reaper/sprites/shizuka-full.json');
 
-    this.load.image('rise', '/reaper/characters/rise.png');
-    this.load.image('eji', '/reaper/characters/eji.png');
-
     this.load.image('slime', '/reaper/sprites/slime.png');
 
     this.load.image('main-menu', '/reaper/backgrounds/main-menu.png');
@@ -93,7 +90,6 @@ export class Boot extends Phaser.Scene {
     this.load.audio('stamina-depleted', '/reaper/sounds/stamina-depleted.wav');
 
     // #region effects
-
     this.load.audio('main-menu-music', '/reaper/music/isolate.exe.mp3');
     this.load.audio('knight', '/reaper/music/knight.mp3');
 

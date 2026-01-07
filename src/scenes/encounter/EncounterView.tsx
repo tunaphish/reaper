@@ -3,7 +3,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, WindowType } from '../../model/spread';
+import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType } from '../../model/spread';
 import classNames from './encounter.module.css';
 import { TypewriterText } from './TypewriterText';
 
@@ -88,9 +88,9 @@ const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
 
 const WindowContentView = (props: { window: Window }) => {
   switch (props.window.type) {
-    case WindowType.IMAGE:
+    case EventType.IMAGE:
       return <ImageWindowView imageWindow={props.window} />
-    case WindowType.TEXT:
+    case EventType.TEXT:
       return <TextWindowView textWindow={props.window} />
     default:
       return null

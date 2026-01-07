@@ -4,7 +4,7 @@ import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { EncounterStore } from './EncounterStore';
 import { Ui } from './EncounterView'; 
-import { Spread } from '../../model/spread';
+import { Spread, EventType, SoundEvent } from '../../model/spread';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -15,6 +15,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class Encounter extends Phaser.Scene {
   private spreadAdvanceSound: Phaser.Sound.BaseSound;
   private reactOverlay: ReactOverlay;
+  private music: Phaser.Sound.BaseSound;
 
   spread: Spread;
   spreadIndex; 
@@ -33,7 +34,6 @@ export class Encounter extends Phaser.Scene {
 
   create(): void {
     this.spreadAdvanceSound = this.sound.add('window-advance');
-    console.log(this)
     this.reactOverlay.create(<Ui encounter={this}/>, this);
     this.advanceSpread();
   }
@@ -41,13 +41,29 @@ export class Encounter extends Phaser.Scene {
   advanceSpread(): void {
     this.spreadIndex++;
 
-    if (this.spreadIndex >= this.spread.windows.length) {
+    if (this.spreadIndex >= this.spread.events.length) {
+      this.music?.stop();
       this.scene.start('EncounterList');
       return;
     }
 
     this.spreadAdvanceSound.play();
-    this.encounterStore.pushWindow(this.spread.windows[this.spreadIndex]);
+    const event = this.spread.events[this.spreadIndex];
+    switch(event.type) {
+      case EventType.IMAGE:
+      case EventType.TEXT: 
+        this.encounterStore.pushWindow(event);
+        break;
+      case EventType.SOUND:
+        const soundEvent = (event as SoundEvent);
+        this.music = this.sound.add(soundEvent.key, {
+          loop: soundEvent?.loop || false,  
+          volume: 0.5  
+        });
+        this.music.play();
+        this.advanceSpread();
+        break;
+    }
   }
 }
 

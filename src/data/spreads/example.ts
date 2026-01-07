@@ -1,24 +1,33 @@
-import { Spread, TextSpeed, ImageWindow, WindowType } from "../../model/spread";
+import { Spread, TextSpeed, EventType } from "../../model/spread";
 
 export const EXAMPLE_SPREAD: Spread = {
   id: "Typewriter Test Example",
-  windows: [
+  events: [
     {
-      type: WindowType.TEXT,
+      type: EventType.SOUND,
+      key: 'charged',
+    },
+    {
+      type: EventType.TEXT,
       text: 'Hi, I am an arbitrarily long string meant to showcase the wordwrap feature in text.'
     },
     {
-      type: WindowType.TEXT,
+      type: EventType.SOUND,
+      key: 'knight',
+      loop: true,
+    },
+    {
+      type: EventType.TEXT,
       text: 'I love you senpai. (Slow speed test)',
       speed: TextSpeed.SLOW
     },
     {
-      type: WindowType.TEXT,
+      type: EventType.TEXT,
       text: 'Random dialogue to test sound. (Fast speed test)',
       speed: TextSpeed.FAST
     },
     {
-      type: WindowType.TEXT,
+      type: EventType.TEXT,
       text: 'Hello, how are you?'
     }
   ]
@@ -27,9 +36,9 @@ export const EXAMPLE_SPREAD: Spread = {
 export const BUNNY_MASK_SPREAD: Spread = 
 {
   id: "Bunny Mask Example",
-  windows: [
+  events: [
     {
-      type: WindowType.IMAGE,
+      type: EventType.IMAGE,
       layers: [
         {
           src: '/reaper/public/images/lofi-street.jpg',
@@ -47,7 +56,7 @@ export const BUNNY_MASK_SPREAD: Spread =
       }
     },
     {
-      type: WindowType.IMAGE,
+      type: EventType.IMAGE,
       layers: [
         {
           src: '/reaper/public/images/bun-mask.jpg',
@@ -61,7 +70,7 @@ export const BUNNY_MASK_SPREAD: Spread =
       },
     },
     {
-      type: WindowType.TEXT,
+      type: EventType.TEXT,
       text: "Don't worry about what I look like...",
       layout: {
         x: 300,

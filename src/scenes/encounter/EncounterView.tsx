@@ -8,11 +8,12 @@ import classNames from './encounter.module.css';
 import { TypewriterText } from './TypewriterText';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
+// solution for isMostRecent likely to not work for multiple spreads..
 export const Ui = observer(({encounter}: {encounter: Encounter}) => {
   return (
     <div className={classNames.encounterContainer}>
       {
-        encounter.encounterStore.displayedWindows.map((window, idx) => <InteractableWindow encounter={encounter} window={window} key={idx}/>)
+        encounter.encounterStore.displayedWindows.map((window, idx) => <InteractableWindow encounter={encounter} window={window} key={idx} isMostRecent={idx === encounter.encounterStore.displayedWindows.length-1}/>)
       }
     </div>
   )
@@ -55,10 +56,11 @@ const anchorToTransform = (anchor: WindowLayout['anchor']) => {
 
 type InteractableWindowProps = {
   encounter: Encounter, 
-  window: Window 
+  window: Window,
+  isMostRecent: boolean,
 }
 
-const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
+const InteractableWindow = ({window, encounter, isMostRecent}: InteractableWindowProps) => {
   const {layout, advanceTimerInMs} = window;
     const style: React.CSSProperties = {
       position: 'absolute',
@@ -78,12 +80,14 @@ const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
 
       return () => clearTimeout(timer);
     }, [advanceTimerInMs, encounter])
+    
+    const isInteractable = !advanceTimerInMs && isMostRecent;
 
     const onClickWindow = () => {
-      if (advanceTimerInMs) return;
-      encounter.advanceSpread()
+      if (!isInteractable) return;
+      encounter.advanceSpread();
     }
-
+    
     return (
       <motion.div 
         variants={expandFromCenterTransition}
@@ -93,7 +97,7 @@ const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
       >
         <div onClick={onClickWindow} className={classNames.window} style={style}>
           <WindowContentView window={window} />
-          {!advanceTimerInMs && <div className={classNames.interactionIndicator}/>}
+          {isInteractable && <div className={classNames.interactionIndicator}/>}
         </div>
       </motion.div>
       

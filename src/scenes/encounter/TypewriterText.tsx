@@ -44,6 +44,6 @@ export const TypewriterText = ({ text, textSpeed = TextSpeed.NORMAL }: Typewrite
     setIsTyping(false);
   }, [displayIndex, text]);
 
-  return <span className={styles.dialogueText}>{displayedText}</span>
+  return <span className={styles.text}>{displayedText}</span>
   
 }

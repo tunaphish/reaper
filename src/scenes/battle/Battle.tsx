@@ -24,11 +24,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Battle',
 };
 
-export interface DialogueTrigger {
-  trigger: (enemies: Enemy[], allies: Allies) => boolean;
-  scriptKeyName: string;
-}
-
 export type Executable = Action | Item | Technique;
 
 export class Battle extends Phaser.Scene {
@@ -179,7 +174,7 @@ export class Battle extends Phaser.Scene {
     else if (this.battleStore.menus.length === 1) {
       this.battleStore.setExecutable(null);
     }
-    this.sound.play('dialogue-advance');
+    this.sound.play('window-advance');
   }
 
   selectOption(option: MenuOption): void {

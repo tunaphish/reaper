@@ -39,4 +39,7 @@ export type ImageWindow = {
 
 export type Window = TextWindow | ImageWindow;
 
-export type Spread = Window[];
+export type Spread = {
+  id: string
+  windows: Window[]
+};

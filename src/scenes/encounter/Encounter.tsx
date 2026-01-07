@@ -5,7 +5,6 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { EncounterStore } from './EncounterStore';
 import { Ui } from './EncounterView'; 
 import { Spread } from '../../model/spread';
-import { EXAMPLE_SPREAD, BUNNY_MASK_SPREAD } from '../../data/spreads/example';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -17,8 +16,8 @@ export class Encounter extends Phaser.Scene {
   private spreadAdvanceSound: Phaser.Sound.BaseSound;
   private reactOverlay: ReactOverlay;
 
-  spread: Spread = BUNNY_MASK_SPREAD;
-  spreadIndex = -1; 
+  spread: Spread;
+  spreadIndex; 
 
   encounterStore: EncounterStore;
 
@@ -26,12 +25,15 @@ export class Encounter extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  init(): void {
+  init(data: { spread: Spread }): void {
     this.encounterStore = new EncounterStore();
+    this.spread = data.spread;
+    this.spreadIndex = -1;
   }
 
   create(): void {
-    this.spreadAdvanceSound = this.sound.add('dialogue-advance');
+    this.spreadAdvanceSound = this.sound.add('window-advance');
+    console.log(this)
     this.reactOverlay.create(<Ui encounter={this}/>, this);
     this.advanceSpread();
   }
@@ -39,13 +41,13 @@ export class Encounter extends Phaser.Scene {
   advanceSpread(): void {
     this.spreadIndex++;
 
-    if (this.spreadIndex >= this.spread.length) {
-      this.scene.start('World');
+    if (this.spreadIndex >= this.spread.windows.length) {
+      this.scene.start('EncounterList');
       return;
     }
 
     this.spreadAdvanceSound.play();
-    this.encounterStore.pushWindow(this.spread[this.spreadIndex]);
+    this.encounterStore.pushWindow(this.spread.windows[this.spreadIndex]);
   }
 }
 

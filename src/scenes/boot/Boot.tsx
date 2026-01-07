@@ -6,7 +6,7 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'Encounter';
+const SCENE_TO_START = 'EncounterList';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -75,7 +75,7 @@ export class Boot extends Phaser.Scene {
 
     this.load.audio('choice-hover', '/reaper/sounds/choice-hover.wav');
     this.load.audio('choice-select', '/reaper/sounds/choice-select.wav');
-    this.load.audio('dialogue-advance', '/reaper/sounds/dialogue-advance.wav');
+    this.load.audio('window-advance', '/reaper/sounds/window-advance.wav');
     this.load.audio('battle-start', '/reaper/sounds/battle-start-2.mp3');
 
     this.load.audio('heal', '/reaper/sounds/heal.mp3');

@@ -88,9 +88,11 @@ archived: true
 - [x] remove 3D setup
 - [x] add back 2D setup
 - [x] delete dialogue setup 
-
 - [x] windows 
-- [ ] mask
+- [x] mask
+- [x] encounter list
+- [ ] play music
+- [ ] auto advance
 - [ ] don't open the door
 - [ ] crows
 - [ ] animation
@@ -106,4 +108,6 @@ archived: true
 - [ ] rename window... as it's shadowed
 - [ ] multiple spreads
 
+
 # Reflection 
+- need to develop cutscene tooling

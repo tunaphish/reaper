@@ -52,10 +52,10 @@ export class MainMenu extends Phaser.Scene {
         }
       })
 
-      const onClickDialogueList = () => {
+      const onClickEncounterList = () => {
         this.menuMusic.stop();
         this.choiceSelectSound.play();
-        this.scene.start('DialogueList');
+        this.scene.start('EncounterList');
       };
 
       React.useEffect(() => {
@@ -75,8 +75,8 @@ export class MainMenu extends Phaser.Scene {
           <div className={styles.mainMenuButton} onClick={onClickStart}>
             start game
           </div>
-          <div className={styles.mainMenuButton} onClick={onClickDialogueList}>
-            show dialogue list
+          <div className={styles.mainMenuButton} onClick={onClickEncounterList}>
+            show encounter list
           </div>
         </motion.div>
       )

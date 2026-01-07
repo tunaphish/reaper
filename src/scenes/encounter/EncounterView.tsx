@@ -1,14 +1,23 @@
-/* eslint-disable react/jsx-key */
 import * as React from 'react';
 
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
-import { Encounter } from './encounter';
-import { TextSpeed, Window, WindowLayout } from '../../model/spread';
+import { Encounter } from './Encounter';
+import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, WindowType } from '../../model/spread';
 import classNames from './encounter.module.css';
 import { TypewriterText } from './TypewriterText';
 
-// #region UI
+// REPLACE KEY WITH SOMETHING ELSE... maybe ID
+export const Ui = observer(({encounter}: {encounter: Encounter}) => {
+  return (
+    <div className={classNames.encounterContainer}>
+      {
+        encounter.encounterStore.displayedWindows.map((window, idx) => <InteractableWindow encounter={encounter} window={window} key={idx}/>)
+      }
+    </div>
+  )
+});
+
 const expandFromCenterTransition = {
   initial: {
     scaleX: 0,
@@ -32,7 +41,7 @@ const expandFromCenterTransition = {
   },
 };
 
-function anchorToTransform(anchor: WindowLayout['anchor']) {
+const anchorToTransform = (anchor: WindowLayout['anchor']) => {
   switch (anchor) {
     case 'top-left': return 'translate(0, 0)'
     case 'top-right': return 'translate(-100%, 0)'
@@ -44,10 +53,13 @@ function anchorToTransform(anchor: WindowLayout['anchor']) {
   }
 }
 
-const InteractableWindow = (props: { encounter: Encounter, window: Window }) => {
-    // TODO: probably spin out to other types..
-    // ASSUMES TEXT WINDOW
-    const {layout, text, speed} = props.window;
+type InteractableWindowProps = {
+  encounter: Encounter, 
+  window: Window 
+}
+
+const InteractableWindow = ({window, encounter}: InteractableWindowProps) => {
+  const {layout} = window;
     const style: React.CSSProperties = {
       position: 'absolute',
       width: layout?.width ?? 380,
@@ -57,30 +69,61 @@ const InteractableWindow = (props: { encounter: Encounter, window: Window }) => 
       transform: anchorToTransform(layout?.anchor ?? 'center'),
     }
 
-    const TextWindow = <TypewriterText text={text} textSpeed={speed || TextSpeed.NORMAL} />
-
     return (
-      <div style={style}>
         <motion.div 
-          className={classNames.window} 
-          onClick={() => props.encounter.advanceSpread()} 
           variants={expandFromCenterTransition}
           initial="initial"
           animate="animate"
           exit="exit"
         >
-          {TextWindow}
+          <div onClick={() => encounter.advanceSpread()} className={classNames.window} style={style}>
+            {
+              <WindowContentView window={window} />
+            }
+          </div>
         </motion.div>
-      </div>
+      
     )
 }
 
-export const Ui = observer(({encounter}: {encounter: Encounter}) => {
+const WindowContentView = (props: { window: Window }) => {
+  switch (props.window.type) {
+    case WindowType.IMAGE:
+      return <ImageWindowView imageWindow={props.window} />
+    case WindowType.TEXT:
+      return <TextWindowView textWindow={props.window} />
+    default:
+      return null
+  }
+}
+
+const ImageLayerView: React.FC<{ layer: ImageLayer }> = ({ layer }) => {
   return (
-    <div className={classNames.encounterContainer}>
-      {
-        encounter.encounterStore.displayedWindows.map(window => <InteractableWindow encounter={encounter} window={window} key={window.text}/>)
-      }
-    </div>
+    <img
+      src={layer.src}
+      draggable={false}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: layer.fit ?? 'contain',
+        zIndex: layer.z ?? 0,
+        userSelect: 'none',
+        pointerEvents: 'none',
+      }}
+    />
   )
-});
+}
+
+const ImageWindowView = (props: { imageWindow: ImageWindow }) => {
+  return props.imageWindow.layers.map((layer, i) => (
+    <ImageLayerView key={i} layer={layer} />
+  ));
+}
+
+const TextWindowView = (props: { textWindow: TextWindow }) => {
+  const {text, speed} = props.textWindow;
+  return <TypewriterText text={text} textSpeed={speed || TextSpeed.NORMAL} />
+}
+

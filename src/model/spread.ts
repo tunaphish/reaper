@@ -12,12 +12,31 @@ export type WindowLayout = {
   anchor?: 'center' | 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right'
 };
 
+export enum WindowType {
+  TEXT,
+  IMAGE
+}
+
 export type TextWindow = {
+  type: WindowType.TEXT
   text: string
   speed?: TextSpeed
   layout?: WindowLayout
 };
 
-export type Window = TextWindow;
+export type ImageLayer = {
+  src: string
+  z?: number                 // higher = on top
+  fit?: 'cover' | 'contain'
+  // opacity?: number
+}
+
+export type ImageWindow = {
+  type: WindowType.IMAGE
+  layers: ImageLayer[]
+  layout?: WindowLayout
+}
+
+export type Window = TextWindow | ImageWindow;
 
 export type Spread = Window[];

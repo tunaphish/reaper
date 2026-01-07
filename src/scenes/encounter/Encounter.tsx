@@ -5,7 +5,7 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { EncounterStore } from './EncounterStore';
 import { Ui } from './EncounterView'; 
 import { Spread } from '../../model/spread';
-import { EXAMPLE_SPREAD } from '../../data/spreads/example';
+import { EXAMPLE_SPREAD, BUNNY_MASK_SPREAD } from '../../data/spreads/example';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -17,7 +17,7 @@ export class Encounter extends Phaser.Scene {
   private spreadAdvanceSound: Phaser.Sound.BaseSound;
   private reactOverlay: ReactOverlay;
 
-  spread: Spread = EXAMPLE_SPREAD;
+  spread: Spread = BUNNY_MASK_SPREAD;
   spreadIndex = -1; 
 
   encounterStore: EncounterStore;

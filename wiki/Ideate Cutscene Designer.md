@@ -88,20 +88,22 @@ archived: true
 - [x] remove 3D setup
 - [x] add back 2D setup
 - [x] delete dialogue setup 
-- [ ] design cutscene generator
-	- [ ] step into area
-	- [ ] walk up to someone and have convo...
-- [x] windows 
 
+- [x] windows 
+- [ ] mask
+- [ ] don't open the door
+- [ ] crows
+- [ ] animation
 - [ ] Interaction model and Design
 	- deciding where content and not content goes..
 - [ ] styled multi text
 - [ ] design random cutscene
 - [ ] interruption
 - [ ] multi thread
-
-- [ ] mask
-- [ ] crows
-- [ ] don't open the door
+- [ ] design cutscene generator
+	- [ ] step into area
+	- [ ] walk up to someone and have convo...
+- [ ] rename window... as it's shadowed
+- [ ] multiple spreads
 
 # Reflection 

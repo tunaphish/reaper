@@ -93,16 +93,15 @@ archived: true
 	- [ ] walk up to someone and have convo...
 - [x] windows 
 
-# Interaction model and Design
-- deciding where content and not content goes..
-
-# typewriter text
+- [ ] Interaction model and Design
+	- deciding where content and not content goes..
 - [ ] styled multi text
-
-# Content
 - [ ] design random cutscene
+- [ ] interruption
+- [ ] multi thread
 
-# Bugs
-- [ ] fix TypewriterText advance bug
-- [ ] text speed bug
+- [ ] mask
+- [ ] crows
+- [ ] don't open the door
+
 # Reflection 

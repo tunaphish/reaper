@@ -16,3 +16,28 @@
   display: flex;
   flex-direction: column;
 }
+
+.dialogueText {
+  grid-column-start: 2;
+  grid-column-end: -1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+
+  margin: 10px;
+}
+
+.dialogueTextIndicator::after {
+  content: "";
+  display: inline-block;
+  border-top: 5px solid transparent;
+  border-right: 5px solid;
+  border-bottom:5px solid transparent;
+  opacity: 0;
+  position: relative;
+  left: 5px;
+  animation: .5s steps(1,end) infinite blink-animation;
+}
+
+@keyframes blink-animation {
+  50% { opacity: 1; }
+}

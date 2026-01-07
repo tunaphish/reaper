@@ -8,7 +8,13 @@ tags:
 - [ ] No Character Arcs over course of game. 
 	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
 
-
+- the observer
+	- looking into sky with arms up as eye rolls to back of head
+	- eye observing brain
+	- stab eye
+	- eye as boss
+- You feel the urge to run away
+- Hysteria - Blackjack - Lady Luck
 - Divine trauma.  My only regret is I couldn’t help more people. 
 - Throughout the game. Can you quit with the sharingan. It’s creeping me out. The reveal that you guys are going back in time and watching yourselves
 - Intro to new area

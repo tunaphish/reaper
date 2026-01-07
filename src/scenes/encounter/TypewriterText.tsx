@@ -1,19 +1,8 @@
 import * as React from 'react';
-import styles from './ui.module.css';
+import styles from './encounter.module.css';
+import { TextSpeed } from '../../model/spread';
 
-export enum TextSpeed {
-  SLOW,
-  NORMAL,
-  FAST
-}
-
-type TypewriterTextProps = { 
-  text: string; 
-  textSpeed?: TextSpeed 
-  onClick?: () => void,
-}
-
-export function textSpeedToValue(speed: TextSpeed): number {
+const textSpeedToValue = (speed: TextSpeed): number => {
   switch (speed) {
     case TextSpeed.SLOW:
       return 45
@@ -24,6 +13,12 @@ export function textSpeedToValue(speed: TextSpeed): number {
     default:
       return 25
   }
+}
+
+type TypewriterTextProps = { 
+  text: string; 
+  textSpeed?: TextSpeed 
+  onClick?: () => void,
 }
 
 export const TypewriterText = ({ text, textSpeed = TextSpeed.NORMAL }: TypewriterTextProps) => {

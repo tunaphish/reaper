@@ -9,7 +9,13 @@ export const EXAMPLE_SPREAD: Spread = {
     },
     {
       type: EventType.TEXT,
-      text: 'Hi, I am an arbitrarily long string meant to showcase the wordwrap feature in text.'
+      line: [
+        { text: 'hey this is ' },
+        { text: 'limit', effect: 'limit' },
+        { text: ' break and ' },
+        { text: 'madness', effect: 'frenzy' },
+        { text: '...' },
+      ]
     },
     {
       type: EventType.SOUND,
@@ -18,17 +24,17 @@ export const EXAMPLE_SPREAD: Spread = {
     },
     {
       type: EventType.TEXT,
-      text: 'I love you senpai. (Slow speed test)',
+      line: [{text: 'I love you senpai. (Slow speed test)'}],
       speed: TextSpeed.SLOW
     },
     {
       type: EventType.TEXT,
-      text: 'Random dialogue to test sound. (Fast speed test)',
+      line: [{text: 'Random dialogue to test sound. (Fast speed test)'}],
       speed: TextSpeed.FAST
     },
     {
       type: EventType.TEXT,
-      text: 'Hello, how are you?'
+      line: [{text: 'Hello how are you'}],
     }
   ]
 }
@@ -72,7 +78,7 @@ export const BUNNY_MASK_SPREAD: Spread =
     },
     {
       type: EventType.TEXT,
-      text: "Don't worry about what I look like...",
+      line: [{text: "Don't worry about what I look like . . ."}],
       layout: {
         x: 300,
         y: 550,

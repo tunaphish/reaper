@@ -23,9 +23,16 @@ export type BaseWindow = {
   advanceTimerInMs?: number
 }
 
+export type TextEffect = 'normal' | 'frenzy' | 'limit'
+
+export type TextToken = {
+  text: string
+  effect?: TextEffect
+}
+
 export type TextWindow = BaseWindow & {
   type: EventType.TEXT
-  text: string
+  line: TextToken[]
   speed?: TextSpeed
 };
 

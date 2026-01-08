@@ -93,21 +93,18 @@ archived: true
 - [x] encounter list
 - [x] play music
 - [x] auto advance
-- [ ] BUG (old ones still interactable)
-- [ ] don't open the door
-- [ ] crows
-- [ ] animation
+- [x] BUG (old ones still interactable)
+- [x] frenzy text
+- [ ] asset bug
 - [ ] styled multi text
-- [ ] design random cutscene
-- [ ] interruption
-- [ ] multi thread
+- [ ] dialogue choice
+- [ ] window exit (crow)
 - [ ] design cutscene generator
 	- [ ] step into area
 	- [ ] walk up to someone and have convo...
+- [ ] animation
 - [ ] rename window... as it's shadowed
 - [ ] multiple spreads
-
-## Interaction model
 
 # Reflection 
 - need to develop cutscene tooling

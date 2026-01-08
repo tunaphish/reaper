@@ -5,7 +5,10 @@ import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
 import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType } from '../../model/spread';
 import classNames from './encounter.module.css';
+
 import { TypewriterText } from './TypewriterText';
+import { FrenzyText } from './FrenzyText';
+import { LimitBreakText } from './LimitBreakText';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
 // solution for isMostRecent likely to not work for multiple spreads..
@@ -143,6 +146,8 @@ const ImageWindowView = (props: { imageWindow: ImageWindow }) => {
 
 const TextWindowView = (props: { textWindow: TextWindow }) => {
   const {text, speed} = props.textWindow;
+  return <LimitBreakText text={text} />
+  // return <FrenzyText text={text} />
   return <TypewriterText text={text} textSpeed={speed || TextSpeed.NORMAL} />
 }
 

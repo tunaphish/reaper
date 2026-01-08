@@ -92,10 +92,5 @@ export class Boot extends Phaser.Scene {
     // #region effects
     this.load.audio('main-menu-music', '/reaper/music/isolate.exe.mp3');
     this.load.audio('knight', '/reaper/music/knight.mp3');
-
-    this.load.text('mission-4', '/reaper/scripts/mission-4.yaml');
-    this.load.text('mission-6', '/reaper/scripts/mission-6.yaml');
-    this.load.text('mission-7', '/reaper/scripts/mission-7.yaml');
-    this.load.text('random-scripts', '/reaper/scripts/random-scripts.yaml');
   }
 }

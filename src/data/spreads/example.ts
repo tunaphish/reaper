@@ -41,12 +41,12 @@ export const BUNNY_MASK_SPREAD: Spread =
       type: EventType.IMAGE,
       layers: [
         {
-          src: '/reaper/public/images/lofi-street.jpg',
+          src: '/reaper/images/lofi-street.jpg',
           z: 0,
           fit: 'cover'
         },
         {
-          src: '/reaper/public/images/eji.png',
+          src: '/reaper/images/eji.png',
           z: 1,
         }
       ],
@@ -60,7 +60,7 @@ export const BUNNY_MASK_SPREAD: Spread =
       type: EventType.IMAGE,
       layers: [
         {
-          src: '/reaper/public/images/bun-mask.jpg',
+          src: '/reaper/images/bun-mask.jpg',
           z: 0,
           fit: 'cover'
         },

@@ -95,8 +95,8 @@ archived: true
 - [x] auto advance
 - [x] BUG (old ones still interactable)
 - [x] frenzy text
-- [ ] asset bug
-- [ ] styled multi text
+- [x] asset bug
+- [x] styled multi text
 - [ ] dialogue choice
 - [ ] window exit (crow)
 - [ ] design cutscene generator

@@ -161,6 +161,13 @@ export const INTERROGATION_SPREAD: Spread = {
             ],
           },
         },
+        {
+          line: [{ text: 'Leave Conversation' }],
+          nextSpread: {
+            id: 'Leave',
+            events: [{ type: EventType.END_SPREAD }],
+          },
+        },
       ],
     },
   ],

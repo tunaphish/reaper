@@ -98,7 +98,8 @@ archived: true
 - [x] asset bug
 - [x] styled multi text
 - [ ] dialogue choice
-- [ ] window exit (crow)
+	- [ ] button styling
+	- [ ] fix what is interactable (mutually exclusive, after selected... gray out)
 - [ ] design cutscene generator
 	- [ ] step into area
 	- [ ] walk up to someone and have convo...

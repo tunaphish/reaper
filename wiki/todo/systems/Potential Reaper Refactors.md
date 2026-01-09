@@ -7,6 +7,7 @@ tags:
 - [ ] look at usage of useFrame && mobx
 	- [ ] look at all useframe usages, i create objects in them lmao
 - [ ] migrate off framer motion to react spring
+- [ ] - Preload images
 
 # inspo 
 - [ ] https://www.destroyallsoftware.com/

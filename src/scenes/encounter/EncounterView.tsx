@@ -3,7 +3,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event } from '../../model/spread';
+import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
@@ -121,7 +121,7 @@ const InteractableWindow = ({window, encounter, isMostRecent, activeSpreadsIndex
         exit="exit"
       >
         <div onClick={onClickWindow} className={classNames.window} style={style}>
-          <WindowContentView window={window} />
+          <WindowContentView window={window} encounter={encounter}/>
           {isInteractable && <div className={classNames.interactionIndicator}/>}
         </div>
       </motion.div>
@@ -129,12 +129,14 @@ const InteractableWindow = ({window, encounter, isMostRecent, activeSpreadsIndex
     )
 }
 
-const WindowContentView = (props: { window: Window }) => {
+const WindowContentView = (props: { window: Window, encounter: Encounter }) => {
   switch (props.window.type) {
     case EventType.IMAGE:
       return <ImageWindowView imageWindow={props.window} />
     case EventType.TEXT:
       return <TextWindowView textWindow={props.window} />
+    case EventType.CHOICE:
+      return <ChoiceWindowView choiceWindow={props.window} encounter={props.encounter} />
     default:
       return null
   }
@@ -169,5 +171,27 @@ const ImageWindowView = (props: { imageWindow: ImageWindow }) => {
 const TextWindowView = (props: { textWindow: TextWindow }) => {
   const {line, speed} = props.textWindow;
   return <TypewriterText line={line} textSpeed={speed || TextSpeed.NORMAL} />
+}
+
+type ChoiceWindowViewProps = {
+  choiceWindow: ChoiceWindow
+  encounter: Encounter
+}
+
+const ChoiceWindowView = ({ choiceWindow, encounter }: ChoiceWindowViewProps) => {
+  const { title, options } = choiceWindow
+
+  return (
+    <div>
+      <TypewriterText line={title} textSpeed={TextSpeed.NORMAL} />
+      <ul className="choice-window__options">
+        {options.map((option, index) => (
+          <li key={index} onClick={() => encounter.addSpread(option.nextSpread)}>
+              <TypewriterText line={option.line} textSpeed={TextSpeed.FAST}/>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 

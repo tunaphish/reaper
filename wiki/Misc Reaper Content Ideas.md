@@ -8,6 +8,7 @@ tags:
 - [ ] No Character Arcs over course of game. 
 	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
 
+- Cursed technique. If I combine them them..
 - the observer
 	- looking into sky with arms up as eye rolls to back of head
 	- eye observing brain
@@ -51,8 +52,6 @@ Keshi is behind the door
 - Flashes back to final fight with Elise. It doesn’t have to be like this. Let me help. You. Let’s fight him together. Glitch. Ash mosaique begins playing. Sei fades in. How. This isn’t possible. You shouldn’t be here. Shut up bitch. Inexplicably wearing a cowboy hat and eyepatch. Elise has no limits. Phase 2 begins. 
 - Character points at health bar expanding intro then mogs. 
 
-
- 
 
 - Restrictions are reversed  violations cause damage. 
 - Reiatsu

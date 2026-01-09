@@ -17,7 +17,7 @@ export class EncounterStore {
     this.activeSpreads.push(activeSpread);
   }
 
-  advanceSpread(activeSpreadsIndex: number): void {
+  iterateSpreadIndex(activeSpreadsIndex: number): void {
     this.activeSpreads[activeSpreadsIndex].spreadIndex++;
   }
 }

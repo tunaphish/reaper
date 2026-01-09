@@ -40,15 +40,14 @@ export class Encounter extends Phaser.Scene {
       if (activeSpread.spreadIndex < activeSpread.spread.events.length) return;
     }
 
-    this.music?.stop();
-    this.scene.start('EncounterList');
+    this.endEncounter();
   }
 
   advanceSpread(activeSpreadsIndex: number): void {
-    this.encounterStore.advanceSpread(activeSpreadsIndex);
+    this.encounterStore.iterateSpreadIndex(activeSpreadsIndex);
     const activeSpread = this.encounterStore.activeSpreads[activeSpreadsIndex];
     if (activeSpread.spreadIndex >= activeSpread.spread.events.length) return;
-
+    
     this.spreadAdvanceSound.play();
     const event = activeSpread.spread.events[activeSpread.spreadIndex];
     switch(event.type) {
@@ -61,6 +60,19 @@ export class Encounter extends Phaser.Scene {
         this.music.play();
         this.advanceSpread(activeSpreadsIndex);
         break;
+      case EventType.END_SPREAD:
+        this.endEncounter();
+        break;
     }
+  }
+
+  addSpread(spread: Spread): void {
+    this.encounterStore.pushActiveSpread({ spread, spreadIndex: -1 });
+    this.advanceSpread(this.encounterStore.activeSpreads.length-1);
+  }
+
+  endEncounter(): void {
+    this.music?.stop(); // TODO: consider not stopping music or when to do so.. maybe event
+    this.scene.start('EncounterList');
   }
 }

@@ -17,6 +17,7 @@ export enum EventType {
   IMAGE,
   SOUND,
   CHOICE,
+  END_SPREAD,
 }
 
 export type BaseWindow = {
@@ -57,7 +58,7 @@ export type SoundEvent = {
 
 export type Option = {
   line: TextToken[]
-  nextSpread: Spread // idk what this is yet
+  nextSpread: Spread
 }
 
 export type ChoiceWindow = BaseWindow & {
@@ -67,9 +68,13 @@ export type ChoiceWindow = BaseWindow & {
   isMutuallyExclusive: boolean
 }
 
+export type EndSpreadEvent = { 
+  type: EventType.END_SPREAD
+}
+
 export type Window = TextWindow | ImageWindow | ChoiceWindow;
 
-export type Event = Window | SoundEvent;
+export type Event = Window | SoundEvent | EndSpreadEvent;
 
 export type Spread = {
   id: string

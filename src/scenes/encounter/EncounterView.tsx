@@ -3,10 +3,11 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType } from '../../model/spread';
+import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event } from '../../model/spread';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
+import { ActiveSpread } from './EncounterStore';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
 // solution for isMostRecent likely to not work for multiple spreads..
@@ -14,11 +15,33 @@ export const Ui = observer(({encounter}: {encounter: Encounter}) => {
   return (
     <div className={classNames.encounterContainer}>
       {
-        encounter.encounterStore.displayedWindows.map((window, idx) => <InteractableWindow encounter={encounter} window={window} key={idx} isMostRecent={idx === encounter.encounterStore.displayedWindows.length-1}/>)
+        encounter.encounterStore.activeSpreads.map((activeSpread, idx) => <SpreadView encounter={encounter} activeSpread={activeSpread} key={idx} activeSpreadIndex={idx}/>)
       }
     </div>
   )
 });
+
+const isWindow = (event: Event) => (event.type === EventType.CHOICE || event.type === EventType.IMAGE || event.type === EventType.TEXT);
+
+type SpreadViewProps = {
+  activeSpread: ActiveSpread
+  encounter: Encounter
+  activeSpreadIndex: number
+}
+const SpreadView = observer(({activeSpread, encounter, activeSpreadIndex}: SpreadViewProps) => {
+  return activeSpread.spread.events
+    .slice(0, activeSpread.spreadIndex+1)
+    .filter(isWindow)
+    .map((eventWindow, idx) => (
+    <InteractableWindow 
+      encounter={encounter} 
+      window={eventWindow} 
+      key={idx} 
+      activeSpreadsIndex={activeSpreadIndex}
+      isMostRecent={true} // fix this later
+    />))
+      
+})
 
 const expandFromCenterTransition = {
   initial: {
@@ -59,9 +82,10 @@ type InteractableWindowProps = {
   encounter: Encounter, 
   window: Window,
   isMostRecent: boolean,
+  activeSpreadsIndex: number,
 }
 
-const InteractableWindow = ({window, encounter, isMostRecent}: InteractableWindowProps) => {
+const InteractableWindow = ({window, encounter, isMostRecent, activeSpreadsIndex}: InteractableWindowProps) => {
   const {layout, advanceTimerInMs} = window;
     const style: React.CSSProperties = {
       position: 'absolute',
@@ -76,7 +100,7 @@ const InteractableWindow = ({window, encounter, isMostRecent}: InteractableWindo
       if (!advanceTimerInMs) return;
 
       const timer = setTimeout(() => {
-        encounter.advanceSpread()
+        encounter.advanceSpread(activeSpreadsIndex)
       }, advanceTimerInMs)
 
       return () => clearTimeout(timer);
@@ -86,7 +110,7 @@ const InteractableWindow = ({window, encounter, isMostRecent}: InteractableWindo
 
     const onClickWindow = () => {
       if (!isInteractable) return;
-      encounter.advanceSpread();
+      encounter.advanceSpread(activeSpreadsIndex);
     }
     
     return (

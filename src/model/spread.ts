@@ -16,6 +16,7 @@ export enum EventType {
   TEXT,
   IMAGE,
   SOUND,
+  CHOICE,
 }
 
 export type BaseWindow = {
@@ -38,7 +39,7 @@ export type TextWindow = BaseWindow & {
 
 export type ImageLayer = {
   src: string
-  z?: number                 // higher = on top
+  z?: number
   fit?: 'cover' | 'contain'
   // opacity?: number
 }
@@ -54,7 +55,19 @@ export type SoundEvent = {
   loop?: boolean
 }
 
-export type Window = TextWindow | ImageWindow;
+export type Option = {
+  line: TextToken[]
+  nextSpread: Spread // idk what this is yet
+}
+
+export type ChoiceWindow = BaseWindow & {
+  type: EventType.CHOICE
+  title: TextToken[]
+  options: Option[]
+  isMutuallyExclusive: boolean
+}
+
+export type Window = TextWindow | ImageWindow | ChoiceWindow;
 
 export type Event = Window | SoundEvent;
 

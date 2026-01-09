@@ -1,14 +1,23 @@
 import { makeAutoObservable } from "mobx";
-import { Window } from "../../model/spread";
+import { Spread } from "../../model/spread";
+
+export type ActiveSpread = {
+  spread: Spread;
+  spreadIndex: number; 
+}
 
 export class EncounterStore {
-  displayedWindows: Window[] = [];
+  activeSpreads: ActiveSpread[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-   pushWindow(window: Window): void {
-    this.displayedWindows.push(window);
+  pushActiveSpread(activeSpread: ActiveSpread): void {
+    this.activeSpreads.push(activeSpread);
+  }
+
+  advanceSpread(activeSpreadsIndex: number): void {
+    this.activeSpreads[activeSpreadsIndex].spreadIndex++;
   }
 }

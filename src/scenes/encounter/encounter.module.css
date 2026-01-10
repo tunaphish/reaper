@@ -63,3 +63,7 @@
   85%  { color: #8b00ff; }
   100% { color: #ff0000; }
 }
+
+.disabled {
+  color: gray;
+}

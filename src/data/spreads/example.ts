@@ -144,6 +144,12 @@ export const INTERROGATION_SPREAD: Spread = {
                 type: EventType.TEXT,
                 line: [{ text: 'he was my brother' }],
                 speed: TextSpeed.FAST,
+                layout: {
+                  x: 100,
+                  y: 550,
+                  width: 150,
+                  height: 100,
+                }
               },
             ],
           },
@@ -157,6 +163,12 @@ export const INTERROGATION_SPREAD: Spread = {
                 type: EventType.TEXT,
                 line: [{ text: 'Are you serious?' }],
                 speed: TextSpeed.FAST,
+                layout: {
+                  x: 300,
+                  y: 550,
+                  width: 150,
+                  height: 100,
+                } 
               },
             ],
           },

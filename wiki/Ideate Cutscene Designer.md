@@ -97,15 +97,16 @@ archived: true
 - [x] frenzy text
 - [x] asset bug
 - [x] styled multi text
-- [ ] dialogue choice
-	- [ ] button styling
-	- [ ] fix what is interactable (mutually exclusive, after selected... gray out)
+- [x] dialogue choice
+- [x] multiple spreads
+- [ ] redesign overworld -> menu -> battle
+- [ ] refactor react overlay so I can have multiple overlays
 - [ ] design cutscene generator
 	- [ ] step into area
 	- [ ] walk up to someone and have convo...
-- [ ] animation
+- [ ] animations
 - [ ] rename window... as it's shadowed
-- [ ] multiple spreads
-
+- [ ] integrate battle
+- [ ] tapping on last window of multi thread will close it, only leave convo, shows interaction symbol (potential solution is some kind of stall event, or keep track if multiple spreads)
 # Reflection 
 - need to develop cutscene tooling

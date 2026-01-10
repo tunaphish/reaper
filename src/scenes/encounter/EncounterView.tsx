@@ -10,7 +10,6 @@ import { TypewriterText } from './TypewriterText';
 import { ActiveSpread } from './EncounterStore';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
-// solution for isMostRecent likely to not work for multiple spreads..
 export const Ui = observer(({encounter}: {encounter: Encounter}) => {
   return (
     <div className={classNames.encounterContainer}>
@@ -38,9 +37,8 @@ const SpreadView = observer(({activeSpread, encounter, activeSpreadIndex}: Sprea
       window={eventWindow} 
       key={idx} 
       activeSpreadsIndex={activeSpreadIndex}
-      isMostRecent={true} // fix this later
     />))
-      
+     
 })
 
 const expandFromCenterTransition = {
@@ -81,11 +79,10 @@ const anchorToTransform = (anchor: WindowLayout['anchor']) => {
 type InteractableWindowProps = {
   encounter: Encounter, 
   window: Window,
-  isMostRecent: boolean,
   activeSpreadsIndex: number,
 }
 
-const InteractableWindow = ({window, encounter, isMostRecent, activeSpreadsIndex}: InteractableWindowProps) => {
+const InteractableWindow = ({window, encounter, activeSpreadsIndex}: InteractableWindowProps) => {
   const {layout, advanceTimerInMs} = window;
     const style: React.CSSProperties = {
       position: 'absolute',
@@ -106,7 +103,10 @@ const InteractableWindow = ({window, encounter, isMostRecent, activeSpreadsIndex
       return () => clearTimeout(timer);
     }, [advanceTimerInMs, encounter])
     
-    const isInteractable = !advanceTimerInMs && isMostRecent;
+
+    // const activeSpread = encounter.encounterStore.activeSpreads[activeSpreadsIndex];
+    // const isLastWindow = window === activeSpread.spread.events[activeSpread.spread.events.length-1];
+    const isInteractable = !advanceTimerInMs;
 
     const onClickWindow = () => {
       if (!isInteractable) return;
@@ -173,6 +173,21 @@ const TextWindowView = (props: { textWindow: TextWindow }) => {
   return <TypewriterText line={line} textSpeed={speed || TextSpeed.NORMAL} />
 }
 
+const OptionView = ({option, encounter}: {option: Option, encounter: Encounter}) => {
+  const [selected, setSelected] = React.useState(false);
+
+  const onClick = () => {
+    if (selected) return;
+    setSelected(true);
+    encounter.addSpread(option.nextSpread)
+  }
+  return (
+    <li onClick={onClick} className={selected ? classNames.disabled : ''}>
+        <TypewriterText line={option.line} textSpeed={TextSpeed.FAST}/>
+    </li>
+  )
+}
+
 type ChoiceWindowViewProps = {
   choiceWindow: ChoiceWindow
   encounter: Encounter
@@ -184,12 +199,8 @@ const ChoiceWindowView = ({ choiceWindow, encounter }: ChoiceWindowViewProps) =>
   return (
     <div>
       <TypewriterText line={title} textSpeed={TextSpeed.NORMAL} />
-      <ul className="choice-window__options">
-        {options.map((option, index) => (
-          <li key={index} onClick={() => encounter.addSpread(option.nextSpread)}>
-              <TypewriterText line={option.line} textSpeed={TextSpeed.FAST}/>
-          </li>
-        ))}
+      <ul>
+        {options.map((option, index) => <OptionView option={option} encounter={encounter} key={index} />)}
       </ul>
     </div>
   )

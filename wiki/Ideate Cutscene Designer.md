@@ -163,9 +163,13 @@ archived: true
 	- [x] gil
 	- [x] location name
 	- [x] now playing
-- [ ] fix pointer bug
+- [x] fix pointer bug
+- [ ] glossary screen
+	- [ ] different name for glossary
+	- [ ] pull all in
+	- [ ] click for description
+	- [ ] seen from memory
 - [ ] member focus screen
-- [ ] general screens
 - [ ] visual flair menu
 	- [ ] one at at time transition
 	- [ ] replace indicator with pixel

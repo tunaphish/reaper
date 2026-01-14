@@ -10,8 +10,10 @@ export enum MenuState {
 
 export class WorldStore {
   menuState: MenuState = MenuState.NONE;
+  spirits = 0;
 
-  constructor() {
+  constructor(spirits: number) {
+    this.spirits = spirits;
     makeAutoObservable(this);
   }
 

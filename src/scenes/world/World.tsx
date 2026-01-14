@@ -8,6 +8,7 @@ import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
 import { MenuState, WorldStore } from './worldStore';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -32,12 +33,16 @@ export class World extends Phaser.Scene {
   }
 
   init(): void {
-    this.worldStore = new WorldStore();
+    const playerSave: PlayerSave = this.registry.get('playerSave');
+    this.allies = this.registry.get('allies');
+    this.inventory = this.registry.get('inventory');
+    
+    this.worldStore = new WorldStore(playerSave.spirits);
+    console.log(toJS(this.worldStore.spirits));
   }
 
   create(): void {
-    this.allies = this.registry.get('allies');
-    this.inventory = this.registry.get('inventory');
+    
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');

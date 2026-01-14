@@ -160,7 +160,7 @@ archived: true
 	- ffxiii moving face
 	- opens up to a polaroid
 - [ ] move world data to generallized place (map data, name, music, etc)
-	- [ ] gil
+	- [x] gil
 	- [ ] location
 	- [ ] now playing
 - [ ] member focus screen
@@ -169,5 +169,8 @@ archived: true
 	- [ ] one at at time transition
 	- [ ] replace indicator with pixel
 	- [ ] exit transitions (animate prescense...)
+
+
+- [ ] move registry keys to registry manager
 # Reflection 
 - need to develop cutscene tooling

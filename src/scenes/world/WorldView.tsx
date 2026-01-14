@@ -8,26 +8,30 @@ import { MenuState } from './worldStore';
 import { observer } from 'mobx-react-lite';
 import { Meter } from '../battle/ResourceDisplay';
 
-export const WorldView = (props: { world: World }): JSX.Element => {
+export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
     <div className={classNames.container}>
-      <MenuContainer world={world} />
+      {props.world.worldStore.menuState !== MenuState.NONE && <MenuContainer world={world} />}
       <StartBar world={world} />
     </div>
   )
-}
+});
 
 const MenuContainer = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
 
   return (
     <div className={classNames.menuContainer}>
-      {world.worldStore.menuState !== MenuState.NONE && <MenuOptions world={world} />}
-      {world.worldStore.menuState !== MenuState.NONE && <AllyBarView world={world} />}
+      <SpiritsView world={world} />
+      <MenuOptions world={world} />
+      <AllyBarView world={world} />
     </div>
   )
+  
 });
+
+const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.spirits}</Window>
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
   const { world } = props;

@@ -5,6 +5,7 @@ import styles from './boot.module.css';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
+import { LocalStorageAdapter } from '../../external/LocalStorageAdapter';
 
 const SCENE_TO_START = 'World';
 
@@ -16,12 +17,15 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class Boot extends Phaser.Scene {
   reactOverlay: ReactOverlay
+  private storage: LocalStorageAdapter = new LocalStorageAdapter(); 
 
   constructor() {
     super(sceneConfig);
   }
 
   public preload(): void {
+    const playerSave: PlayerSave = this.storage.load();
+    this.registry.set('playerSave', playerSave);
     this.registry.set('allies', DefaultAllies);
     this.registry.set('inventory', DEFAULT_INVENTORY)
 

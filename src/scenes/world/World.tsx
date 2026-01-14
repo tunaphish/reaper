@@ -8,7 +8,8 @@ import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
 import { MenuState, WorldStore } from './worldStore';
-import { toJS } from 'mobx';
+import { MapData } from '../../model/mapData';
+import { DEBUG_MAP_DATA } from '../../data/maps';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -19,6 +20,8 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class World extends Phaser.Scene {
   private player: Player;
   reactOverlay: ReactOverlay;
+  private music: Phaser.Sound.BaseSound;
+  mapData: MapData;
 
   worldStore: WorldStore;
 
@@ -32,35 +35,44 @@ export class World extends Phaser.Scene {
     super(sceneConfig);
   }
 
+  // dynamically preload map data here
+
   init(): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');
     this.allies = this.registry.get('allies');
     this.inventory = this.registry.get('inventory');
+    this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave.spirits);
-    console.log(toJS(this.worldStore.spirits));
-  }
-
-  create(): void {
-    
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
+  }
 
-    const map = this.make.tilemap({ key: 'map' });
-    const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
+  create(): void {
+    // Map
+    const map = this.make.tilemap({ key: this.mapData.tilemapKey });
+    const tileset = map.addTilesetImage(this.mapData.tilesetTiledKey, this.mapData.tilesetPhaserKey);
 
     map.createLayer('Below Player', tileset, 0, 0);
     const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
     map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
 
     const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
-    this.player = new Player(this, spawnPoint.x, spawnPoint.y);
 
+    // Player
+    this.player = new Player(this, spawnPoint.x, spawnPoint.y);
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
 
     this.cameras.main.fadeIn(1200);
+    if (this.mapData.musicKey) {
+      this.music = this.sound.add(this.mapData.musicKey, {
+        loop: true,  
+        volume: 0.2  
+      });
+      // this.music.play();
+    }
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
   }

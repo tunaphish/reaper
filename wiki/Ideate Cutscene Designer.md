@@ -159,18 +159,21 @@ archived: true
 	- ffvii windows
 	- ffxiii moving face
 	- opens up to a polaroid
-- [ ] move world data to generallized place (map data, name, music, etc)
+- [x] move world data to generallized place (map data, name, music, etc)
 	- [x] gil
-	- [ ] location
-	- [ ] now playing
+	- [x] location name
+	- [x] now playing
+- [ ] fix pointer bug
 - [ ] member focus screen
 - [ ] general screens
 - [ ] visual flair menu
 	- [ ] one at at time transition
 	- [ ] replace indicator with pixel
 	- [ ] exit transitions (animate prescense...)
-
-
+	- [ ] scrolling now playing screen
 - [ ] move registry keys to registry manager
+
+- [ ] bugs
+	- [ ] refactor how encounter music works with World Music (and how it stops)
 # Reflection 
 - need to develop cutscene tooling

@@ -23,6 +23,8 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
 
   return (
     <div className={classNames.menuContainer}>
+      {world.mapData.musicKey && <NowPlayingView world={world} />}
+      <LocationNameView world={world} />
       <SpiritsView world={world} />
       <MenuOptions world={world} />
       <AllyBarView world={world} />
@@ -31,6 +33,8 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
   
 });
 
+const LocationNameView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', bottom: '50px', left: '10px', padding: '5px', zIndex: 5 }}>Location: {props.world.mapData.locationName}</Window>
+const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px' }}>Now Playing: {props.world.mapData.musicKey}</Window>
 const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.spirits}</Window>
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
@@ -147,6 +151,5 @@ const Window = ({children, style}: WindowProps) => {
       >
         {children}
       </motion.div>
-      
     )
 }

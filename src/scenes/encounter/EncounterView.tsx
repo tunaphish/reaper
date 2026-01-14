@@ -155,8 +155,6 @@ const ImageLayerView: React.FC<{ layer: ImageLayer }> = ({ layer }) => {
         objectFit: layer.fit ?? 'contain',
         objectPosition: 'bottom center',
         zIndex: layer.z ?? 0,
-        userSelect: 'none',
-        pointerEvents: 'none',
       }}
     />
   )

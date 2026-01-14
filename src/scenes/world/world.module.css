@@ -5,7 +5,11 @@
 
     height: 100%;
     width: 100%;
-    pointer-events: none;
+    pointer-events: none !important;
+}
+
+.container > * {
+    pointer-events: auto;
 }
 
 .menuContainer {
@@ -23,7 +27,7 @@
 
 .startBar {
     width: 100%;
-    pointer-events: auto;
+    background-color: black;
 }
 
 .combatantBar {

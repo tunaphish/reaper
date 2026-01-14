@@ -82,7 +82,9 @@ const StartBar = (props: { world: World }): JSX.Element => {
   }
 
   return (
-    <div className={classNames.startbar} onClick={onClick}>start</div>
+    <Window style={{ width: '100%', pointerEvents: 'auto' }}>
+      <span onClick={onClick}>menu</span>
+    </Window>
   )
 }
 

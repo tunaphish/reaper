@@ -260,22 +260,6 @@
   grid-row: 1;
 }
 
-
-.unclickable {
-  pointer-events: none;
-}
-
-.cursor::before {
-  content: "";
-  position: absolute;
-  border-top: 10px solid transparent;
-  border-left: 10px solid;
-  border-bottom:10px solid transparent;
-  opacity: 0;
-  left: -5px;
-  animation: .5s steps(1,end) infinite blink-animation;
-}
-
 @keyframes blink-animation {
   50% { opacity: 1; }
 }

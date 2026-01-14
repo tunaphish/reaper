@@ -155,16 +155,19 @@ archived: true
 - [ ] integrate battle
 - [ ] tapping on last window of multi thread will close it, only leave convo, shows interaction symbol (potential solution is some kind of stall event, or keep track if multiple spreads)
 
-- [ ] overworld menu
+- [x] overworld menu
 	- ffvii windows
 	- ffxiii moving face
 	- opens up to a polaroid
-
-- [ ] now playing
+- [ ] move world data to generallized place (map data, name, music, etc)
+	- [ ] gil
+	- [ ] location
+	- [ ] now playing
 - [ ] member focus screen
 - [ ] general screens
-- [ ] menu
+- [ ] visual flair menu
 	- [ ] one at at time transition
-- [ ] replace indicator with pixel
+	- [ ] replace indicator with pixel
+	- [ ] exit transitions (animate prescense...)
 # Reflection 
 - need to develop cutscene tooling

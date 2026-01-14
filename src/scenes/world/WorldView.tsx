@@ -31,13 +31,33 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
+  const style: React.CSSProperties = {
+    zIndex: 5,
+    position: 'absolute',
+    right: '20px',
+    bottom: '40px',
+  }
+
+  const onClickInventory = () => {
+    world.setMenu(MenuState.INVENTORY);
+  }
+
+  const onClickGlossary = () => {
+    world.setMenu(MenuState.GLOSSARY);
+  }
+
+  const onClickExit = () => {
+    world.setMenu(MenuState.NONE);
+  }
 
   return (
-    <div className={classNames.menuContainer}>
-      <div>Primary</div>
-      <div>Primary</div>
-      <div>Primary</div>
-    </div>
+    <Window style={style}>
+      <div className={classNames.menuContainer}>
+        <div onClick={onClickInventory}>Inventory</div>
+        <div onClick={onClickGlossary}>Glossary</div>
+        <div onClick={onClickExit}>Exit</div>
+      </div>
+    </Window>
   )
 });
 
@@ -108,7 +128,7 @@ const expandFromCenterTransition = {
 
 type WindowProps = {
   children: React.ReactNode
-  style: React.CSSProperties
+  style?: React.CSSProperties
 }
 
 const Window = ({children, style}: WindowProps) => {

@@ -8,7 +8,6 @@ import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
 import { MenuState, WorldStore } from './worldStore';
-import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -23,6 +22,7 @@ export class World extends Phaser.Scene {
   worldStore: WorldStore;
 
   choiceSelectSound: Phaser.Sound.BaseSound;
+  choiceDisabledSound: Phaser.Sound.BaseSound;
 
   allies: Ally[];
   inventory: Inventory;
@@ -40,6 +40,8 @@ export class World extends Phaser.Scene {
     this.inventory = this.registry.get('inventory');
 
     this.choiceSelectSound = this.sound.add('choice-select');
+    this.choiceDisabledSound = this.sound.add('stamina-depleted');
+
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles');
 
@@ -79,8 +81,11 @@ export class World extends Phaser.Scene {
   }
 
   setMenu(menuState: MenuState): void {
+    if (menuState === this.worldStore.menuState) {
+      this.choiceDisabledSound.play();
+      return;
+    }
     this.choiceSelectSound.play();
     this.worldStore.setMenuState(menuState);
-    console.log(toJS(this.worldStore.menuState))
   }
 }

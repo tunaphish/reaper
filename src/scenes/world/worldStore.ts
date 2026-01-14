@@ -4,6 +4,7 @@ export enum MenuState {
     NONE = 'none',
     NEUTRAL = 'neutral',
     INVENTORY = 'inventory',
+    GLOSSARY = 'glossary',
 
 }
 

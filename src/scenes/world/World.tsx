@@ -7,6 +7,8 @@ import { WorldView } from './WorldView';
 import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
+import { MenuState, WorldStore } from './worldStore';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -16,16 +18,21 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class World extends Phaser.Scene {
   private player: Player;
-  reactOverlay: ReactOverlay
+  reactOverlay: ReactOverlay;
 
+  worldStore: WorldStore;
 
   choiceSelectSound: Phaser.Sound.BaseSound;
 
   allies: Ally[];
-  inventory: Inventory
+  inventory: Inventory;
 
   constructor() {
     super(sceneConfig);
+  }
+
+  init(): void {
+    this.worldStore = new WorldStore();
   }
 
   create(): void {
@@ -48,7 +55,7 @@ export class World extends Phaser.Scene {
 
     this.cameras.main.fadeIn(1200);
     
-    this.reactOverlay.create(<WorldView scene={this}/>, this);
+    this.reactOverlay.create(<WorldView world={this}/>, this);
   }
 
   update(time: number, delta: number): void {
@@ -71,11 +78,9 @@ export class World extends Phaser.Scene {
     this.scene.run('Battle', { enemies: [fencer] });
   }
 
-  world(): void {
+  setMenu(menuState: MenuState): void {
     this.choiceSelectSound.play();
-    this.scene.manager.getScenes(false).forEach(scene => {
-      this.scene.stop(scene.scene.key);  
-    });
-    this.scene.start('MainMenu');
-  };
+    this.worldStore.setMenuState(menuState);
+    console.log(toJS(this.worldStore.menuState))
+  }
 }

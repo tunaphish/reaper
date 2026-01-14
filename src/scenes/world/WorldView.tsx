@@ -1,110 +1,128 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import styles from './world.module.css';
+import classNames from './world.module.css';
 import { World } from './World';
+import { Ally } from '../../model/ally';
+import { MenuState } from './worldStore';
+import { observer } from 'mobx-react-lite';
+import { Meter } from '../battle/ResourceDisplay';
 
-const PartyWindow = (props: { scene: World }) => {
+export const WorldView = (props: { world: World }): JSX.Element => {
+  const { world } = props
   return (
-    <div className={styles.window} style={{ display: 'flex', justifyContent: 'space-around', padding: '5px' }}>
-      {props.scene.allies.map((ally) => {
-        return (
-          <div className={styles.ally} key={ally.name}>
-            <img src={ally.menuPortraitPath} style={{ maxWidth: '70%' }}/>
-            <div>{ally.name}</div>
-            <div>HP {ally.health}/{ally.maxHealth}</div>
-          </div>
-        )
-      })}
+    <div className={classNames.container}>
+      <MenuContainer world={world} />
+      <StartBar world={world} />
     </div>
-   )
+  )
 }
 
-const Party = (props: { scene: World }) => {
+const MenuContainer = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
+
   return (
-    <div className={styles.partyContainer}>
-      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
-      <div className={styles.abilitiesContainer}>
-        <div>abilities placeholder</div>
-      </div>
-      <PartyWindow scene={props.scene} />
+    <div className={classNames.menuContainer}>
+      {world.worldStore.menuState !== MenuState.NONE && <MenuOptions world={world} />}
+      {world.worldStore.menuState !== MenuState.NONE && <AllyBarView world={world} />}
     </div>
-   )
+  )
+});
+
+const MenuOptions = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
+
+  return (
+    <div className={classNames.menuContainer}>
+      <div>Primary</div>
+      <div>Primary</div>
+      <div>Primary</div>
+    </div>
+  )
+});
+
+const StartBar = (props: { world: World }): JSX.Element => {
+  const { world } = props;
+  const onClick = () => {
+    if (world.worldStore.menuState === MenuState.NONE) {
+      world.setMenu(MenuState.NEUTRAL);
+      return;
+    }
+
+    world.setMenu(MenuState.NONE);
+    return;
+  }
+
+  return (
+    <div className={classNames.startbar} onClick={onClick}>start</div>
+  )
 }
 
-const Inventory = (props: { scene: World }) => {
+const AllyBarView = (props: { world: World }): JSX.Element => {
+  const { allies } = props.world;
   return (
-    <div className={styles.inventoryContainer}>
-      <div className={styles.window} style={{ marginBottom: '5px' }}>desc placeholder</div>
-      <PartyWindow scene={props.scene} />
-      <div className={styles.window} style={{ flex: 1, padding: '5px', marginTop: '5px' }}>
-        {
-          props.scene.inventory.map(item => {
-            return (
-              <div key={item.name}>
-                <button className={styles.item} disabled={!item.canUseOutsideBattle || item.charges === 0}>
-                  { `${item.name} ${item.charges}/${item.maxCharges}` }
-                </button>
-              </div>
-            )
-          })
-        }
-      </div>
+    <div className={classNames.combatantBar}>
+        {allies.map((ally) => <AllyView ally={ally} key={ally.name}/>)}
     </div>
-   )
+  )
 }
 
-export const WorldView = (props: { scene: World }): JSX.Element => {
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuContent, setMenuContent] = React.useState<JSX.Element | null>(null);
+const AllyView = (props: { ally: Ally }): JSX.Element => {
+  const { ally } = props;
 
-  const onMenuClick = () => {
-    props.scene.allies = props.scene.registry.get('allies'); // allies gets set after battle.
-
-    setMenuOpen(!menuOpen);
-    props.scene.pause();
-    setMenuContent(<Party scene={props.scene}/>);
-  }
-
-  const onPartyClick = () => {
-    props.scene.choiceSelectSound.play();
-    setMenuContent(<Party scene={props.scene}/>);
-  }
-
-  const onInventoryClick = () => {
-    props.scene.choiceSelectSound.play();
-    setMenuContent(<Inventory scene={props.scene}/>);
-  }
-
-  const onExitClick = () => {
-    props.scene.choiceSelectSound.play();
-    setMenuOpen(!menuOpen);
-    setMenuContent(null);
-    props.scene.unpause();
+  const style: React.CSSProperties = {
+    width: '100%',
+    padding: '5px',
   }
 
   return (
-    <div className={styles.menuContainer}>
-      <div className={styles.menuContent}>
-        {menuContent}
-      </div>
-      <motion.div 
-        animate={{ width: menuOpen ? '100%' : '100px' }}
-        className={styles.navigation}
-      >
-        {
-          menuOpen ?
-          (<>
-            <div className={styles.navigationButton} onClick={onPartyClick}>party</div>
-            <div className={styles.navigationButton} onClick={onInventoryClick}>inv</div>
-            <div className={styles.navigationButton} onClick={() => props.scene.battle()}>battle</div>
-            <div className={styles.navigationButton} onClick={onExitClick}>exit</div>
-          </>) :
-          <div className={styles.navigationButton} onClick={onMenuClick}>menu</div>
-        }
-        
-      </motion.div>
-    </div>
-
+    <Window key={ally.name} style={style}>
+      {ally.name}
+      <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
+    </Window>
   );
+}
+
+const expandFromCenterTransition = {
+  initial: {
+    scaleX: 0,
+    transformOrigin: "center",
+    
+  },
+  animate: {
+    scaleX: 1,
+    
+    transition: {
+      duration: 0.15,
+      ease: "easeOut",
+    },
+  },
+  exit: {
+    scaleX: 0,
+    transition: {
+      duration: 0.15,
+      ease: "easeIn",
+    },
+  },
+};
+
+type WindowProps = {
+  children: React.ReactNode
+  style: React.CSSProperties
+}
+
+const Window = ({children, style}: WindowProps) => {
+    return (
+      <motion.div 
+        variants={expandFromCenterTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className={classNames.window}
+        style={style}
+      >
+        {children}
+      </motion.div>
+      
+    )
 }

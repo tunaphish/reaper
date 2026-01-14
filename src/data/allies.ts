@@ -10,15 +10,15 @@ import { OptionType } from '../model/option';
 
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
-  name: 'Cloud',
-  desc: 'Soul of Cloud',
+  name: 'Eji',
+  desc: 'Soul of Eji',
   options: [Actions.attack, Actions.stanch, Techniques.haste, Techniques.buff, Actions.shatter],
 }
 
 export const Eji: Ally = {
   type: OptionType.ALLY,
-  name: 'Cloud',
-  health: 100,
+  name: 'Eji',
+  health: 50,
   maxHealth: 100,
   bleed: 0,
   actionPoints: .1,
@@ -37,14 +37,14 @@ export const Eji: Ally = {
 
 const keshiFolder: Folder = {
   type: OptionType.FOLDER,
-  name: 'Barret',
-  desc: 'Soul of Barret',
+  name: 'Keshi',
+  desc: 'Soul of Keshi',
   options: [Actions.attack, Actions.stanch],
 }
 
 export const Keshi: Ally = {
   type: OptionType.ALLY,
-  name: 'Barret',
+  name: 'Keshi',
   health: 100,
   maxHealth: 100,
   bleed: 0,
@@ -63,14 +63,14 @@ export const Keshi: Ally = {
 
 const eliseFolder: Folder = {
   type: OptionType.FOLDER,
-  desc: 'Soul of Tifa',
-  name: 'Tifa',
+  desc: 'Soul of Elise',
+  name: 'Elise',
   options: [Actions.attack, Actions.stanch],
 };
 
 export const Elise: Ally = {
   type: OptionType.ALLY,
-  name: 'Tifa',
+  name: 'Elise',
   health: 100,
   bleed: 0,
   maxHealth: 100,

@@ -64,7 +64,7 @@ export const TechniqueViewManager = observer(((props: {combatant: Combatant }) =
 })); 
 
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, battleScene: Battle }) => {
+export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: styles.DEAD,

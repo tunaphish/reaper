@@ -6,7 +6,7 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 
-const SCENE_TO_START = 'EncounterList';
+const SCENE_TO_START = 'World';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,

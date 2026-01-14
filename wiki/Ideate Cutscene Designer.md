@@ -154,5 +154,17 @@ archived: true
 - [ ] rename window... as it's shadowed
 - [ ] integrate battle
 - [ ] tapping on last window of multi thread will close it, only leave convo, shows interaction symbol (potential solution is some kind of stall event, or keep track if multiple spreads)
+
+- [ ] overworld menu
+	- ffvii windows
+	- ffxiii moving face
+	- opens up to a polaroid
+
+- [ ] now playing
+- [ ] member focus screen
+- [ ] general screens
+- [ ] menu
+	- [ ] one at at time transition
+- [ ] replace indicator with pixel
 # Reflection 
 - need to develop cutscene tooling

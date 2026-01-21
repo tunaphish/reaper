@@ -1,0 +1,31 @@
+- It’s lore. Enemy glossary. And soul. Maybe something similar to player view?
+- before I had just a simple journal
+- actually I like a journal style of things... a time based... this is when I saw it... and then a date entry... 
+
+- souls also represent connections and things... a trophy... expanding on certain things.. okay I like it. I like it. 
+
+- [x] overworld menu
+	- ffvii windows
+	- ffxiii moving face
+	- opens up to a polaroid
+- [x] move world data to generallized place (map data, name, music, etc)
+	- [x] gil
+	- [x] location name
+	- [x] now playing
+- [x] fix pointer bug
+- [ ] glossary screen
+	- [ ] enemies
+	- [ ] techniques
+- [ ] member focus screen
+- [ ] visual flair menu
+	- [ ] one at at time transition
+	- [ ] replace indicator with pixel
+	- [ ] exit transitions (animate prescense...)
+	- [ ] scrolling now playing screen
+- [ ] move registry keys to registry manager
+
+- [ ] bugs
+	- [ ] refactor how encounter music works with World Music (and how it stops)
+
+
+- [ ] 

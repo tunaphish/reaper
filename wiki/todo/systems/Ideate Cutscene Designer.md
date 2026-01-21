@@ -155,29 +155,6 @@ archived: true
 - [ ] integrate battle
 - [ ] tapping on last window of multi thread will close it, only leave convo, shows interaction symbol (potential solution is some kind of stall event, or keep track if multiple spreads)
 
-- [x] overworld menu
-	- ffvii windows
-	- ffxiii moving face
-	- opens up to a polaroid
-- [x] move world data to generallized place (map data, name, music, etc)
-	- [x] gil
-	- [x] location name
-	- [x] now playing
-- [x] fix pointer bug
-- [ ] glossary screen
-	- [ ] different name for glossary
-	- [ ] pull all in
-	- [ ] click for description
-	- [ ] seen from memory
-- [ ] member focus screen
-- [ ] visual flair menu
-	- [ ] one at at time transition
-	- [ ] replace indicator with pixel
-	- [ ] exit transitions (animate prescense...)
-	- [ ] scrolling now playing screen
-- [ ] move registry keys to registry manager
 
-- [ ] bugs
-	- [ ] refactor how encounter music works with World Music (and how it stops)
 # Reflection 
 - need to develop cutscene tooling

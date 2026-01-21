@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ideate Cutscene Designer.md",
+                "file": "todo/systems/Menu Navigation.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Ideate Cutscene Designer"
+              "title": "Menu Navigation"
             }
           }
         ]
@@ -169,16 +169,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "11cd94652c4efe89",
+  "active": "f6a96c3305b28ef8",
   "lastOpenFiles": [
+    "Souls as trophies.md",
+    "todo/systems/Menu Navigation.md",
+    "todo/content/Eji Dog Scene.md",
+    "todo/content/Misc Reaper Content Ideas.md",
+    "todo/systems/Ideate Cutscene Designer.md",
     "todo/systems/Ideate Window Presentation Driving Gameplay.md",
     "todo/artstyle/Window Artstyle.md",
-    "Ideate Cutscene Designer.md",
-    "Misc Reaper Content Ideas.md",
     "overview.md",
     "todo/systems/Potential Reaper Refactors.md",
     "todo/systems/Ideate Battle Triggers and Combos.md",
-    "todo/Class Ideation.canvas",
+    "todo/content/Class Ideation.canvas",
     "todo/systems/Faking Difficulty - Helldivers Article.md",
     "todo/content/Rough Reaper Enemy Ideas.md",
     "symbols/Enemies - Normalcy.md",
@@ -196,9 +199,6 @@
     "missions/Keshi's Arc End.md",
     "missions/The End.md",
     "plot refactor.md",
-    "missions/The CEO - Greed.md",
-    "missions/Training Arc.md",
-    "Untitled.md",
     "todo/Battle System.canvas",
     "todo/cutscene-designer.canvas",
     "archive/media/window-ideation.png",

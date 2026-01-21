@@ -8,6 +8,19 @@ tags:
 - [ ] No Character Arcs over course of game. 
 	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
 
+
+- constantly recontextualizing previous abilities and techniques
+	- Menu that makes no sense until it’s reconfextualized and super powerful
+	- Maybe foreign enemy or something 
+	- It’s all in Spanish lmao 
+- Jankenbo technique - play against enemy
+
+
+- Silly things we did in the past. Small connections. 
+- home invasion
+- Hey sei. Intro
+- Censored text.
+
 - Cursed technique. If I combine them them..
 - the observer
 	- looking into sky with arms up as eye rolls to back of head

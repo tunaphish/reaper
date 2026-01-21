@@ -14,8 +14,10 @@
 	- [x] now playing
 - [x] fix pointer bug
 - [ ] glossary screen
-	- [ ] enemies
+	- [x] enemies
 	- [ ] techniques
+	- [ ] enemy seen at, 
+	- [ ] enemy pics
 - [ ] member focus screen
 - [ ] visual flair menu
 	- [ ] one at at time transition
@@ -26,6 +28,4 @@
 
 - [ ] bugs
 	- [ ] refactor how encounter music works with World Music (and how it stops)
-
-
-- [ ] 
+- [ ] refactor to playerSave in memory... and then a player save persisted?

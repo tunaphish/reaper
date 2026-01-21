@@ -15,16 +15,14 @@ export interface PotentialOption {
   singleUse: boolean;
 }
 
-
-
 export interface Strategy {
   potentialOptions: PotentialOption[];
   toExit: (enemy: Enemy, battle: Battle) => boolean;
   toEnter: (enemy: Enemy, battle: Battle) => boolean;
 }
 
-
 export type Enemy = Combatant & {
+  journalDescription: string;
   type: OptionType.ENEMY;
 
   strategies: Strategy[];

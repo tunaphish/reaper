@@ -43,7 +43,7 @@ export class World extends Phaser.Scene {
     this.inventory = this.registry.get('inventory');
     this.mapData = DEBUG_MAP_DATA;
     
-    this.worldStore = new WorldStore(playerSave.spirits);
+    this.worldStore = new WorldStore(playerSave);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');

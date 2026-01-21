@@ -28,6 +28,20 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   },
 };
 
+const seedLocalStorage = () => {
+  localStorage.setItem(
+    "reaper:playersave",
+    JSON.stringify({
+      spirits: 120,
+      seenEnemies: [
+        // { enemyName: "Fencer", seenAt: Date.now() - 86400000 },
+        { enemyName: "Knight", seenAt: Date.now() },
+      ],
+    })
+  );
+};
+seedLocalStorage();
+
 const game = new Phaser.Game(gameConfig);
 
 export default game;

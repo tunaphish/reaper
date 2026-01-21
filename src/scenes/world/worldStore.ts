@@ -4,16 +4,16 @@ export enum MenuState {
     NONE = 'none',
     NEUTRAL = 'neutral',
     INVENTORY = 'inventory',
-    GLOSSARY = 'glossary',
+    JOURNAL = 'journal',
 
 }
 
 export class WorldStore {
   menuState: MenuState = MenuState.NONE;
-  spirits = 0;
+  playerSave: PlayerSave
 
-  constructor(spirits: number) {
-    this.spirits = spirits;
+  constructor(playerSave: PlayerSave) {
+    this.playerSave = playerSave;
     makeAutoObservable(this);
   }
 

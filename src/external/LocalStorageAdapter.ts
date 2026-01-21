@@ -1,3 +1,5 @@
+// TODO: Multiple Saves
+// localStorage.getItem("reaper:playersave")
 const key = "reaper:playersave";
 
 export class LocalStorageAdapter {

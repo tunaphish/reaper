@@ -1,4 +1,14 @@
+type SeenEnemy =  {
+    enemyName: string,
+    seenAt: number, 
+}
+
 type PlayerSave = {
+    spirits: number
+    seenEnemies: SeenEnemy[]
+}
+
+
 //   meta: {
 //     version: number
 //     timestamp: number
@@ -11,9 +21,6 @@ type PlayerSave = {
 //   }
 
     // items: { id: string; qty: number }[]
-    spirits: number
-  
-
 //   progression: {
 //     flags: Record<string, boolean>
 //     unlockedAbilities: string[]
@@ -23,4 +30,3 @@ type PlayerSave = {
 //     volume: number
 //     textSpeed: number
 //   }
-}

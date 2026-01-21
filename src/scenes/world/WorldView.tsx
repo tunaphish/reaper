@@ -8,6 +8,9 @@ import { MenuState } from './worldStore';
 import { observer } from 'mobx-react-lite';
 import { Meter } from '../battle/ResourceDisplay';
 
+import { enemies } from '../../data/enemies';
+import { Enemy } from '../../model/enemy';
+
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
@@ -24,6 +27,7 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
   return (
     <div className={classNames.menuContainer}>
       {world.mapData.musicKey && <NowPlayingView world={world} />}
+      {world.worldStore.menuState === MenuState.JOURNAL && <JournalTypeView world={world} />}
       <LocationNameView world={world} />
       <SpiritsView world={world} />
       <MenuOptions world={world} />
@@ -33,9 +37,52 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
   
 });
 
+const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
+  const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
+
+  return enemies
+    .filter(enemy => seenMap.has(enemy.name))
+    .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
+}
+
+enum JournalMenuState {
+  NONE = 'none',
+  ENEMIES = 'enemies',
+  TECHNIQUES = 'techniques',
+}
+
+const EnemyListView = (props: { world: World }): JSX.Element => {
+  const [displayedEnemy, setDisplayedEnemy] = React.useState<Enemy>(null);
+  const displayedEnemies = getDisplayedEnemies(enemies, props.world.worldStore.playerSave.seenEnemies);
+  return (
+    <>
+      {displayedEnemy && <Window style={{ position: 'absolute', top: '350px', left: '200px', padding: '5px', zIndex: 5 }}>{displayedEnemy.name}</Window>}
+      {displayedEnemy && <Window style={{ position: 'absolute', top: '400px', left: '100px', width: '300px', padding: '5px', zIndex: 5 }}>{displayedEnemy.journalDescription}</Window>}
+      <Window style={{ position: 'absolute', top: '300px', right: '10px', padding: '5px', zIndex: 5 }}>
+        { displayedEnemies.map(enemy => <div key={enemy.name} onClick={() => setDisplayedEnemy(enemy)}>{enemy.name}</div>)}
+      </Window>
+    </>
+    
+  )
+}
+
+const JournalTypeView = (props: { world: World }): JSX.Element => {
+  const [journalMenuState, setJournalMenuState] = React.useState(JournalMenuState.NONE);
+
+  return (
+    <>
+      {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
+      <Window style={{ position: 'absolute', top: '300px', left: '10px', padding: '5px', zIndex: 5 }}>
+        <div onClick={() => setJournalMenuState(JournalMenuState.ENEMIES)}>Enemies</div>
+        <div onClick={() => setJournalMenuState(JournalMenuState.TECHNIQUES)}>Techniques</div>
+      </Window>
+    </> 
+  )
+}
+
 const LocationNameView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', bottom: '50px', left: '10px', padding: '5px', zIndex: 5 }}>Location: {props.world.mapData.locationName}</Window>
 const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px' }}>Now Playing: {props.world.mapData.musicKey}</Window>
-const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.spirits}</Window>
+const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
@@ -50,8 +97,8 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
     world.setMenu(MenuState.INVENTORY);
   }
 
-  const onClickGlossary = () => {
-    world.setMenu(MenuState.GLOSSARY);
+  const onClickJournal = () => {
+    world.setMenu(MenuState.JOURNAL);
   }
 
   const onClickExit = () => {
@@ -62,7 +109,7 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
     <Window style={style}>
       <div className={classNames.menuContainer}>
         <div onClick={onClickInventory}>Inventory</div>
-        <div onClick={onClickGlossary}>Glossary</div>
+        <div onClick={onClickJournal}>Journal</div>
         <div onClick={onClickExit}>Exit</div>
       </div>
     </Window>

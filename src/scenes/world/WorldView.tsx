@@ -1,9 +1,8 @@
 
 import * as React from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import classNames from './world.module.css';
 import { World } from './World';
-import { Ally } from '../../model/ally';
 import { MenuState } from './worldStore';
 import { observer } from 'mobx-react-lite';
 import { Meter } from '../battle/ResourceDisplay';
@@ -15,7 +14,10 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
     <div className={classNames.container}>
-      {props.world.worldStore.menuState !== MenuState.NONE && <MenuContainer world={world} />}
+      <AnimatePresence mode="wait">
+        {props.world.worldStore.menuState !== MenuState.NONE && <MenuContainer world={world} />}
+      </AnimatePresence>
+      
       <StartBar world={world} />
     </div>
   )
@@ -27,7 +29,9 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
   return (
     <div className={classNames.menuContainer}>
       {world.mapData.musicKey && <NowPlayingView world={world} />}
-      {world.worldStore.menuState === MenuState.JOURNAL && <JournalTypeView world={world} />}
+      <AnimatePresence mode="wait">
+        {world.worldStore.menuState === MenuState.JOURNAL && <JournalTypeView world={world} />}
+      </AnimatePresence>
       <LocationNameView world={world} />
       <SpiritsView world={world} />
       <MenuOptions world={world} />
@@ -89,7 +93,9 @@ const JournalTypeView = (props: { world: World }): JSX.Element => {
 
   return (
     <>
-      {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
+      <AnimatePresence mode="wait">
+        {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
+      </AnimatePresence>
       <Window style={{ position: 'absolute', top: '300px', left: '10px', padding: '5px', zIndex: 5 }}>
         <div onClick={() => onClickJournalMenuOption(JournalMenuState.ENEMIES)}>Enemies</div>
         <div onClick={() => onClickJournalMenuOption(JournalMenuState.TECHNIQUES)}>Techniques</div>
@@ -135,7 +141,7 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
   return (
     <Window style={style}>
       <div className={classNames.menuContainer}>
-        {/* <div onClick={onClickInventory}>Inventory</div> */}
+        <div onClick={onClickInventory}>Inventory</div>
         <div onClick={onClickJournal}>Journal</div>
         <div onClick={onClickExit}>Exit</div>
       </div>

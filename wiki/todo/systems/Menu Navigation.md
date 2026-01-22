@@ -11,8 +11,6 @@
 - [ ] member focus screen
 - [ ] visual flair menu
 	- [ ] replace indicator with pixel
-	- [ ] exit transitions (animate prescense...)
 - [ ] move registry keys to registry manager
-
 - [ ] bugs
 	- [ ] refactor how encounter music works with World Music (and how it stops)

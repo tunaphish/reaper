@@ -117,7 +117,38 @@ const LocationNameView = (props: { world: World }): JSX.Element => <Window style
 const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>
 const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }} delay={0.25}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
 
+const SelectableOption = (props: { selected: boolean, children: React.ReactNode}): JSX.Element =>  <div style={{ position: 'relative'}}>{props.selected && <MenuCursor />}{props.children}</div>;
+
+const MenuCursor = () => (
+  <motion.img
+    src="/reaper/ui/cursor.png" 
+    alt=""
+    style={{
+      width: '24px',       
+      imageRendering: 'pixelated',
+      position: 'absolute',
+      left: '-24px',
+      top: '10%',
+    }}
+    initial={{ opacity: 0, x: 4 }}
+    animate={{
+      opacity: 1,
+      x: [0, -4, 0],
+    }}
+    transition={{
+      x: {
+        repeat: Infinity,
+        duration: 0.6,
+        ease: 'easeInOut',
+      },
+      opacity: { duration: 0.15 },
+    }}
+  />
+);
+
+
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
+  const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const { world } = props;
   const style: React.CSSProperties = {
     zIndex: 5,
@@ -126,24 +157,23 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
     bottom: '40px',
   }
 
-  const onClickInventory = () => {
-    world.setMenu(MenuState.INVENTORY);
+  const onClickOption = (option, i) => {
+    setSelectedIndex(i);
+    world.setMenu(option.menuState);
   }
 
-  const onClickJournal = () => {
-    world.setMenu(MenuState.JOURNAL);
-  }
-
-  const onClickExit = () => {
-    world.setMenu(MenuState.NONE);
-  }
+  const options = [
+    { label: "Inventory", menuState: MenuState.INVENTORY },
+    { label: "Journal", menuState: MenuState.JOURNAL },
+    { label: "Exit", menuState: MenuState.NONE },
+  ]
 
   return (
     <Window style={style}>
       <div className={classNames.menuContainer}>
-        <div onClick={onClickInventory}>Inventory</div>
-        <div onClick={onClickJournal}>Journal</div>
-        <div onClick={onClickExit}>Exit</div>
+        {options.map((option, i) => (
+          <SelectableOption selected={i===selectedIndex} key={option.label}><span onClick={() => onClickOption(option, i)}>{option.label}</span></SelectableOption>
+        ))}
       </div>
     </Window>
   )

@@ -10,11 +10,9 @@
 	- [ ] enemy pics
 - [ ] member focus screen
 - [ ] visual flair menu
-	- [ ] one at at time transition
 	- [ ] replace indicator with pixel
 	- [ ] exit transitions (animate prescense...)
 - [ ] move registry keys to registry manager
 
 - [ ] bugs
 	- [ ] refactor how encounter music works with World Music (and how it stops)
-- [ ] refactor to playerSave in memory... and then a player save persisted?

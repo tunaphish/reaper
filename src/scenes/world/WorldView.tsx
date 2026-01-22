@@ -107,9 +107,9 @@ const Ticker = ({ text }: { text: string }) => (
   </div>
 );
 
-const LocationNameView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', bottom: '50px', left: '10px', padding: '5px', zIndex: 5 }}>Location: {props.world.mapData.locationName}</Window>
-const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px', width: '200px' }}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>
-const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
+const LocationNameView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', bottom: '50px', left: '10px', padding: '5px', zIndex: 5 }} delay={0.05}>Location: {props.world.mapData.locationName}</Window>
+const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>
+const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }} delay={0.25}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
@@ -164,28 +164,25 @@ const StartBar = (props: { world: World }): JSX.Element => {
 
 const AllyBarView = (props: { world: World }): JSX.Element => {
   const { allies } = props.world;
-  return (
-    <div className={classNames.combatantBar}>
-        {allies.map((ally) => <AllyView ally={ally} key={ally.name}/>)}
-    </div>
-  )
-}
-
-const AllyView = (props: { ally: Ally }): JSX.Element => {
-  const { ally } = props;
-
+  
   const style: React.CSSProperties = {
     width: '100%',
     padding: '5px',
   }
-
+  
   return (
-    <Window key={ally.name} style={style}>
-      {ally.name}
-      <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
-    </Window>
-  );
+    <div className={classNames.combatantBar}>
+        {allies.map((ally,i) => (
+          <Window key={ally.name} style={style} delay={i*0.15}>
+            {ally.name}
+            <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
+          </Window>
+        ))}
+    </div>
+  )
 }
+
+
 
 const expandFromCenterTransition = {
   initial: {
@@ -193,14 +190,14 @@ const expandFromCenterTransition = {
     transformOrigin: "center",
     
   },
-  animate: {
+  animate: (delay) => ({
     scaleX: 1,
-    
     transition: {
+      delay,
       duration: 0.15,
       ease: "easeOut",
     },
-  },
+  }),
   exit: {
     scaleX: 0,
     transition: {
@@ -213,15 +210,17 @@ const expandFromCenterTransition = {
 type WindowProps = {
   children: React.ReactNode
   style?: React.CSSProperties
+  delay?: number 
 }
 
-const Window = ({children, style}: WindowProps) => {
+const Window = ({children, style, delay}: WindowProps) => {
     return (
       <motion.div 
         variants={expandFromCenterTransition}
         initial="initial"
         animate="animate"
         exit="exit"
+        custom={delay || 0}
         className={classNames.window}
         style={style}
       >

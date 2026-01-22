@@ -45,12 +45,6 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
 
-enum JournalMenuState {
-  NONE = 'none',
-  ENEMIES = 'enemies',
-  TECHNIQUES = 'techniques',
-}
-
 const EnemyListView = (props: { world: World }): JSX.Element => {
   const [displayedEnemy, setDisplayedEnemy] = React.useState<Enemy>(null);
   const displayedEnemies = getDisplayedEnemies(enemies, props.world.worldStore.playerSave.seenEnemies);
@@ -71,9 +65,14 @@ const EnemyListView = (props: { world: World }): JSX.Element => {
       <Window style={{ position: 'absolute', top: '300px', right: '10px', padding: '5px', zIndex: 5 }}>
         { displayedEnemies.map(enemy => <div key={enemy.name} onClick={() => onClickEnemyMenuOption(enemy)}>{enemy.name}</div>)}
       </Window>
-    </>
-    
+    </> 
   )
+}
+
+enum JournalMenuState {
+  NONE = 'none',
+  ENEMIES = 'enemies',
+  TECHNIQUES = 'techniques',
 }
 
 const JournalTypeView = (props: { world: World }): JSX.Element => {
@@ -136,7 +135,7 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
   return (
     <Window style={style}>
       <div className={classNames.menuContainer}>
-        <div onClick={onClickInventory}>Inventory</div>
+        {/* <div onClick={onClickInventory}>Inventory</div> */}
         <div onClick={onClickJournal}>Journal</div>
         <div onClick={onClickExit}>Exit</div>
       </div>

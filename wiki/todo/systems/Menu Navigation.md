@@ -4,10 +4,6 @@
 
 - souls also represent connections and things... a trophy... expanding on certain things.. okay I like it. I like it. 
 
-- [x] overworld menu
-	- ffvii windows
-	- ffxiii moving face
-	- opens up to a polaroid
 - [ ] glossary screen
 	- [ ] techniques
 	- [ ] enemy seen at 

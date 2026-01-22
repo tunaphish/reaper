@@ -8,16 +8,11 @@
 	- ffvii windows
 	- ffxiii moving face
 	- opens up to a polaroid
-- [x] move world data to generallized place (map data, name, music, etc)
-	- [x] gil
-	- [x] location name
-	- [x] now playing
-- [x] fix pointer bug
 - [ ] glossary screen
-	- [x] enemies
 	- [ ] techniques
-	- [ ] enemy seen at, 
+	- [ ] enemy seen at 
 	- [ ] enemy pics
+	- [ ] on click sound effects
 - [ ] member focus screen
 - [ ] visual flair menu
 	- [ ] one at at time transition

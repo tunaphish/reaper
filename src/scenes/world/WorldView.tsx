@@ -54,12 +54,22 @@ enum JournalMenuState {
 const EnemyListView = (props: { world: World }): JSX.Element => {
   const [displayedEnemy, setDisplayedEnemy] = React.useState<Enemy>(null);
   const displayedEnemies = getDisplayedEnemies(enemies, props.world.worldStore.playerSave.seenEnemies);
+
+  const onClickEnemyMenuOption = (newEnemy: Enemy) => {
+    if (displayedEnemy === newEnemy) {
+      props.world.playChoiceDisabledSound();
+      return;
+    }
+    props.world.playChoiceSelectSound();
+    setDisplayedEnemy(newEnemy);
+  }
+
   return (
     <>
       {displayedEnemy && <Window style={{ position: 'absolute', top: '350px', left: '200px', padding: '5px', zIndex: 5 }}>{displayedEnemy.name}</Window>}
       {displayedEnemy && <Window style={{ position: 'absolute', top: '400px', left: '100px', width: '300px', padding: '5px', zIndex: 5 }}>{displayedEnemy.journalDescription}</Window>}
       <Window style={{ position: 'absolute', top: '300px', right: '10px', padding: '5px', zIndex: 5 }}>
-        { displayedEnemies.map(enemy => <div key={enemy.name} onClick={() => setDisplayedEnemy(enemy)}>{enemy.name}</div>)}
+        { displayedEnemies.map(enemy => <div key={enemy.name} onClick={() => onClickEnemyMenuOption(enemy)}>{enemy.name}</div>)}
       </Window>
     </>
     
@@ -69,19 +79,37 @@ const EnemyListView = (props: { world: World }): JSX.Element => {
 const JournalTypeView = (props: { world: World }): JSX.Element => {
   const [journalMenuState, setJournalMenuState] = React.useState(JournalMenuState.NONE);
 
+  const onClickJournalMenuOption = (newJournalMenuState: JournalMenuState) => {
+    if (journalMenuState === newJournalMenuState) {
+      props.world.playChoiceDisabledSound();
+      return;
+    }
+    props.world.playChoiceSelectSound();
+    setJournalMenuState(newJournalMenuState);
+  }
+
   return (
     <>
       {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
       <Window style={{ position: 'absolute', top: '300px', left: '10px', padding: '5px', zIndex: 5 }}>
-        <div onClick={() => setJournalMenuState(JournalMenuState.ENEMIES)}>Enemies</div>
-        <div onClick={() => setJournalMenuState(JournalMenuState.TECHNIQUES)}>Techniques</div>
+        <div onClick={() => onClickJournalMenuOption(JournalMenuState.ENEMIES)}>Enemies</div>
+        <div onClick={() => onClickJournalMenuOption(JournalMenuState.TECHNIQUES)}>Techniques</div>
       </Window>
     </> 
   )
 }
 
+const Ticker = ({ text }: { text: string }) => (
+  <div className={classNames.ticker}>
+    <div className={classNames.tickerTrack}>
+      <span>{text}&nbsp;&nbsp;</span>
+      <span>{text}&nbsp;&nbsp;</span>
+    </div>
+  </div>
+);
+
 const LocationNameView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', bottom: '50px', left: '10px', padding: '5px', zIndex: 5 }}>Location: {props.world.mapData.locationName}</Window>
-const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px' }}>Now Playing: {props.world.mapData.musicKey}</Window>
+const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px', width: '200px' }}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>
 const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
 
 const MenuOptions = observer((props: { world: World }): JSX.Element => {

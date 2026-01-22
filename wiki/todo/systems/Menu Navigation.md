@@ -12,13 +12,11 @@
 	- [ ] techniques
 	- [ ] enemy seen at 
 	- [ ] enemy pics
-	- [ ] on click sound effects
 - [ ] member focus screen
 - [ ] visual flair menu
 	- [ ] one at at time transition
 	- [ ] replace indicator with pixel
 	- [ ] exit transitions (animate prescense...)
-	- [ ] scrolling now playing screen
 - [ ] move registry keys to registry manager
 
 - [ ] bugs

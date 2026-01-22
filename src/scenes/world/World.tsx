@@ -105,4 +105,12 @@ export class World extends Phaser.Scene {
     this.choiceSelectSound.play();
     this.worldStore.setMenuState(menuState);
   }
+
+  playChoiceSelectSound(): void {
+    this.choiceSelectSound.play();
+  }
+
+  playChoiceDisabledSound(): void {
+    this.choiceDisabledSound.play();
+  }
 }

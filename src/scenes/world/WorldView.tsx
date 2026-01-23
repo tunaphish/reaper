@@ -9,6 +9,7 @@ import { Meter } from '../battle/ResourceDisplay';
 
 import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
+import { CursorList } from './CursorList';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -67,7 +68,12 @@ const EnemyListView = (props: { world: World }): JSX.Element => {
       {displayedEnemy && <Window style={{ position: 'absolute', top: '350px', left: '200px', padding: '5px', zIndex: 5 }}>{displayedEnemy.name}</Window>}
       {displayedEnemy && <Window style={{ position: 'absolute', top: '400px', left: '100px', width: '300px', padding: '5px', zIndex: 5 }}>{displayedEnemy.journalDescription}</Window>}
       <Window style={{ position: 'absolute', top: '300px', right: '10px', padding: '5px', zIndex: 5 }}>
-        { displayedEnemies.map(enemy => <div key={enemy.name} onClick={() => onClickEnemyMenuOption(enemy)}>{enemy.name}</div>)}
+        <CursorList
+          items={displayedEnemies}
+          getKey={e => e.name}
+          renderLabel={e => <div>{e.name}</div>}
+          onSelect={onClickEnemyMenuOption}
+        />
       </Window>
     </> 
   )
@@ -91,14 +97,23 @@ const JournalTypeView = (props: { world: World }): JSX.Element => {
     setJournalMenuState(newJournalMenuState);
   }
 
+  const journalOptions = [
+    JournalMenuState.ENEMIES,
+    JournalMenuState.TECHNIQUES,
+  ]
+
   return (
     <>
       <AnimatePresence mode="wait">
         {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
       </AnimatePresence>
       <Window style={{ position: 'absolute', top: '300px', left: '10px', padding: '5px', zIndex: 5 }}>
-        <div onClick={() => onClickJournalMenuOption(JournalMenuState.ENEMIES)}>Enemies</div>
-        <div onClick={() => onClickJournalMenuOption(JournalMenuState.TECHNIQUES)}>Techniques</div>
+        <CursorList
+          items={journalOptions}
+          getKey={s => s}
+          renderLabel={s => <div>{s}</div>}
+          onSelect={onClickJournalMenuOption}
+        />
       </Window>
     </> 
   )
@@ -117,50 +132,16 @@ const LocationNameView = (props: { world: World }): JSX.Element => <Window style
 const NowPlayingView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: 'left', padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>
 const SpiritsView = (props: { world: World }): JSX.Element => <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }} delay={0.25}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
 
-const SelectableOption = (props: { selected: boolean, children: React.ReactNode}): JSX.Element =>  <div style={{ position: 'relative'}}>{props.selected && <MenuCursor />}{props.children}</div>;
-
-const MenuCursor = () => (
-  <motion.img
-    src="/reaper/ui/cursor.png" 
-    alt=""
-    style={{
-      width: '24px',       
-      imageRendering: 'pixelated',
-      position: 'absolute',
-      left: '-24px',
-      top: '10%',
-    }}
-    initial={{ opacity: 0, x: 4 }}
-    animate={{
-      opacity: 1,
-      x: [0, -4, 0],
-    }}
-    transition={{
-      x: {
-        repeat: Infinity,
-        duration: 0.6,
-        ease: 'easeInOut',
-      },
-      opacity: { duration: 0.15 },
-    }}
-  />
-);
-
-
 const MenuOptions = observer((props: { world: World }): JSX.Element => {
-  const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const { world } = props;
   const style: React.CSSProperties = {
     zIndex: 5,
     position: 'absolute',
     right: '20px',
     bottom: '40px',
+    padding: '5px'
   }
 
-  const onClickOption = (option, i) => {
-    setSelectedIndex(i);
-    world.setMenu(option.menuState);
-  }
 
   const options = [
     { label: "Inventory", menuState: MenuState.INVENTORY },
@@ -170,11 +151,12 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
 
   return (
     <Window style={style}>
-      <div className={classNames.menuContainer}>
-        {options.map((option, i) => (
-          <SelectableOption selected={i===selectedIndex} key={option.label}><span onClick={() => onClickOption(option, i)}>{option.label}</span></SelectableOption>
-        ))}
-      </div>
+      <CursorList
+        items={options}
+        getKey={o => o.label}
+        renderLabel={o => <span>{o.label}</span>}
+        onSelect={(option) => world.setMenu(option.menuState)}
+      />
     </Window>
   )
 });
@@ -217,8 +199,6 @@ const AllyBarView = (props: { world: World }): JSX.Element => {
     </div>
   )
 }
-
-
 
 const expandFromCenterTransition = {
   initial: {

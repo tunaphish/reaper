@@ -34,7 +34,7 @@ const seedLocalStorage = () => {
     JSON.stringify({
       spirits: 120,
       seenEnemies: [
-        // { enemyName: "Fencer", seenAt: Date.now() - 86400000 },
+        { enemyName: "Fencer", seenAt: Date.now() - 86400000 },
         { enemyName: "Knight", seenAt: Date.now() },
       ],
     })

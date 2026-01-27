@@ -22,3 +22,4 @@ tags:
 	- score system
 	- linear progression to ensure reasonable progress, doens't open til game does
 	- alternatively no healing
+- Crunchy combat informing exposition, narrative, etc

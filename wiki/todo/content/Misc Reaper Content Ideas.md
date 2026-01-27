@@ -270,3 +270,22 @@ A flower shopkeep who cares very much about beautiful things.
 - Gives you love flower (can only have one inventory) when you first meet her
 - What regret do you have after death that spurs you on to be beautiful?
 
+
+
+# Lack of Self Awareness
+
+Guilt and self awareness does not purify you
+Just like guilt does not purify sin. Self awareness does not absolve your inaction. You call me a slave to my emotions but you're a slave to your mind.
+
+Why is it only through considerable effort that I am able to feel something. Anything. At all. 
+
+It seems in my confusing self centered self I mistook her empathy for a genuine internal sense of annoyance? From my having felt something negative and expressing that negativity to her. Maybe they’re the same ? And it’s just how the rational brain interprets that event that matters. Going back to the rational rather than everything that is so important. I valued structure so deeply that I wasn’t able to hear what my heart was saying. Just a jumbled mess of vague thoughts and ideas that have no meaning understandable by my rational mind. Why is it that I feel the need to write so often now. That guy at the bar. The lonely guy who just wanted to chat. I wonder if he knew he sucked. That he could see in my insincere gestures that his work was genuinely awful. I continuously go into this loop of self awareness that doesn’t allow me to feel. My nipples are chill in the cool wind. The loop. The loop. The loop. Am I absolved of the guilt because I’m aware that I’m aware. Even noticing the loop becomes this meta wave of self awareness that I have to break and then I notice the breaking and the noticing of the noticing of the breaking and another loop begins and I notice the pattern of patterns and this itself becomes a pattern. Is there really truly no end? I feel like I’m going crazy. 
+
+Look at this sunset. Describe it without using words. For a split second. I had a feeling well from my chest. Words are lies. That feeling is the truth. Even now as the words pierce your heart your using your mind to interpret it instead of simply feeling it. This being it. After all the thoughts aren’t yours. So if you’re thinking it. You aren’t it. The rational mind inhibits being it. 
+
+On a side tangent. To pursue good. Okay your values. Aka at an extreme what is good now. At an extreme. Even at the cost of others. Thus might is right. 
+
+Anyways just be it 
+
+You only think you are self aware. Because you think your intelligence has ascended beyond those who aren’t able to self obsess. But that’s still just your ego. You climbed the walls and play in the dark caves thinking you escaped. But the ones who do. Regardless are the ones without ego. Because the ego is the thoughts. If you act according to your instinct then intrinsically it’s not your ego. It’s you. You think them retarded but they’re realler than you. 
+

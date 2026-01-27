@@ -16,6 +16,10 @@ tags:
 - One shot. All health is drained. Allies are feared. 
 - Drop weight. Halves physical attack cast time. Increase stamina regeneration.
 - Targets last player to attack him
+- Micro vs macro
+- Next magic attack taken removes charge time
+- Different costs. Health. Blood cost technique. “No longer bleed “
+- Triggers. Heal as soon as someone is attacked “might put you into exhaustion
 
 
 # Technique Lore

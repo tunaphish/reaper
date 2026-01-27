@@ -3,11 +3,12 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { ImageLayer, ImageWindow, TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
+import { TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
 import { ActiveSpread } from './EncounterStore';
+import { ImageWindowView } from '../shared/ImageWindowView';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
 export const Ui = observer(({encounter}: {encounter: Encounter}) => {
@@ -140,30 +141,6 @@ const WindowContentView = (props: { window: Window, encounter: Encounter }) => {
     default:
       return null
   }
-}
-
-const ImageLayerView: React.FC<{ layer: ImageLayer }> = ({ layer }) => {
-  return (
-    <img
-      src={layer.src}
-      draggable={false}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: layer.fit ?? 'contain',
-        objectPosition: 'bottom center',
-        zIndex: layer.z ?? 0,
-      }}
-    />
-  )
-}
-
-const ImageWindowView = (props: { imageWindow: ImageWindow }) => {
-  return props.imageWindow.layers.map((layer, i) => (
-    <ImageLayerView key={i} layer={layer} />
-  ));
 }
 
 const TextWindowView = (props: { textWindow: TextWindow }) => {

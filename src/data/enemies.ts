@@ -42,6 +42,8 @@ export const fencer: Enemy = {
   position: [-1, 0, -10],
 
   activeTechniques: new Set(),
+
+  baseImageSrc: '/reaper/images/fencer.png',
 };
 
 
@@ -80,6 +82,7 @@ export const knight: Enemy = {
   position: [1, 0, -5],
 
   activeTechniques: new Set(),
+  baseImageSrc: '/reaper/images/knight.gif',
 };
 
 export const enemies = [

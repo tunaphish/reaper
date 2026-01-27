@@ -30,4 +30,6 @@ export type Enemy = Combatant & {
   // temp vars
   strategyIndex?: number;
   timeTilNextAction: number;
+
+  baseImageSrc: string;
 };

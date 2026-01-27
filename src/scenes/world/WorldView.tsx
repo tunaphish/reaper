@@ -10,6 +10,8 @@ import { Meter } from '../battle/ResourceDisplay';
 import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
 import { CursorList } from './CursorList';
+import { ImageWindowView } from '../shared/ImageWindowView';
+import { EventType, ImageWindow } from '../../model/spread';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -50,6 +52,47 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
 
+const getEnemyImageView = (enemy: Enemy): ImageWindow =>{
+  return {
+    type: EventType.IMAGE,
+    layout: {
+      x: 100,
+      y: 200,
+      width: 250,
+      height: 250,
+    },
+    layers: [{
+      src: enemy.baseImageSrc,
+    }]
+  }
+}
+
+const ImageWindowViewWrapper = (props: { imageWindow: ImageWindow }): JSX.Element => {
+  const { layout } = props.imageWindow;
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    width: layout?.width ?? 380,
+    height: layout?.height ?? 140,
+    left: layout?.x ?? 225,
+    top: layout?.y ?? 620,
+  }
+  return (
+    <div style={style}>
+      <ImageWindowView imageWindow={props.imageWindow}/>
+    </div>
+  )
+}
+
+const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
+  const enemyImageWindow: ImageWindow = getEnemyImageView(props.enemy);
+  return (
+    <>
+      <Window style={{ position: 'absolute', top: '175px', left: '100px', padding: '5px', zIndex: 10 }}>{props.enemy.name}</Window>
+      <Window style={{ position: 'absolute', top: '400px', left: '75px', width: '300px', padding: '5px', zIndex: 10 }}>{props.enemy.journalDescription}</Window>
+      <ImageWindowViewWrapper imageWindow={enemyImageWindow}/>
+    </>
+  )
+}
 const EnemyListView = (props: { world: World }): JSX.Element => {
   const [displayedEnemy, setDisplayedEnemy] = React.useState<Enemy>(null);
   const displayedEnemies = getDisplayedEnemies(enemies, props.world.worldStore.playerSave.seenEnemies);
@@ -65,9 +108,8 @@ const EnemyListView = (props: { world: World }): JSX.Element => {
 
   return (
     <>
-      {displayedEnemy && <Window style={{ position: 'absolute', top: '350px', left: '200px', padding: '5px', zIndex: 5 }}>{displayedEnemy.name}</Window>}
-      {displayedEnemy && <Window style={{ position: 'absolute', top: '400px', left: '100px', width: '300px', padding: '5px', zIndex: 5 }}>{displayedEnemy.journalDescription}</Window>}
-      <Window style={{ position: 'absolute', top: '300px', right: '10px', padding: '5px', zIndex: 5 }}>
+      {displayedEnemy && <DisplayedEnemy enemy={displayedEnemy} />}
+      <Window style={{ position: 'absolute', bottom: '60px', left: '20px', padding: '5px', zIndex: 10 }}>
         <CursorList
           items={displayedEnemies}
           getKey={e => e.name}
@@ -107,7 +149,7 @@ const JournalTypeView = (props: { world: World }): JSX.Element => {
       <AnimatePresence mode="wait">
         {journalMenuState === JournalMenuState.ENEMIES && <EnemyListView world={props.world}/>}
       </AnimatePresence>
-      <Window style={{ position: 'absolute', top: '300px', left: '10px', padding: '5px', zIndex: 5 }}>
+      <Window style={{ position: 'absolute', bottom: '60px', left: '150px', padding: '5px', zIndex: 10 }}>
         <CursorList
           items={journalOptions}
           getKey={s => s}
@@ -138,7 +180,7 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
     zIndex: 5,
     position: 'absolute',
     right: '20px',
-    bottom: '40px',
+    bottom: '50px',
     padding: '5px'
   }
 

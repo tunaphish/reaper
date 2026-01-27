@@ -1,6 +1,6 @@
 # Inspo
 - Blackout, Psychogenesis
-
+Earendel reze tongue intro
 # Systems
 - Tap everyone to fight to begin channeling aura
 - magic is the source of depression... techniques have weaknesses...

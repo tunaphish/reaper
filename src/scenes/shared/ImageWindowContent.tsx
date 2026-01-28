@@ -18,6 +18,6 @@ const ImageLayerView: React.FC<{ layer: ImageLayer; }> = ({ layer }) => {
   );
 };
 
-export const ImageWindowView = (props: { imageWindow: ImageWindow; }): JSX.Element[] => {
+export const ImageWindowContent = (props: { imageWindow: ImageWindow; }): JSX.Element[] => {
   return props.imageWindow.layers.map((layer, i) => <ImageLayerView key={i} layer={layer} />);
 };

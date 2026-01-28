@@ -1,2 +1,2 @@
 export { Window } from './Window';
-export { ImageWindowView } from './ImageWindowView';
+export { ImageWindowContent } from './ImageWindowContent';

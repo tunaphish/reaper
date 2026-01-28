@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import classNames from './world.module.css';
 import { World } from './World';
 import { MenuState } from './worldStore';
@@ -10,8 +10,9 @@ import { Meter } from '../battle/ResourceDisplay';
 import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
 import { CursorList } from '../shared/CursorList';
-import { ImageWindowView, Window } from '../shared';
+import { ImageWindowContent, Window } from '../shared';
 import { EventType, ImageWindow } from '../../model/spread';
+import { PanelWindow } from '../shared/Window';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -56,8 +57,8 @@ const getEnemyImageView = (enemy: Enemy): ImageWindow =>{
   return {
     type: EventType.IMAGE,
     layout: {
-      x: 100,
-      y: 200,
+      x: 225,
+      y: 325,
       width: 250,
       height: 250,
     },
@@ -67,29 +68,15 @@ const getEnemyImageView = (enemy: Enemy): ImageWindow =>{
   }
 }
 
-const ImageWindowViewWrapper = (props: { imageWindow: ImageWindow }): JSX.Element => {
-  const { layout } = props.imageWindow;
-  const style: React.CSSProperties = {
-    position: 'absolute',
-    width: layout?.width ?? 380,
-    height: layout?.height ?? 140,
-    left: layout?.x ?? 225,
-    top: layout?.y ?? 620,
-  }
-  return (
-    <div style={style}>
-      <ImageWindowView imageWindow={props.imageWindow}/>
-    </div>
-  )
-}
-
 const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
   const enemyImageWindow: ImageWindow = getEnemyImageView(props.enemy);
   return (
     <>
       <Window style={{ position: 'absolute', top: '175px', left: '100px', padding: '5px', zIndex: 10 }}>{props.enemy.name}</Window>
       <Window style={{ position: 'absolute', top: '400px', left: '75px', width: '300px', padding: '5px', zIndex: 10 }}>{props.enemy.journalDescription}</Window>
-      <ImageWindowViewWrapper imageWindow={enemyImageWindow}/>
+      <PanelWindow window={enemyImageWindow}>
+        <ImageWindowContent imageWindow={enemyImageWindow}/>
+      </PanelWindow>
     </>
   )
 }

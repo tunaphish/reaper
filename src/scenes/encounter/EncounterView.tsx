@@ -1,15 +1,15 @@
 import * as React from 'react';
 
 import { observer } from 'mobx-react-lite';
-import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { TextSpeed, TextWindow, Window as WindowModel, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, Event, ChoiceWindow, Option } from '../../model/spread';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
 import { ActiveSpread } from './EncounterStore';
-import { ImageWindowView, Window } from '../shared';
+import { ImageWindowContent } from '../shared';
 import { MenuCursor } from '../shared/CursorList';
+import { PanelWindow } from '../shared/Window';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
 export const Ui = observer(({encounter}: {encounter: Encounter}) => {
@@ -43,41 +43,6 @@ const SpreadView = observer(({activeSpread, encounter, activeSpreadIndex}: Sprea
      
 })
 
-const expandFromCenterTransition = {
-  initial: {
-    scaleX: 0,
-    transformOrigin: "center",
-    
-  },
-  animate: {
-    scaleX: 1,
-    
-    transition: {
-      duration: 0.15,
-      ease: "easeOut",
-    },
-  },
-  exit: {
-    scaleX: 0,
-    transition: {
-      duration: 0.15,
-      ease: "easeIn",
-    },
-  },
-};
-
-const anchorToTransform = (anchor: WindowLayout['anchor']) => {
-  switch (anchor) {
-    case 'top-left': return 'translate(0, 0)'
-    case 'top-right': return 'translate(-100%, 0)'
-    case 'bottom-left': return 'translate(0, -100%)'
-    case 'bottom-right': return 'translate(-100%, -100%)'
-    case 'center':
-    default:
-      return 'translate(-50%, -50%)'
-  }
-}
-
 type InteractableWindowProps = {
   encounter: Encounter, 
   window: WindowModel,
@@ -85,16 +50,7 @@ type InteractableWindowProps = {
 }
 
 const InteractableWindow = ({window, encounter, activeSpreadsIndex}: InteractableWindowProps) => {
-  const {layout, advanceTimerInMs} = window;
-    const style: React.CSSProperties = {
-      position: 'absolute',
-      width: layout?.width ?? 380,
-      height: layout?.height ?? 140,
-      left: layout?.x ?? 225,
-      top: layout?.y ?? 620,
-      transform: anchorToTransform(layout?.anchor ?? 'center'),
-    }
-
+  const {advanceTimerInMs} = window;
     React.useEffect(() => {
       if (!advanceTimerInMs) return;
 
@@ -105,7 +61,6 @@ const InteractableWindow = ({window, encounter, activeSpreadsIndex}: Interactabl
       return () => clearTimeout(timer);
     }, [advanceTimerInMs, encounter])
     
-
     // const activeSpread = encounter.encounterStore.activeSpreads[activeSpreadsIndex];
     // const isLastWindow = window === activeSpread.spread.events[activeSpread.spread.events.length-1];
     const isInteractable = !advanceTimerInMs;
@@ -116,17 +71,17 @@ const InteractableWindow = ({window, encounter, activeSpreadsIndex}: Interactabl
     }
     
     return (
-      <Window onClick={onClickWindow} style={style}>
+      <PanelWindow onClick={onClickWindow} window={window}>
         {isInteractable && <MenuCursor/>}
         <WindowContentView window={window} encounter={encounter}/>
-      </Window>
+      </PanelWindow>
     )
 }
 
 const WindowContentView = (props: { window: WindowModel, encounter: Encounter }) => {
   switch (props.window.type) {
     case EventType.IMAGE:
-      return <ImageWindowView imageWindow={props.window} />
+      return <ImageWindowContent imageWindow={props.window} />
     case EventType.TEXT:
       return <TextWindowView textWindow={props.window} />
     case EventType.CHOICE:

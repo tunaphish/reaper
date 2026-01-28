@@ -8,6 +8,11 @@ tags:
 - [ ] No Character Arcs over course of game. 
 	- [ ] Mostly front and backloaded. Revelations should clue you in on the nature of what you are experiencing.
 
+- Don’t include height on purpose to show a character blathering on and on 
+- Everyone learns pose. Or aesthetics. Does more damage?
+
+• ⁃ Pose during a conversation
+
 
 - constantly recontextualizing previous abilities and techniques
 	- Menu that makes no sense until it’s reconfextualized and super powerful

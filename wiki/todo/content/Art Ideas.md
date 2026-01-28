@@ -4,7 +4,12 @@ tags:
   - reaper
   - artstyle
 ---
+- Condition fulfilled shader
+- Steal png from chrono ark for facing 
+• ⁃ Eyes and hair flowing for charging magic
+
 - spinning pixel CD in now playing
+	-  or just a music notes
 
 - Black and white. You start drawing tomorrow. Eji vs keshi 1v1. Flow state where AP just keeps streaming you don’t stop. Attacking. The attacks just queue into each other. Some kind of bankai where there’s no health. But more so and meter. 
 - Mine and missing textures sisters

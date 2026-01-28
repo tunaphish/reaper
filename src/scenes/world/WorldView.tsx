@@ -9,8 +9,8 @@ import { Meter } from '../battle/ResourceDisplay';
 
 import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
-import { CursorList } from './CursorList';
-import { ImageWindowView } from '../shared/ImageWindowView';
+import { CursorList } from '../shared/CursorList';
+import { ImageWindowView, Window } from '../shared';
 import { EventType, ImageWindow } from '../../model/spread';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
@@ -216,8 +216,8 @@ const StartBar = (props: { world: World }): JSX.Element => {
   }
 
   return (
-    <Window style={{ width: '100%', pointerEvents: 'auto' }}>
-      <span onClick={onClick}>menu</span>
+    <Window style={{ width: '100%', pointerEvents: 'auto' }} onClick={onClick}>
+      <span>menu</span>
     </Window>
   )
 }
@@ -226,7 +226,7 @@ const AllyBarView = (props: { world: World }): JSX.Element => {
   const { allies } = props.world;
   
   const style: React.CSSProperties = {
-    width: '100%',
+    width: '120px',
     padding: '5px',
   }
   
@@ -242,47 +242,3 @@ const AllyBarView = (props: { world: World }): JSX.Element => {
   )
 }
 
-const expandFromCenterTransition = {
-  initial: {
-    scaleX: 0,
-    transformOrigin: "center",
-    
-  },
-  animate: (delay) => ({
-    scaleX: 1,
-    transition: {
-      delay,
-      duration: 0.15,
-      ease: "easeOut",
-    },
-  }),
-  exit: {
-    scaleX: 0,
-    transition: {
-      duration: 0.15,
-      ease: "easeIn",
-    },
-  },
-};
-
-type WindowProps = {
-  children: React.ReactNode
-  style?: React.CSSProperties
-  delay?: number 
-}
-
-const Window = ({children, style, delay}: WindowProps) => {
-    return (
-      <motion.div 
-        variants={expandFromCenterTransition}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        custom={delay || 0}
-        className={classNames.window}
-        style={style}
-      >
-        {children}
-      </motion.div>
-    )
-}

@@ -3,44 +3,11 @@
   width: 100%;
 }
 
-.window {
-  background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  
-  border: 2px ridge white;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
-
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-}
-
 .textContainer {
   white-space: pre-wrap;   
   word-wrap: break-word;
   overflow-wrap: break-word;
   margin: 10px;
-}
-
-.interactionIndicator {
-  content: "";
-  border-top: 10px solid transparent;
-  border-right: 10px solid white;
-  border-bottom: 10px solid transparent;
-  opacity: 0;
-  animation: .5s steps(1,end) infinite blink-animation;
-
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 0;
-  height: 0;
-}
-
-@keyframes blink-animation {
-  50% { opacity: 1; }
 }
 
 /* Each letter cycles colors independently */

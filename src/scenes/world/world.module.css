@@ -31,7 +31,6 @@
 }
 
 .combatantBar {
-  background-color: black;
   display: flex;
   width: 100%;
 }
@@ -43,22 +42,6 @@
 .healthMeter {
     height: 3px;
 }
-
-.window {
-  background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  
-  border: 2px ridge white;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
-
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-}
-
-
 
 .item {
     all: unset;

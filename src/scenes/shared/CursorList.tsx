@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 
-const MenuCursor = () => (
+export const MenuCursor = () => (
   <motion.img
     src="/reaper/ui/cursor.png" 
     alt=""

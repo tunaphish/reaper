@@ -3,12 +3,13 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Encounter } from './Encounter';
-import { TextSpeed, TextWindow, Window, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
+import { TextSpeed, TextWindow, Window as WindowModel, WindowLayout, EventType, Spread, Event, ChoiceWindow, Option } from '../../model/spread';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
 import { ActiveSpread } from './EncounterStore';
-import { ImageWindowView } from '../shared/ImageWindowView';
+import { ImageWindowView, Window } from '../shared';
+import { MenuCursor } from '../shared/CursorList';
 
 // REPLACE KEY WITH SOMETHING ELSE... maybe ID
 export const Ui = observer(({encounter}: {encounter: Encounter}) => {
@@ -79,7 +80,7 @@ const anchorToTransform = (anchor: WindowLayout['anchor']) => {
 
 type InteractableWindowProps = {
   encounter: Encounter, 
-  window: Window,
+  window: WindowModel,
   activeSpreadsIndex: number,
 }
 
@@ -115,22 +116,14 @@ const InteractableWindow = ({window, encounter, activeSpreadsIndex}: Interactabl
     }
     
     return (
-      <motion.div 
-        variants={expandFromCenterTransition}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        <div onClick={onClickWindow} className={classNames.window} style={style}>
-          <WindowContentView window={window} encounter={encounter}/>
-          {isInteractable && <div className={classNames.interactionIndicator}/>}
-        </div>
-      </motion.div>
-      
+      <Window onClick={onClickWindow} style={style}>
+        {isInteractable && <MenuCursor/>}
+        <WindowContentView window={window} encounter={encounter}/>
+      </Window>
     )
 }
 
-const WindowContentView = (props: { window: Window, encounter: Encounter }) => {
+const WindowContentView = (props: { window: WindowModel, encounter: Encounter }) => {
   switch (props.window.type) {
     case EventType.IMAGE:
       return <ImageWindowView imageWindow={props.window} />

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo/content/Art Ideas.md",
+                "file": "todo/Environment Artstyle.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Art Ideas"
+              "title": "Environment Artstyle"
             }
           }
         ]
@@ -171,7 +171,10 @@
   },
   "active": "11cd94652c4efe89",
   "lastOpenFiles": [
-    "todo/content/Misc Reaper Content Ideas.md",
+    "todo/Ideate Conditions for Unlocking.md",
+    "Misc Reaper Content Ideas.md",
+    "overview.md",
+    "todo/content/Art Ideas.md",
     "todo/Potential Reaper Refactors.md",
     "todo/Integrate Battle Intros - Initiate Command.md",
     "todo/content/Rough Reaper Enemy Ideas.md",
@@ -188,9 +191,7 @@
     "todo/systems/Ideate Cutscene Designer.md",
     "todo/Sound Design.md",
     "todo/content/Eji Dog Scene.md",
-    "todo/content/Art Ideas.md",
     "architecture/inbox.md",
-    "overview.md",
     "architecture",
     "Souls as trophies.md",
     "todo/Ideate Window Presentation Driving Gameplay.md",
@@ -199,7 +200,6 @@
     "symbols/Enemies - Normalcy.md",
     "missions/Design Overview.canvas",
     "Story Refactor Based on Identified Issues.md",
-    "missions/The Hikikomori - Shut In.md",
     "todo/Battle System.canvas",
     "todo/cutscene-designer.canvas",
     "archive/media/window-ideation.png",

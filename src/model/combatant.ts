@@ -21,7 +21,6 @@ export type Combatant = Option & {
   activeTechniques: Set<Technique>;
 
   status: Status;
-  position: [x: number, y: number, z: number];
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

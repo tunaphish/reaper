@@ -39,7 +39,6 @@ export const fencer: Enemy = {
   // temp props
   timeTilNextAction: 0,
   status: Status.NORMAL,
-  position: [-1, 0, -10],
 
   activeTechniques: new Set(),
 
@@ -79,7 +78,6 @@ export const knight: Enemy = {
   timeTilNextAction: 0,
 
   status: Status.NORMAL,
-  position: [1, 0, -5],
 
   activeTechniques: new Set(),
   baseImageSrc: '/reaper/images/knight.gif',

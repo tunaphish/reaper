@@ -128,15 +128,15 @@ const MenuContainer = observer((props: { battleScene: Battle }) => {
 
 
 
-export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
-    const { allies } = props.scene.battleStore;
+export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
+    const { allies } = props.battle.battleStore;
     const onClickalliesMember = (member: Ally) => {
-      props.scene.openInitialMenu(member);
+      props.battle.openInitialMenu(member);
     }
 
     return (
         <div className={styles.container}>
-
+          <Description  battle={props.battle}/>
           <div style={{ flex: 4, zIndex: -1 }}> 
           </div>
           <div className={styles.combatantBar}>
@@ -144,12 +144,12 @@ export const BattleView = observer((props: { scene: Battle }): JSX.Element => {
                 return( 
                   <div style={{ position: 'relative', flex: '1' }} key={member.name}>
                     <TechniqueViewManager combatant={member} />
-                    <ResourceDisplay battleScene={props.scene} combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
+                    <ResourceDisplay combatant={member} onClickCell={() => onClickalliesMember(member)} key={member.name}/>
                   </div>
                 )
               })}
           </div>
-          <MenuContainer battleScene={props.scene}/>
+          <MenuContainer battleScene={props.battle}/>
         </div>
       )
 });

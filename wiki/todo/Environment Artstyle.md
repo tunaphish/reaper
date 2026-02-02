@@ -1,7 +1,7 @@
 - [ ] Ideate Overworld Artstyle -> 
 - [ ] relate this to vision
 - [ ] relate this to other world building
-
+- [ ] PC-98, Cybersigilism, niche artstyles (I love these niche styles and want to explore them)
 # Inspiration 
 - Omori -> Strong color pallete Pixel Art 2D Overworld. hand Drawn Battle system
 - Ghibli Films -> Density of environments. Appeals to Children and Adults. Beautiful environments

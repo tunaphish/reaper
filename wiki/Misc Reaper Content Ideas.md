@@ -13,6 +13,9 @@ tags:
 
 • ⁃ Pose during a conversation
 
+- "i found an old 'to-do' list in my mom's handwriting from 2003.
+	- item #3 was 'buy a new dress for myself.'
+	- it was crossed out, and underneath she wrote, 'buy school shoes for little lamb.' that's me, i'm little lamb. i looked at my shelf of medals and certificates and realized they were all paid for in dresses she never wore."
 
 - constantly recontextualizing previous abilities and techniques
 	- Menu that makes no sense until it’s reconfextualized and super powerful

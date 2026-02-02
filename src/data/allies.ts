@@ -29,7 +29,6 @@ export const Eji: Ally = {
   activeTechniques: new Set(),
   
   status: Status.NORMAL,
-  position: [-2, 0, 2],
   
   menuPortraitPath: '/reaper/images/cloud.png',
 };
@@ -56,7 +55,6 @@ export const Keshi: Ally = {
   activeTechniques: new Set(),
   
   status: Status.NORMAL,
-  position: [0, 0, 2],
   
   menuPortraitPath: '/reaper/images/barret.png',
 };
@@ -82,7 +80,6 @@ export const Elise: Ally = {
   activeTechniques: new Set(),
 
   status: Status.NORMAL,
-  position: [2, 0, 2],
 
   menuPortraitPath: '/reaper/images/tifa.png',
 };

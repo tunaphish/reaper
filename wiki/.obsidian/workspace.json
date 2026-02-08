@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo/Environment Artstyle.md",
+                "file": "Misc Reaper Content Ideas.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Environment Artstyle"
+              "title": "Misc Reaper Content Ideas"
             }
           }
         ]
@@ -171,30 +171,30 @@
   },
   "active": "11cd94652c4efe89",
   "lastOpenFiles": [
-    "todo/Ideate Conditions for Unlocking.md",
-    "Misc Reaper Content Ideas.md",
-    "overview.md",
+    "todo/content/Rough Reaper Enemy Ideas.md",
+    "todo/content/Eji Dog Scene.md",
     "todo/content/Art Ideas.md",
+    "Misc Reaper Content Ideas.md",
+    "todo/Ideate Window Presentation Driving Gameplay.md",
+    "todo/Environment Artstyle.md",
+    "todo/Ideate Conditions for Unlocking.md",
+    "overview.md",
     "todo/Potential Reaper Refactors.md",
     "todo/Integrate Battle Intros - Initiate Command.md",
-    "todo/content/Rough Reaper Enemy Ideas.md",
     "todo/systems/Implement Base Combat.md",
     "todo/Research Analog Horror.md",
     "todo/content/Class Ideation.canvas",
     "todo/content/Class Ideation and Technique Lore.md",
     "todo/content/Blog Topics.md",
-    "todo/Environment Artstyle.md",
     "todo/systems/Menu Navigation.md",
     "todo/Reaper Progression System.md",
     "todo/Ideate Overworld Map Navigation.md",
     "todo/Faking Difficulty - Helldivers Article.md",
     "todo/systems/Ideate Cutscene Designer.md",
     "todo/Sound Design.md",
-    "todo/content/Eji Dog Scene.md",
     "architecture/inbox.md",
     "architecture",
     "Souls as trophies.md",
-    "todo/Ideate Window Presentation Driving Gameplay.md",
     "todo/artstyle/Window Artstyle.md",
     "todo/systems/Ideate Battle Triggers and Combos.md",
     "symbols/Enemies - Normalcy.md",

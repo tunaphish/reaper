@@ -4,7 +4,7 @@ import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import { ActiveSpread, EncounterStore } from './EncounterStore';
 import { Ui } from './EncounterView'; 
-import { Spread, EventType, SoundEvent } from '../../model/spread';
+import { Encounter as EncounterModel, EventType, SoundEvent } from '../../model/encounter';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -23,7 +23,7 @@ export class Encounter extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  init(data: { spread: Spread }): void {
+  init(data: { spread: EncounterModel }): void {
     this.encounterStore = new EncounterStore();
     const activeSpread: ActiveSpread = { spread: data.spread, spreadIndex: -1}
     this.encounterStore.pushActiveSpread(activeSpread)
@@ -60,13 +60,13 @@ export class Encounter extends Phaser.Scene {
         this.music.play();
         this.advanceSpread(activeSpreadsIndex);
         break;
-      case EventType.END_SPREAD:
+      case EventType.END_ENCOUNTER:
         this.endEncounter();
         break;
     }
   }
 
-  addSpread(spread: Spread): void {
+  addSpread(spread: EncounterModel): void {
     this.encounterStore.pushActiveSpread({ spread, spreadIndex: -1 });
     this.advanceSpread(this.encounterStore.activeSpreads.length-1);
   }

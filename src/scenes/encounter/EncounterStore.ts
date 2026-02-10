@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
-import { Spread } from "../../model/spread";
+import { Encounter } from "../../model/encounter";
 
 export type ActiveSpread = {
-  spread: Spread;
+  spread: Encounter;
   spreadIndex: number; 
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from './shared.module.css';
 import { motion } from 'framer-motion';
-import { WindowLayout, Window as WindowModel } from '../../model/spread';
+import { WindowLayout, Window as WindowModel } from '../../model/encounter';
 
 const expandFromCenterTransition = {
   initial: {

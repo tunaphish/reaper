@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { observer } from 'mobx-react-lite';
 import { Encounter } from './Encounter';
-import { TextSpeed, TextWindow, Window as WindowModel, EventType, Event, ChoiceWindow, Option } from '../../model/spread';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, Event, ChoiceWindow, Option } from '../../model/encounter';
 import classNames from './encounter.module.css';
 
 import { TypewriterText } from './TypewriterText';
@@ -102,7 +102,7 @@ const OptionView = ({option, encounter}: {option: Option, encounter: Encounter})
   const onClick = () => {
     if (selected) return;
     setSelected(true);
-    encounter.addSpread(option.nextSpread)
+    encounter.addSpread(option.nextEncounter)
   }
   return (
     <li onClick={onClick} className={selected ? classNames.disabled : ''}>

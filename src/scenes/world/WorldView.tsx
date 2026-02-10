@@ -11,7 +11,7 @@ import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
 import { CursorList } from '../shared/CursorList';
 import { ImageWindowContent, Window } from '../shared';
-import { EventType, ImageWindow } from '../../model/spread';
+import { EventType, ImageWindow } from '../../model/encounter';
 import { PanelWindow } from '../shared/Window';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageLayer, ImageWindow } from '../../model/spread';
+import { ImageLayer, ImageWindow } from '../../model/encounter';
 
 const ImageLayerView: React.FC<{ layer: ImageLayer; }> = ({ layer }) => {
   return (

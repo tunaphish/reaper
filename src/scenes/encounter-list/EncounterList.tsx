@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import classNames from './encounterlist.module.css';
-import * as spreads from '../../data/spreads/example'
+import * as spreads from '../../data/encounters/example'
 
 const ALL_SPREADS = Object.values(spreads)
 

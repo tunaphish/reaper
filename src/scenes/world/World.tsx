@@ -11,8 +11,8 @@ import { MenuState, WorldStore } from './worldStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import * as EXAMPLE_SPREADS from '../../data/spreads/example';
-import { Spread } from '../../model/spread';
+import * as EXAMPLE_SPREADS from '../../data/encounters/example';
+import { Encounter } from '../../model/encounter';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -102,7 +102,7 @@ export class World extends Phaser.Scene {
     this.triggerGroup.children.iterate(zone => {
       const overlapping = zone.getData("overlapping");
       if (overlapping && !this.physics.overlap(zone, this.player)) {
-        const encounter: Spread = zone.getData("encounter");
+        const encounter: Encounter = zone.getData("encounter");
         zone.setData("overlapping", false);
         console.log('exit: ', encounter.id);
       }
@@ -181,7 +181,7 @@ export class World extends Phaser.Scene {
     zone.setData("overlapping", true);
 
     // play out encounter
-    const encounter: Spread  = zone.getData("encounter");
+    const encounter: Encounter  = zone.getData("encounter");
     console.log('enter: ', encounter.id);
   }
 }

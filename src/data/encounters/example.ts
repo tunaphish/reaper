@@ -1,6 +1,6 @@
-import { Spread, TextSpeed, EventType } from '../../model/spread';
+import { Encounter, TextSpeed, EventType } from '../../model/encounter';
 
-export const EXAMPLE_SPREAD: Spread = {
+export const EXAMPLE_SPREAD: Encounter = {
   id: 'Typewriter Test Example',
   events: [
     {
@@ -39,7 +39,7 @@ export const EXAMPLE_SPREAD: Spread = {
   ],
 };
 
-export const BUNNY_MASK_SPREAD: Spread = {
+export const BUNNY_MASK_SPREAD: Encounter = {
   id: 'Bunny Mask Example',
   events: [
     {
@@ -88,7 +88,7 @@ export const BUNNY_MASK_SPREAD: Spread = {
   ],
 };
 
-export const YES_NO_CHOICE_SPREAD: Spread = {
+export const YES_NO_CHOICE_SPREAD: Encounter = {
   id: 'Yes No Choice Spread',
   events: [
     {
@@ -98,7 +98,7 @@ export const YES_NO_CHOICE_SPREAD: Spread = {
       options: [
         {
           line: [{ text: 'yes' }],
-          nextSpread: {
+          nextEncounter: {
             id: 'yes yield',
             events: [
               {
@@ -111,7 +111,7 @@ export const YES_NO_CHOICE_SPREAD: Spread = {
         },
         {
           line: [{ text: 'no' }],
-          nextSpread: {
+          nextEncounter: {
             id: 'no yield',
             events: [
               {
@@ -127,7 +127,7 @@ export const YES_NO_CHOICE_SPREAD: Spread = {
   ],
 };
 
-export const INTERROGATION_SPREAD: Spread = {
+export const INTERROGATION_SPREAD: Encounter = {
   id: 'INTERROGATION Spread',
   events: [
     {
@@ -137,7 +137,7 @@ export const INTERROGATION_SPREAD: Spread = {
       options: [
         {
           line: [{ text: 'who was the victim?' }],
-          nextSpread: {
+          nextEncounter: {
             id: 'asdf',
             events: [
               {
@@ -156,7 +156,7 @@ export const INTERROGATION_SPREAD: Spread = {
         },
         {
           line: [{ text: 'but why male models' }],
-          nextSpread: {
+          nextEncounter: {
             id: 'zoolander',
             events: [
               {
@@ -175,9 +175,9 @@ export const INTERROGATION_SPREAD: Spread = {
         },
         {
           line: [{ text: 'Leave Conversation' }],
-          nextSpread: {
+          nextEncounter: {
             id: 'Leave',
-            events: [{ type: EventType.END_SPREAD }],
+            events: [{ type: EventType.END_ENCOUNTER }],
           },
         },
       ],

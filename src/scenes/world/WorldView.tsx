@@ -20,8 +20,8 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
     <div className={classNames.container}>
       <AnimatePresence mode="wait">
         {props.world.worldStore.menuState !== MenuState.NONE && <MenuContainer world={world} />}
-        <EncounterContainer world={world} />
       </AnimatePresence>
+      <EncounterContainer world={world} />
     </div>
   )
 });
@@ -219,13 +219,15 @@ const AllyBarView = (props: { world: World }): JSX.Element => {
 
 export const EncounterContainer = observer(({world}: {world: World}) => (
   <>
-    {
-      world.worldStore.windows.map((window, idx) => (
-        <PanelWindow window={window} key={idx}>
-          <WindowContentView window={window} world={world}/>
-        </PanelWindow>
-      ))
-    }
+    <AnimatePresence>
+      {
+        world.worldStore.windows.map((window, idx) => (
+          <PanelWindow window={window} key={idx}>
+            <WindowContentView window={window} world={world}/>
+          </PanelWindow>
+        ))
+      }
+    </AnimatePresence>
   </>
 ));
 

@@ -2,7 +2,8 @@
 finished:
 tags:
 ---
-- [ ] Plot is driven by Mission Structure and not Characters
+
+asdf- [ ] Plot is driven by Mission Structure and not Characters
 - [ ] Plot doesn't reflect latest writing
 - [ ] Lack of coherent World Building
 - [ ] No Character Arcs over course of game. 

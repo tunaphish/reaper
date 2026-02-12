@@ -1,12 +1,10 @@
----
-date: 2025-11-18
-tags:
-  - reaper
-  - artstyle
----
+- reaper just as a place to explore cool art ideas lmao
+
 - Condition fulfilled shader
 - Steal png from chrono ark for facing 
 • ⁃ Eyes and hair flowing for charging magic
+- Wigglepaint
+
 
 - spinning pixel CD in now playing
 	-  or just a music notes

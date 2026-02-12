@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './encounter.module.css';
+import styles from './shared.module.css';
 import { TextEffect, TextSpeed, TextToken } from '../../model/encounter';
 import { LimitBreakLetter } from './LimitBreakLetter';
 import { FrenzyLetter } from './FrenzyLetter';

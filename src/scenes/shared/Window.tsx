@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from './shared.module.css';
 import { motion } from 'framer-motion';
-import { WindowLayout, Window as WindowModel } from '../../model/encounter';
+import { Window as WindowModel } from '../../model/encounter';
 
 const expandFromCenterTransition = {
   initial: {
@@ -30,10 +30,9 @@ type WindowProps = {
   style?: React.CSSProperties;
   delay?: number;
   onClick?: () => void;
-  window?: WindowModel
 };
 
-export const Window = ({ children, style, delay = 0, onClick, window }: WindowProps) => (
+export const Window = ({ children, style, delay = 0, onClick }: WindowProps) => (
   <motion.div 
     variants={expandFromCenterTransition}
     initial="initial"
@@ -64,27 +63,12 @@ export const PanelWindow = ({ children, style, delay = 0, onClick, window }: Pan
     height: layout?.height ?? 140,
     left: layout?.x ?? 225,
     top: layout?.y ?? 620,
-    transform: anchorToTransform(layout?.anchor ?? 'center'),
     ...style
   }
 
   return (
-    <div style={wrapperStyle}>
-      <Window style={style} onClick={onClick} delay={delay}>
-        {children}
-      </Window>
-    </div>
+    <Window style={wrapperStyle} onClick={onClick} delay={delay}>
+      {children}
+    </Window>
   );
 };
-
-const anchorToTransform = (anchor: WindowLayout['anchor']) => {
-  switch (anchor) {
-    case 'top-left': return 'translate(0, 0)'
-    case 'top-right': return 'translate(-100%, 0)'
-    case 'bottom-left': return 'translate(0, -100%)'
-    case 'bottom-right': return 'translate(-100%, -100%)'
-    case 'center':
-    default:
-      return 'translate(-50%, -50%)'
-  }
-}

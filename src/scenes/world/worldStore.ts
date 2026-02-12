@@ -1,16 +1,17 @@
 import { makeAutoObservable } from "mobx";
+import { Window } from "../../model/encounter";
 
 export enum MenuState {
     NONE = 'none',
     NEUTRAL = 'neutral',
     INVENTORY = 'inventory',
     JOURNAL = 'journal',
-
 }
 
 export class WorldStore {
   menuState: MenuState = MenuState.NONE;
-  playerSave: PlayerSave
+  windows: Window[] = [];
+  playerSave: PlayerSave;
 
   constructor(playerSave: PlayerSave) {
     this.playerSave = playerSave;
@@ -19,5 +20,13 @@ export class WorldStore {
 
   setMenuState(menuState: MenuState): void{
     this.menuState = menuState;
+  }
+
+  pushWindow(window: Window): void {
+    this.windows.push(window);
+  }
+
+  setWindows(windows: []): void {
+    this.windows = windows;
   }
 }

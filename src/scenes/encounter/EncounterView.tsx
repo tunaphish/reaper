@@ -5,7 +5,7 @@ import { Encounter } from './Encounter';
 import { TextSpeed, TextWindow, Window as WindowModel, EventType, Event, ChoiceWindow, Option } from '../../model/encounter';
 import classNames from './encounter.module.css';
 
-import { TypewriterText } from './TypewriterText';
+import { TypewriterText } from '../shared/TypewriterText';
 import { ActiveSpread } from './EncounterStore';
 import { ImageWindowContent } from '../shared';
 import { MenuCursor } from '../shared/CursorList';

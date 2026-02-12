@@ -9,7 +9,6 @@ export type WindowLayout = {
   y?: number // bottom
   width?: number // px, default: 480
   height?: number // px, default: auto
-  anchor?: 'center' | 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right'
 };
 
 export enum EventType {
@@ -20,9 +19,12 @@ export enum EventType {
   END_ENCOUNTER,
 }
 
-export type BaseWindow = {
+export type BaseEvent = {
+  delayInMs?: number;
+}
+
+export type BaseWindow = BaseEvent & {
   layout?: WindowLayout
-  advanceTimerInMs?: number
 }
 
 export type TextEffect = 'normal' | 'frenzy' | 'limit'
@@ -40,9 +42,7 @@ export type TextWindow = BaseWindow & {
 
 export type ImageLayer = {
   src: string
-  z?: number
   fit?: 'cover' | 'contain'
-  // opacity?: number
 }
 
 export type ImageWindow = BaseWindow & {
@@ -50,7 +50,7 @@ export type ImageWindow = BaseWindow & {
   layers: ImageLayer[]
 }
 
-export type SoundEvent = {
+export type SoundEvent = BaseEvent & {
   type: EventType.SOUND
   key: string
   loop?: boolean
@@ -68,13 +68,9 @@ export type ChoiceWindow = BaseWindow & {
   isMutuallyExclusive: boolean
 }
 
-export type EndEncounterEvent = { 
-  type: EventType.END_ENCOUNTER
-}
-
 export type Window = TextWindow | ImageWindow | ChoiceWindow;
 
-export type Event = Window | SoundEvent | EndEncounterEvent;
+export type Event = Window | SoundEvent;
 
 export type Encounter = {
   id: string

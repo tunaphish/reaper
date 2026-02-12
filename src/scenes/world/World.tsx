@@ -12,7 +12,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter } from '../../model/encounter';
+import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -34,6 +34,8 @@ export class World extends Phaser.Scene {
 
   allies: Ally[];
   inventory: Inventory;
+
+  queuedEvents: Event[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -105,8 +107,12 @@ export class World extends Phaser.Scene {
         const encounter: Encounter = zone.getData("encounter");
         zone.setData("overlapping", false);
         console.log('exit: ', encounter.id);
+
+        // TODO handle actual exit conditions
+        this.worldStore.setWindows([]);
       }
     });
+    this.processQueuedEvents(delta);
   }
 
   pause(): void {
@@ -180,8 +186,39 @@ export class World extends Phaser.Scene {
     if (overlapping) return;
     zone.setData("overlapping", true);
 
-    // play out encounter
     const encounter: Encounter  = zone.getData("encounter");
-    console.log('enter: ', encounter.id);
+    this.queuedEvents.push(...encounter.events);
+  } 
+
+  processQueuedEvents(delta: number): void {
+    const toDelay: Event[] = [];
+
+    for (const event of this.queuedEvents) {
+      if (!event.delayInMs || event.delayInMs < 0) {
+        this.executeEvent(event)
+        continue;
+      }
+      event.delayInMs -= delta;
+      toDelay.push(event);
+    }
+    this.queuedEvents = toDelay;
+  }
+
+  executeEvent(event: Event): void {
+    if (isWindow(event)) {
+      this.worldStore.pushWindow(event);
+      return;
+    }
+    if (event.type === EventType.SOUND) {
+      const soundEvent = (event as SoundEvent);
+      this.music = this.sound.add(soundEvent.key, {
+        loop: soundEvent?.loop || false,  
+        volume: 0.5  
+      });
+      this.music.play();
+      return;
+    }
   }
 }
+
+const isWindow = (event: Event) => (event.type === EventType.CHOICE || event.type === EventType.IMAGE || event.type === EventType.TEXT);

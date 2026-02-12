@@ -6,12 +6,12 @@ import { World } from './World';
 import { MenuState } from './worldStore';
 import { observer } from 'mobx-react-lite';
 import { Meter } from '../battle/ResourceDisplay';
-
+import { TypewriterText } from '../shared/TypewriterText';
 import { enemies } from '../../data/enemies';
 import { Enemy } from '../../model/enemy';
 import { CursorList } from '../shared/CursorList';
 import { ImageWindowContent, Window } from '../shared';
-import { EventType, ImageWindow } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow } from '../../model/encounter';
 import { PanelWindow } from '../shared/Window';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
@@ -20,18 +20,19 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
     <div className={classNames.container}>
       <AnimatePresence mode="wait">
         {props.world.worldStore.menuState !== MenuState.NONE && <MenuContainer world={world} />}
+        <EncounterContainer world={world} />
       </AnimatePresence>
-      
-      <StartBar world={world} />
     </div>
   )
 });
+
+// #region Menu 
 
 const MenuContainer = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
 
   return (
-    <div className={classNames.menuContainer}>
+    <>
       {world.mapData.musicKey && <NowPlayingView world={world} />}
       <AnimatePresence mode="wait">
         {world.worldStore.menuState === MenuState.JOURNAL && <JournalTypeView world={world} />}
@@ -40,7 +41,7 @@ const MenuContainer = observer((props: { world: World }): JSX.Element => {
       <SpiritsView world={world} />
       <MenuOptions world={world} />
       <AllyBarView world={world} />
-    </div>
+    </>
   )
   
 });
@@ -57,8 +58,8 @@ const getEnemyImageView = (enemy: Enemy): ImageWindow =>{
   return {
     type: EventType.IMAGE,
     layout: {
-      x: 225,
-      y: 325,
+      x: 100,
+      y: 200,
       width: 250,
       height: 250,
     },
@@ -190,24 +191,6 @@ const MenuOptions = observer((props: { world: World }): JSX.Element => {
   )
 });
 
-const StartBar = (props: { world: World }): JSX.Element => {
-  const { world } = props;
-  const onClick = () => {
-    if (world.worldStore.menuState === MenuState.NONE) {
-      world.setMenu(MenuState.NEUTRAL);
-      return;
-    }
-
-    world.setMenu(MenuState.NONE);
-    return;
-  }
-
-  return (
-    <Window style={{ width: '100%', pointerEvents: 'auto' }} onClick={onClick}>
-      <span>menu</span>
-    </Window>
-  )
-}
 
 const AllyBarView = (props: { world: World }): JSX.Element => {
   const { allies } = props.world;
@@ -229,3 +212,37 @@ const AllyBarView = (props: { world: World }): JSX.Element => {
   )
 }
 
+ 
+// #endregion
+
+// #region Encounter
+
+export const EncounterContainer = observer(({world}: {world: World}) => (
+  <>
+    {
+      world.worldStore.windows.map((window, idx) => (
+        <PanelWindow window={window} key={idx}>
+          <WindowContentView window={window} world={world}/>
+        </PanelWindow>
+      ))
+    }
+  </>
+));
+
+const WindowContentView = (props: { window: WindowModel, world: World }) => {
+  switch (props.window.type) {
+    case EventType.IMAGE:
+      return <ImageWindowContent imageWindow={props.window} />
+    case EventType.TEXT:
+      return <TextWindowView textWindow={props.window} />
+    default:
+      return null
+  }
+}
+
+const TextWindowView = (props: { textWindow: TextWindow }) => {
+  const {line, speed} = props.textWindow;
+  return <TypewriterText line={line} textSpeed={speed || TextSpeed.NORMAL} />
+}
+
+// #endregion

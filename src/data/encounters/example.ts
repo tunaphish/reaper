@@ -47,19 +47,18 @@ export const BUNNY_MASK_SPREAD: Encounter = {
       layers: [
         {
           src: '/reaper/images/lofi-street.jpg',
-          z: 0,
           fit: 'cover',
         },
         {
           src: '/reaper/images/eji.png',
-          z: 1,
         },
       ],
       layout: {
+        x: 50,
+        y: 200,
         width: 140,
         height: 300,
       },
-      advanceTimerInMs: 200,
     },
     {
       type: EventType.IMAGE,
@@ -71,18 +70,22 @@ export const BUNNY_MASK_SPREAD: Encounter = {
         },
       ],
       layout: {
+        x: 90,
+        y: 300,
         width: 80,
         height: 110,
       },
+      delayInMs: 200,
     },
     {
       type: EventType.TEXT,
+      delayInMs: 300,
       line: [{ text: "Don't worry about what I look like . . ." }],
       layout: {
-        x: 300,
-        y: 550,
-        width: 150,
-        height: 100,
+        x: 100,
+        y: 200,
+        width: 200,
+        height: 80,
       },
     },
   ],
@@ -171,13 +174,6 @@ export const INTERROGATION_SPREAD: Encounter = {
                 } 
               },
             ],
-          },
-        },
-        {
-          line: [{ text: 'Leave Conversation' }],
-          nextEncounter: {
-            id: 'Leave',
-            events: [{ type: EventType.END_ENCOUNTER }],
           },
         },
       ],

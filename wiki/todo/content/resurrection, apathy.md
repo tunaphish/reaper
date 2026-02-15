@@ -1,0 +1,2 @@
+- The fact that technically you didn’t do anything and yet it feels like the biggest sin
+- a world entirely decided by other people

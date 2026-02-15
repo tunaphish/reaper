@@ -12,6 +12,29 @@ asdf- [ ] Plot is driven by Mission Structure and not Characters
 - Don’t include height on purpose to show a character blathering on and on 
 - Everyone learns pose. Or aesthetics. Does more damage?
 
+  
+
+- It’s our job to take power. It’s their job to hold it
+
+
+- Watching others fight is a lot bigger aspect. More anime moments 
+
+  
+
+- rapture playing. Your walking and cutscene is happening. Initial fight. Keshis just like can you fuck this guys up? Bet fifty bucks. Can initiate a challenge. Like that tattoo one I thought of. 
+- Anthem. Why the fuck is my memory showing up for you
+- Nah fuck you I have a better idea. He threatens to dive into your memories and you neeed to defend yourself
+
+  
+
+You have to watch your friend make the initial decision in his life that separates you forever. Your bonded mate. Because his ideals. What he wants leads him away. 
+
+  
+
+  
+
+- A young. Earnest. Loving kind of love. Nothing can’t last in the face of earnestness. The sardonic ice.
+
 • ⁃ Pose during a conversation
 
 - Your pee smells like coffee

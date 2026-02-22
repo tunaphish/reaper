@@ -13,6 +13,7 @@ import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWi
 import { PanelWindow } from '../shared/Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
+import { CursorList } from '../shared/CursorList';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -51,13 +52,22 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
     world.popMenu();
   }
 
+  const Content = menu?.isCursor ?
+    <CursorList 
+      items={menu.menuOptions}
+      getKey={(item) => item.display} 
+      renderLabel={(item) => <>{item.display}</>}
+      onSelect={(item) => { world.playChoiceSelectSound(); item.execute(); }}
+    /> :
+    <>{menu.menuOptions.map(option => <div key={option.display} onClick={() => onClick(option)}>{option.display}</div>)}</>
+
   return (
     <Window style={style}>
         <div style={{ color: 'black', background: 'white', }} onClick={(e) => onClickExit(e)}>
           X
         </div>
         <div style={{ padding: '5px' }}>
-          {menu.menuOptions.map(option => <div key={option.display} onClick={() => onClick(option)}>{option.display}</div>)}
+          {Content}
         </div>
     </Window>
   )

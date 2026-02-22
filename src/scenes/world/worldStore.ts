@@ -13,6 +13,7 @@ export type MenuOption = {
 export type Menu =  {
   onClose?: () => void;
   menuOptions: MenuOption[];
+  isCursor?: boolean;
 };
 
 

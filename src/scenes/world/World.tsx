@@ -7,15 +7,15 @@ import { WorldView } from './WorldView';
 import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
-import { Menu, MenuOption, MenuState, WorldStore } from './worldStore';
+import { Menu, MenuOption, WorldStore } from './worldStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
 import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+
 import { Enemy } from '../../model/enemy';
 import { enemies } from '../../data/enemies';
-import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -240,7 +240,8 @@ export class World extends Phaser.Scene {
       });
     const enemyJournalMenu: Menu = {
       onClose: () => this.worldStore.setEnemyJournalContent(null),
-      menuOptions: enemyJournalMenuOptions
+      menuOptions: enemyJournalMenuOptions,
+      isCursor: true,
     }
 
     const journalMenu: Menu = {

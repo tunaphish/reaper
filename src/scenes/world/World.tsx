@@ -7,12 +7,15 @@ import { WorldView } from './WorldView';
 import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { fencer } from '../../data/enemies';
-import { MenuState, WorldStore } from './worldStore';
+import { Menu, MenuOption, MenuState, WorldStore } from './worldStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
 import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+import { Enemy } from '../../model/enemy';
+import { enemies } from '../../data/enemies';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -131,15 +134,6 @@ export class World extends Phaser.Scene {
     this.scene.run('Battle', { enemies: [fencer] });
   }
 
-  setMenu(menuState: MenuState): void {
-    if (menuState === this.worldStore.menuState) {
-      this.choiceDisabledSound.play();
-      return;
-    }
-    this.choiceSelectSound.play();
-    this.worldStore.setMenuState(menuState);
-  }
-
   playChoiceSelectSound(): void {
     this.choiceSelectSound.play();
   }
@@ -219,6 +213,117 @@ export class World extends Phaser.Scene {
       return;
     }
   }
+
+  //#region input based actions
+  setAlly = (ally: Ally): void => {
+    this.worldStore.closeMenus();
+    this.playChoiceSelectSound();
+    const firstMenu = this.getMenus();
+    this.worldStore.pushMenu(firstMenu);
+    this.worldStore.setActiveAlly(ally);
+  }
+
+  popMenu = (): void => {
+    this.playChoiceDisabledSound();
+    this.worldStore.popMenu();
+  }
+
+  getMenus(): Menu {
+    const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
+      .map(enemy => {
+        return {
+          display: enemy.name,
+          execute: () => {
+            this.worldStore.setEnemyJournalContent(enemy);
+          }
+        }
+      });
+    const enemyJournalMenu: Menu = {
+      onClose: () => this.worldStore.setEnemyJournalContent(null),
+      menuOptions: enemyJournalMenuOptions
+    }
+
+    const journalMenu: Menu = {
+      menuOptions: [
+        {
+          display: "Enemies",
+          execute: () => {  
+            this.worldStore.pushMenu(enemyJournalMenu);
+          }
+        },
+        {
+          display: "Techniques",
+          execute: () => {  
+            console.log("techniques");
+          }
+        },
+      ]
+    };
+
+    const systemMenu: Menu = {
+      onClose: () => this.worldStore.setSystemsMenuOpen(false),
+      menuOptions: [
+        // {
+        //   display: "Inventory",
+        //   execute: () => {  
+        //     //
+        //   }
+        // },
+        {
+          display: "Journal",
+          execute: () => {  
+            this.worldStore.pushMenu(journalMenu);
+          }
+        },
+        {
+          display: "Exit",
+          execute: () => {  
+            this.worldStore.closeMenus();
+          }
+        },
+      ],  
+    }  
+    
+    const firstMenu: Menu = {
+      onClose: () => this.worldStore.setActiveAlly(null),
+      menuOptions: [
+        {
+          display: "Menu",
+          execute: () => {
+            this.worldStore.setSystemsMenuOpen(true);  
+            this.worldStore.pushMenu(systemMenu);
+          }
+        },
+        {
+          display: "Talk",
+          execute: () => {  
+            //
+          }
+        },
+        {
+          display: "Fight",
+          execute: () => {  
+            //
+          }
+        },
+      ],
+    };
+
+    return firstMenu;
+  }
+
+  
+
+  //#endregion
+  
+}
+
+const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
+  const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
+
+  return enemies
+    .filter(enemy => seenMap.has(enemy.name))
+    .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
 
 const isWindow = (event: Event) => (event.type === EventType.CHOICE || event.type === EventType.IMAGE || event.type === EventType.TEXT);

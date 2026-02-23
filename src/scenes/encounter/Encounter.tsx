@@ -60,9 +60,6 @@ export class Encounter extends Phaser.Scene {
         this.music.play();
         this.advanceSpread(activeSpreadsIndex);
         break;
-      case EventType.END_ENCOUNTER:
-        this.endEncounter();
-        break;
     }
   }
 

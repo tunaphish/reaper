@@ -1,4 +1,61 @@
-import { Encounter, TextSpeed, EventType } from '../../model/encounter';
+import { Encounter, TextSpeed, EventType, Event } from '../../model/encounter';
+
+export const advanceFactory = (nextEncounter: Encounter): Event => ({
+  type: EventType.CHOICE,
+  isMutuallyExclusive: false,
+  options: [
+    {
+      line: [{ text: 'Advance' }],
+      nextEncounter
+    },
+  ],
+});
+
+export const MUSIC_SPEED_SPREAD: Encounter = {
+  id: 'Typewriter Test Example',
+  events: [
+    {
+      type: EventType.SOUND,
+      key: 'knight',
+      loop: true,
+    },
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'I love you senpai. (Slow speed test)' }],
+      speed: TextSpeed.SLOW,
+      layout: {
+        x: 100,
+        y: 200,
+        width: 280,
+        height: 80,
+      },
+      delayInMs: 1000,
+    },
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'Random dialogue to test sound. (Fast speed test)' }],
+      speed: TextSpeed.FAST,
+      layout: {
+        x: 100,
+        y: 300,
+        width: 280,
+        height: 80,
+      },
+      delayInMs: 2000,
+    },
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'Hello how are you' }],
+      layout: {
+        x: 100,
+        y: 400,
+        width: 280,
+        height: 80,
+      },
+      delayInMs: 3000,
+    },
+  ],
+};
 
 export const EXAMPLE_SPREAD: Encounter = {
   id: 'Typewriter Test Example',
@@ -16,26 +73,14 @@ export const EXAMPLE_SPREAD: Encounter = {
         { text: 'madness', effect: 'frenzy' },
         { text: '...' },
       ],
+      layout: {
+        x: 100,
+        y: 100,
+        width: 280,
+        height: 100,
+      }
     },
-    {
-      type: EventType.SOUND,
-      key: 'knight',
-      loop: true,
-    },
-    {
-      type: EventType.TEXT,
-      line: [{ text: 'I love you senpai. (Slow speed test)' }],
-      speed: TextSpeed.SLOW,
-    },
-    {
-      type: EventType.TEXT,
-      line: [{ text: 'Random dialogue to test sound. (Fast speed test)' }],
-      speed: TextSpeed.FAST,
-    },
-    {
-      type: EventType.TEXT,
-      line: [{ text: 'Hello how are you' }],
-    },
+    advanceFactory(MUSIC_SPEED_SPREAD),
   ],
 };
 
@@ -65,7 +110,6 @@ export const BUNNY_MASK_SPREAD: Encounter = {
       layers: [
         {
           src: '/reaper/images/bun-mask.jpg',
-          z: 0,
           fit: 'cover',
         },
       ],
@@ -129,6 +173,10 @@ export const YES_NO_CHOICE_SPREAD: Encounter = {
     },
   ],
 };
+
+
+
+
 
 export const INTERROGATION_SPREAD: Encounter = {
   id: 'INTERROGATION Spread',

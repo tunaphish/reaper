@@ -19,7 +19,7 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
     <div className={classNames.container}>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         { world.worldStore.enemyJournalContent && <DisplayedEnemy enemy={world.worldStore.enemyJournalContent} />}
         { world.worldStore.systemsMenuOpen && <InfoView world={world} /> }
       </AnimatePresence>
@@ -102,11 +102,37 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   )
 });
 
-const AllyBarView = (props: { world: World }): JSX.Element => (
+const ChoiceView = (props: { world: World }): JSX.Element => {
+  const choice = props.world.worldStore.choiceWindow;
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: "-20px",
+    width: '80%',
+    height: '100%',
+    margin: '10px',
+    display: 'flex',
+    zIndex: 100
+  }
+  return (
+    <Window style={style}>
+      {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
+      {
+        choice.options.map((option, idx) => 
+          <div key={idx} onClick={() => props.world.selectChoice(option.nextEncounter)}>
+            {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
+          </div>
+        )
+      }
+    </Window>
+  )
+}
+
+const AllyBarView = observer((props: { world: World }): JSX.Element => (
   <div className={classNames.combatantBar}>
+    {props.world.worldStore.choiceWindow && <ChoiceView world={props.world} />}
     {props.world.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
   </div>
-);
+));
 
 // #region Menu 
 

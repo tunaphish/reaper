@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { Window } from "../../model/encounter";
+import { ChoiceWindow, Window } from "../../model/encounter";
 import { Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 
@@ -18,10 +18,13 @@ export type Menu =  {
 
 
 export class WorldStore {
-  windows: Window[] = [];
   playerSave: PlayerSave;
+
+  // Navigation Related
+  windows: Window[] = [];
   activeAlly?: Ally;
   menus: Menu[] = [];
+  choiceWindow?: ChoiceWindow;
 
   // TODO: potentially make these generic
   enemyJournalContent?: Enemy;
@@ -67,5 +70,9 @@ export class WorldStore {
 
   setSystemsMenuOpen(systemsMenuOpen: boolean): void {
     this.systemsMenuOpen = systemsMenuOpen;
+  }
+
+  setChoiceWindow(choiceWindow: ChoiceWindow): void {
+    this.choiceWindow = choiceWindow;
   }
 }

@@ -63,7 +63,7 @@ export type Option = {
 
 export type ChoiceWindow = BaseWindow & {
   type: EventType.CHOICE
-  title: TextToken[]
+  title?: TextToken[]
   options: Option[]
   isMutuallyExclusive: boolean
 }

@@ -16,6 +16,7 @@ import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
 import { enemies } from '../../data/enemies';
+import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -113,6 +114,7 @@ export class World extends Phaser.Scene {
 
         // TODO handle actual exit conditions
         this.worldStore.setWindows([]);
+        this.worldStore.setChoiceWindow(null);
       }
     });
     this.processQueuedEvents(delta);
@@ -146,7 +148,7 @@ export class World extends Phaser.Scene {
     const triggers = [
       {
         triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.BUNNY_MASK_SPREAD,
+        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
         x: spawnPoint.x,
         y: spawnPoint.y,
         width: 48,
@@ -188,7 +190,8 @@ export class World extends Phaser.Scene {
     const toDelay: Event[] = [];
 
     for (const event of this.queuedEvents) {
-      if (!event.delayInMs || event.delayInMs < 0) {
+      if (!event.delayInMs) event.delayInMs = 300;
+      if (event.delayInMs < 0) {
         this.executeEvent(event)
         continue;
       }
@@ -199,17 +202,34 @@ export class World extends Phaser.Scene {
   }
 
   executeEvent(event: Event): void {
+    if (event.type === EventType.CHOICE) {
+      this.worldStore.setChoiceWindow(event);
+      return;
+    }
     if (isWindow(event)) {
       this.worldStore.pushWindow(event);
       return;
     }
     if (event.type === EventType.SOUND) {
       const soundEvent = (event as SoundEvent);
-      this.music = this.sound.add(soundEvent.key, {
-        loop: soundEvent?.loop || false,  
+
+      // music case
+      if (soundEvent?.loop) { 
+        if (this.music.key === soundEvent.key) return;
+        if (this.music.isPlaying) this.music.stop();
+        this.music = this.sound.add(soundEvent.key, {
+          loop: true,  
+          volume: 0.5  
+        });
+        this.music.play();
+        return;
+      }
+
+      // sound effect case
+      this.sound.add(soundEvent.key, {
+        loop: false,  
         volume: 0.5  
-      });
-      this.music.play();
+      }).play();
       return;
     }
   }
@@ -228,6 +248,13 @@ export class World extends Phaser.Scene {
     this.worldStore.popMenu();
   }
 
+  selectChoice = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.worldStore.setChoiceWindow(null);
+    this.queuedEvents.push(...encounter.events);
+
+  }
+
   getMenus(): Menu {
     const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
       .map(enemy => {
@@ -243,6 +270,7 @@ export class World extends Phaser.Scene {
       menuOptions: enemyJournalMenuOptions,
       isCursor: true,
     }
+    
 
     const journalMenu: Menu = {
       menuOptions: [
@@ -327,4 +355,4 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
 
-const isWindow = (event: Event) => (event.type === EventType.CHOICE || event.type === EventType.IMAGE || event.type === EventType.TEXT);
+const isWindow = (event: Event) => (event.type === EventType.IMAGE || event.type === EventType.TEXT);

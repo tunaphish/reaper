@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
-import { ActionEvent, Window } from "../../model/encounter";
+import { ContextAction, Window } from "../../model/encounter";
 import { Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
+
 
 export type MenuOption = {
   display: string;
@@ -21,7 +22,7 @@ export class WorldStore {
   windows: Window[] = [];
   activeAlly?: Ally;
   menus: Menu[] = [];
-  actionEvents: ActionEvent[] = [];
+  contextAction?: ContextAction;
 
   // TODO: potentially make these generic
   enemyJournalContent?: Enemy;
@@ -69,11 +70,7 @@ export class WorldStore {
     this.systemsMenuOpen = systemsMenuOpen;
   }
 
-  pushActionEvent(actionEvent: ActionEvent): void {
-    this.actionEvents.push(actionEvent);
-  }
-
-  closeActionEvents(): void {
-    this.actionEvents = [];
+  setContextAction(contextAction?: ContextAction): void {
+    this.contextAction = contextAction;
   }
 }

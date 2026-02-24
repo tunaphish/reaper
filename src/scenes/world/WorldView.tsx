@@ -9,7 +9,7 @@ import { Meter } from '../battle/ResourceDisplay';
 import { TypewriterText } from '../shared/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '../shared';
-import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ActionEvent } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ObserveAction, ContextAction } from '../../model/encounter';
 import { PanelWindow } from '../shared/Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
@@ -75,19 +75,17 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
   )
 });
 
-const ActionEventView = observer((props: { world: World, actionEvent: ActionEvent }): JSX.Element => {
-  const { world, actionEvent } = props;
+const ContextActionView = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
+
+  // ASSUMES observe
+  const contextAction = world.worldStore.contextAction as ObserveAction;
   const onClick = () => {
-    world.selectActionEvent(actionEvent);
+    world.onObserve(contextAction);
   }
   return (
-    <Window style={{ padding: '5px' }} onClick={onClick}>{actionEvent.display}</Window>
+    <Window style={{ padding: '5px' }} onClick={onClick}>{contextAction.display}</Window>
   );
-});
-
-const ActionEventsView = observer((props: { world: World }): JSX.Element => {
-  const { world } = props;
-  return <>{world.worldStore.actionEvents.map((actionEvent,idx) => <ActionEventView world={world} actionEvent={actionEvent} key={idx} />)}</>
 });
 
 const MenuStack = observer((props: { world: World }): JSX.Element => {
@@ -125,7 +123,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       </Window>
       <div style={{ position: "absolute", top: "-20px" }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
-        {ally.name === "Eji" && <ActionEventsView world={world} />}
+        {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
     </>
 

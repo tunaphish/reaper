@@ -72,7 +72,7 @@ export const EXAMPLE_SPREAD: Encounter = {
       }
     },
     {
-      type:  EventType.ACTION,
+      type:  EventType.OBSERVE,
       display: 'Observe',
       nextEncounter: MUSIC_SPEED_SPREAD,
     },

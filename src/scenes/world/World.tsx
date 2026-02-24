@@ -12,7 +12,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { ActionEvent, Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+import { ObserveAction, Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
 import { enemies } from '../../data/enemies';
@@ -115,11 +115,11 @@ export class World extends Phaser.Scene {
       if (overlapping && !this.physics.overlap(zone, this.player)) {
         const encounter: Encounter = zone.getData("encounter");
         zone.setData("overlapping", false);
-        console.log('exit: ', encounter.id);
 
         // TODO handle actual exit conditions
+        this.queuedEvents = [];
         this.worldStore.setWindows([]);
-        this.worldStore.closeActionEvents();
+        this.worldStore.setContextAction(null);
       }
     });
   }
@@ -190,35 +190,44 @@ export class World extends Phaser.Scene {
   }
 
   executeEvent(event: Event): void {
-    if (isWindow(event)) {
-      this.worldStore.pushWindow(event);
-      return;
-    }
-    if (event.type === EventType.ACTION) {
-      this.worldStore.pushActionEvent(event);
-      return;
-    }
-    if (event.type === EventType.SOUND) {
-      const soundEvent = (event as SoundEvent);
-
-      // music case
-      if (soundEvent?.loop) { 
-        if (this.music.key === soundEvent.key) return;
-        if (this.music.isPlaying) this.music.stop();
-        this.music = this.sound.add(soundEvent.key, {
-          loop: true,  
-          volume: 0.5  
-        });
-        this.music.play();
+    switch (event.type) {
+      case EventType.IMAGE:
+      case EventType.TEXT: {
+        this.worldStore.pushWindow(event);
         return;
       }
 
-      // sound effect case
-      this.sound.add(soundEvent.key, {
-        loop: false,  
-        volume: 0.5  
-      }).play();
-      return;
+      case EventType.OBSERVE:
+      case EventType.CHOICE: {
+        this.worldStore.setContextAction(event);
+        return;
+      }
+
+      case EventType.SOUND: {
+        const soundEvent = event as SoundEvent;
+
+        if (soundEvent.loop) {
+          if (this.music.key === soundEvent.key) return;
+
+          if (this.music.isPlaying) {
+            this.music.stop();
+          }
+
+          this.music = this.sound.add(soundEvent.key, {
+            loop: true,
+            volume: 0.5,
+          });
+
+          this.music.play();
+          return;
+        }
+
+        this.sound.add(soundEvent.key, {
+          loop: false,
+          volume: 0.5,
+        }).play();
+        return;
+      }
     }
   }
 
@@ -236,9 +245,9 @@ export class World extends Phaser.Scene {
     this.worldStore.popMenu();
   }
 
-  selectActionEvent = (actionEvent: ActionEvent): void => {
+  onObserve = (actionEvent: ObserveAction): void => {
     this.playChoiceSelectSound();
-    this.worldStore.closeActionEvents();
+    this.worldStore.setContextAction(null);
     this.queuedEvents.push(...actionEvent.nextEncounter.events);
   }
 
@@ -270,7 +279,7 @@ export class World extends Phaser.Scene {
         {
           display: "Techniques",
           execute: () => {  
-            console.log("techniques");
+            //
           }
         },
       ]
@@ -279,12 +288,6 @@ export class World extends Phaser.Scene {
     const systemMenu: Menu = {
       onClose: () => this.worldStore.setSystemsMenuOpen(false),
       menuOptions: [
-        // {
-        //   display: "Inventory",
-        //   execute: () => {  
-        //     //
-        //   }
-        // },
         {
           display: "Journal",
           execute: () => {  
@@ -316,4 +319,3 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
 
-const isWindow = (event: Event) => (event.type === EventType.IMAGE || event.type === EventType.TEXT);

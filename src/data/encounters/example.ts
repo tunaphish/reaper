@@ -130,6 +130,28 @@ export const BUNNY_MASK_SPREAD: Encounter = {
   ],
 };
 
+export const YES_YIELD_ENCOUNTER: Encounter = {
+  id: 'yes yield',
+  events: [
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'wise choice' }],
+      speed: TextSpeed.FAST,
+    },
+  ],
+};
+
+export const NO_YIELD_ENCOUNTER: Encounter = {
+  id: 'no yield',
+  events: [
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'then it is death' }],
+      speed: TextSpeed.FAST,
+    },
+  ],
+};
+
 export const YES_NO_CHOICE_SPREAD: Encounter = {
   id: 'Yes No Choice Spread',
   events: [
@@ -140,35 +162,50 @@ export const YES_NO_CHOICE_SPREAD: Encounter = {
       options: [
         {
           line: [{ text: 'yes' }],
-          nextEncounter: {
-            id: 'yes yield',
-            events: [
-              {
-                type: EventType.TEXT,
-                line: [{ text: 'wise choice' }],
-                speed: TextSpeed.FAST,
-              },
-            ],
-          },
+          nextEncounter: YES_YIELD_ENCOUNTER,
         },
         {
           line: [{ text: 'no' }],
-          nextEncounter: {
-            id: 'no yield',
-            events: [
-              {
-                type: EventType.TEXT,
-                line: [{ text: 'then it is death' }],
-                speed: TextSpeed.FAST,
-              },
-            ],
-          },
+          nextEncounter: NO_YIELD_ENCOUNTER,
         },
       ],
     },
   ],
 };
 
+export const INTERROGATION_VICTIM_ENCOUNTER: Encounter = {
+  id: 'asdf',
+  events: [
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'he was my brother' }],
+      speed: TextSpeed.FAST,
+      layout: {
+        x: 100,
+        y: 550,
+        width: 150,
+        height: 100,
+      },
+    },
+  ],
+};
+
+export const INTERROGATION_MODELS_ENCOUNTER: Encounter = {
+  id: 'zoolander',
+  events: [
+    {
+      type: EventType.TEXT,
+      line: [{ text: 'Are you serious?' }],
+      speed: TextSpeed.FAST,
+      layout: {
+        x: 300,
+        y: 550,
+        width: 150,
+        height: 100,
+      },
+    },
+  ],
+};
 
 export const INTERROGATION_SPREAD: Encounter = {
   id: 'INTERROGATION Spread',
@@ -180,41 +217,11 @@ export const INTERROGATION_SPREAD: Encounter = {
       options: [
         {
           line: [{ text: 'who was the victim?' }],
-          nextEncounter: {
-            id: 'asdf',
-            events: [
-              {
-                type: EventType.TEXT,
-                line: [{ text: 'he was my brother' }],
-                speed: TextSpeed.FAST,
-                layout: {
-                  x: 100,
-                  y: 550,
-                  width: 150,
-                  height: 100,
-                }
-              },
-            ],
-          },
+          nextEncounter: INTERROGATION_VICTIM_ENCOUNTER,
         },
         {
           line: [{ text: 'but why male models' }],
-          nextEncounter: {
-            id: 'zoolander',
-            events: [
-              {
-                type: EventType.TEXT,
-                line: [{ text: 'Are you serious?' }],
-                speed: TextSpeed.FAST,
-                layout: {
-                  x: 300,
-                  y: 550,
-                  width: 150,
-                  height: 100,
-                } 
-              },
-            ],
-          },
+          nextEncounter: INTERROGATION_MODELS_ENCOUNTER,
         },
       ],
     },

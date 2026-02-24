@@ -16,7 +16,6 @@
   white-space: pre-wrap;   
   word-wrap: break-word;
   overflow-wrap: break-word;
-  margin: 10px;
 }
 
 /* Each letter cycles colors independently */

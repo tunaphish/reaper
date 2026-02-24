@@ -136,7 +136,7 @@ export class World extends Phaser.Scene {
     const triggers = [
       {
         triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
+        encounter: EXAMPLE_SPREADS.YES_NO_CHOICE_SPREAD,
         x: spawnPoint.x,
         y: spawnPoint.y,
         width: 48,
@@ -245,10 +245,10 @@ export class World extends Phaser.Scene {
     this.worldStore.popMenu();
   }
 
-  onObserve = (actionEvent: ObserveAction): void => {
+  onNextEncounter = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
     this.worldStore.setContextAction(null);
-    this.queuedEvents.push(...actionEvent.nextEncounter.events);
+    this.queuedEvents.push(...encounter.events);
   }
 
   getSystemMenu(): Menu {

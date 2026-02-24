@@ -9,7 +9,7 @@ import { Meter } from '../battle/ResourceDisplay';
 import { TypewriterText } from '../shared/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '../shared';
-import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ObserveAction, ContextAction } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ObserveAction, ContextAction, ChoiceAction } from '../../model/encounter';
 import { PanelWindow } from '../shared/Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
@@ -77,16 +77,49 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
 
 const ContextActionView = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
+  switch (world.worldStore.contextAction.type) {
+    case EventType.CHOICE:
+      return <ChoiceView world={world} />
+    case EventType.OBSERVE:
+      return <ObserveView world={world} />
+    default:
+      return null
+  }
+});
 
-  // ASSUMES observe
+const ObserveView = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
+
   const contextAction = world.worldStore.contextAction as ObserveAction;
   const onClick = () => {
-    world.onObserve(contextAction);
+    world.onNextEncounter(contextAction.nextEncounter);
   }
   return (
     <Window style={{ padding: '5px' }} onClick={onClick}>{contextAction.display}</Window>
   );
 });
+
+const ChoiceView = (props: { world: World }): JSX.Element => {
+  const choice = props.world.worldStore.contextAction as ChoiceAction;
+  
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: "-40px"
+  }
+
+  return (
+    <Window style={style}>
+      {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
+      {
+        choice.options.map((option, idx) => 
+          <div key={idx} onClick={() => props.world.onNextEncounter(option.nextEncounter)}>
+            {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
+          </div>
+        )
+      }
+    </Window>
+  )
+}
 
 const MenuStack = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
@@ -97,7 +130,7 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
   const { world, ally, idx } = props;
 
-  const isInEncounter = world.worldStore.windows.length > 0;
+  const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
   const style: React.CSSProperties = {
     width: '100%',
@@ -130,30 +163,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   )
 });
 
-// const ChoiceView = (props: { world: World }): JSX.Element => {
-//   const choice = props.world.worldStore.choiceWindow;
-//   const style: React.CSSProperties = {
-//     position: "absolute",
-//     top: "-20px",
-//     width: '80%',
-//     height: '100%',
-//     margin: '10px',
-//     display: 'flex',
-//     zIndex: 100
-//   }
-//   return (
-//     <Window style={style}>
-//       {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
-//       {
-//         choice.options.map((option, idx) => 
-//           <div key={idx} onClick={() => props.world.selectChoice(option.nextEncounter)}>
-//             {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
-//           </div>
-//         )
-//       }
-//     </Window>
-//   )
-// }
 
 const AllyBarView = observer((props: { world: World }): JSX.Element => (
   <div className={classNames.combatantBar}>

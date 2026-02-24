@@ -61,8 +61,8 @@ export const PanelWindow = ({ children, style, delay = 0, onClick, window }: Pan
     position: 'absolute',
     width: layout?.width ?? 380,
     height: layout?.height ?? 140,
-    left: layout?.x ?? 225,
-    top: layout?.y ?? 620,
+    left: layout?.x ?? 35,
+    top: layout?.y ?? 550,
     ...style
   }
 

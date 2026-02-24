@@ -16,7 +16,7 @@ export enum EventType {
   IMAGE,
   SOUND,
   CHOICE,
-  END_ENCOUNTER,
+  ACTION,
 }
 
 export type BaseEvent = {
@@ -56,21 +56,27 @@ export type SoundEvent = BaseEvent & {
   loop?: boolean
 }
 
+export type ActionEvent = BaseEvent & {
+  type: EventType.ACTION
+  display: string
+  nextEncounter: Encounter
+}
+
 export type Option = {
   line: TextToken[]
   nextEncounter: Encounter
 }
 
-export type ChoiceWindow = BaseWindow & {
+export type ChoiceEvent = BaseEvent & {
   type: EventType.CHOICE
   title?: TextToken[]
   options: Option[]
   isMutuallyExclusive: boolean
 }
 
-export type Window = TextWindow | ImageWindow | ChoiceWindow;
+export type Window = TextWindow | ImageWindow;
 
-export type Event = Window | SoundEvent;
+export type Event = Window | SoundEvent | ActionEvent | ChoiceEvent;
 
 export type Encounter = {
   id: string

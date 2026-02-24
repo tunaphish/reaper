@@ -12,7 +12,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+import { ActionEvent, Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
 import { enemies } from '../../data/enemies';
@@ -105,6 +105,11 @@ export class World extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.player.update(time, delta);
+    this.onTriggerExit();
+    this.processQueuedEvents(delta);
+  }
+
+  onTriggerExit(): void {
     this.triggerGroup.children.iterate(zone => {
       const overlapping = zone.getData("overlapping");
       if (overlapping && !this.physics.overlap(zone, this.player)) {
@@ -114,26 +119,9 @@ export class World extends Phaser.Scene {
 
         // TODO handle actual exit conditions
         this.worldStore.setWindows([]);
-        this.worldStore.setChoiceWindow(null);
+        this.worldStore.closeActionEvents();
       }
     });
-    this.processQueuedEvents(delta);
-  }
-
-  pause(): void {
-    this.choiceSelectSound.play();
-    this.scene.pause('World');
-  }
-
-  unpause(): void {
-    this.choiceSelectSound.play();
-    this.scene.resume('World');
-  }
-
-  battle(): void {
-    this.choiceSelectSound.play();
-    this.scene.pause();
-    this.scene.run('Battle', { enemies: [fencer] });
   }
 
   playChoiceSelectSound(): void {
@@ -202,12 +190,12 @@ export class World extends Phaser.Scene {
   }
 
   executeEvent(event: Event): void {
-    if (event.type === EventType.CHOICE) {
-      this.worldStore.setChoiceWindow(event);
-      return;
-    }
     if (isWindow(event)) {
       this.worldStore.pushWindow(event);
+      return;
+    }
+    if (event.type === EventType.ACTION) {
+      this.worldStore.pushActionEvent(event);
       return;
     }
     if (event.type === EventType.SOUND) {
@@ -238,7 +226,7 @@ export class World extends Phaser.Scene {
   setAlly = (ally: Ally): void => {
     this.worldStore.closeMenus();
     this.playChoiceSelectSound();
-    const firstMenu = this.getMenus();
+    const firstMenu = this.getSystemMenu();
     this.worldStore.pushMenu(firstMenu);
     this.worldStore.setActiveAlly(ally);
   }
@@ -248,14 +236,13 @@ export class World extends Phaser.Scene {
     this.worldStore.popMenu();
   }
 
-  selectChoice = (encounter: Encounter): void => {
+  selectActionEvent = (actionEvent: ActionEvent): void => {
     this.playChoiceSelectSound();
-    this.worldStore.setChoiceWindow(null);
-    this.queuedEvents.push(...encounter.events);
-
+    this.worldStore.closeActionEvents();
+    this.queuedEvents.push(...actionEvent.nextEncounter.events);
   }
 
-  getMenus(): Menu {
+  getSystemMenu(): Menu {
     const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
       .map(enemy => {
         return {
@@ -310,37 +297,11 @@ export class World extends Phaser.Scene {
             this.worldStore.closeMenus();
           }
         },
-      ],  
-    }  
-    
-    const firstMenu: Menu = {
-      onClose: () => this.worldStore.setActiveAlly(null),
-      menuOptions: [
-        {
-          display: "Menu",
-          execute: () => {
-            this.worldStore.setSystemsMenuOpen(true);  
-            this.worldStore.pushMenu(systemMenu);
-          }
-        },
-        {
-          display: "Talk",
-          execute: () => {  
-            //
-          }
-        },
-        {
-          display: "Fight",
-          execute: () => {  
-            //
-          }
-        },
       ],
-    };
+    }  
 
-    return firstMenu;
+    return systemMenu;
   }
-
   
 
   //#endregion

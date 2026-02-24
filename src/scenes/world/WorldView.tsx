@@ -9,7 +9,7 @@ import { Meter } from '../battle/ResourceDisplay';
 import { TypewriterText } from '../shared/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '../shared';
-import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ActionEvent } from '../../model/encounter';
 import { PanelWindow } from '../shared/Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
@@ -32,12 +32,14 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
 const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JSX.Element => {
   const { world, menu, idx } = props;
   const isTopMenu = world.worldStore.menus.length-1 === idx;
-  const xOffset = ((idx%2 ===0) ? 20 : 40) + 20 
+
+  const verticalOffset = (-20*idx) + (-20*menu.menuOptions.length);
+  const horizontalOffset = ((idx%2 ===0) ? 20 : 40) + 20 
 
   const style: React.CSSProperties = {
     position: "absolute",
-    top: (-80 + -20*idx)+ "px", 
-    left: xOffset + "px",
+    top: verticalOffset + "px", 
+    left: horizontalOffset + "px",
   }
 
   const onClick = (option: MenuOption) => {
@@ -73,6 +75,21 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
   )
 });
 
+const ActionEventView = observer((props: { world: World, actionEvent: ActionEvent }): JSX.Element => {
+  const { world, actionEvent } = props;
+  const onClick = () => {
+    world.selectActionEvent(actionEvent);
+  }
+  return (
+    <Window style={{ padding: '5px' }} onClick={onClick}>{actionEvent.display}</Window>
+  );
+});
+
+const ActionEventsView = observer((props: { world: World }): JSX.Element => {
+  const { world } = props;
+  return <>{world.worldStore.actionEvents.map((actionEvent,idx) => <ActionEventView world={world} actionEvent={actionEvent} key={idx} />)}</>
+});
+
 const MenuStack = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
   return <>{world.worldStore.menus.map((menu, idx) => <MenuView world={world} menu={menu} idx={idx} key={idx}/>)}</>
@@ -82,54 +99,66 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
   const { world, ally, idx } = props;
 
+  const isInEncounter = world.worldStore.windows.length > 0;
+
   const style: React.CSSProperties = {
     width: '100%',
     padding: '5px',
     position: 'relative',
+    color: isInEncounter ? 'gray' : 'white',
   }
 
   const onClick = () => {
+    if (isInEncounter) {
+      world.playChoiceDisabledSound;
+      return;
+    }
     if (world.worldStore.activeAlly?.name === ally.name && world.worldStore.menus.length > 0) return;
     world.setAlly(ally);
   }
   
   return (
-    <Window key={ally.name} style={style} delay={idx*0.15} onClick={onClick}>
-      {ally.name}
-      {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
-      <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
-    </Window>
+    <>
+      <Window key={ally.name} style={style} delay={idx*0.15} onClick={onClick}>
+        {ally.name}
+        <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
+      </Window>
+      <div style={{ position: "absolute", top: "-20px" }}>
+        {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
+        {ally.name === "Eji" && <ActionEventsView world={world} />}
+      </div>
+    </>
+
   )
 });
 
-const ChoiceView = (props: { world: World }): JSX.Element => {
-  const choice = props.world.worldStore.choiceWindow;
-  const style: React.CSSProperties = {
-    position: "absolute",
-    top: "-20px",
-    width: '80%',
-    height: '100%',
-    margin: '10px',
-    display: 'flex',
-    zIndex: 100
-  }
-  return (
-    <Window style={style}>
-      {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
-      {
-        choice.options.map((option, idx) => 
-          <div key={idx} onClick={() => props.world.selectChoice(option.nextEncounter)}>
-            {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
-          </div>
-        )
-      }
-    </Window>
-  )
-}
+// const ChoiceView = (props: { world: World }): JSX.Element => {
+//   const choice = props.world.worldStore.choiceWindow;
+//   const style: React.CSSProperties = {
+//     position: "absolute",
+//     top: "-20px",
+//     width: '80%',
+//     height: '100%',
+//     margin: '10px',
+//     display: 'flex',
+//     zIndex: 100
+//   }
+//   return (
+//     <Window style={style}>
+//       {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
+//       {
+//         choice.options.map((option, idx) => 
+//           <div key={idx} onClick={() => props.world.selectChoice(option.nextEncounter)}>
+//             {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
+//           </div>
+//         )
+//       }
+//     </Window>
+//   )
+// }
 
 const AllyBarView = observer((props: { world: World }): JSX.Element => (
   <div className={classNames.combatantBar}>
-    {props.world.worldStore.choiceWindow && <ChoiceView world={props.world} />}
     {props.world.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
   </div>
 ));

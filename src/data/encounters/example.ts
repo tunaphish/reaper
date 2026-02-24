@@ -1,15 +1,6 @@
 import { Encounter, TextSpeed, EventType, Event } from '../../model/encounter';
 
-export const advanceFactory = (nextEncounter: Encounter): Event => ({
-  type: EventType.CHOICE,
-  isMutuallyExclusive: false,
-  options: [
-    {
-      line: [{ text: 'Advance' }],
-      nextEncounter
-    },
-  ],
-});
+
 
 export const MUSIC_SPEED_SPREAD: Encounter = {
   id: 'Typewriter Test Example',
@@ -80,7 +71,11 @@ export const EXAMPLE_SPREAD: Encounter = {
         height: 100,
       }
     },
-    advanceFactory(MUSIC_SPEED_SPREAD),
+    {
+      type:  EventType.ACTION,
+      display: 'Observe',
+      nextEncounter: MUSIC_SPEED_SPREAD,
+    },
   ],
 };
 
@@ -173,9 +168,6 @@ export const YES_NO_CHOICE_SPREAD: Encounter = {
     },
   ],
 };
-
-
-
 
 
 export const INTERROGATION_SPREAD: Encounter = {

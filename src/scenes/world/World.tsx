@@ -24,6 +24,11 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'World',
 };
 
+type QueuedEvent = {
+  event: Event,
+  delayInMs: number
+}
+
 export class World extends Phaser.Scene {
   private player: Player;
   reactOverlay: ReactOverlay;
@@ -39,7 +44,7 @@ export class World extends Phaser.Scene {
   allies: Ally[];
   inventory: Inventory;
 
-  queuedEvents: Event[] = [];
+  queuedEvents: QueuedEvent[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -117,10 +122,15 @@ export class World extends Phaser.Scene {
 
         // TODO handle actual exit conditions
         this.queuedEvents = [];
-        this.worldStore.setWindows([]);
+        this.worldStore.closeWindows();
         this.worldStore.setContextAction(null);
       }
     });
+  }
+
+  addQueuedEvents(events: Event[]): void {
+    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
+    this.queuedEvents.push(...newEvents);
   }
 
   playChoiceSelectSound(): void {
@@ -170,20 +180,19 @@ export class World extends Phaser.Scene {
     zone.setData("overlapping", true);
 
     const encounter: Encounter  = zone.getData("encounter");
-    this.queuedEvents.push(...encounter.events);
+    this.addQueuedEvents(encounter.events);
   } 
 
   processQueuedEvents(delta: number): void {
-    const toDelay: Event[] = [];
+    const toDelay: QueuedEvent[] = [];
 
-    for (const event of this.queuedEvents) {
-      if (!event.delayInMs) event.delayInMs = 300;
-      if (event.delayInMs < 0) {
-        this.executeEvent(event)
+    for (const queuedEvent of this.queuedEvents) {
+      if (queuedEvent.delayInMs < 0) {
+        this.executeEvent(queuedEvent.event);
         continue;
       }
-      event.delayInMs -= delta;
-      toDelay.push(event);
+      queuedEvent.delayInMs -= delta;
+      toDelay.push(queuedEvent);
     }
     this.queuedEvents = toDelay;
   }
@@ -247,13 +256,13 @@ export class World extends Phaser.Scene {
   onNextEncounter = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
     this.worldStore.setContextAction(null);
-    this.queuedEvents.push(...encounter.events);
+    this.addQueuedEvents(encounter.events);
   }
 
   onMultiSelect = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
     this.worldStore.closeWindows();
-    this.queuedEvents.push(...encounter.events);
+    this.addQueuedEvents(encounter.events);
   }
 
   getSystemMenu(): Menu {

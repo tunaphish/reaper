@@ -42,6 +42,11 @@ export class WorldStore {
     this.windows = windows;
   }
 
+  // TODO: figure out how to actually handle exit conditions for windows.... LATAH
+  closeWindows(): void {
+    this.windows = [];
+  }
+
   setActiveAlly(ally: Ally): void {
     this.activeAlly = ally;
   }

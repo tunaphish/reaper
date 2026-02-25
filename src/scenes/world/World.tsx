@@ -113,7 +113,6 @@ export class World extends Phaser.Scene {
     this.triggerGroup.children.iterate(zone => {
       const overlapping = zone.getData("overlapping");
       if (overlapping && !this.physics.overlap(zone, this.player)) {
-        const encounter: Encounter = zone.getData("encounter");
         zone.setData("overlapping", false);
 
         // TODO handle actual exit conditions
@@ -136,7 +135,7 @@ export class World extends Phaser.Scene {
     const triggers = [
       {
         triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.YES_NO_CHOICE_SPREAD,
+        encounter: EXAMPLE_SPREADS.INTERROGATION_SPREAD,
         x: spawnPoint.x,
         y: spawnPoint.y,
         width: 48,
@@ -248,6 +247,12 @@ export class World extends Phaser.Scene {
   onNextEncounter = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
     this.worldStore.setContextAction(null);
+    this.queuedEvents.push(...encounter.events);
+  }
+
+  onMultiSelect = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.worldStore.closeWindows();
     this.queuedEvents.push(...encounter.events);
   }
 

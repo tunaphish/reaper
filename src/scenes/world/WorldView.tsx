@@ -104,19 +104,32 @@ const ChoiceView = (props: { world: World }): JSX.Element => {
   
   const style: React.CSSProperties = {
     position: "absolute",
-    top: "-40px"
+    top: "-40px",
+    left: "20px",
   }
+  const choices = choice.isMutuallyExclusive ?
+    choice.options.map((option, idx) => 
+      <div key={idx} onClick={() => props.world.onNextEncounter(option.nextEncounter)}>
+        {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
+      </div>
+    ) :
+    <CursorList 
+      getKey={(item) => item.nextEncounter.id}
+      items={choice.options}
+      renderLabel={(item) => <TypewriterText line={item.line} textSpeed={TextSpeed.NORMAL} />}
+      onSelect={(item) => props.world.onMultiSelect(item.nextEncounter)}
+    />
+
+    choice.options.map((option, idx) =>
+      <div key={idx} onClick={() => props.world.onMultiSelect(option.nextEncounter)}>
+        {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
+      </div>
+    );
 
   return (
     <Window style={style}>
       {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
-      {
-        choice.options.map((option, idx) => 
-          <div key={idx} onClick={() => props.world.onNextEncounter(option.nextEncounter)}>
-            {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
-          </div>
-        )
-      }
+      { choices }
     </Window>
   )
 }

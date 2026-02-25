@@ -146,9 +146,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
   const style: React.CSSProperties = {
-    width: '100%',
-    padding: '5px',
-    position: 'relative',
     color: isInEncounter ? 'gray' : 'white',
   }
 
@@ -162,7 +159,13 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   }
   
   return (
-    <>
+    <div 
+      style={{     
+        width: '100%',
+        padding: '5px',
+        position: 'relative', 
+      }}
+    >
       <Window key={ally.name} style={style} delay={idx*0.15} onClick={onClick}>
         {ally.name}
         <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
@@ -171,7 +174,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
-    </>
+    </div>
 
   )
 });

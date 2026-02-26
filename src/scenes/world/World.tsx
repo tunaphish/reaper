@@ -12,8 +12,22 @@ import { DEBUG_MAP_DATA } from '../../data/maps';
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
 import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
-import { Enemy } from '../../model/enemy';
+
 import { enemies } from '../../data/enemies';
+
+import { Enemy } from '../../model/enemy';
+import { Status, updateActionPoints } from '../../model/combatant';
+import { Folder } from '../../model/folder';
+import { Action } from "../../model/action";
+import { Item } from "../../model/item";
+import { Technique } from "../../model/technique";
+import { OptionType } from '../../model/option';
+import { TargetType } from '../../model/targetType';
+
+import * as Techniques from '../../data/techniques';
+
+export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
+
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -115,6 +129,10 @@ export class World extends Phaser.Scene {
     // combat
     this.worldStore.tickStats(delta);
     this.worldStore.updateCombatantsState();
+    this.checkBattleEndConditions();
+    this.resetDeadAllyCasterMenu();
+    this.executeSelectedOption();    
+
   }
 
   onTriggerExit(): void {
@@ -247,8 +265,16 @@ export class World extends Phaser.Scene {
     this.worldStore.closeMenus();
     this.playChoiceSelectSound();
     if (this.combatInitiated) {
-      const systemMenu = this.getSystemMenu();
-      this.worldStore.pushMenu(systemMenu);
+        const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
+        if (CANNOT_OPEN_STATUS.includes(ally.status)) {
+          this.sound.play('stamina-depleted');
+          return;
+        }
+
+        this.sound.play('choice-select');
+        this.worldStore.setActiveAlly(ally);
+        this.events.emit('caster-set', ally);
+        this.worldStore.pushMenu(this.getCombatMenu(ally.folder));
     } else {
       const systemMenu = this.getSystemMenu();
       this.worldStore.pushMenu(systemMenu);
@@ -334,6 +360,158 @@ export class World extends Phaser.Scene {
   
 
   //#region combat
+  resetDeadAllyCasterMenu(): void {
+    if (this.worldStore.activeAlly && this.worldStore?.activeAlly.status === Status.DEAD) {
+      this.worldStore.setActiveAlly(null);
+      // this.worldStore.emptyMenu();
+    }
+  }
+
+  checkBattleEndConditions(): void {
+    if (this.worldStore.allies.every((member) => member.status === Status.DEAD)) {
+      console.log('win')
+    }
+    if (this.worldStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
+      // console.log('lose')
+    }
+  }
+
+  getCombatMenu(folder: Folder): Menu {
+    const menuOptions: MenuOption[] = folder.options.map(option => {
+      return {
+        display: option.name,
+        execute: () => {
+          this.selectOption(option as CombatOption);
+        }
+      }
+    });
+
+    return { menuOptions };
+  }
+
+    selectOption(option: CombatOption): void {
+      this.sound.play('choice-select');
+      switch(option.type) {
+        case OptionType.ACTION:
+          const action = option as Action;
+          this.worldStore.setExecutable(action);
+          switch (action.targetType) {
+            case TargetType.SELF:
+              const targetMenu: Menu = { 
+                menuOptions: [
+                  { 
+                    display: this.worldStore.activeAlly.name, 
+                    execute: () => this.worldStore.setTarget(this.worldStore.activeAlly) 
+                  }
+                ]
+              };
+              this.worldStore.pushMenu(targetMenu);
+              break;
+            case TargetType.ENEMIES:
+              const enemiesMenu: Menu = {
+                 menuOptions: this.worldStore.enemies.map(enemy => { 
+                  return {
+                    display: enemy.name, 
+                    execute: () => this.worldStore.setTarget(enemy)
+                  }
+                })
+              };
+              this.worldStore.pushMenu(enemiesMenu);
+              break;
+            case TargetType.ALLIES:
+              const alliesMenu: Menu = {
+                 menuOptions: this.worldStore.allies.map(enemy => { 
+                  return {
+                    display: enemy.name, 
+                    execute: () => this.worldStore.setTarget(enemy)
+                  }
+                })
+              };
+              this.worldStore.pushMenu(alliesMenu);
+              break;
+            case TargetType.SINGLE_TARGET:
+              const singleTargetMenu: Menu = {
+                 menuOptions: this.worldStore.getCombatants().map(enemy => { 
+                  return {
+                    display: enemy.name, 
+                    execute: () => this.worldStore.setTarget(enemy)
+                  }
+                })
+              };
+              this.worldStore.pushMenu(singleTargetMenu);
+              break;
+          }
+          break;
+        case OptionType.TECHNIQUE:
+          const technique = option as Technique;
+          this.worldStore.setExecutable(technique);
+            const shatterMenu: Menu = { 
+              menuOptions: [
+                { 
+                  display: this.worldStore.activeAlly.name, 
+                  execute: () => this.worldStore.setTarget(this.worldStore.activeAlly) 
+                }
+              ]
+            };
+          this.worldStore.pushMenu(shatterMenu);
+          break;
+  
+        case OptionType.ENEMY:
+        case OptionType.ALLY:
+          const combatant = option;
+          this.worldStore.setTarget(combatant);
+          break;
+        case OptionType.FOLDER:
+          const folder = option as Folder;
+          const folderMenu = this.getCombatMenu(folder);
+          this.worldStore.pushMenu(folderMenu);
+          break;
+      }
+    }
+
+  executeSelectedOption(): void {
+    if (
+      !this.worldStore.activeAlly || 
+      !this.worldStore.executable || 
+      !this.worldStore.target
+    ) return; 
+    
+
+    // if (combatant.queuedOption.type === OptionType.ITEM) {
+    //   combatant.queuedOption.charges -= 1;
+    //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
+    //   this.sound.play(combatant.queuedOption.soundKeyName);
+    // } else
+
+    if (this.worldStore.executable.type === OptionType.TECHNIQUE) {
+      const technique = (this.worldStore.executable as Technique);
+
+      if (this.worldStore.activeAlly.activeTechniques.has(this.worldStore.executable)) {
+        updateActionPoints(this.worldStore.activeAlly, technique.actionPointsCost);
+        this.worldStore.activeAlly.activeTechniques.delete(this.worldStore.executable);
+      } else {
+        updateActionPoints(this.worldStore.activeAlly, -technique.actionPointsCost);
+        this.worldStore.activeAlly.activeTechniques.add(this.worldStore.executable);
+      }
+    
+      
+      this.sound.play(technique.soundKeyName);
+      this.worldStore.resetSelections();
+      return;
+    }
+
+    const action = (this.worldStore.executable as Action);
+    updateActionPoints(this.worldStore.activeAlly, -action.actionPointsCost);
+
+    const potency = action.potency * (this.worldStore.activeAlly.activeTechniques.has(Techniques.buff) ? 2 : 1);
+    action.resolve(this.worldStore.target, this.worldStore.activeAlly, potency);
+    
+    this.sound.play(action.soundKeyName);
+    
+    this.worldStore.resetSelections();
+    
+  }
+
   //#endregion
 }
 

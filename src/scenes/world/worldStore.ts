@@ -1,8 +1,13 @@
 import { makeAutoObservable } from "mobx";
+
 import { ContextAction, Window } from "../../model/encounter";
 import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant, Status } from "../../model/combatant";
+import { Action, } from '../../model/action';
+import { Item } from '../../model/item';
+import { Technique } from '../../model/technique';
+
 import * as Techniques from '../../data/techniques';
 
 
@@ -16,15 +21,17 @@ export type Menu =  {
   isCursor?: boolean;
 };
 
+export type Executable = Action | Item | Technique;
 
 export class WorldStore {
   playerSave: PlayerSave;
 
   // Navigation Related
   windows: Window[] = [];
-  activeAlly?: Ally;
   menus: Menu[] = [];
   contextAction?: ContextAction;
+
+
 
   // TODO: potentially make these generic
   enemyJournalContent?: Enemy;
@@ -33,6 +40,10 @@ export class WorldStore {
   // Combat
   enemies: Enemy[] = [];
   allies: Allies;
+
+  activeAlly?: Ally;
+  executable?: Executable;
+  target?: Combatant;
 
   constructor(playerSave: PlayerSave, allies: Allies) {
     this.playerSave = playerSave;
@@ -122,4 +133,18 @@ export class WorldStore {
       return [...this.enemies, ...this.allies];
     }
   
+    setTarget(target?: Combatant): void {
+      this.target = target;
+    }
+  
+    setExecutable(executable?: Executable): void {
+      this.executable = executable;
+    }
+
+    resetSelections(): void {
+      this.closeMenus();
+      this.setActiveAlly(null);
+      this.setExecutable(null);
+      this.setTarget(null);
+    }
 }

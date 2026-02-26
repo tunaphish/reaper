@@ -6,14 +6,14 @@ import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
 import { Meter, ResourceDisplay, TechniqueViewManager } from '../battle/ResourceDisplay';
-import { TypewriterText } from '../shared/TypewriterText';
+import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
-import { ImageWindowContent, Window } from '../shared';
+import { ImageWindowContent, Window } from '.';
 import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ObserveAction, ContextAction, ChoiceAction } from '../../model/encounter';
-import { PanelWindow } from '../shared/Window';
+import { PanelWindow } from './Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
-import { CursorList } from '../shared/CursorList';
+import { CursorList } from './CursorList';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props

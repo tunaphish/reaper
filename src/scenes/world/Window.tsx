@@ -1,5 +1,5 @@
 import * as React from 'react';
-import classNames from './shared.module.css';
+import classNames from './world.module.css';
 import { motion } from 'framer-motion';
 import { Window as WindowModel } from '../../model/encounter';
 

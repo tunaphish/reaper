@@ -148,7 +148,7 @@ export class World extends Phaser.Scene {
     const triggers = [
       {
         triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.INTERROGATION_SPREAD,
+        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
         x: spawnPoint.x,
         y: spawnPoint.y,
         width: 48,

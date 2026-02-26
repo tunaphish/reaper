@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
 import styles from './world.module.css';
 import {Technique} from '../../model/technique';
+import { Ally } from '../../model/ally';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
   const { className, value, max } = props;
@@ -63,7 +64,7 @@ export const TechniqueViewManager = observer(((props: {combatant: Combatant }) =
 })); 
 
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
+export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: styles.DEAD,
@@ -71,8 +72,12 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
   };
   const style = [
     styles.window,
-    statusToStylesMap[props.combatant.status],
+    statusToStylesMap[props.ally.status],
   ];
+  
+  const baseAP = props.ally.maxActionPoints;
+  const totalAP = Math.floor(props.ally.actionPoints);
+  const overflowAP = Math.max(0, totalAP - baseAP);
 
   return (
     <div className={style.join(' ')} onClick={props.onClickCell} 
@@ -85,28 +90,39 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
 
         <motion.div 
           className={styles.castingWindow}
-          animate={{ height: (Math.abs(props.combatant.actionPoints%1) * 100) + '%' }}
+          animate={{ height: (Math.abs(props.ally.actionPoints%1) * 100) + '%' }}
           transition={{ duration: 0 }}
         />
 
         <div className={styles.characterCellContainer}>
-          <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
+          <div style={{ fontSize: '12px' }}>{props.ally.name}</div>
           <div className={styles.meterContainer}>
-            <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={styles.bleedMeter}/>
-            <Meter value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth} className={styles.healthMeter}/>
-            <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
+            <Meter value={props.ally.health} max={props.ally.maxHealth} className={styles.bleedMeter}/>
+            <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={styles.healthMeter}/>
+            <div className={styles.meterNumber}>{Math.ceil(props.ally.health)}</div>
           </div>
           <div className={styles.actionPointRow}>
-            {Array.from({ length: props.combatant.maxActionPoints }).map((_, i) => (
+            {Array.from({ length: baseAP }).map((_, i) => (
               <div
-                key={i}
+                key={`base-${i}`}
                 className={[
                   styles.actionPointToken,
-                  i < Math.floor(props.combatant.actionPoints) ? styles.filled : styles.empty,
+                  i < totalAP ? styles.filled : styles.empty,
                 ].join(' ')}
               />
             ))}
-        </div>
+
+            {overflowAP > 0 && (
+              <div className={styles.overflowRow}>
+                {Array.from({ length: overflowAP }).map((_, i) => (
+                  <div
+                    key={`overflow-${i}`}
+                    className={styles.overflowToken}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
        </div>
     </div>
   )

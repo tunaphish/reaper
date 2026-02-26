@@ -21,7 +21,7 @@ export const Eji: Ally = {
   health: 50,
   maxHealth: 100,
   bleed: 0,
-  actionPoints: .1,
+  actionPoints: 5,
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,

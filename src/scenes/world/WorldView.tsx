@@ -188,7 +188,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
     >
       <div style={{ position: 'relative', flex: '1' }} >
         <TechniqueViewManager combatant={ally} />
-        <ResourceDisplay combatant={ally} onClickCell={onClick}/>
+        <ResourceDisplay ally={ally} onClickCell={onClick}/>
       </div>
       <div style={{ position: "absolute", top: "-20px" }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}

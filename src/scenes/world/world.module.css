@@ -38,7 +38,8 @@
 }
 
 .menuContent {
-    flex: 1;
+  flex: 1;
+  padding: 5px;
 }
 
 .healthMeter {
@@ -106,6 +107,7 @@ overflow: hidden;
 }
 
 
+
 .window {
   background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
   background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
@@ -118,4 +120,227 @@ overflow: hidden;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
+}
+
+.enemyWindow {
+  background: linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -moz-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -webkit-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+  background: -o-linear-gradient(to bottom right, #ad0000, #850000, #230000);
+
+  border: 2px ridge white;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
+
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.windowName {
+  padding: 3px;
+}
+
+.characterCellContainer {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.actionPoints {
+  grid-column: 1;
+  grid-row: 1;
+
+
+  font-size: 96px;
+  padding-right: 24px;
+  text-align: end;
+  line-height: .8;
+  text-shadow: none;
+}
+
+.chargeMeterContainer {
+  grid-column: 1;
+  grid-row: 1;
+  opacity: .4;
+}
+
+.enemyResourceDisplay {
+  background-color: gray;
+}
+
+
+.meterContainer {
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  margin-bottom: 3px;   
+  width: 100%;
+}
+
+.enemyMeterContainer {
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  width: 100%;
+  height: 10px;
+}
+
+.meterBackground {
+  width: 100%;
+  background-color: transparent;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.meter {
+  background: white;
+  height: 100%;
+}
+
+.resourceContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.statContainer {
+  display: flex;
+}
+
+.EXHAUSTED {
+  border: 1px solid yellow;
+  color: yellow;
+}
+
+.DEAD {
+  border: 1px solid red;
+  color: red;
+}
+
+.tvContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  overflow: hidden;  
+}
+
+.background, .enemyPortait {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
+  width: 100%;
+
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.modalContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: all;
+}
+
+.modalMenu {
+  position: absolute;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-10px, -10px); }
+  20%, 40%, 60%, 80% { transform: translate(10px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+
+
+.healthMeter > div {
+  background: white;
+}
+
+.bleedMeter > div{
+  background: pink;
+}
+
+.meterNumber {
+  grid-column: 1;
+  grid-row: 1;
+  padding-left: 5px;
+  font-size: 8px;
+  color: gray;
+}
+
+.menuOption {
+  all: unset;
+  
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  font-size: 32px;
+  width: 100%;
+}
+
+.menuOption:disabled {
+  color: gray;
+}
+
+
+.optionCost {
+  text-align: end;
+  flex: 1;
+  padding-left: 5px;
+}
+
+.magicCost {
+  text-shadow: 3px 2px 2px rgba(251, 12, 12,1), 0px -1px 3px rgba(12, 79, 251,.5),-3px 0px 2px rgba(52, 251, 12, 1);
+}
+
+.castingWindow {
+  height: 0;
+  width: 100%;
+  background-color: gray;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+@keyframes blink-animation {
+  50% { opacity: 1; }
+}
+
+
+
+
+
+
+.actionPointRow {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  height: 20px;
+}
+
+.actionPointToken {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #666;
+}
+
+.filled {
+  background: #fff;
+}
+
+.empty {
+  background: transparent;
 }

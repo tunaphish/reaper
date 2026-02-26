@@ -9,7 +9,7 @@ import { MenuOption } from './menuOption';
 import styles from './battle.module.css';
 import { Battle } from './Battle';
 import { Folder } from '../../model/folder';
-import { ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
+import { ResourceDisplay, TechniqueViewManager } from '../world/ResourceDisplay';
 
 import { Action } from '../../model/action';
 

@@ -265,23 +265,3 @@
 }
 
 
-.actionPointRow {
-  display: flex;
-  gap: 4px;
-  margin-top: 4px;
-  height: 20px;
-}
-
-.actionPointToken {
-  width: 8px;
-  height: 8px;
-  border: 1px solid #666;
-}
-
-.filled {
-  background: #fff;
-}
-
-.empty {
-  background: transparent;
-}

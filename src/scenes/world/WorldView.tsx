@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { Meter, ResourceDisplay, TechniqueViewManager } from '../battle/ResourceDisplay';
+import { Meter, ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';

@@ -72,7 +72,7 @@ export const Elise: Ally = {
   health: 100,
   bleed: 0,
   maxHealth: 100,
-  actionPoints: 0,
+  actionPoints: 2,
   maxActionPoints: 3,
   actionPointsRegenRatePerSecond: .08,
   folder: eliseFolder,

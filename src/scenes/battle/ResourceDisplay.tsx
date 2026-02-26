@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
 import styles from './battle.module.css';
-import { Battle } from './Battle';
 import {Technique} from '../../model/technique';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
@@ -75,8 +74,6 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
     statusToStylesMap[props.combatant.status],
   ];
 
-
-
   return (
     <div className={style.join(' ')} onClick={props.onClickCell} 
       style={{ 
@@ -99,9 +96,17 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
             <Meter value={props.combatant.health-props.combatant.bleed} max={props.combatant.maxHealth} className={styles.healthMeter}/>
             <div className={styles.meterNumber}>{Math.ceil(props.combatant.health)}</div>
           </div>
-       </div>
-       <div className={styles.actionPoints}>
-          {Math.floor(props.combatant.actionPoints)}
+          <div className={styles.actionPointRow}>
+            {Array.from({ length: props.combatant.maxActionPoints }).map((_, i) => (
+              <div
+                key={i}
+                className={[
+                  styles.actionPointToken,
+                  i < Math.floor(props.combatant.actionPoints) ? styles.filled : styles.empty,
+                ].join(' ')}
+              />
+            ))}
+        </div>
        </div>
     </div>
   )

@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { Meter } from '../battle/ResourceDisplay';
+import { Meter, ResourceDisplay } from '../battle/ResourceDisplay';
 import { TypewriterText } from '../shared/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '../shared';
@@ -166,10 +166,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         position: 'relative', 
       }}
     >
-      <Window key={ally.name} style={style} delay={idx*0.15} onClick={onClick}>
-        {ally.name}
-        <Meter value={ally.health} max={ally.maxHealth} className={classNames.healthMeter}></Meter>
-      </Window>
+      <ResourceDisplay combatant={ally} onClickCell={onClick}/>
       <div style={{ position: "absolute", top: "-20px" }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
@@ -182,7 +179,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
 const AllyBarView = observer((props: { world: World }): JSX.Element => (
   <div className={classNames.combatantBar}>
-    {props.world.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
+    {props.world.worldStore.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
   </div>
 ));
 

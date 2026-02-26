@@ -1,7 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import { ContextAction, Window } from "../../model/encounter";
-import { Ally } from "../../model/ally";
+import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
+import { Combatant, Status } from "../../model/combatant";
+import * as Techniques from '../../data/techniques';
 
 
 export type MenuOption = {
@@ -28,9 +30,13 @@ export class WorldStore {
   enemyJournalContent?: Enemy;
   systemsMenuOpen = false;
 
+  // Combat
+  enemies: Enemy[] = [];
+  allies: Allies;
 
-  constructor(playerSave: PlayerSave) {
+  constructor(playerSave: PlayerSave, allies: Allies) {
     this.playerSave = playerSave;
+    this.allies = allies;
     makeAutoObservable(this);
   }
 
@@ -78,4 +84,42 @@ export class WorldStore {
   setContextAction(contextAction?: ContextAction): void {
     this.contextAction = contextAction;
   }
+
+  // combat
+    tickStats(delta: number): void {
+      this.getCombatants().forEach((combatant) => {
+  
+        if (combatant.status === Status.DEAD) return;
+        if (combatant.bleed > 0) {
+          const DAMAGE_TICK_RATE = (delta / 1000) * 5;
+          combatant.bleed -= DAMAGE_TICK_RATE;
+          combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
+        }
+        
+          const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
+            (combatant.activeTechniques.has(Techniques.haste) ? 2 : 1) *
+            (delta / 1000) ;
+  
+          combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);
+      
+  
+      });
+    }
+  
+    updateCombatantsState(): void {
+      [...this.allies, ...this.enemies].forEach((combatant) => {
+        if (combatant.health <= 0) {
+          combatant.status = Status.DEAD;
+        } else if (combatant.actionPoints <= 0) {
+          combatant.status = Status.EXHAUSTED;
+        } else {
+          combatant.status = Status.NORMAL;
+        }
+      });
+    }
+  
+    getCombatants(): Combatant[] {
+      return [...this.enemies, ...this.allies];
+    }
+  
 }

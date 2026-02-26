@@ -2,21 +2,18 @@ import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
 import { WorldView } from './WorldView';
-// import { fencer } from '../../data/enemies';
 
-import { Ally } from '../../model/ally';
+import { Allies, Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
-import { fencer } from '../../data/enemies';
 import { Menu, MenuOption, WorldStore } from './worldStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { ObserveAction, Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
 import { enemies } from '../../data/enemies';
-import { toJS } from 'mobx';
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -41,10 +38,12 @@ export class World extends Phaser.Scene {
   choiceSelectSound: Phaser.Sound.BaseSound;
   choiceDisabledSound: Phaser.Sound.BaseSound;
 
-  allies: Ally[];
   inventory: Inventory;
 
   queuedEvents: QueuedEvent[] = [];
+
+  // combat
+  combatInitiated = true;
 
   constructor() {
     super(sceneConfig);
@@ -54,11 +53,11 @@ export class World extends Phaser.Scene {
 
   init(): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');
-    this.allies = this.registry.get('allies');
+    const allies: Allies = this.registry.get('allies');
     this.inventory = this.registry.get('inventory');
     this.mapData = DEBUG_MAP_DATA;
     
-    this.worldStore = new WorldStore(playerSave);
+    this.worldStore = new WorldStore(playerSave, allies);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
@@ -78,7 +77,7 @@ export class World extends Phaser.Scene {
     // Create Map Triggers
     this.triggerGroup = this.physics.add.staticGroup()
     // TODO: Update to pull trigger data from Tiled
-    this.createEncounterTriggers(spawnPoint)
+    // this.createEncounterTriggers(spawnPoint)
 
 
     // Player
@@ -112,6 +111,10 @@ export class World extends Phaser.Scene {
     this.player.update(time, delta);
     this.onTriggerExit();
     this.processQueuedEvents(delta);
+
+    // combat
+    this.worldStore.tickStats(delta);
+    this.worldStore.updateCombatantsState();
   }
 
   onTriggerExit(): void {
@@ -323,6 +326,9 @@ export class World extends Phaser.Scene {
 
   //#endregion
   
+
+  //#region combat
+  //#endregion
 }
 
 const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {

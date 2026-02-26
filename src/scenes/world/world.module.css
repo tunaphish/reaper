@@ -139,7 +139,6 @@ overflow: hidden;
 .characterCellContainer {
   grid-column: 1;
   grid-row: 1;
-  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -150,10 +149,16 @@ overflow: hidden;
   display: grid;
   grid-template-columns: 1fr; 
   grid-template-rows: 1fr;
-  margin-bottom: 3px;   
   width: 100%;
+  font-size: 12px;
+  height: 100%;
+  background-color: gray;
 }
 
+.meterContainer > * {
+  grid-column: 1;
+  grid-row: 1;
+}
 
 
 .meterBackground {
@@ -208,6 +213,18 @@ overflow: hidden;
   grid-row: 1;
 }
 
+.actionPointsContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.actionPointsContainer > * {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .modalContainer {
   position: absolute;
   width: 100%;
@@ -242,15 +259,6 @@ overflow: hidden;
   background: pink;
 }
 
-.meterNumber {
-  grid-column: 1;
-  grid-row: 1;
-  padding-left: 5px;
-  font-size: 8px;
-  
-  text-shadow: .5px .5px 0 rgba(0, 0, 0, 1);
-
-}
 
 .menuOption {
   all: unset;
@@ -289,20 +297,17 @@ overflow: hidden;
   50% { opacity: 1; }
 }
 
-
-
-
-
-
 .actionPointRow {
   display: flex;
   align-items: center;
   gap: 4px;
+  padding: 12px;
 }
 
 .actionPointToken {
   width: 8px;
   height: 8px;
+  transform: rotate(45deg);
 }
 
 .filled {
@@ -322,6 +327,7 @@ overflow: hidden;
 .overflowToken {
   width: 6px;
   height: 6px;
-  background: gold;       /* or glow / pulse */
+  background: gold; 
   box-shadow: 0 0 4px gold;
+  transform: rotate(45deg);
 }

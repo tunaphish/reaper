@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
-import styles from './world.module.css';
+import classNames from './world.module.css';
 import {Technique} from '../../model/technique';
 import { Ally } from '../../model/ally';
 
@@ -10,8 +10,8 @@ export const Meter = (props: { value: number, max: number, className?: string })
   const { className, value, max } = props;
 
   return (
-    <div className={[styles.meterBackground, className].join(' ')}>
-      <div className={styles.meter} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
+    <div className={[classNames.meterBackground, className].join(' ')}>
+      <div className={classNames.meter} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
     </div>
   )
 }
@@ -43,7 +43,7 @@ export const TechniqueView = (props: { technique: Technique }) => {
     return (
       <div style={style}>
         <motion.div
-          className={styles.window} 
+          className={classNames.window} 
           style={{ fontSize: '16px' }}
           initial={{ scaleY: 0 }} 
           animate={{ scaleY: 1 }} 
@@ -67,11 +67,11 @@ export const TechniqueViewManager = observer(((props: {combatant: Combatant }) =
 export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
-    [Status.DEAD]: styles.DEAD,
-    [Status.EXHAUSTED]: styles.EXHAUSTED,
+    [Status.DEAD]: classNames.DEAD,
+    [Status.EXHAUSTED]: classNames.EXHAUSTED,
   };
-  const style = [
-    styles.window,
+  const className = [
+    classNames.window,
     statusToStylesMap[props.ally.status],
   ];
   
@@ -80,49 +80,53 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   const overflowAP = Math.max(0, totalAP - baseAP);
 
   return (
-    <div className={style.join(' ')} onClick={props.onClickCell} 
-      style={{ 
-        flex: '1',
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gridTemplateRows: "1fr", 
-      }}>
-
-        <motion.div 
-          className={styles.castingWindow}
-          animate={{ height: (Math.abs(props.ally.actionPoints%1) * 100) + '%' }}
-          transition={{ duration: 0 }}
-        />
-
-        <div className={styles.characterCellContainer}>
-          <div style={{ fontSize: '12px' }}>{props.ally.name}</div>
-          <div className={styles.meterContainer}>
-            <Meter value={props.ally.health} max={props.ally.maxHealth} className={styles.bleedMeter}/>
-            <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={styles.healthMeter}/>
-            <div className={styles.meterNumber}>{Math.ceil(props.ally.health)}</div>
+    <div className={className.join(' ')} onClick={props.onClickCell}>
+        <div className={classNames.characterCellContainer}>
+          <div className={classNames.meterContainer}>
+            <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
+            <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter}/>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
+              <div style={{ fontSize: '12px' }}>{props.ally.name}</div>
+              <div style={{ fontSize: '12px' }}>{Math.ceil(props.ally.health)}</div>
+            </div>
           </div>
-          <div className={styles.actionPointRow}>
+          <div className={classNames.actionPointsContainer}
+             style={{ 
+              flex: '1',
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gridTemplateRows: "1fr", 
+            }}
+          >
+            <motion.div 
+              className={classNames.castingWindow}
+              animate={{ height: (Math.abs(props.ally.actionPoints%1) * 100) + '%' }}
+              transition={{ duration: 0 }}
+            />
+            <div className={classNames.actionPointRow}>
             {Array.from({ length: baseAP }).map((_, i) => (
               <div
                 key={`base-${i}`}
                 className={[
-                  styles.actionPointToken,
-                  i < totalAP ? styles.filled : styles.empty,
+                  classNames.actionPointToken,
+                  i < totalAP ? classNames.filled : classNames.empty,
                 ].join(' ')}
               />
             ))}
 
             {overflowAP > 0 && (
-              <div className={styles.overflowRow}>
+              <div className={classNames.overflowRow}>
                 {Array.from({ length: overflowAP }).map((_, i) => (
                   <div
                     key={`overflow-${i}`}
-                    className={styles.overflowToken}
+                    className={classNames.overflowToken}
                   />
                 ))}
               </div>
             )}
           </div>
+          </div>
+
        </div>
     </div>
   )

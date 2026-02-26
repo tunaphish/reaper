@@ -16,7 +16,7 @@ import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Status } from '../../model/combatant';
+import { Combatant, Status } from '../../model/combatant';
 import { updateActionPoints } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -390,86 +390,59 @@ export class World extends Phaser.Scene {
 
     return { menuOptions };
   }
-
-    selectOption(option: CombatOption): void {
-      this.sound.play('choice-select');
-      switch(option.type) {
-        case OptionType.ACTION:
-          const action = option as Action;
-          this.worldStore.setExecutable(action);
-          switch (action.targetType) {
-            case TargetType.SELF:
-              const targetMenu: Menu = { 
-                menuOptions: [
-                  { 
-                    display: this.worldStore.activeAlly.name, 
-                    execute: () => this.worldStore.setTarget(this.worldStore.activeAlly) 
-                  }
-                ]
-              };
-              this.worldStore.pushMenu(targetMenu);
-              break;
-            case TargetType.ENEMIES:
-              const enemiesMenu: Menu = {
-                 menuOptions: this.worldStore.enemies.map(enemy => { 
-                  return {
-                    display: enemy.name, 
-                    execute: () => this.worldStore.setTarget(enemy)
-                  }
-                })
-              };
-              this.worldStore.pushMenu(enemiesMenu);
-              break;
-            case TargetType.ALLIES:
-              const alliesMenu: Menu = {
-                 menuOptions: this.worldStore.allies.map(enemy => { 
-                  return {
-                    display: enemy.name, 
-                    execute: () => this.worldStore.setTarget(enemy)
-                  }
-                })
-              };
-              this.worldStore.pushMenu(alliesMenu);
-              break;
-            case TargetType.SINGLE_TARGET:
-              const singleTargetMenu: Menu = {
-                 menuOptions: this.worldStore.getCombatants().map(enemy => { 
-                  return {
-                    display: enemy.name, 
-                    execute: () => this.worldStore.setTarget(enemy)
-                  }
-                })
-              };
-              this.worldStore.pushMenu(singleTargetMenu);
-              break;
-          }
-          break;
-        case OptionType.TECHNIQUE:
-          const technique = option as Technique;
-          this.worldStore.setExecutable(technique);
-            const shatterMenu: Menu = { 
-              menuOptions: [
-                { 
-                  display: this.worldStore.activeAlly.name, 
-                  execute: () => this.worldStore.setTarget(this.worldStore.activeAlly) 
-                }
-              ]
-            };
-          this.worldStore.pushMenu(shatterMenu);
-          break;
   
-        case OptionType.ENEMY:
-        case OptionType.ALLY:
-          const combatant = option;
-          this.worldStore.setTarget(combatant);
-          break;
-        case OptionType.FOLDER:
-          const folder = option as Folder;
-          const folderMenu = this.getCombatMenu(folder);
-          this.worldStore.pushMenu(folderMenu);
-          break;
+  getTargetsMenu(targets: Combatant[]): Menu {
+    const menuOptions: MenuOption[] = targets.map(target => {
+      return {
+        display: target.name,
+        execute: () => {
+          this.worldStore.setTarget(target);
+        }
       }
+    });
+    const onClose = () => {
+      this.worldStore.setTarget(null);
     }
+
+    return { menuOptions, onClose };
+  }
+
+  selectOption(option: CombatOption): void {
+    this.sound.play('choice-select');
+    switch(option.type) {
+      case OptionType.ACTION:
+        const action = option as Action;
+        this.worldStore.setExecutable(action);
+        switch (action.targetType) {
+          case TargetType.SELF:
+            this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
+            break;
+          case TargetType.ENEMIES:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.enemies));
+            break;
+          case TargetType.ALLIES:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.allies));
+            break;
+          case TargetType.SINGLE_TARGET:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.getCombatants()));
+            break;
+        }
+        break;
+      case OptionType.TECHNIQUE:
+        this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
+        break;
+      case OptionType.ENEMY:
+      case OptionType.ALLY:
+        const combatant = option;
+        this.worldStore.setTarget(combatant);
+        break;
+      case OptionType.FOLDER:
+        const folder = option as Folder;
+        const folderMenu = this.getCombatMenu(folder);
+        this.worldStore.pushMenu(folderMenu);
+        break;
+    }
+  }
 
   executeSelectedOption(): void {
     if (

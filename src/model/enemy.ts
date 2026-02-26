@@ -1,35 +1,36 @@
 import { Combatant } from './combatant';
 import { OptionType } from './option';
-import { Battle } from '../scenes/battle/Battle';
-import { Action } from './action';
-import { Item } from './item';
-import { Folder } from './folder';
+// import { Battle } from '../scenes/battle/Battle';
+// import { Action } from './action';
+// import { Item } from './item';
+// import { Folder } from './folder';
 
-  // valid: (enemy: Enemy, scene: Battle) => boolean;
-  // getTarget: (scene: Battle, caster: Combatant) => Combatant;
+// valid: (enemy: Enemy, scene: Battle) => boolean;
+// getTarget: (scene: Battle, caster: Combatant) => Combatant;
 
-export interface PotentialOption {
-  option: (Action | Item | Folder);
-  getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
-  cadence: number;
-  singleUse: boolean;
-}
+// export interface PotentialOption {
+//   option: (Action | Item | Folder);
+//   getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
+//   cadence: number;
+//   singleUse: boolean;
+// }
 
-export interface Strategy {
-  potentialOptions: PotentialOption[];
-  toExit: (enemy: Enemy, battle: Battle) => boolean;
-  toEnter: (enemy: Enemy, battle: Battle) => boolean;
-}
+// export interface Strategy {
+//   potentialOptions: PotentialOption[];
+//   toExit: (enemy: Enemy, battle: Battle) => boolean;
+//   toEnter: (enemy: Enemy, battle: Battle) => boolean;
+// }
 
 export type Enemy = Combatant & {
   journalDescription: string;
   type: OptionType.ENEMY;
+  baseImageSrc: string;
 
-  strategies: Strategy[];
+  
   
   // temp vars
-  strategyIndex?: number;
-  timeTilNextAction: number;
-
-  baseImageSrc: string;
+  // strategyIndex?: number;
+  // timeTilNextAction: number;
+  // strategies: Strategy[];
+  
 };

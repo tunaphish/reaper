@@ -23,11 +23,31 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
         { world.worldStore.enemyJournalContent && <DisplayedEnemy enemy={world.worldStore.enemyJournalContent} />}
         { world.worldStore.systemsMenuOpen && <InfoView world={world} /> }
       </AnimatePresence>
+      <EnemiesContainer world={world} />
       <EncounterContainer world={world} />
       <AllyBarView world={world} />
     </div>
   )
 });
+
+
+//#region Combat
+
+export const EnemiesContainer = observer(({world}: {world: World}) => {
+  return (
+    <>
+      <AnimatePresence>
+        {
+          world.worldStore.enemies.map((enemy, idx) => (
+             <DisplayedEnemy enemy={enemy} key={enemy.name + idx} />
+          ))
+        }
+      </AnimatePresence>
+    </>
+  )
+});
+
+//#endregion
 
 const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JSX.Element => {
   const { world, menu, idx } = props;

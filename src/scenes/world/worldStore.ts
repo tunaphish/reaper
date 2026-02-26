@@ -147,4 +147,8 @@ export class WorldStore {
       this.setExecutable(null);
       this.setTarget(null);
     }
+
+    pushEnemy(enemy: Enemy): void {
+      this.enemies.push(enemy);
+    }
 }

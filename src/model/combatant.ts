@@ -14,10 +14,6 @@ export type Combatant = Option & {
   maxHealth: number;
   bleed: number;
 
-  actionPoints: number;
-  maxActionPoints: number;
-  actionPointsRegenRatePerSecond: number; 
-
   activeTechniques: Set<Technique>;
 
   status: Status;
@@ -33,10 +29,6 @@ export const updateHealth = (target: Combatant, change: number): void => {
 export const updateBleed = (target: Combatant, change: number): void => {
   const newBleed = target.bleed + change;
   target.bleed = clamp(0, newBleed, target.health);
-};
-
-export const updateActionPoints = (target: Combatant, change: number): void => {
-  target.actionPoints = Math.min(target.maxActionPoints, target.actionPoints + change);
 };
 
 export const updateDamage = (target: Combatant, change: number): void => {

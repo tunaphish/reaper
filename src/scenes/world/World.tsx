@@ -16,7 +16,8 @@ import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Status, updateActionPoints } from '../../model/combatant';
+import { Status } from '../../model/combatant';
+import { updateActionPoints } from '../../model/ally';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
 import { Item } from "../../model/item";
@@ -72,6 +73,7 @@ export class World extends Phaser.Scene {
     this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave, allies);
+    this.worldStore.pushEnemy(enemies[1]) //knight
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');

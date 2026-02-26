@@ -246,8 +246,14 @@ export class World extends Phaser.Scene {
   setAlly = (ally: Ally): void => {
     this.worldStore.closeMenus();
     this.playChoiceSelectSound();
-    const firstMenu = this.getSystemMenu();
-    this.worldStore.pushMenu(firstMenu);
+    if (this.combatInitiated) {
+      const systemMenu = this.getSystemMenu();
+      this.worldStore.pushMenu(systemMenu);
+    } else {
+      const systemMenu = this.getSystemMenu();
+      this.worldStore.pushMenu(systemMenu);
+    }
+
     this.worldStore.setActiveAlly(ally);
   }
 

@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { Meter, ResourceDisplay } from '../battle/ResourceDisplay';
+import { Meter, ResourceDisplay, TechniqueViewManager } from '../battle/ResourceDisplay';
 import { TypewriterText } from '../shared/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '../shared';
@@ -151,7 +151,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
   const onClick = () => {
     if (isInEncounter) {
-      world.playChoiceDisabledSound;
+      world.playChoiceDisabledSound();
       return;
     }
     if (world.worldStore.activeAlly?.name === ally.name && world.worldStore.menus.length > 0) return;
@@ -166,7 +166,10 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         position: 'relative', 
       }}
     >
-      <ResourceDisplay combatant={ally} onClickCell={onClick}/>
+      <div style={{ position: 'relative', flex: '1' }} >
+        <TechniqueViewManager combatant={ally} />
+        <ResourceDisplay combatant={ally} onClickCell={onClick}/>
+      </div>
       <div style={{ position: "absolute", top: "-20px" }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}

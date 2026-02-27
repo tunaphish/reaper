@@ -82,14 +82,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   return (
     <div className={className.join(' ')} onClick={props.onClickCell}>
         <div className={classNames.characterCellContainer}>
-          <div className={classNames.meterContainer}>
-            <Meter value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter}/>
-            <Meter value={props.ally.health-props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter}/>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
-              <div style={{ fontSize: '12px' }}>{props.ally.name}</div>
-              <div style={{ fontSize: '12px' }}>{Math.ceil(props.ally.health)}</div>
-            </div>
-          </div>
+          <CombatantHealthBar combatant={props.ally} />
           <div className={classNames.actionPointsContainer}
              style={{ 
               flex: '1',
@@ -130,4 +123,15 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
        </div>
     </div>
   )
+});
+
+export const CombatantHealthBar = observer((props: { combatant: Combatant }) => {
+  return <div className={classNames.meterContainer}>
+          <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
+          <Meter value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
+            <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
+            <div style={{ fontSize: '12px' }}>{Math.ceil(props.combatant.health)}</div>
+          </div>
+        </div>;
 });

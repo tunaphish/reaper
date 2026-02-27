@@ -7,13 +7,11 @@ const ImageLayerView: React.FC<{ layer: ImageLayer; }> = ({ layer }) => {
       src={layer.src}
       draggable={false}
       style={{
-        position: 'absolute',
         inset: 0,
         width: '100%',
         height: '100%',
         objectFit: layer.fit ?? 'contain',
         objectPosition: 'bottom center',
-        zIndex: layer.z ?? 0,
       }} />
   );
 };

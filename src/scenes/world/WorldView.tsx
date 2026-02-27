@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { Meter, ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
+import { CombatantHealthBar, Meter, ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
@@ -39,10 +39,34 @@ export const EnemiesContainer = observer(({world}: {world: World}) => {
       <AnimatePresence>
         {
           world.worldStore.enemies.map((enemy, idx) => (
-             <DisplayedEnemy enemy={enemy} key={enemy.name + idx} />
+             <EnemyView enemy={enemy} key={enemy.name + idx} />
           ))
         }
       </AnimatePresence>
+    </>
+  )
+});
+
+
+const EnemyView = observer((props: { enemy: Enemy }): JSX.Element => {
+  const enemyImageWindow: ImageWindow = {
+    type: EventType.IMAGE,
+    layout: {
+      x: 100,
+      y: 200,
+      width: 200,
+    },
+    layers: [{
+      src: props.enemy.baseImageSrc,
+    }]
+  }
+
+  return (
+    <>
+      <PanelWindow window={enemyImageWindow}>
+        <CombatantHealthBar combatant={props.enemy} />
+        <ImageWindowContent imageWindow={enemyImageWindow}/>
+      </PanelWindow>
     </>
   )
 });
@@ -209,7 +233,7 @@ const AllyBarView = observer((props: { world: World }): JSX.Element => (
 // #region Menu 
 
 
-const getEnemyImageView = (enemy: Enemy): ImageWindow =>{
+const getEnemyImageView = (enemy: Enemy): ImageWindow => {
   return {
     type: EventType.IMAGE,
     layout: {

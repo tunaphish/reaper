@@ -60,7 +60,7 @@ export const PanelWindow = ({ children, style, delay = 0, onClick, window }: Pan
   const wrapperStyle: React.CSSProperties = {
     position: 'absolute',
     width: layout?.width ?? 380,
-    height: layout?.height ?? 140,
+    height: layout?.height ?? 'auto',
     left: layout?.x ?? 35,
     top: layout?.y ?? 550,
     ...style

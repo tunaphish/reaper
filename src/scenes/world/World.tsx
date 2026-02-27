@@ -261,6 +261,7 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_DAMAGE: {
+        this.events.emit('shake', this.worldStore.target.name);
         updateDamage(this.worldStore.target, event.value);
         return;
       }

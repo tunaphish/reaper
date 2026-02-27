@@ -14,6 +14,7 @@ import { PanelWindow } from './Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
 import { CursorList } from './CursorList';
+import { getRandomInt } from '../../model/math';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -33,13 +34,36 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
 
 //#region Combat
 
+export function usePhaserDomShake(
+  scene: Phaser.Scene | null,
+  ref: React.RefObject<Element>,
+  target: string,
+): void {
+  React.useEffect(() => {
+    
+    if (!scene || !ref.current) return;
+
+    const handler = (data) => {
+      if (data !== target) return;
+      if (ref.current) {
+        shakeElement(ref.current);
+      }
+    };
+
+    scene.events.on("shake", handler);
+    return () => {
+      scene.events.off("shake", handler);
+    };
+  }, [scene, ref, "shake"]);
+}
+
 export const EnemiesContainer = observer(({world}: {world: World}) => {
   return (
     <>
       <AnimatePresence>
         {
           world.worldStore.enemies.map((enemy, idx) => (
-             <EnemyView enemy={enemy} idx={idx} key={enemy.name + idx} count={world.worldStore.enemies.length} />
+             <EnemyView world={world} enemy={enemy} idx={idx} key={enemy.name + idx} count={world.worldStore.enemies.length} />
           ))
         }
       </AnimatePresence>
@@ -49,8 +73,11 @@ export const EnemiesContainer = observer(({world}: {world: World}) => {
 
 
 const EnemyView = observer(
-  (props: { enemy: Enemy; idx: number; count: number }): JSX.Element => {
-    const { enemy, idx, count } = props;
+  (props: { world: World, enemy: Enemy; idx: number; count: number }): JSX.Element => {
+    const { world, enemy, idx, count } = props;
+
+    const ref = React.useRef<HTMLDivElement>(null);
+    usePhaserDomShake(world, ref, enemy.name);
 
     const STAGE_W = 450;
     const STAGE_H = 800;
@@ -98,19 +125,37 @@ const EnemyView = observer(
       ],
     };
 
-    return (
-      
-        
-        <PanelWindow window={enemyImageWindow}>
-          <CombatantHealthBar combatant={enemy} />
-          <ImageWindowContent imageWindow={enemyImageWindow} />
-          <TechniqueViewManager combatant={enemy} />
+    return (      
+        <PanelWindow window={enemyImageWindow} >
+          <div ref={ref}>
+            <CombatantHealthBar combatant={enemy} />
+            <ImageWindowContent imageWindow={enemyImageWindow} />
+            <TechniqueViewManager combatant={enemy} />
+          </div>
         </PanelWindow>
-      
-      
     );
   }
 );
+
+export const shakeElement = (element: Element): void => {
+  const duration = 350 + getRandomInt(100);
+  
+  const shakeTiming = {
+    duration,
+    timing: 'ease-in-out',
+    iterationCount: 1,
+  }
+
+  const keyFrames = [];
+  for (let i=0; i<10; i++) {
+    keyFrames.push({ transform: `translate(${-20+getRandomInt(40)}px, ${-20+getRandomInt(40)}px) rotate(${-10+getRandomInt(20)}deg)`});
+  }
+  keyFrames.push({ transform: 'translate(0, 0) rotate(0)'});
+
+
+  element.animate(keyFrames, shakeTiming);
+}
+
 
 //#endregion
 
@@ -229,6 +274,8 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
   const { world, ally, idx } = props;
+  const ref = React.useRef<HTMLDivElement>(null);
+  usePhaserDomShake(world, ref, ally.name);
 
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
@@ -252,6 +299,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         padding: '5px',
         position: 'relative', 
       }}
+      ref={ref}
     >
       <div style={{ position: 'relative', flex: '1' }} >
         <TechniqueViewManager combatant={ally} />

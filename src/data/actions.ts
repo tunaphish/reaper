@@ -83,7 +83,37 @@ export const engage: Action = {
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
+  ]
+};
 
+export const splinter: Action = {
+  type: OptionType.ACTION,
+  name: 'Splinter',
+  description: 'Deals high damage. Condition: Splinter must not have been used during this combat.',
+  targetType: TargetType.SINGLE_TARGET,
+
+
+  actionPointsCost: 1,
+
+  conditionMet: (world, caster, target) => world.splinterNotCasted,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 70 }
+  ]
+};
+
+export const smash: Action = {
+  type: OptionType.ACTION,
+  name: 'Smash',
+  description: 'Deals high damage',
+  targetType: TargetType.SINGLE_TARGET,
+
+
+  actionPointsCost: 2,
+
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 120 }
   ]
 };
 

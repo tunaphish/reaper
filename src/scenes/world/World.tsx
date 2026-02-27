@@ -59,6 +59,7 @@ export class World extends Phaser.Scene {
 
   // combat
   combatInitiated = true;
+  splinterNotCasted = true;
 
   constructor() {
     super(sceneConfig);
@@ -502,7 +503,7 @@ export class World extends Phaser.Scene {
     } 
 
     // TODO: Apply Techniques Buffs
-    
+    if (action.name === "Splinter") this.splinterNotCasted = false;
     action.events.forEach(event => this.executeEvent(event));    
     this.worldStore.resetSelections();
     

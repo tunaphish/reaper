@@ -39,7 +39,7 @@ export const EnemiesContainer = observer(({world}: {world: World}) => {
       <AnimatePresence>
         {
           world.worldStore.enemies.map((enemy, idx) => (
-             <EnemyView enemy={enemy} key={enemy.name + idx} />
+             <EnemyView enemy={enemy} idx={idx} key={enemy.name + idx} />
           ))
         }
       </AnimatePresence>
@@ -48,28 +48,64 @@ export const EnemiesContainer = observer(({world}: {world: World}) => {
 });
 
 
-const EnemyView = observer((props: { enemy: Enemy }): JSX.Element => {
-  const enemyImageWindow: ImageWindow = {
-    type: EventType.IMAGE,
-    layout: {
-      x: 100,
-      y: 200,
-      width: 200,
-    },
-    layers: [{
-      src: props.enemy.baseImageSrc,
-    }]
-  }
+const EnemyView = observer(
+  (props: { enemy: Enemy; idx: number; count: number }): JSX.Element => {
+    const { enemy, idx, count } = props;
 
-  return (
-    <>
+    const STAGE_W = 450;
+    const STAGE_H = 800;
+    const SIZE = 235;
+
+    const positions: { x: number; y: number }[] = (() => {
+      switch (count) {
+        case 1:
+          return [{ x: (STAGE_W - SIZE) / 2, y: 120 }];
+        case 2:
+          return [
+            { x: 40, y: 120 },
+            { x: STAGE_W - SIZE - 40, y: 120 },
+          ];
+        case 3:
+          return [
+            { x: (STAGE_W - SIZE) / 2, y: 80 },
+            { x: 20, y: 340 },
+            { x: STAGE_W - SIZE - 20, y: 340 },
+          ];
+        case 4:
+        default:
+          return [
+            { x: 20, y: 80 },
+            { x: STAGE_W - SIZE - 20, y: 80 },
+            { x: 20, y: 360 },
+            { x: STAGE_W - SIZE - 20, y: 360 },
+          ];
+      }
+    })();
+
+    const { x, y } = positions[idx];
+
+    const enemyImageWindow: ImageWindow = {
+      type: EventType.IMAGE,
+      layout: {
+        x,
+        y,
+        width: SIZE,
+      },
+      layers: [
+        {
+          src: enemy.baseImageSrc,
+        },
+      ],
+    };
+
+    return (
       <PanelWindow window={enemyImageWindow}>
-        <CombatantHealthBar combatant={props.enemy} />
-        <ImageWindowContent imageWindow={enemyImageWindow}/>
+        <CombatantHealthBar combatant={enemy} />
+        <ImageWindowContent imageWindow={enemyImageWindow} />
       </PanelWindow>
-    </>
-  )
-});
+    );
+  }
+);
 
 //#endregion
 

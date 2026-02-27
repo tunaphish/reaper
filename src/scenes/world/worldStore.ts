@@ -148,7 +148,7 @@ export class WorldStore {
       this.setTarget(null);
     }
 
-    pushEnemy(enemy: Enemy): void {
-      this.enemies.push(enemy);
+    pushEnemies(enemies: Enemy[]): void {
+      this.enemies.push(...enemies);
     }
 }

@@ -3,7 +3,8 @@ import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 
 import * as Actions from './actions';
-import { randomAlly } from './targetStrategies';
+import { randomAlly } from './targetStrategies'
+import * as Techniques from './techniques';
 
 export const fencer: Enemy = {
   type: OptionType.ENEMY,
@@ -41,7 +42,7 @@ export const fencer: Enemy = {
   // ],
   // timeTilNextAction: 0,
 
-  activeTechniques: new Set(),
+  activeTechniques: new Set([Techniques.haste]),
 
 };
 

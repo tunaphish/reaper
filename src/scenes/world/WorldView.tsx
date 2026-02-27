@@ -39,7 +39,7 @@ export const EnemiesContainer = observer(({world}: {world: World}) => {
       <AnimatePresence>
         {
           world.worldStore.enemies.map((enemy, idx) => (
-             <EnemyView enemy={enemy} idx={idx} key={enemy.name + idx} />
+             <EnemyView enemy={enemy} idx={idx} key={enemy.name + idx} count={world.worldStore.enemies.length} />
           ))
         }
       </AnimatePresence>
@@ -99,10 +99,15 @@ const EnemyView = observer(
     };
 
     return (
-      <PanelWindow window={enemyImageWindow}>
-        <CombatantHealthBar combatant={enemy} />
-        <ImageWindowContent imageWindow={enemyImageWindow} />
-      </PanelWindow>
+      
+        
+        <PanelWindow window={enemyImageWindow}>
+          <CombatantHealthBar combatant={enemy} />
+          <ImageWindowContent imageWindow={enemyImageWindow} />
+          <TechniqueViewManager combatant={enemy} />
+        </PanelWindow>
+      
+      
     );
   }
 );

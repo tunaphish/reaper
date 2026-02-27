@@ -19,6 +19,7 @@ export type Menu =  {
   onClose?: () => void;
   menuOptions: MenuOption[];
   isCursor?: boolean;
+  title?: string;
 };
 
 export type Executable = Action | Item | Technique;

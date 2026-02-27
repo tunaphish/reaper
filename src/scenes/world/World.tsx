@@ -289,7 +289,7 @@ export class World extends Phaser.Scene {
         this.sound.play('choice-select');
         this.worldStore.setActiveAlly(ally);
         this.events.emit('caster-set', ally);
-        this.worldStore.pushMenu(this.getCombatMenu(ally.folder));
+        this.worldStore.pushMenu(this.getCombatMenu(ally.folder, ally.name));
     } else {
       const systemMenu = this.getSystemMenu();
       this.worldStore.pushMenu(systemMenu);
@@ -329,6 +329,7 @@ export class World extends Phaser.Scene {
       onClose: () => this.worldStore.setEnemyJournalContent(null),
       menuOptions: enemyJournalMenuOptions,
       isCursor: true,
+      title: "Enemies"
     }
     
 
@@ -346,7 +347,8 @@ export class World extends Phaser.Scene {
             //
           }
         },
-      ]
+      ],
+      title: "Journal",
     };
 
     const systemMenu: Menu = {
@@ -391,7 +393,7 @@ export class World extends Phaser.Scene {
     }
   }
 
-  getCombatMenu(folder: Folder): Menu {
+  getCombatMenu(folder: Folder, title: string): Menu {
     const menuOptions: MenuOption[] = folder.options.map(option => {
       return {
         display: option.name,
@@ -400,8 +402,7 @@ export class World extends Phaser.Scene {
         }
       }
     });
-
-    return { menuOptions };
+    return { menuOptions, title };
   }
   
   getTargetsMenu(targets: Combatant[]): Menu {
@@ -416,8 +417,9 @@ export class World extends Phaser.Scene {
     const onClose = () => {
       this.worldStore.setTarget(null);
     }
+    const title = "Targets";
 
-    return { menuOptions, onClose };
+    return { menuOptions, onClose, title };
   }
 
   selectOption(option: CombatOption): void {
@@ -453,7 +455,7 @@ export class World extends Phaser.Scene {
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
-        const folderMenu = this.getCombatMenu(folder);
+        const folderMenu = this.getCombatMenu(folder, folder.name);
         this.worldStore.pushMenu(folderMenu);
         break;
     }

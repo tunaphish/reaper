@@ -150,8 +150,10 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
 
   return (
     <Window style={style}>
-        <div style={{ color: 'black', background: 'white', }} onClick={(e) => onClickExit(e)}>
-          X
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px', background: 'white', color: 'gray' }} onClick={(e) => onClickExit(e)}>
+          <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
+          <div>X</div>
         </div>
         <div style={{ padding: '5px' }}>
           {Content}

@@ -70,6 +70,23 @@ export const attack: Action = {
     ]
 };
 
+export const engage: Action = {
+  type: OptionType.ACTION,
+  name: 'Engage',
+  description: 'Deals high damage. Condition: target must have full health.',
+  targetType: TargetType.SINGLE_TARGET,
+
+
+  actionPointsCost: 1,
+
+  conditionMet: (world, caster, target) => target.health === target.maxHealth,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 70 }
+
+  ]
+};
+
 export const stanch: Action = {
   type: OptionType.ACTION,
   name: 'Stanch',

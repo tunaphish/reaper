@@ -487,7 +487,6 @@ export class World extends Phaser.Scene {
         this.worldStore.activeAlly.activeTechniques.add(this.worldStore.executable);
       }
     
-      
       this.sound.play(technique.soundKeyName);
       this.worldStore.resetSelections();
       return;
@@ -496,9 +495,15 @@ export class World extends Phaser.Scene {
     const action = (this.worldStore.executable as Action);
     updateActionPoints(this.worldStore.activeAlly, -action.actionPointsCost);
 
-    // TODO: Apply Techniques
-    action.events.forEach(event => this.executeEvent(event));
+    if (action.conditionMet && !action.conditionMet(this, this.worldStore.activeAlly, this.worldStore.target)) {
+      this.sound.play('restriction-violated');
+      this.worldStore.resetSelections();
+      return;
+    } 
+
+    // TODO: Apply Techniques Buffs
     
+    action.events.forEach(event => this.executeEvent(event));    
     this.worldStore.resetSelections();
     
   }

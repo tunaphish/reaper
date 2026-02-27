@@ -88,6 +88,7 @@ export class Boot extends Phaser.Scene {
     this.load.audio('debuff', '/reaper/sounds/debuff.wav');
     this.load.audio('smirk', '/reaper/sounds/smirk.mp3');
     this.load.audio('charged', '/reaper/sounds/charged.mp3');
+    this.load.audio('restriction-violated', '/reaper/sounds/restriction-violated.mp3');
 
     this.load.audio('slime-noise', '/reaper/sounds/slime-noise.mp3');
 

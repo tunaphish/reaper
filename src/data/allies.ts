@@ -26,7 +26,7 @@ export const Eji: Ally = {
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: new Set([Techniques.haste, Techniques.buff]),
+  activeTechniques: new Set(),
   
   status: Status.NORMAL,
   

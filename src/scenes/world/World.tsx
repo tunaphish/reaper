@@ -429,6 +429,8 @@ export class World extends Phaser.Scene {
         }
         break;
       case OptionType.TECHNIQUE:
+        const technique = option as Technique;
+        this.worldStore.setExecutable(technique);
         this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
         break;
       case OptionType.ENEMY:

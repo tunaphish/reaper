@@ -2,7 +2,7 @@ import { Action } from '../model/action';
 import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
-import { updateActionPoints } from '../model/ally';
+import { updateActionPoints } from '../model/combatant';
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);

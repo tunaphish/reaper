@@ -17,7 +17,7 @@ import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
 import { Combatant, Status } from '../../model/combatant';
-import { updateActionPoints } from '../../model/ally';
+import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
 import { Item } from "../../model/item";

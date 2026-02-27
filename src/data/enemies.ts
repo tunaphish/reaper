@@ -15,7 +15,10 @@ export const fencer: Enemy = {
   maxHealth: 200,
   bleed: 0,
   status: Status.NORMAL,
-
+  actionPoints: 0,
+  maxActionPoints: 125,
+  actionPointsRegenRatePerSecond: 8,
+  
   
   // strategies: [
   //   {
@@ -53,6 +56,10 @@ export const knight: Enemy = {
   health: 200,
   maxHealth: 200,
   bleed: 0,
+
+  actionPoints: 0,
+  maxActionPoints: 125,
+  actionPointsRegenRatePerSecond: 5,
 
   // strategies: [
   //   {

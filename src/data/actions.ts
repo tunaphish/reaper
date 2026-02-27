@@ -3,6 +3,7 @@ import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
+import { EventType } from '../model/encounter';
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
@@ -40,40 +41,46 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 export const shatter: Action = {
   type: OptionType.ACTION,
   name: 'Shatter',
-  actionPointsCost: 0,
-  targetType: TargetType.SELF,
-  soundKeyName: 'charged',
-
   description: 'Deals damage',
-  resolve: (target, source: Combatant, potency) => {
-    const totalAp = [...source.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
-    source.actionPoints += totalAp;
-    source.activeTechniques = new Set();
-  },
-  potency: 50,
+  targetType: TargetType.SELF,
+
+  actionPointsCost: 0,
+
+  events: [
+    { type: EventType.SOUND, key: 'charged' },
+    { type: EventType.SHATTER }
+
+  ]
 }
 
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
-  actionPointsCost: 1,
-  targetType: TargetType.SINGLE_TARGET,
-  soundKeyName: 'attack',
-
   description: 'Deals damage',
-  resolve: dealDamage,
-  potency: 50,
+  targetType: TargetType.SINGLE_TARGET,
 
+
+  actionPointsCost: 1,
+
+
+    events: [
+      { type: EventType.SOUND, key: 'attack' },
+      { type: EventType.UPDATE_DAMAGE, value: 50 }
+  
+    ]
 };
 
 export const stanch: Action = {
   type: OptionType.ACTION,
   name: 'Stanch',
-  actionPointsCost: 1,
-  targetType: TargetType.SELF,
-
   description: 'Heals bleed on self',
-  resolve: healBleed,
-  potency: 50,
-  soundKeyName: 'heal',
+  targetType: TargetType.SELF,
+  
+  actionPointsCost: 1,
+
+    events: [
+      { type: EventType.SOUND, key: 'heal' },
+      { type: EventType.UPDATE_DAMAGE, value: -50 }
+    ]
+  
 }

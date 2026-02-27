@@ -16,7 +16,7 @@ import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, Status } from '../../model/combatant';
+import { Combatant, Status, updateDamage } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -73,7 +73,7 @@ export class World extends Phaser.Scene {
     this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave, allies);
-    this.worldStore.pushEnemies(enemies) //knight
+    this.worldStore.pushEnemies([enemies[0]]);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
@@ -257,6 +257,19 @@ export class World extends Phaser.Scene {
           loop: false,
           volume: 0.5,
         }).play();
+        return;
+      }
+
+      case EventType.UPDATE_DAMAGE: {
+        updateDamage(this.worldStore.target, event.value);
+        return;
+      }
+
+      case EventType.SHATTER: {
+        const source = this.worldStore.target;
+        const totalAp = [...source.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
+        source.actionPoints += totalAp;
+        source.activeTechniques = new Set();
         return;
       }
     }
@@ -480,10 +493,8 @@ export class World extends Phaser.Scene {
     const action = (this.worldStore.executable as Action);
     updateActionPoints(this.worldStore.activeAlly, -action.actionPointsCost);
 
-    const potency = action.potency * (this.worldStore.activeAlly.activeTechniques.has(Techniques.buff) ? 2 : 1);
-    action.resolve(this.worldStore.target, this.worldStore.activeAlly, potency);
-    
-    this.sound.play(action.soundKeyName);
+    // TODO: Apply Techniques
+    action.events.forEach(event => this.executeEvent(event));
     
     this.worldStore.resetSelections();
     

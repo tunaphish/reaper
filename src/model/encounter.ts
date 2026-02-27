@@ -17,6 +17,11 @@ export enum EventType {
   SOUND,
   CHOICE,
   OBSERVE,
+  
+  // Combat
+  UPDATE_DAMAGE,
+  UPDATE_AP,
+  SHATTER,
 }
 
 export type BaseEvent = {
@@ -77,11 +82,33 @@ export type ChoiceAction = BaseEvent & {
 }
 
 // #endregion
+
+// #region CombatEvents
+
+export type UpdateDamageEvent = BaseEvent & {
+  type: EventType.UPDATE_DAMAGE
+  value: number
+}
+
+export type UpdateApEvent = BaseEvent & {
+  type: EventType.UPDATE_AP
+  value: number
+}
+
+export type ShatterEvent = BaseEvent & {
+  type: EventType.SHATTER
+}
+
+
+// #endregion
+
 export type Window = TextWindow | ImageWindow;
 
 export type ContextAction =  ObserveAction | ChoiceAction;
 
-export type Event = Window | SoundEvent | ContextAction;
+export type CombatEvent = UpdateDamageEvent | UpdateApEvent | SHATTER;
+
+export type Event = Window | SoundEvent | ContextAction | CombatEvent;
 
 export type Encounter = {
   id: string

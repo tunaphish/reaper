@@ -18,7 +18,7 @@ export type Combatant = Option & {
   maxActionPoints: number;
   actionPointsRegenRatePerSecond: number; 
 
-  activeTechniques: Set<Technique>;
+  activeTechniques: Technique[];
   status: Status;
 }
 

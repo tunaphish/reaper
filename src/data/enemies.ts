@@ -1,10 +1,21 @@
 import { Enemy } from '../model/enemy';
-import { Status } from '../model/combatant';
+import { Combatant, Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 
 import * as Actions from './actions';
-import { randomTarget } from './targetStrategies'
 import * as Techniques from './techniques';
+import { getRandomInt } from '../model/math';
+import { World } from '../scenes/world/World';
+
+
+const isAlive = (targets: Combatant) => targets.status !== Status.DEAD;
+
+const randomTarget = (potentialTargets: Combatant[]) => {
+  return potentialTargets.at(getRandomInt(potentialTargets.length));
+};
+
+const randomAliveTarget = (scene: World, potentialTargets: Combatant[]): Combatant => randomTarget(potentialTargets.filter(isAlive));
+
 
 export const fencer: Enemy = {
   type: OptionType.ENEMY,
@@ -21,14 +32,32 @@ export const fencer: Enemy = {
   actionPointsRegenRatePerSecond: .13,
   
   strategies: [
-    { action: Actions.attack, weight: 100, getTarget: randomTarget, isValid: (world, caster) => true },
-    { action: Actions.splinter, weight: 500, getTarget: randomTarget, isValid: (world, caster) => world.splinterNotCasted },
-    { action: Actions.engage, weight: 500, getTarget: randomTarget, isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+    { 
+      option: Actions.attack, 
+      weight: 100, 
+      getTarget: (world, potentialTargets) => randomTarget(potentialTargets), 
+      isValid: (world, caster) => true 
+    },
+    { 
+      option: Actions.splinter, 
+      weight: 500, 
+      getTarget: randomAliveTarget, 
+      isValid: (world, caster) => world.splinterNotCasted },
+    { 
+      option: Actions.engage, 
+      weight: 500, 
+      getTarget: randomAliveTarget, 
+      isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+    { 
+      option: Techniques.counter, 
+      weight: 500, 
+      getTarget: randomAliveTarget, //
+      isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
+    },
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: new Set([Techniques.haste]),
-
+  activeTechniques: [Techniques.counter, Techniques.haste],
 };
 
 
@@ -51,7 +80,7 @@ export const knight: Enemy = {
   selectedStrategyIndex: 0,
   status: Status.NORMAL,
 
-  activeTechniques: new Set(),
+  activeTechniques: [],
 };
 
 export const enemies = [

@@ -26,7 +26,7 @@ export const Eji: Ally = {
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: new Set(),
+  activeTechniques: [],
   
   status: Status.NORMAL,
   
@@ -52,7 +52,7 @@ export const Keshi: Ally = {
   actionPointsRegenRatePerSecond: .12,
   folder: keshiFolder,
 
-  activeTechniques: new Set(),
+  activeTechniques: [],
   
   status: Status.NORMAL,
   
@@ -77,7 +77,7 @@ export const Elise: Ally = {
   actionPointsRegenRatePerSecond: .08,
   folder: eliseFolder,
 
-  activeTechniques: new Set(),
+  activeTechniques: [],
 
   status: Status.NORMAL,
 

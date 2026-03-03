@@ -273,7 +273,7 @@ export class World extends Phaser.Scene {
         const source = this.worldStore.target;
         const totalAp = [...source.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
         source.actionPoints += totalAp;
-        source.activeTechniques = new Set();
+        source.activeTechniques = [];
         return;
       }
     }
@@ -384,24 +384,31 @@ export class World extends Phaser.Scene {
   executeEnemyStrategies(): void {
     if (!this.combatInitiated) return;
     
-    const actionableEnemies = this.worldStore.enemies
-      .filter(enemy => enemy.status === Status.NORMAL)
-      .filter(enemy => enemy.actionPoints >= enemy.strategies[enemy.selectedStrategyIndex].action.actionPointsCost);    
-
+    const actionableEnemies = this.worldStore.enemies.filter(enemy => enemy.status === Status.NORMAL)
 
     for (const enemy of actionableEnemies) {
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
-      const action = strategy.action;
-      const liveTargets = this.worldStore.allies.filter(isAlive);
-      const potentialTargets = liveTargets.filter(ally => !action.conditionMet || action.conditionMet(this, enemy, ally));
-      const target = strategy.getTarget(this, potentialTargets.length === 0 ? liveTargets : potentialTargets);
-      this.executeOption(enemy, target, action);
-      enemy.status = Status.NORMAL;
+      const option = (strategy.option as CombatOption);
+
+      if (option.type === OptionType.TECHNIQUE) {
+        this.executeOption(enemy, enemy, option);
+      } else if (option.type === OptionType.ACTION) {
+        const action = option as Action;
+        if (enemy.actionPoints < action.actionPointsCost) continue;
+
+        const potentialTargets = this.worldStore.allies.filter(ally => !action.conditionMet || action.conditionMet(this, enemy, ally));
+        const target = strategy.getTarget(this, potentialTargets.length === 0 ? potentialTargets : potentialTargets);
+        this.executeOption(enemy, target, option);
+        enemy.status = Status.NORMAL;
+      }
+
+
       
       // Select Weighted Strategy
+      // engage probably happens too early
       const viableStrategies = enemy.strategies
         .map((s, i) => ({ s, i }))
-        .filter(({ s }) => s.isValid(this, enemy))
+        .filter(({ s }) => s.isValid(this, enemy));
 
       const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
       let roll = Math.random() * totalWeight
@@ -520,12 +527,14 @@ export class World extends Phaser.Scene {
     if (option.type === OptionType.TECHNIQUE) {
       const technique = (option as Technique);
 
-      if (caster.activeTechniques.has(option)) {
+      const idx = caster.activeTechniques.indexOf(option);
+
+      if (idx !== -1) {
         updateActionPoints(caster, technique.actionPointsCost);
-        caster.activeTechniques.delete(option);
+        caster.activeTechniques.splice(idx, 1);
       } else {
         updateActionPoints(caster, -technique.actionPointsCost);
-        caster.activeTechniques.add(option);
+        caster.activeTechniques.push(option);
       }
     
       this.sound.play(technique.soundKeyName);
@@ -534,7 +543,6 @@ export class World extends Phaser.Scene {
 
     const action = (option as Action);
     updateActionPoints(caster, -action.actionPointsCost);
-    console.log(caster.name, caster.actionPoints)
 
     if (action.conditionMet && !action.conditionMet(this, caster, target)) {
       this.sound.play('restriction-violated');
@@ -557,6 +565,3 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .filter(enemy => seenMap.has(enemy.name))
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
-
-const isAlive = (unit: Combatant) => unit.health !== 0;
-

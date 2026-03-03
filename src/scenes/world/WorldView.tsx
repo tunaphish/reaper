@@ -130,7 +130,18 @@ const EnemyView = observer(
           <div ref={ref}>
             <CombatantHealthBar combatant={enemy} />
             <ImageWindowContent imageWindow={enemyImageWindow} />
-            <div>{enemy.strategies[enemy.selectedStrategyIndex].action.name}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>
+                <span>{enemy.strategies[enemy.selectedStrategyIndex].option.name} </span>
+                <span>{enemy.actionPoints.toFixed(2)}</span>
+              </span>
+              <span>
+                {
+                  [...enemy.activeTechniques].map((technique) => <span key={technique.name}>{technique.name} </span>)
+                }
+              </span>
+            </div>
+
           </div>
         </PanelWindow>
     );

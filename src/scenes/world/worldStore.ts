@@ -109,7 +109,7 @@ export class WorldStore {
         }
         
           const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-            (combatant.activeTechniques.has(Techniques.haste) ? 2 : 1) *
+            (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
             (delta / 1000) ;
   
           combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);

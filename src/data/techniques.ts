@@ -15,7 +15,17 @@ export const buff: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Buff',
   actionPointsCost: 1,
-  description: 'Technique: Increase Speed',
+  description: 'Technique: Increase Strength',
+
+  soundKeyName: 'smirk',
+};
+
+
+export const counter: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Counter',
+  actionPointsCost: 1,
+  description: 'Technique: ATTACK enemies who deal damage to you',
 
   soundKeyName: 'smirk',
 };

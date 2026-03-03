@@ -3,7 +3,7 @@ import { Status } from '../model/combatant';
 import { OptionType } from '../model/option';
 
 import * as Actions from './actions';
-import { randomAlly } from './targetStrategies'
+import { randomTarget } from './targetStrategies'
 import * as Techniques from './techniques';
 
 export const fencer: Enemy = {
@@ -17,30 +17,15 @@ export const fencer: Enemy = {
   bleed: 0,
   status: Status.NORMAL,
   actionPoints: 0,
-  maxActionPoints: 125,
-  actionPointsRegenRatePerSecond: 8,
+  maxActionPoints: 2,
+  actionPointsRegenRatePerSecond: .13,
   
-  
-  // strategies: [
-  //   {
-  //     potentialOptions: [
-  //       { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false }
-  //     ],
-  //     toExit: (enemy, battle): boolean => enemy.actionPoints < 25,
-  //     toEnter: (enemy): boolean => enemy.actionPoints > 100,
-  //   },
-  //   {
-  //     potentialOptions: [],
-  //     toExit: (enemy, battle): boolean => enemy.actionPoints > 100,
-  //     toEnter: (enemy): boolean => enemy.actionPoints > 50,
-  //   },
-  //   {
-  //     potentialOptions: [],
-  //     toExit: (enemy, battle): boolean => enemy.actionPoints > 50,
-  //     toEnter: (): boolean => true,
-  //   }
-  // ],
-  // timeTilNextAction: 0,
+  strategies: [
+    { action: Actions.attack, weight: 100, getTarget: randomTarget, isValid: (world, caster) => true },
+    { action: Actions.splinter, weight: 500, getTarget: randomTarget, isValid: (world, caster) => world.splinterNotCasted },
+    { action: Actions.engage, weight: 500, getTarget: randomTarget, isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+  ],
+  selectedStrategyIndex: 0,
 
   activeTechniques: new Set([Techniques.haste]),
 
@@ -59,26 +44,11 @@ export const knight: Enemy = {
   bleed: 0,
 
   actionPoints: 0,
-  maxActionPoints: 125,
-  actionPointsRegenRatePerSecond: 5,
+  maxActionPoints: 2,
+  actionPointsRegenRatePerSecond: .13,
 
-  // strategies: [
-  //   {
-  //     potentialOptions: [
-  //       { option: Actions.attack, getTarget: randomAlly, cadence: 500, singleUse: false  }
-  //     ],
-
-  //     toExit: (enemy, battle): boolean => enemy.actionPoints < 25,
-  //     toEnter: (enemy): boolean => enemy.actionPoints > 75,
-  //   },
-  //   {
-  //     potentialOptions: [],
-  //     toExit: (enemy, battle): boolean => enemy.actionPoints > 75,
-  //     toEnter: (): boolean => true,
-  //   }
-  // ],
-  // timeTilNextAction: 0,
-
+  strategies: [],
+  selectedStrategyIndex: 0,
   status: Status.NORMAL,
 
   activeTechniques: new Set(),

@@ -1,36 +1,20 @@
+import { World } from '../scenes/world/World';
+import { Action } from './action';
 import { Combatant } from './combatant';
-import { OptionType } from './option';
-// import { Battle } from '../scenes/battle/Battle';
-// import { Action } from './action';
-// import { Item } from './item';
-// import { Folder } from './folder';
+import { Option, OptionType } from './option';
 
-// valid: (enemy: Enemy, scene: Battle) => boolean;
-// getTarget: (scene: Battle, caster: Combatant) => Combatant;
+export type Strategy = {
+  action: Action; // likely to change to option at some point.. use items stuff like that.. also apply technique lmao.. 
+  weight: number;
+  isValid: (world: World, caster: Combatant) => boolean;
+  getTarget: (world: World, potentialTargets: Combatant[]) => Combatant;
 
-// export interface PotentialOption {
-//   option: (Action | Item | Folder);
-//   getTarget: (scene: Battle, caster: Combatant) => Combatant | null;
-//   cadence: number;
-//   singleUse: boolean;
-// }
-
-// export interface Strategy {
-//   potentialOptions: PotentialOption[];
-//   toExit: (enemy: Enemy, battle: Battle) => boolean;
-//   toEnter: (enemy: Enemy, battle: Battle) => boolean;
-// }
+}
 
 export type Enemy = Combatant & {
   journalDescription: string;
   type: OptionType.ENEMY;
   baseImageSrc: string;
-
-  
-  
-  // temp vars
-  // strategyIndex?: number;
-  // timeTilNextAction: number;
-  // strategies: Strategy[];
-  
+  strategies: Strategy[];  
+  selectedStrategyIndex: number;
 };

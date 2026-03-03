@@ -132,6 +132,8 @@ export class World extends Phaser.Scene {
     // combat
     this.worldStore.tickStats(delta);
     this.worldStore.updateCombatantsState();
+
+    this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
@@ -221,7 +223,7 @@ export class World extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-  executeEvent(event: Event): void {
+  executeEvent(event: Event, target?: Combatant): void {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.TEXT: {
@@ -262,8 +264,8 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_DAMAGE: {
-        this.events.emit('shake', this.worldStore.target.name);
-        updateDamage(this.worldStore.target, event.value);
+        this.events.emit('shake', target.name);
+        updateDamage(target, event.value);
         return;
       }
 
@@ -379,19 +381,54 @@ export class World extends Phaser.Scene {
   
 
   //#region combat
+  executeEnemyStrategies(): void {
+    if (!this.combatInitiated) return;
+    
+    const actionableEnemies = this.worldStore.enemies
+      .filter(enemy => enemy.status === Status.NORMAL)
+      .filter(enemy => enemy.actionPoints >= enemy.strategies[enemy.selectedStrategyIndex].action.actionPointsCost);    
+
+
+    for (const enemy of actionableEnemies) {
+      const strategy = enemy.strategies[enemy.selectedStrategyIndex];
+      const action = strategy.action;
+      const liveTargets = this.worldStore.allies.filter(isAlive);
+      const potentialTargets = liveTargets.filter(ally => !action.conditionMet || action.conditionMet(this, enemy, ally));
+      const target = strategy.getTarget(this, potentialTargets.length === 0 ? liveTargets : potentialTargets);
+      this.executeOption(enemy, target, action);
+      enemy.status = Status.NORMAL;
+      
+      // Select Weighted Strategy
+      const viableStrategies = enemy.strategies
+        .map((s, i) => ({ s, i }))
+        .filter(({ s }) => s.isValid(this, enemy))
+
+      const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
+      let roll = Math.random() * totalWeight
+      for (const strategy of viableStrategies) {
+        roll -= strategy.s.weight
+        if (roll <= 0) enemy.selectedStrategyIndex = strategy.i
+        continue;
+      }
+      enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
+    }
+  }
+
+  
   resetDeadAllyCasterMenu(): void {
     if (this.worldStore.activeAlly && this.worldStore?.activeAlly.status === Status.DEAD) {
       this.worldStore.setActiveAlly(null);
-      // this.worldStore.emptyMenu();
+      this.worldStore.resetSelections();
+      this.worldStore.closeMenus();
     }
   }
 
   checkBattleEndConditions(): void {
     if (this.worldStore.allies.every((member) => member.status === Status.DEAD)) {
-      console.log('win')
+      console.log('lose')
     }
     if (this.worldStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
-      // console.log('lose')
+      console.log('win')
     }
   }
 
@@ -469,48 +506,49 @@ export class World extends Phaser.Scene {
       !this.worldStore.executable || 
       !this.worldStore.target
     ) return; 
-    
+    this.executeOption(this.worldStore.activeAlly, this.worldStore.target, this.worldStore.executable);
+    this.worldStore.resetSelections();  
+  }
 
+  executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
     // if (combatant.queuedOption.type === OptionType.ITEM) {
     //   combatant.queuedOption.charges -= 1;
     //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
     //   this.sound.play(combatant.queuedOption.soundKeyName);
     // } else
 
-    if (this.worldStore.executable.type === OptionType.TECHNIQUE) {
-      const technique = (this.worldStore.executable as Technique);
+    if (option.type === OptionType.TECHNIQUE) {
+      const technique = (option as Technique);
 
-      if (this.worldStore.activeAlly.activeTechniques.has(this.worldStore.executable)) {
-        updateActionPoints(this.worldStore.activeAlly, technique.actionPointsCost);
-        this.worldStore.activeAlly.activeTechniques.delete(this.worldStore.executable);
+      if (caster.activeTechniques.has(option)) {
+        updateActionPoints(caster, technique.actionPointsCost);
+        caster.activeTechniques.delete(option);
       } else {
-        updateActionPoints(this.worldStore.activeAlly, -technique.actionPointsCost);
-        this.worldStore.activeAlly.activeTechniques.add(this.worldStore.executable);
+        updateActionPoints(caster, -technique.actionPointsCost);
+        caster.activeTechniques.add(option);
       }
     
       this.sound.play(technique.soundKeyName);
-      this.worldStore.resetSelections();
       return;
     }
 
-    const action = (this.worldStore.executable as Action);
-    updateActionPoints(this.worldStore.activeAlly, -action.actionPointsCost);
+    const action = (option as Action);
+    updateActionPoints(caster, -action.actionPointsCost);
+    console.log(caster.name, caster.actionPoints)
 
-    if (action.conditionMet && !action.conditionMet(this, this.worldStore.activeAlly, this.worldStore.target)) {
+    if (action.conditionMet && !action.conditionMet(this, caster, target)) {
       this.sound.play('restriction-violated');
-      this.worldStore.resetSelections();
       return;
     } 
 
     // TODO: Apply Techniques Buffs
     if (action.name === "Splinter") this.splinterNotCasted = false;
-    action.events.forEach(event => this.executeEvent(event));    
-    this.worldStore.resetSelections();
-    
+    action.events.forEach(event => this.executeEvent(event, target));    
   }
-
   //#endregion
 }
+
+
 
 const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
   const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
@@ -519,4 +557,6 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
     .filter(enemy => seenMap.has(enemy.name))
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
 }
+
+const isAlive = (unit: Combatant) => unit.health !== 0;
 

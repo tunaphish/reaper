@@ -1,7 +1,6 @@
 import { Option } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
-import { Ally } from './ally';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -59,6 +58,6 @@ export const updateDamage = (target: Combatant, change: number): void => {
 export const resetCombatantBattleState = (combatant: Combatant): void => {
   combatant.status = Status.NORMAL;
 };
-export const updateActionPoints = (target: Ally, change: number): void => {
+export const updateActionPoints = (target: Combatant, change: number): void => {
   target.actionPoints = Math.min(target.maxActionPoints, target.actionPoints + change);
 };

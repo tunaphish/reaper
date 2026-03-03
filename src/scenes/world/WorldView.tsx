@@ -130,7 +130,7 @@ const EnemyView = observer(
           <div ref={ref}>
             <CombatantHealthBar combatant={enemy} />
             <ImageWindowContent imageWindow={enemyImageWindow} />
-            <TechniqueViewManager combatant={enemy} />
+            <div>{enemy.strategies[enemy.selectedStrategyIndex].action.name}</div>
           </div>
         </PanelWindow>
     );

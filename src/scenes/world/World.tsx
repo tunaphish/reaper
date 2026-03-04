@@ -26,6 +26,8 @@ import { OptionType } from '../../model/option';
 import { TargetType } from '../../model/targetType';
 
 import * as Techniques from '../../data/techniques';
+import * as Actions from '../../data/actions';
+
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -223,7 +225,7 @@ export class World extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-  executeEvent(event: Event, target?: Combatant): void {
+  executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.TEXT: {
@@ -264,8 +266,12 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_DAMAGE: {
+        console.log(caster.name, target.name);
         this.events.emit('shake', target.name);
         updateDamage(target, event.value);
+        if (target.activeTechniques.some(technique => technique.name === Techniques.counter.name)) {
+          this.executeOption(target, caster, Actions.attack);
+        }
         return;
       }
 
@@ -552,7 +558,7 @@ export class World extends Phaser.Scene {
 
     // TODO: Apply Techniques Buffs
     if (action.name === "Splinter") this.splinterNotCasted = false;
-    action.events.forEach(event => this.executeEvent(event, target));    
+    action.events.forEach(event => this.executeEvent(event, target, caster));    
   }
   //#endregion
 }

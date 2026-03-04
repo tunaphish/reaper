@@ -57,7 +57,7 @@ export const fencer: Enemy = {
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: [Techniques.haste],
+  activeTechniques: [Techniques.counter],
 };
 
 

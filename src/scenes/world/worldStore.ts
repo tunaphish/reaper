@@ -122,6 +122,8 @@ export class WorldStore {
       [...this.allies, ...this.enemies].forEach((combatant) => {
         if (combatant.health <= 0) {
           combatant.status = Status.DEAD;
+          combatant.actionPoints = 0;
+          combatant.activeTechniques = [];
         } else if (combatant.actionPoints <= 0) {
           combatant.status = Status.EXHAUSTED;
         } else {

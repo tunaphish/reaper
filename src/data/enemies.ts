@@ -50,14 +50,14 @@ export const fencer: Enemy = {
       isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
-      weight: 500, 
+      weight: 2000, 
       getTarget: randomAliveTarget, //
       isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
     },
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: [Techniques.counter, Techniques.haste],
+  activeTechniques: [Techniques.haste],
 };
 
 

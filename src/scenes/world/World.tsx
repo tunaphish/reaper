@@ -397,7 +397,7 @@ export class World extends Phaser.Scene {
         if (enemy.actionPoints < action.actionPointsCost) continue;
 
         const potentialTargets = this.worldStore.allies.filter(ally => !action.conditionMet || action.conditionMet(this, enemy, ally));
-        const target = strategy.getTarget(this, potentialTargets.length === 0 ? potentialTargets : potentialTargets);
+        const target = strategy.getTarget(this, potentialTargets.length === 0 ? this.worldStore.allies : potentialTargets );
         this.executeOption(enemy, target, option);
         enemy.status = Status.NORMAL;
       }
@@ -412,6 +412,7 @@ export class World extends Phaser.Scene {
 
       const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
       let roll = Math.random() * totalWeight
+
       for (const strategy of viableStrategies) {
         roll -= strategy.s.weight
         if (roll <= 0) enemy.selectedStrategyIndex = strategy.i

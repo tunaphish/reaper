@@ -29,29 +29,30 @@ export const MenuCursor = () => (
   />
 );
 
-type CursorListProps<T> = {
+type MenuOptionsViewProps<T> = {
   items: T[]
   getKey: (item: T) => string
   renderLabel: (item: T) => React.ReactNode
   onSelect: (item: T, index: number) => void
   initialIndex?: number
+  isCursor?: boolean
 }
 
-export const CursorList = ({items,getKey,renderLabel,onSelect,initialIndex = -1,}: CursorListProps<T>): JSX.Element => {
+export const MenuOptionsView = ({items,getKey,renderLabel,onSelect,initialIndex = -1,isCursor=false}: MenuOptionsViewProps<T>): JSX.Element => {
   const [selectedIndex, setSelectedIndex] = React.useState(initialIndex)
 
   return (
     <>
       {items.map((item, i) => (
         <div
-          key={getKey(item)}
+          key={getKey(item) + i}
           onClick={() => {
             setSelectedIndex(i)
             onSelect(item, i)
           }}
-          style={{ position: 'relative' }}
+          style={{ position: 'relative', display: 'flex' }}
         >
-          {i === selectedIndex && <MenuCursor />}
+          {isCursor && i === selectedIndex && <MenuCursor />}
           {renderLabel(item)}
         </div>
       ))}

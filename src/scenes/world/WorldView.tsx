@@ -13,7 +13,7 @@ import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWi
 import { PanelWindow } from './Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
-import { CursorList } from './CursorList';
+import { MenuOptionsView } from './MenuOptionsView';
 import { getRandomInt } from '../../model/math';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
@@ -183,11 +183,6 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
     left: horizontalOffset + "px",
   }
 
-  const onClick = (option: MenuOption) => {
-    if (!isTopMenu) return;
-    world.playChoiceSelectSound();
-    option.execute()
-  }
 
   const onClickExit = (e) => {
     e.stopPropagation();
@@ -195,25 +190,26 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
     world.popMenu();
   }
 
-  const Content = menu?.isCursor ?
-    <CursorList 
-      items={menu.menuOptions}
-      getKey={(item) => item.display} 
-      renderLabel={(item) => <>{item.display}</>}
-      onSelect={(item) => { world.playChoiceSelectSound(); item.execute(); }}
-    /> :
-    <>{menu.menuOptions.map(option => <div key={option.display} onClick={() => onClick(option)}>{option.display}</div>)}</>
 
   return (
     <Window style={style}>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px', background: 'white', color: 'gray' }} onClick={(e) => onClickExit(e)}>
-          <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
-          <div>X</div>
-        </div>
-        <div style={{ padding: '5px' }}>
-          {Content}
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px', background: 'white', color: 'gray' }} onClick={(e) => onClickExit(e)}>
+        <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
+        <div>X</div>
+      </div>
+      <div style={{ padding: '5px' }}>
+        <MenuOptionsView 
+          items={menu.menuOptions}
+          getKey={(item) => item.display} 
+          renderLabel={(item) => item.display()}
+          onSelect={(item) => { 
+            if (!isTopMenu) return;
+            world.playChoiceSelectSound(); 
+            item.execute();
+          }}
+          isCursor={menu.isCursor}
+        /> 
+      </div>
     </Window>
   )
 });
@@ -256,11 +252,12 @@ const ChoiceView = (props: { world: World }): JSX.Element => {
         {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
       </div>
     ) :
-    <CursorList 
+    <MenuOptionsView 
       getKey={(item) => item.nextEncounter.id}
       items={choice.options}
       renderLabel={(item) => <TypewriterText line={item.line} textSpeed={TextSpeed.NORMAL} />}
       onSelect={(item) => props.world.onMultiSelect(item.nextEncounter)}
+      isCursor={true}
     />
 
     choice.options.map((option, idx) =>

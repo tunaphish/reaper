@@ -135,7 +135,7 @@ export class World extends Phaser.Scene {
     this.worldStore.tickStats(delta);
     this.worldStore.updateCombatantsState();
 
-    this.executeEnemyStrategies();
+    // this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
@@ -328,7 +328,7 @@ export class World extends Phaser.Scene {
     const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
       .map(enemy => {
         return {
-          display: enemy.name,
+          display: () => <span>{enemy.name}</span>,
           execute: () => {
             this.worldStore.setEnemyJournalContent(enemy);
           }
@@ -345,13 +345,13 @@ export class World extends Phaser.Scene {
     const journalMenu: Menu = {
       menuOptions: [
         {
-          display: "Enemies",
+          display: () => <span>Enemies</span>,
           execute: () => {  
             this.worldStore.pushMenu(enemyJournalMenu);
           }
         },
         {
-          display: "Techniques",
+          display: () => <span>Techniques</span>,
           execute: () => {  
             //
           }
@@ -364,13 +364,13 @@ export class World extends Phaser.Scene {
       onClose: () => this.worldStore.setSystemsMenuOpen(false),
       menuOptions: [
         {
-          display: "Journal",
+          display: () => <span>Journal</span>,
           execute: () => {  
             this.worldStore.pushMenu(journalMenu);
           }
         },
         {
-          display: "Exit",
+          display: () => <span>Exit</span>,
           execute: () => {  
             this.worldStore.closeMenus();
           }
@@ -446,9 +446,22 @@ export class World extends Phaser.Scene {
   }
 
   getCombatMenu(folder: Folder, title: string): Menu {
-    const menuOptions: MenuOption[] = folder.options.map(option => {
+
+
+    const menuOptions: MenuOption[] = folder.options.map((option) => {
+      const display = () => (
+        <span style={{ width: 'max-content' }}>
+          <img 
+            src={getIconSrc(option)}
+            alt="" 
+            style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
+          />
+          {option.name}
+        </span>
+      )
+
       return {
-        display: option.name,
+        display,
         execute: () => {
           this.selectOption(option as CombatOption);
         }
@@ -459,8 +472,20 @@ export class World extends Phaser.Scene {
   
   getTargetsMenu(targets: Combatant[]): Menu {
     const menuOptions: MenuOption[] = targets.map(target => {
+      const display = () => (
+        <span style={{ width: 'max-content' }}>
+          <img 
+            src={getIconSrc(target)}
+            alt="" 
+            style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
+            
+          />
+          {target.name}
+        </span>
+      )
+
       return {
-        display: target.name,
+        display,
         execute: () => {
           this.worldStore.setTarget(target);
         }
@@ -502,7 +527,7 @@ export class World extends Phaser.Scene {
         break;
       case OptionType.ENEMY:
       case OptionType.ALLY:
-        const combatant = option;
+        const combatant = option as Combatant;
         this.worldStore.setTarget(combatant);
         break;
       case OptionType.FOLDER:
@@ -533,14 +558,14 @@ export class World extends Phaser.Scene {
     if (option.type === OptionType.TECHNIQUE) {
       const technique = (option as Technique);
 
-      const idx = caster.activeTechniques.indexOf(option);
+      const idx = caster.activeTechniques.indexOf(technique);
 
       if (idx !== -1) {
         updateActionPoints(caster, technique.actionPointsCost);
         caster.activeTechniques.splice(idx, 1);
       } else {
         updateActionPoints(caster, -technique.actionPointsCost);
-        caster.activeTechniques.push(option);
+        caster.activeTechniques.push(technique);
       }
     
       this.sound.play(technique.soundKeyName);
@@ -570,4 +595,24 @@ const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[
   return enemies
     .filter(enemy => seenMap.has(enemy.name))
     .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
+}
+
+
+const getIconSrc = (option: { type: OptionType }): string => {
+  switch (option.type) {
+    case OptionType.FOLDER:
+      return '/reaper/ui/icons/folder.png';
+    case OptionType.ENEMY:
+      return '/reaper/ui/icons/enemy.png';
+    case OptionType.ALLY:
+      return '/reaper/ui/icons/ally.png';
+    case OptionType.ACTION:
+      return '/reaper/ui/icons/attack.png';
+    case OptionType.ITEM:
+      return '/reaper/ui/icons/item.png';
+    case OptionType.TECHNIQUE:
+      return '/reaper/ui/icons/magic.png';
+    default:
+      return '/reaper/ui/icons/magic.png'; 
+  }
 }

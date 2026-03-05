@@ -12,7 +12,7 @@ import * as Techniques from '../../data/techniques';
 
 
 export type MenuOption = {
-  display: string;
+  display: () => JSX.Element;
   execute: () => void;
 }
 export type Menu =  {

@@ -1,4 +1,4 @@
-import { Option } from './option';
+import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
 
@@ -10,6 +10,8 @@ export enum Status {
 
 
 export type Combatant = Option & {
+  type: OptionType;
+
   health: number;
   maxHealth: number;
   bleed: number;

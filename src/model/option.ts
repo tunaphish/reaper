@@ -9,6 +9,7 @@ export enum OptionType {
 
 export interface Option {
     name: string;
+    type: OptionType;
 }
 
 export const isSameOption = (option: Option) => (otherOption: Option): boolean => otherOption.name === option.name;

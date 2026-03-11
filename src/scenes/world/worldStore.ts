@@ -100,21 +100,20 @@ export class WorldStore {
   // combat
     tickStats(delta: number): void {
       this.getCombatants().forEach((combatant) => {
-  
         if (combatant.status === Status.DEAD) return;
         if (combatant.bleed > 0) {
           const DAMAGE_TICK_RATE = (delta / 1000) * 5;
           combatant.bleed -= DAMAGE_TICK_RATE;
           combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
         }
-        
-          const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-            (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
-            (delta / 1000) ;
-  
-          combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);
-      
-  
+
+        // handles overflow
+        if (combatant.actionPoints > combatant.maxActionPoints) return;
+        const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
+          (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
+          (delta / 1000) ;
+
+        combatant.actionPoints = Math.min(combatant.maxActionPoints, combatant.actionPoints + regenPerTick);
       });
     }
   

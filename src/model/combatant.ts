@@ -61,5 +61,5 @@ export const resetCombatantBattleState = (combatant: Combatant): void => {
   combatant.status = Status.NORMAL;
 };
 export const updateActionPoints = (target: Combatant, change: number): void => {
-  target.actionPoints = Math.min(target.maxActionPoints, target.actionPoints + change);
+  target.actionPoints = target.actionPoints + change;
 };

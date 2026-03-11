@@ -310,15 +310,10 @@ overflow: hidden;
   object-fit: contain;
 }
 
-.overflowRow {
-  display: flex;
-}
-
 .overflowToken {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   background: gold; 
-  box-shadow: 0 0 4px gold;
 }
 
 @keyframes shake {

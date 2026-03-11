@@ -59,14 +59,12 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
               />
             ))}
 
-            <div className={classNames.overflowRow}>
-              {Array.from({ length: overflowAP }).map((_, i) => (
-                <div
-                  key={`overflow-${i}`}
-                  className={classNames.overflowToken}
-                />
-              ))}
-            </div>
+            {Array.from({ length: overflowAP }).map((_, i) => (
+              <div
+                key={`overflow-${i}`}
+                className={classNames.overflowToken}
+              />
+            ))}
 
 
           {props.ally.activeTechniques.map((technique, i) => (

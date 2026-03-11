@@ -48,7 +48,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
               animate={{ height: (Math.abs(props.ally.actionPoints%1) * 100) + '%' }}
               transition={{ duration: 0 }}
             />
-            <div className={classNames.actionPointRow}>
+          <div className={classNames.actionPointRow}>
             {Array.from({ length: baseAP }).map((_, i) => (
               <div
                 key={`base-${i}`}
@@ -59,16 +59,23 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
               />
             ))}
 
-            {overflowAP > 0 && (
-              <div className={classNames.overflowRow}>
-                {Array.from({ length: overflowAP }).map((_, i) => (
-                  <div
-                    key={`overflow-${i}`}
-                    className={classNames.overflowToken}
-                  />
-                ))}
-              </div>
-            )}
+            <div className={classNames.overflowRow}>
+              {Array.from({ length: overflowAP }).map((_, i) => (
+                <div
+                  key={`overflow-${i}`}
+                  className={classNames.overflowToken}
+                />
+              ))}
+            </div>
+
+
+          {props.ally.activeTechniques.map((technique, i) => (
+            <img
+              key={`tech-${i}`}
+              src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
+              className={classNames.techniqueIcon}
+            />
+          ))}
           </div>
           </div>
 

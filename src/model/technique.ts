@@ -6,4 +6,5 @@ export type Technique = Option & {
   description: string;
   
   soundKeyName: string;
+  iconSrc?: string;
 }

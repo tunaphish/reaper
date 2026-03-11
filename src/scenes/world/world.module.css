@@ -294,7 +294,6 @@ overflow: hidden;
 .actionPointToken {
   width: 8px;
   height: 8px;
-  transform: rotate(45deg);
 }
 
 .filled {
@@ -305,10 +304,14 @@ overflow: hidden;
   border: 1px solid #666;
 }
 
+.techniqueIcon {
+  width: 8px;
+  height: 8px;
+  object-fit: contain;
+}
+
 .overflowRow {
   display: flex;
-  gap: 2px;
-  margin-left: 6px;
 }
 
 .overflowToken {
@@ -316,7 +319,6 @@ overflow: hidden;
   height: 6px;
   background: gold; 
   box-shadow: 0 0 4px gold;
-  transform: rotate(45deg);
 }
 
 @keyframes shake {

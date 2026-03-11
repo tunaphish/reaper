@@ -18,6 +18,7 @@ export const buff: Technique = {
   description: 'Technique: Increase Strength',
 
   soundKeyName: 'smirk',
+  iconSrc: '/reaper/ui/icons/magic.png',
 };
 
 

@@ -450,13 +450,18 @@ export class World extends Phaser.Scene {
 
     const menuOptions: MenuOption[] = folder.options.map((option) => {
       const display = () => (
-        <span style={{ width: 'max-content' }}>
-          <img 
-            src={getIconSrc(option)}
-            alt="" 
-            style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
-          />
-          {option.name}
+        <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <img 
+              src={getIconSrc(option)}
+              alt="" 
+              style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
+            />
+            {option.name}
+          </div>
+          { 'actionPointsCost' in option && <div style={{ marginLeft: '8px' }}>{option.actionPointsCost as string}</div>}
+          
+          
         </span>
       )
 

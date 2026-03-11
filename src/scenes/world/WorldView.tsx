@@ -197,7 +197,7 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JS
         <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
         <div>X</div>
       </div>
-      <div style={{ padding: '5px' }}>
+      <div style={{ padding: '5px', width: 'max-content' }}>
         <MenuOptionsView 
           items={menu.menuOptions}
           getKey={(item) => item.display} 

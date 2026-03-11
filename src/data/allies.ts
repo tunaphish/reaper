@@ -12,7 +12,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.stanch, Techniques.haste, Techniques.buff, Actions.shatter, Actions.splinter],
+  options: [Actions.attack, Actions.stanch, Techniques.haste, Techniques.buff, Actions.engage],
 }
 
 export const Eji: Ally = {
@@ -21,12 +21,12 @@ export const Eji: Ally = {
   health: 50,
   maxHealth: 100,
   bleed: 0,
-  actionPoints: 5,
+  actionPoints: 0,
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: [Techniques.haste, Techniques.buff],
+  activeTechniques: [Techniques.buff],
   
   status: Status.NORMAL,
   

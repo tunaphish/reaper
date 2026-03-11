@@ -38,21 +38,6 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 
 // #region Actions
 
-export const shatter: Action = {
-  type: OptionType.ACTION,
-  name: 'Shatter',
-  description: 'Deals damage',
-  targetType: TargetType.SELF,
-
-  actionPointsCost: 0,
-
-  events: [
-    { type: EventType.SOUND, key: 'charged' },
-    { type: EventType.SHATTER }
-
-  ]
-}
-
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
@@ -77,7 +62,7 @@ export const engage: Action = {
   targetType: TargetType.SINGLE_TARGET,
 
 
-  actionPointsCost: 1,
+  actionPointsCost: 4,
 
   conditionMet: (world, caster, target) => target.health === target.maxHealth,
   events: [

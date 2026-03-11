@@ -274,13 +274,6 @@ export class World extends Phaser.Scene {
         return;
       }
 
-      case EventType.SHATTER: {
-        const source = this.worldStore.target;
-        const totalAp = [...source.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
-        source.actionPoints += totalAp;
-        source.activeTechniques = [];
-        return;
-      }
     }
   }
 
@@ -569,7 +562,7 @@ export class World extends Phaser.Scene {
         updateActionPoints(caster, technique.actionPointsCost);
         caster.activeTechniques.splice(idx, 1);
       } else {
-        updateActionPoints(caster, -technique.actionPointsCost);
+        useApResources(caster, technique.actionPointsCost);
         caster.activeTechniques.push(technique);
       }
     
@@ -578,7 +571,7 @@ export class World extends Phaser.Scene {
     }
 
     const action = (option as Action);
-    updateActionPoints(caster, -action.actionPointsCost);
+    useApResources(caster, action.actionPointsCost);
 
     if (action.conditionMet && !action.conditionMet(this, caster, target)) {
       this.sound.play('restriction-violated');
@@ -592,7 +585,15 @@ export class World extends Phaser.Scene {
   //#endregion
 }
 
+const useApResources = (caster: Combatant, cost: number) => {
+  if (cost > caster.actionPoints){
+    const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
+    caster.actionPoints += totalAp;
+    caster.activeTechniques = [];
+  }
+  updateActionPoints(caster, -cost);
 
+}
 
 const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
   const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));

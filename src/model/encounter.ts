@@ -21,7 +21,6 @@ export enum EventType {
   // Combat
   UPDATE_DAMAGE,
   UPDATE_AP,
-  SHATTER,
 }
 
 export type BaseEvent = {
@@ -95,10 +94,6 @@ export type UpdateApEvent = BaseEvent & {
   value: number
 }
 
-export type ShatterEvent = BaseEvent & {
-  type: EventType.SHATTER
-}
-
 
 // #endregion
 
@@ -106,7 +101,7 @@ export type Window = TextWindow | ImageWindow;
 
 export type ContextAction =  ObserveAction | ChoiceAction;
 
-export type CombatEvent = UpdateDamageEvent | UpdateApEvent | SHATTER;
+export type CombatEvent = UpdateDamageEvent | UpdateApEvent;
 
 export type Event = Window | SoundEvent | ContextAction | CombatEvent;
 

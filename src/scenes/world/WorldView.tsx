@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { CombatantHealthBar, Meter, ResourceDisplay, TechniqueViewManager } from './ResourceDisplay';
+import { CombatantHealthBar, ResourceDisplay } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
@@ -310,7 +310,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       ref={ref}
     >
       <div style={{ position: 'relative', flex: '1' }} >
-        <TechniqueViewManager combatant={ally} />
         <ResourceDisplay ally={ally} onClickCell={onClick}/>
       </div>
       <div style={{ position: "absolute", top: "-20px" }}>

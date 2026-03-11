@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
 import classNames from './world.module.css';
-import {Technique} from '../../model/technique';
 import { Ally } from '../../model/ally';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
@@ -15,53 +14,6 @@ export const Meter = (props: { value: number, max: number, className?: string })
     </div>
   )
 }
-
-export const TechniqueView = (props: { technique: Technique }) => {
-    const { technique } = props;
-  
-    const getRandomBorderPoint = () => {
-      const boxSize = 100;
-      const y = Math.random() * boxSize;
-      const center = boxSize / 2;
-      const heightFactor = 4; // Adjust this for how high the arc is
-      const x = heightFactor * (1 - Math.pow((y - center) / center, 2)); // Parabolic formula
-      return [x, y];
-    }
-  
-    const style: React.CSSProperties = React.useMemo(() => {
-      const [topPos, leftPos] = getRandomBorderPoint();
-      const top = `${topPos}%`; 
-      const left = `${leftPos}%`;
-      return {
-        position: 'absolute', 
-        top, 
-        left,
-        transform: "translate(-50%, -50%)",
-      }
-    }, []);
-
-    return (
-      <div style={style}>
-        <motion.div
-          className={classNames.window} 
-          style={{ fontSize: '16px' }}
-          initial={{ scaleY: 0 }} 
-          animate={{ scaleY: 1 }} 
-          exit={{ scaleY: 0 }}
-          transition={{ duration: .1, ease: 'easeOut' }} 
-        >
-          {technique.name}
-        </motion.div>
-      </div>
-    )
-  }
-
-export const TechniqueViewManager = observer(((props: {combatant: Combatant }) => {
-  const { combatant } = props;
-  return (
-    [...combatant.activeTechniques].map((technique) => <TechniqueView key={technique.name} technique={technique} />)      
-  )
-})); 
 
 
 export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {

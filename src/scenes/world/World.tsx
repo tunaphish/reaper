@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from './world.module.css';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
 import { WorldView } from './WorldView';
@@ -16,7 +17,7 @@ import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, Status, updateDamage } from '../../model/combatant';
+import { Combatant, Status, techniqueIsActive, updateDamage } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -268,7 +269,8 @@ export class World extends Phaser.Scene {
       case EventType.UPDATE_DAMAGE: {
         this.events.emit('shake', target.name);
         updateDamage(target, event.value);
-        if (target.activeTechniques.some(technique => technique.name === Techniques.counter.name)) {
+        
+        if (techniqueIsActive(target, Techniques.counter)) {
           this.executeOption(target, caster, Actions.attack);
         }
         return;
@@ -442,8 +444,14 @@ export class World extends Phaser.Scene {
 
 
     const menuOptions: MenuOption[] = folder.options.map((option) => {
+      let className = ''
+      if (option.type === OptionType.TECHNIQUE) {
+        const technique = option as Technique;
+        if (techniqueIsActive(this.worldStore.activeAlly, technique)) className = classNames.techniqueActive;
+      }
+      
       const display = () => (
-        <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} className={className}>
           <div>
             <img 
               src={getIconSrc(option)}

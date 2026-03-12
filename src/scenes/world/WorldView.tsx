@@ -287,10 +287,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
-  const style: React.CSSProperties = {
-    color: isInEncounter ? 'gray' : 'white',
-  }
-
   const onClick = () => {
     if (isInEncounter) {
       world.playChoiceDisabledSound();
@@ -312,10 +308,11 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       <div style={{ position: 'relative', flex: '1' }} >
         <ResourceDisplay ally={ally} onClickCell={onClick}/>
       </div>
-      <div style={{ position: "absolute", top: "-20px" }}>
+      <div style={{ position: "absolute", top: "-20px", zIndex: 2 }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
+
     </div>
 
   )

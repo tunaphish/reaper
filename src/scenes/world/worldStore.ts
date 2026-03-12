@@ -108,7 +108,10 @@ export class WorldStore {
         }
 
         // handles overflow
-        if (combatant.actionPoints > combatant.maxActionPoints) return;
+        if (combatant.actionPoints > combatant.maxActionPoints) {
+          combatant.actionPoints = Math.trunc(combatant.actionPoints);
+          return;
+        }
         const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
           (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
           (delta / 1000) ;

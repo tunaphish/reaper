@@ -57,9 +57,8 @@ export const updateDamage = (target: Combatant, change: number): void => {
 };
 
 
-export const resetCombatantBattleState = (combatant: Combatant): void => {
-  combatant.status = Status.NORMAL;
-};
 export const updateActionPoints = (target: Combatant, change: number): void => {
   target.actionPoints = target.actionPoints + change;
 };
+
+export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(t => t.name === technique.name);

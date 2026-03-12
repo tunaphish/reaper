@@ -334,7 +334,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       <div style={{ position: 'relative', flex: '1' }} >
         <ResourceDisplay ally={ally} onClickCell={onClick}/>
       </div>
-      <div style={{ position: "absolute", top: "-20px", zIndex: 2 }}>
+      <div style={{ position: "absolute", top: "-40px", zIndex: 2, left: '20%' }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>

@@ -170,11 +170,10 @@ export const shakeElement = (element: Element): void => {
 
 //#endregion
 
-const MenuView = observer((props: { world: World, menu: Menu, idx: number }): JSX.Element => {
-  const { world, menu, idx } = props;
+const MenuView = observer((props: { world: World, menu: Menu, idx: number, verticalOffset: number }): JSX.Element => {
+  const { world, menu, idx, verticalOffset } = props;
   const isTopMenu = world.worldStore.menus.length-1 === idx;
 
-  const verticalOffset = (-20*idx) + (-20*menu.menuOptions.length);
   const horizontalOffset = ((idx%2 ===0) ? 20 : 40) + 20 
 
   const style: React.CSSProperties = {
@@ -276,7 +275,9 @@ const ChoiceView = (props: { world: World }): JSX.Element => {
 
 const MenuStack = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
-  return <>{world.worldStore.menus.map((menu, idx) => <MenuView world={world} menu={menu} idx={idx} key={idx}/>)}</>
+  const { menus } = world.worldStore;
+  return <>{menus.map((menu, idx) => 
+    <MenuView world={world} menu={menu} idx={idx} key={idx} verticalOffset={(-20*idx) + (-20*menus[0].menuOptions.length)}/>)}</>
 });
 
 

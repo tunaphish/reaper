@@ -31,6 +31,9 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   const totalAP = Math.floor(props.ally.actionPoints);
   const overflowAP = Math.max(0, totalAP - baseAP);
 
+  const progress = ((props.ally.actionPoints % 1) + 1) % 1;
+  const actionPointMeterHeight = (progress * 100) + '%';
+
   return (
     <div className={className.join(' ')} onClick={props.onClickCell}>
         <div className={classNames.characterCellContainer}>
@@ -45,7 +48,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
           >
             <motion.div 
               className={classNames.castingWindow}
-              animate={{ height: (Math.abs(props.ally.actionPoints%1) * 100) + '%' }}
+              animate={{ height: actionPointMeterHeight }}
               transition={{ duration: 0 }}
             />
           <div className={classNames.actionPointRow}>

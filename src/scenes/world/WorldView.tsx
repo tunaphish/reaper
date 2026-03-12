@@ -170,11 +170,9 @@ export const shakeElement = (element: Element): void => {
 
 //#endregion
 
-const MenuView = observer((props: { world: World, menu: Menu, idx: number, verticalOffset: number }): JSX.Element => {
-  const { world, menu, idx, verticalOffset } = props;
+const MenuView = observer((props: { world: World, menu: Menu, idx: number, verticalOffset: number, horizontalOffset: number }): JSX.Element => {
+  const { world, menu, idx, verticalOffset, horizontalOffset } = props;
   const isTopMenu = world.worldStore.menus.length-1 === idx;
-
-  const horizontalOffset = ((idx%2 ===0) ? 20 : 40) + 20 
 
   const style: React.CSSProperties = {
     position: "absolute",
@@ -276,8 +274,35 @@ const ChoiceView = (props: { world: World }): JSX.Element => {
 const MenuStack = observer((props: { world: World }): JSX.Element => {
   const { world } = props;
   const { menus } = world.worldStore;
-  return <>{menus.map((menu, idx) => 
-    <MenuView world={world} menu={menu} idx={idx} key={idx} verticalOffset={(-20*idx) + (-20*menus[0].menuOptions.length)}/>)}</>
+  const [widths, setWidths] = React.useState({});
+
+  const setWidth = (idx, el) => {
+    if (!el) return;
+    const w = el.offsetWidth;
+    setWidths(prev => (prev[idx] === w ? prev : { ...prev, [idx]: w }));
+  };
+
+ return <>
+    {menus.map((menu, idx) => {
+      const verticalOffset = (-20*idx) + (-20*menus[0].menuOptions.length);
+
+      const prevWidth = widths[idx - 1] || 0;
+      const direction = idx % 2 === 0 ? -1 : 1;
+      const horizontalOffset = direction * (prevWidth / 2 + 20);
+
+      return (
+        <div ref={(el) => setWidth(idx, el)} key={idx}>
+          <MenuView
+            world={world}
+            menu={menu}
+            verticalOffset={verticalOffset}
+            idx={idx}
+            horizontalOffset={horizontalOffset}
+          />
+        </div>
+      );
+    })}
+  </>
 });
 
 

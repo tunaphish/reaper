@@ -6,6 +6,7 @@ import * as Actions from './actions';
 import * as Techniques from './techniques';
 import { getRandomInt } from '../model/math';
 import { World } from '../scenes/world/World';
+import { Action } from '../model/action';
 
 
 const isAlive = (targets: Combatant) => targets.status !== Status.DEAD;
@@ -14,7 +15,11 @@ const randomTarget = (potentialTargets: Combatant[]) => {
   return potentialTargets.at(getRandomInt(potentialTargets.length));
 };
 
-const randomAliveTarget = (scene: World, potentialTargets: Combatant[]): Combatant => randomTarget(potentialTargets.filter(isAlive));
+const randomAliveAlly = (scene: World, action: Action, caster: Enemy): Combatant => {
+
+  const potentialTargets = scene.worldStore.allies.filter(ally => !action.conditionMet || action.conditionMet(this, caster, ally));
+  return randomTarget(potentialTargets.filter(isAlive))
+};
 
 
 export const fencer: Enemy = {
@@ -35,23 +40,23 @@ export const fencer: Enemy = {
     { 
       option: Actions.attack, 
       weight: 100, 
-      getTarget: (world, potentialTargets) => randomTarget(potentialTargets), 
+      getTarget: randomAliveAlly, 
       isValid: (world, caster) => true 
     },
     { 
       option: Actions.splinter, 
       weight: 500, 
-      getTarget: randomAliveTarget, 
+      getTarget: randomAliveAlly, 
       isValid: (world, caster) => world.splinterNotCasted },
     { 
       option: Actions.engage, 
       weight: 500, 
-      getTarget: randomAliveTarget, 
+      getTarget: randomAliveAlly, 
       isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
       weight: 2000, 
-      getTarget: randomAliveTarget, //
+      getTarget: randomAliveAlly, //
       isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
     },
   ],

@@ -3,7 +3,7 @@ import { OptionType } from '../model/option';
 import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
-import { EventType } from '../model/encounter';
+import { EventType, ShatterTechniqueTarget } from '../model/encounter';
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
@@ -116,3 +116,23 @@ export const stanch: Action = {
     ]
   
 }
+
+// #region Magics
+export const magic: Action = {
+  type: OptionType.ACTION,
+  name: 'Magic',
+  description: 'Deals Damage. Shatters random technique.',
+  targetType: TargetType.ENEMIES,
+  
+  castTimeInMs: 2000,
+  actionPointsCost: 1,
+
+    events: [
+      { type: EventType.SOUND, key: 'debuff' },
+      { type: EventType.UPDATE_DAMAGE, value: 50 },
+      { type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM }
+    ]
+  
+}
+
+// #endregion

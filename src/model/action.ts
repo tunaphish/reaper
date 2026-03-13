@@ -9,8 +9,8 @@ export type Action = Option & {
   description: string;
   targetType: TargetType;
 
-
   actionPointsCost: number;
+  castTimeInMs?: number;
 
   conditionMet?: (world: World, caster: Combatant, target: Combatant) => boolean;
   events: Event[];

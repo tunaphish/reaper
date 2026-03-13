@@ -21,6 +21,7 @@ export enum EventType {
   // Combat
   UPDATE_DAMAGE,
   UPDATE_AP,
+  SHATTER_TECHNIQUE,
 }
 
 export type BaseEvent = {
@@ -94,6 +95,15 @@ export type UpdateApEvent = BaseEvent & {
   value: number
 }
 
+export enum ShatterTechniqueTarget {
+  RANDOM = 'random'
+}
+
+export type ShatterTechniqueEvent = BaseEvent & {
+  type: EventType.SHATTER_TECHNIQUE
+  target: ShatterTechniqueTarget
+}
+
 
 // #endregion
 
@@ -101,7 +111,7 @@ export type Window = TextWindow | ImageWindow;
 
 export type ContextAction =  ObserveAction | ChoiceAction;
 
-export type CombatEvent = UpdateDamageEvent | UpdateApEvent;
+export type CombatEvent = UpdateDamageEvent | UpdateApEvent | ShatterTechniqueEvent;
 
 export type Event = Window | SoundEvent | ContextAction | CombatEvent;
 

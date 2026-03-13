@@ -12,7 +12,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.stanch, Techniques.haste, Techniques.buff, Actions.engage],
+  options: [Actions.attack, Actions.stanch, Techniques.haste, Techniques.buff, Actions.magic],
 }
 
 export const Eji: Ally = {

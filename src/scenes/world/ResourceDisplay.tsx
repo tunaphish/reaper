@@ -33,6 +33,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
 
   const progress = ((props.ally.actionPoints % 1) + 1) % 1;
   const actionPointMeterHeight = (progress * 100) + '%';
+  const castingWindowHeight = (props.ally.castingAction ? (props.ally.castingAction.castedTimeInMs / props.ally.castingAction.action.castTimeInMs)*100 : 0) + '%'
 
   return (
     <div className={className.join(' ')} onClick={props.onClickCell}>
@@ -47,39 +48,43 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
             }}
           >
             <motion.div 
-              className={classNames.castingWindow}
+              className={classNames.actionPointMeterWindow}
               animate={{ height: actionPointMeterHeight }}
               transition={{ duration: 0 }}
             />
-          <div className={classNames.actionPointRow}>
-            {Array.from({ length: baseAP }).map((_, i) => (
-              <div
-                key={`base-${i}`}
-                className={[
-                  classNames.actionPointToken,
-                  i < totalAP ? classNames.filled : classNames.empty,
-                ].join(' ')}
-              />
-            ))}
-
-            {Array.from({ length: overflowAP }).map((_, i) => (
-              <div
-                key={`overflow-${i}`}
-                className={classNames.overflowToken}
-              />
-            ))}
-
-
-          {props.ally.activeTechniques.map((technique, i) => (
-            <img
-              key={`tech-${i}`}
-              src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
-              className={classNames.techniqueIcon}
+            <motion.div 
+              className={classNames.castingWindow}
+              animate={{ height: castingWindowHeight }}
+              transition={{ duration: 0 }}
             />
-          ))}
-          </div>
-          </div>
+            <div className={classNames.actionPointRow}>
+              {Array.from({ length: baseAP }).map((_, i) => (
+                <div
+                  key={`base-${i}`}
+                  className={[
+                    classNames.actionPointToken,
+                    i < totalAP ? classNames.filled : classNames.empty,
+                  ].join(' ')}
+                />
+              ))}
 
+              {Array.from({ length: overflowAP }).map((_, i) => (
+                <div
+                  key={`overflow-${i}`}
+                  className={classNames.overflowToken}
+                />
+              ))}
+
+
+            {props.ally.activeTechniques.map((technique, i) => (
+              <img
+                key={`tech-${i}`}
+                src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
+                className={classNames.techniqueIcon}
+              />
+            ))}
+            </div>
+          </div>
        </div>
     </div>
   )

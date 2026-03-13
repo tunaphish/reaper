@@ -107,6 +107,11 @@ export class WorldStore {
           combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
         }
 
+        if (combatant.castingAction) {
+          combatant.castingAction.castedTimeInMs += delta;
+          return;
+        } 
+
         // handles overflow
         if (combatant.actionPoints > combatant.maxActionPoints) {
           combatant.actionPoints = Math.trunc(combatant.actionPoints);

@@ -11,7 +11,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter, Event, EventType, SoundEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent } from '../../model/encounter';
 
 
 import { enemies } from '../../data/enemies';
@@ -28,6 +28,8 @@ import { TargetType } from '../../model/targetType';
 
 import * as Techniques from '../../data/techniques';
 import * as Actions from '../../data/actions';
+import { toJS } from 'mobx';
+import { getRandomInt } from '../../model/math';
 
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
@@ -135,12 +137,11 @@ export class World extends Phaser.Scene {
     // combat
     this.worldStore.tickStats(delta);
     this.worldStore.updateCombatantsState();
-
     // this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
-
+    this.executeCastedActions();
   }
 
   onTriggerExit(): void {
@@ -276,6 +277,18 @@ export class World extends Phaser.Scene {
         return;
       }
 
+      case EventType.SHATTER_TECHNIQUE: {
+        const shatterTechniqueEvent = event as ShatterTechniqueEvent;
+        if (shatterTechniqueEvent.target === ShatterTechniqueTarget.RANDOM) {
+          target.activeTechniques.splice(getRandomInt(target.activeTechniques.length),1);
+          return;
+        }
+      }
+
+      default: {
+        console.log('unhandled event type: ' + event.type);
+        return;
+      }
     }
   }
 
@@ -284,8 +297,9 @@ export class World extends Phaser.Scene {
     this.worldStore.closeMenus();
     this.playChoiceSelectSound();
     if (this.combatInitiated) {
-        const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED]
-        if (CANNOT_OPEN_STATUS.includes(ally.status)) {
+        // Could probably just flip this
+        const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
+        if (CANNOT_OPEN_STATUS.includes(ally.status) || ally.castingAction) {
           this.sound.play('stamina-depleted');
           return;
         }
@@ -552,12 +566,23 @@ export class World extends Phaser.Scene {
     this.worldStore.resetSelections();  
   }
 
+  executeCastedActions(): void {
+    this.worldStore.getCombatants().forEach(combatant => { 
+      if (!combatant.castingAction || combatant.castingAction.castedTimeInMs < combatant.castingAction.action.castTimeInMs) return;
+      const castingAction = combatant.castingAction;
+      castingAction.action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
+      combatant.castingAction = null;
+    });
+
+  }
+
   executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
     // if (combatant.queuedOption.type === OptionType.ITEM) {
     //   combatant.queuedOption.charges -= 1;
     //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
     //   this.sound.play(combatant.queuedOption.soundKeyName);
     // } else
+
 
     if (option.type === OptionType.TECHNIQUE) {
       const technique = (option as Technique);
@@ -583,6 +608,17 @@ export class World extends Phaser.Scene {
       this.sound.play('restriction-violated');
       return;
     } 
+
+    if ('castTimeInMs' in option) {
+      // some kind of indicator that i'm doing this
+      this.sound.play('charged')
+      caster.castingAction = {
+        action: option as Action,
+        target,
+        castedTimeInMs: 0,
+      }
+      return;
+    }
 
     // TODO: Apply Techniques Buffs
     if (action.name === "Splinter") this.splinterNotCasted = false;

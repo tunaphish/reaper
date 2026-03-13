@@ -1,6 +1,7 @@
 import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
+import { Action } from './action';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -22,6 +23,12 @@ export type Combatant = Option & {
 
   activeTechniques: Technique[];
   status: Status;
+
+  castingAction?: {
+    target: Combatant;
+    action: Action;
+    castedTimeInMs: number;
+  }
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

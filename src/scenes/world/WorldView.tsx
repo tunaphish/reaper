@@ -15,6 +15,7 @@ import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
 import { MenuOptionsView } from './MenuOptionsView';
 import { getRandomInt } from '../../model/math';
+import { motion } from 'framer-motion';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -28,7 +29,7 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
       <EncounterContainer world={world} />
       <AllyBarView world={world} />
     </div>
-  )
+)
 });
 
 
@@ -125,21 +126,40 @@ const EnemyView = observer(
       ],
     };
 
+    const progress = ((enemy.actionPoints % 1) + 1) % 1;
+    const actionPointMeterWidth = (progress * 100) + '%';
+    const castingWindowWidth = (enemy.castingAction ? (enemy.castingAction.castedTimeInMs / enemy.castingAction.action.castTimeInMs)*100 : 0) + '%'
+
+
     return (      
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
             <CombatantHealthBar combatant={enemy} />
             <ImageWindowContent imageWindow={enemyImageWindow} />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>
+            <div 
+              style={{ 
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                gridTemplateRows: "1fr", 
+              }}
+            >
+              <motion.div 
+                className={classNames.enemyActionPointMeterWindow}
+                animate={{ width: actionPointMeterWidth }}
+                transition={{ duration: 0 }}
+              />
+              <motion.div 
+                className={classNames.enemyCastingWindow}
+                animate={{ width: castingWindowWidth }}
+                transition={{ duration: 0 }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 1, gridRow: 1  }}>
                 <span>{enemy.strategies[enemy.selectedStrategyIndex].option.name} </span>
-                <span>{enemy.actionPoints.toFixed(2)}</span>
-              </span>
-              <span>
                 {
                   [...enemy.activeTechniques].map((technique) => <span key={technique.name}>{technique.name} </span>)
                 }
-              </span>
+              </div>
+
             </div>
 
           </div>

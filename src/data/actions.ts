@@ -62,7 +62,7 @@ export const engage: Action = {
   targetType: TargetType.SINGLE_TARGET,
 
 
-  actionPointsCost: 4,
+  actionPointsCost: 1,
 
   conditionMet: (world, caster, target) => target.health === target.maxHealth,
   events: [

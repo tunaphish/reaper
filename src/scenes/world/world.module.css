@@ -288,6 +288,23 @@ overflow: hidden;
   grid-row: 1;
 }
 
+
+.enemyActionPointMeterWindow {
+  height: 100%;
+  width: 0;
+  background-color: gray;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.enemyCastingWindow {
+  height: 100%;
+  width: 0;
+  background-color: white;
+  grid-column: 1;
+  grid-row: 1;
+}
+
 @keyframes blink-animation {
   50% { opacity: 1; }
 }

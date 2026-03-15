@@ -51,7 +51,7 @@ export const fencer: Enemy = {
   strategies: [
     { 
       option: Actions.magic, 
-      weight: 0, 
+      weight: 20, 
       getTarget: randomAllyWithTechnique, 
       isValid: (world, caster) => world.worldStore.allies.some(hasTechnique) 
     },
@@ -78,7 +78,7 @@ export const fencer: Enemy = {
       isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
     },
   ],
-  selectedStrategyIndex: 4,
+  selectedStrategyIndex: 0,
 
   activeTechniques: [],
 };

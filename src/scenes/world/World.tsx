@@ -137,7 +137,7 @@ export class World extends Phaser.Scene {
     // combat
     this.worldStore.tickStats(delta);
     this.worldStore.updateCombatantsState();
-    // this.executeEnemyStrategies();
+    this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
@@ -408,6 +408,7 @@ export class World extends Phaser.Scene {
     const actionableEnemies = this.worldStore.enemies.filter(enemy => enemy.status === Status.NORMAL)
 
     for (const enemy of actionableEnemies) {
+      if (enemy.castingAction) return;
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
       const option = (strategy.option as CombatOption);
 
@@ -415,9 +416,19 @@ export class World extends Phaser.Scene {
         const action = option as Action;
         if (enemy.actionPoints < action.actionPointsCost) continue;
 
-        const target = strategy.getTarget(this, action, enemy);
-        this.executeOption(enemy, target, option);
-        enemy.status = Status.NORMAL;
+        if ('castTimeInMs' in option) {
+          this.sound.play('charged');
+          useApResources(enemy, action.actionPointsCost);
+          enemy.castingAction = {
+            action: option as Action,
+            target: strategy.getTarget(this, action, enemy),
+            castedTimeInMs: 0,
+          }
+        } else {
+          const target = strategy.getTarget(this, action, enemy);
+          this.executeOption(enemy, target, option);
+          enemy.status = Status.NORMAL;
+        }
       }
 
       
@@ -458,8 +469,6 @@ export class World extends Phaser.Scene {
   }
 
   getCombatMenu(folder: Folder, title: string): Menu {
-
-
     const menuOptions: MenuOption[] = folder.options.map((option) => {
       let className = ''
       if (option.type === OptionType.TECHNIQUE) {

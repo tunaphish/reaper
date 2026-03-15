@@ -130,6 +130,7 @@ const EnemyView = observer(
     const actionPointMeterWidth = (progress * 100) + '%';
     const castingWindowWidth = (enemy.castingAction ? (enemy.castingAction.castedTimeInMs / enemy.castingAction.action.castTimeInMs)*100 : 0) + '%'
 
+    const displayedAction = enemy.castingAction?.action?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name;
 
     return (      
         <PanelWindow window={enemyImageWindow} >
@@ -154,7 +155,7 @@ const EnemyView = observer(
                 transition={{ duration: 0 }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 1, gridRow: 1  }}>
-                <span>{enemy.strategies[enemy.selectedStrategyIndex].option.name} </span>
+                <span>{displayedAction} </span>
                 {
                   [...enemy.activeTechniques].map((technique) => <span key={technique.name}>{technique.name} </span>)
                 }

@@ -18,7 +18,7 @@ const randomTarget = (potentialTargets: Combatant[]) => {
 
 const randomAliveAlly = (scene: World, action: Action, caster: Enemy): Combatant => {
   const potentialTargets = scene.worldStore.allies
-    .filter(ally => !action.conditionMet || action.conditionMet(this, caster, ally))
+    .filter(ally => !action.conditionMet || action.conditionMet(scene, caster, ally))
     .filter(isAlive);
   return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.worldStore.allies);
 };

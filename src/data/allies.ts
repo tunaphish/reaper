@@ -22,7 +22,7 @@ export const Eji: Ally = {
   maxHealth: 100,
   bleed: 0,
   actionPoints: 0,
-  maxActionPoints: 2,
+  maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
@@ -47,8 +47,8 @@ export const Keshi: Ally = {
   health: 100,
   maxHealth: 100,
   bleed: 0,
-  actionPoints: 0.4,
-  maxActionPoints: 2,
+  actionPoints: 0,
+  maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .12,
   folder: keshiFolder,
 
@@ -72,8 +72,8 @@ export const Elise: Ally = {
   health: 100,
   bleed: 0,
   maxHealth: 100,
-  actionPoints: 2,
-  maxActionPoints: 3,
+  actionPoints: 0,
+  maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .08,
   folder: eliseFolder,
 

@@ -144,24 +144,6 @@ export class World extends Phaser.Scene {
     this.executeCastedActions();
   }
 
-  onTriggerExit(): void {
-    this.triggerGroup.children.iterate(zone => {
-      const overlapping = zone.getData("overlapping");
-      if (overlapping && !this.physics.overlap(zone, this.player)) {
-        zone.setData("overlapping", false);
-
-        // TODO handle actual exit conditions
-        this.queuedEvents = [];
-        this.worldStore.closeWindows();
-        this.worldStore.setContextAction(null);
-      }
-    });
-  }
-
-  addQueuedEvents(events: Event[]): void {
-    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
-    this.queuedEvents.push(...newEvents);
-  }
 
   playChoiceSelectSound(): void {
     this.choiceSelectSound.play();
@@ -171,6 +153,7 @@ export class World extends Phaser.Scene {
     this.choiceDisabledSound.play();
   }
 
+  // #region initialize map
   createEncounterTriggers(spawnPoint: Phaser.Types.Tilemaps.TiledObject): void {
     const triggers = [
       {
@@ -199,7 +182,7 @@ export class World extends Phaser.Scene {
 
       this.triggerGroup.add(zone);
     }
-}
+  }
 
   onTriggerOverlap(
     player: Phaser.GameObjects.GameObject,
@@ -212,6 +195,27 @@ export class World extends Phaser.Scene {
     const encounter: Encounter  = zone.getData("encounter");
     this.addQueuedEvents(encounter.events);
   } 
+
+  onTriggerExit(): void {
+    this.triggerGroup.children.iterate(zone => {
+      const overlapping = zone.getData("overlapping");
+      if (overlapping && !this.physics.overlap(zone, this.player)) {
+        zone.setData("overlapping", false);
+
+        // TODO handle actual exit conditions
+        this.queuedEvents = [];
+        this.worldStore.closeWindows();
+        this.worldStore.setContextAction(null);
+      }
+    });
+  }
+  // #endregion
+
+  // #region handle events
+  addQueuedEvents(events: Event[]): void {
+    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
+    this.queuedEvents.push(...newEvents);
+  }
 
   processQueuedEvents(delta: number): void {
     const toDelay: QueuedEvent[] = [];
@@ -227,7 +231,7 @@ export class World extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-  executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
+    executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.TEXT: {
@@ -291,6 +295,9 @@ export class World extends Phaser.Scene {
       }
     }
   }
+  // #endregion
+
+
 
   //#region input based actions
   setAlly = (ally: Ally): void => {
@@ -404,9 +411,7 @@ export class World extends Phaser.Scene {
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
       const option = (strategy.option as CombatOption);
 
-      if (option.type === OptionType.TECHNIQUE) {
-        this.executeOption(enemy, enemy, option);
-      } else if (option.type === OptionType.ACTION) {
+      if (option.type === OptionType.ACTION || option.type === OptionType.TECHNIQUE ) {
         const action = option as Action;
         if (enemy.actionPoints < action.actionPointsCost) continue;
 
@@ -573,17 +578,9 @@ export class World extends Phaser.Scene {
       castingAction.action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
       combatant.castingAction = null;
     });
-
   }
 
   executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
-    // if (combatant.queuedOption.type === OptionType.ITEM) {
-    //   combatant.queuedOption.charges -= 1;
-    //   combatant.queuedOption.execute(combatant.queuedTarget, combatant);
-    //   this.sound.play(combatant.queuedOption.soundKeyName);
-    // } else
-
-
     if (option.type === OptionType.TECHNIQUE) {
       const technique = (option as Technique);
 

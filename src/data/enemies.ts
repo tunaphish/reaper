@@ -31,6 +31,8 @@ const randomAllyWithTechnique = (scene: World, action: Action, caster: Enemy): C
   return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.worldStore.allies);
 };
 
+const self = (scene: World, action: Action, caster: Enemy): Combatant => caster;
+
 
 export const fencer: Enemy = {
   type: OptionType.ENEMY,
@@ -72,13 +74,13 @@ export const fencer: Enemy = {
     { 
       option: Techniques.counter, 
       weight: 2000, 
-      getTarget: randomAliveAlly, //
+      getTarget: self, 
       isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
     },
   ],
-  selectedStrategyIndex: 1,
+  selectedStrategyIndex: 4,
 
-  activeTechniques: [Techniques.counter],
+  activeTechniques: [],
 };
 
 

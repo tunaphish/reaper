@@ -35,6 +35,8 @@ import { actionMenuItem, targetMenuItem } from './CombatMenus';
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
 
+
+
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -305,7 +307,6 @@ export class World extends Phaser.Scene {
   }
   
   // #endregion
-
   executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
     switch (event.type) {
       case EventType.IMAGE:
@@ -496,10 +497,6 @@ export class World extends Phaser.Scene {
 
   getCombatMenu(folder: Folder, title: string): Menu {
     const menuOptions: MenuOption[] = folder.options.map((option) => {
-
-      
-
-
       return {
         display: () => actionMenuItem(option, this.worldStore.activeAlly),
         execute: () => {
@@ -541,12 +538,20 @@ export class World extends Phaser.Scene {
     this.worldStore.getCombatants().forEach(combatant => { 
       if (!combatant.castingAction || combatant.castingAction.castedTimeInMs < combatant.castingAction.action.castTimeInMs) return;
       const castingAction = combatant.castingAction;
+
+      if (castingAction.action.conditionMet && !castingAction.action.conditionMet(this, combatant, castingAction.target)) {
+        this.sound.play('restriction-violated');
+        return;
+      } 
+
+      if (castingAction.action.name === "Splinter") this.splinterNotCasted = false;
       castingAction.action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
       combatant.castingAction = null;
     });
   }
 
   executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
+    // Handle Technique
     if (option.type === OptionType.TECHNIQUE) {
       const technique = (option as Technique);
 
@@ -564,28 +569,15 @@ export class World extends Phaser.Scene {
       return;
     }
 
+    // Handle Action
     const action = (option as Action);
     useApResources(caster, action.actionPointsCost);
 
-    if (action.conditionMet && !action.conditionMet(this, caster, target)) {
-      this.sound.play('restriction-violated');
-      return;
-    } 
-
-    if ('castTimeInMs' in option) {
-      // some kind of indicator that i'm doing this
-      this.sound.play('charged')
-      caster.castingAction = {
-        action: option as Action,
-        target,
-        castedTimeInMs: 0,
-      }
-      return;
+    caster.castingAction = {
+      action: option as Action,
+      target,
+      castedTimeInMs: 0,
     }
-
-    // TODO: apply target
-    if (action.name === "Splinter") this.splinterNotCasted = false;
-    action.events.forEach(event => this.executeEvent(event, target, caster));    
   }
   //#endregion
 }

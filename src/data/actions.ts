@@ -43,7 +43,7 @@ export const attack: Action = {
   name: 'Attack',
   description: 'Deals damage',
   targetType: TargetType.SINGLE_TARGET,
-
+  castTimeInMs: 500,
 
   actionPointsCost: 1,
 
@@ -60,7 +60,7 @@ export const engage: Action = {
   name: 'Engage',
   description: 'Deals high damage. Condition: target must have full health.',
   targetType: TargetType.SINGLE_TARGET,
-
+castTimeInMs: 500,
 
   actionPointsCost: 1,
 
@@ -76,7 +76,7 @@ export const splinter: Action = {
   name: 'Splinter',
   description: 'Deals high damage. Condition: Splinter must not have been used during this combat.',
   targetType: TargetType.SINGLE_TARGET,
-
+  castTimeInMs: 500,
 
   actionPointsCost: 1,
 
@@ -92,7 +92,7 @@ export const smash: Action = {
   name: 'Smash',
   description: 'Deals high damage',
   targetType: TargetType.SINGLE_TARGET,
-
+  castTimeInMs: 500,
 
   actionPointsCost: 2,
 
@@ -107,7 +107,7 @@ export const stanch: Action = {
   name: 'Stanch',
   description: 'Heals bleed on self',
   targetType: TargetType.SELF,
-  
+  castTimeInMs: 500,
   actionPointsCost: 1,
 
     events: [

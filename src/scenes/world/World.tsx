@@ -17,7 +17,7 @@ import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTar
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, Status, techniqueIsActive, updateDamage } from '../../model/combatant';
+import { Combatant, Status, techniqueIsActive, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -116,7 +116,6 @@ export class World extends Phaser.Scene {
       this
     )
 
-
     this.cameras.main.fadeIn(1200);
     if (this.mapData.musicKey) {
       this.music = this.sound.add(this.mapData.musicKey, {
@@ -153,7 +152,7 @@ export class World extends Phaser.Scene {
     this.choiceDisabledSound.play();
   }
 
-  // #region initialize map
+  // #region handle events
   createEncounterTriggers(spawnPoint: Phaser.Types.Tilemaps.TiledObject): void {
     const triggers = [
       {
@@ -209,9 +208,7 @@ export class World extends Phaser.Scene {
       }
     });
   }
-  // #endregion
 
-  // #region handle events
   addQueuedEvents(events: Event[]): void {
     const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
     this.queuedEvents.push(...newEvents);
@@ -231,7 +228,85 @@ export class World extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-    executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
+  onNextEncounter = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.worldStore.setContextAction(null);
+    this.addQueuedEvents(encounter.events);
+  }
+
+  onMultiSelect = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.worldStore.closeWindows();
+    this.addQueuedEvents(encounter.events);
+  }
+
+  getSystemMenu(): Menu {
+    const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
+      const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
+
+      return enemies
+        .filter(enemy => seenMap.has(enemy.name))
+        .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
+    }
+    const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
+      .map(enemy => {
+        return {
+          display: () => <span>{enemy.name}</span>,
+          execute: () => {
+            this.worldStore.setEnemyJournalContent(enemy);
+          }
+        }
+      });
+    const enemyJournalMenu: Menu = {
+      onClose: () => this.worldStore.setEnemyJournalContent(null),
+      menuOptions: enemyJournalMenuOptions,
+      isCursor: true,
+      title: "Enemies"
+    }
+    
+
+    const journalMenu: Menu = {
+      menuOptions: [
+        {
+          display: () => <span>Enemies</span>,
+          execute: () => {  
+            this.worldStore.pushMenu(enemyJournalMenu);
+          }
+        },
+        {
+          display: () => <span>Techniques</span>,
+          execute: () => {  
+            //
+          }
+        },
+      ],
+      title: "Journal",
+    };
+
+    const systemMenu: Menu = {
+      onClose: () => this.worldStore.setSystemsMenuOpen(false),
+      menuOptions: [
+        {
+          display: () => <span>Journal</span>,
+          execute: () => {  
+            this.worldStore.pushMenu(journalMenu);
+          }
+        },
+        {
+          display: () => <span>Exit</span>,
+          execute: () => {  
+            this.worldStore.closeMenus();
+          }
+        },
+      ],
+    }  
+
+    return systemMenu;
+  }
+  
+  // #endregion
+
+  executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.TEXT: {
@@ -295,11 +370,8 @@ export class World extends Phaser.Scene {
       }
     }
   }
-  // #endregion
 
-
-
-  //#region input based actions
+  //#region combat input
   setAlly = (ally: Ally): void => {
     this.worldStore.closeMenus();
     this.playChoiceSelectSound();
@@ -323,80 +395,49 @@ export class World extends Phaser.Scene {
     this.worldStore.setActiveAlly(ally);
   }
 
+  selectOption(option: CombatOption): void {
+    this.sound.play('choice-select');
+    switch(option.type) {
+      case OptionType.ACTION:
+        const action = option as Action;
+        this.worldStore.setExecutable(action);
+        switch (action.targetType) {
+          case TargetType.SELF:
+            this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
+            break;
+          case TargetType.ENEMIES:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.enemies));
+            break;
+          case TargetType.ALLIES:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.allies));
+            break;
+          case TargetType.SINGLE_TARGET:
+            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.getCombatants()));
+            break;
+        }
+        break;
+      case OptionType.TECHNIQUE:
+        const technique = option as Technique;
+        this.worldStore.setExecutable(technique);
+        this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
+        break;
+      case OptionType.ENEMY:
+      case OptionType.ALLY:
+        const combatant = option as Combatant;
+        this.worldStore.setTarget(combatant);
+        break;
+      case OptionType.FOLDER:
+        const folder = option as Folder;
+        const folderMenu = this.getCombatMenu(folder, folder.name);
+        this.worldStore.pushMenu(folderMenu);
+        break;
+    }
+  }
+
   popMenu = (): void => {
     this.playChoiceDisabledSound();
     this.worldStore.popMenu();
   }
-
-  onNextEncounter = (encounter: Encounter): void => {
-    this.playChoiceSelectSound();
-    this.worldStore.setContextAction(null);
-    this.addQueuedEvents(encounter.events);
-  }
-
-  onMultiSelect = (encounter: Encounter): void => {
-    this.playChoiceSelectSound();
-    this.worldStore.closeWindows();
-    this.addQueuedEvents(encounter.events);
-  }
-
-  getSystemMenu(): Menu {
-    const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
-      .map(enemy => {
-        return {
-          display: () => <span>{enemy.name}</span>,
-          execute: () => {
-            this.worldStore.setEnemyJournalContent(enemy);
-          }
-        }
-      });
-    const enemyJournalMenu: Menu = {
-      onClose: () => this.worldStore.setEnemyJournalContent(null),
-      menuOptions: enemyJournalMenuOptions,
-      isCursor: true,
-      title: "Enemies"
-    }
-    
-
-    const journalMenu: Menu = {
-      menuOptions: [
-        {
-          display: () => <span>Enemies</span>,
-          execute: () => {  
-            this.worldStore.pushMenu(enemyJournalMenu);
-          }
-        },
-        {
-          display: () => <span>Techniques</span>,
-          execute: () => {  
-            //
-          }
-        },
-      ],
-      title: "Journal",
-    };
-
-    const systemMenu: Menu = {
-      onClose: () => this.worldStore.setSystemsMenuOpen(false),
-      menuOptions: [
-        {
-          display: () => <span>Journal</span>,
-          execute: () => {  
-            this.worldStore.pushMenu(journalMenu);
-          }
-        },
-        {
-          display: () => <span>Exit</span>,
-          execute: () => {  
-            this.worldStore.closeMenus();
-          }
-        },
-      ],
-    }  
-
-    return systemMenu;
-  }
-  
 
   //#endregion
   
@@ -430,7 +471,6 @@ export class World extends Phaser.Scene {
           enemy.status = Status.NORMAL;
         }
       }
-
       
       // Select Weighted Strategy
       // engage probably happens too early
@@ -450,7 +490,6 @@ export class World extends Phaser.Scene {
     }
   }
 
-  
   resetDeadAllyCasterMenu(): void {
     if (this.worldStore.activeAlly && this.worldStore?.activeAlly.status === Status.DEAD) {
       this.worldStore.setActiveAlly(null);
@@ -531,44 +570,6 @@ export class World extends Phaser.Scene {
     return { menuOptions, onClose, title };
   }
 
-  selectOption(option: CombatOption): void {
-    this.sound.play('choice-select');
-    switch(option.type) {
-      case OptionType.ACTION:
-        const action = option as Action;
-        this.worldStore.setExecutable(action);
-        switch (action.targetType) {
-          case TargetType.SELF:
-            this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
-            break;
-          case TargetType.ENEMIES:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.enemies));
-            break;
-          case TargetType.ALLIES:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.allies));
-            break;
-          case TargetType.SINGLE_TARGET:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.getCombatants()));
-            break;
-        }
-        break;
-      case OptionType.TECHNIQUE:
-        const technique = option as Technique;
-        this.worldStore.setExecutable(technique);
-        this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
-        break;
-      case OptionType.ENEMY:
-      case OptionType.ALLY:
-        const combatant = option as Combatant;
-        this.worldStore.setTarget(combatant);
-        break;
-      case OptionType.FOLDER:
-        const folder = option as Folder;
-        const folderMenu = this.getCombatMenu(folder, folder.name);
-        this.worldStore.pushMenu(folderMenu);
-        break;
-    }
-  }
 
   executeSelectedOption(): void {
     if (
@@ -626,31 +627,12 @@ export class World extends Phaser.Scene {
       return;
     }
 
-    // TODO: Apply Techniques Buffs
+    // TODO: apply target
     if (action.name === "Splinter") this.splinterNotCasted = false;
     action.events.forEach(event => this.executeEvent(event, target, caster));    
   }
   //#endregion
 }
-
-const useApResources = (caster: Combatant, cost: number) => {
-  if (cost > caster.actionPoints){
-    const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
-    caster.actionPoints += totalAp;
-    caster.activeTechniques = [];
-  }
-  updateActionPoints(caster, -cost);
-
-}
-
-const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
-  const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
-
-  return enemies
-    .filter(enemy => seenMap.has(enemy.name))
-    .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
-}
-
 
 const getIconSrc = (option: { type: OptionType }): string => {
   switch (option.type) {

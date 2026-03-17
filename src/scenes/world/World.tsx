@@ -138,7 +138,7 @@ export class World extends Phaser.Scene {
     // combat
     this.tickStats(delta);
     this.updateCombatantsState();
-    this.executeEnemyStrategies();
+    // this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
@@ -469,6 +469,7 @@ export class World extends Phaser.Scene {
 
       const newActionPoints = combatant.actionPoints + regenPerTick;
       if (newActionPoints > combatant.maxActionPoints) {
+        this.sound.play('action-ready', { volume: .5 });
         combatant.actionPoints = combatant.maxActionPoints;
         return;
       }

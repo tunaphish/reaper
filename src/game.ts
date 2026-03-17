@@ -1,6 +1,11 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
 import ReactOverlay from './plugins/ReactOverlay';
+import { configure } from "mobx";
+
+configure({
+  enforceActions: "never"
+});
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'r e a p e r',

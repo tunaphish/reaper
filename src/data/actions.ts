@@ -4,6 +4,7 @@ import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
 import { EventType, ShatterTechniqueTarget } from '../model/encounter';
+import { Folder } from '../model/folder';
 
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
@@ -36,7 +37,7 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 };
 
 
-// #region Actions
+// #region Basic
 
 export const attack: Action = {
   type: OptionType.ACTION,
@@ -57,6 +58,43 @@ export const attack: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 };
 
+
+export const stanch: Action = {
+  type: OptionType.ACTION,
+  name: 'Stanch',
+  description: 'Heals bleed on self',
+  targetType: TargetType.SELF,
+  castTimeInMs: 300,
+  actionPointsCost: 1,
+
+  events: [
+    { type: EventType.SOUND, key: 'heal' },
+    { type: EventType.UPDATE_DAMAGE, value: -50 }
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
+  
+}
+
+export const magic: Action = {
+  type: OptionType.ACTION,
+  name: 'Magic',
+  description: 'Deals Damage. Shatters random technique.',
+  targetType: TargetType.ENEMIES,
+  
+  castTimeInMs: 2000,
+  actionPointsCost: 1,
+
+  events: [
+    { type: EventType.SOUND, key: 'debuff' },
+    { type: EventType.UPDATE_DAMAGE, value: 50 },
+    { type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM }
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
+}
+
+// #region fencer
 export const engage: Action = {
   type: OptionType.ACTION,
   name: 'Engage',
@@ -110,40 +148,11 @@ export const smash: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 };
 
-export const stanch: Action = {
-  type: OptionType.ACTION,
-  name: 'Stanch',
-  description: 'Heals bleed on self',
-  targetType: TargetType.SELF,
-  castTimeInMs: 300,
-  actionPointsCost: 1,
-
-  events: [
-    { type: EventType.SOUND, key: 'heal' },
-    { type: EventType.UPDATE_DAMAGE, value: -50 }
-  ],
-
-  castingImageSrc:'/reaper/images/test.jpeg',
-  
-}
-
-// #region Magics
-export const magic: Action = {
-  type: OptionType.ACTION,
-  name: 'Magic',
-  description: 'Deals Damage. Shatters random technique.',
-  targetType: TargetType.ENEMIES,
-  
-  castTimeInMs: 2000,
-  actionPointsCost: 1,
-
-  events: [
-    { type: EventType.SOUND, key: 'debuff' },
-    { type: EventType.UPDATE_DAMAGE, value: 50 },
-    { type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM }
-  ],
-
-  castingImageSrc:'/reaper/images/test.jpeg',
+export const fencer: Folder = {
+  name: 'Fencer',
+  desc: 'Strong Conditional Actions',
+  type: OptionType.FOLDER,
+  options: [ splinter, engage ]
 }
 
 // #endregion

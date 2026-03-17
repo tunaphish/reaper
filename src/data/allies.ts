@@ -38,7 +38,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
   desc: 'Soul of Keshi',
-  options: [Actions.attack, Actions.stanch, Actions.engage, Actions.smash, Actions.splinter],
+  options: [Actions.attack, Actions.stanch, Actions.fencer],
 }
 
 export const Keshi: Ally = {

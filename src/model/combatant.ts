@@ -26,7 +26,7 @@ export type Combatant = Option & {
 
   castingAction?: {
     target: Combatant;
-    action: Action;
+    option: Option;
     castedTimeInMs: number;
   }
 }

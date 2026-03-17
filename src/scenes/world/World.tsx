@@ -142,7 +142,7 @@ export class World extends Phaser.Scene {
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
-    this.executeCastedActions();
+    this.executeCastedOptions();
   }
 
 
@@ -581,48 +581,57 @@ export class World extends Phaser.Scene {
     this.worldStore.resetSelections();  
   }
 
-  executeCastedActions(): void {
+  executeCastedOptions(): void {
     this.worldStore.getCombatants().forEach(combatant => { 
-      if (!combatant.castingAction || combatant.castingAction.castedTimeInMs < combatant.castingAction.action.castTimeInMs) return;
-      const castingAction = combatant.castingAction;
-
-      if (castingAction.action.conditionMet && !castingAction.action.conditionMet(this, combatant, castingAction.target)) {
-        this.sound.play('restriction-violated');
+      if (!combatant.castingAction) return;
+      const { option, target, castedTimeInMs } = combatant.castingAction;
+      if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
+      if (castedTimeInMs < option.castTimeInMs) return;
+      
+      if (option.type === OptionType.TECHNIQUE) {
+        const technique = option as Technique;
+        combatant.activeTechniques.push(technique);
+        this.sound.play(technique.soundKeyName)
         combatant.castingAction = null;
-        return;
-      } 
+      }
 
-      if (castingAction.action.name === "Splinter") this.splinterNotCasted = false;
-      castingAction.action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
-      combatant.castingAction = null;
+
+      if (option.type === OptionType.ACTION) {
+        const action = option as Action;
+        if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
+          this.sound.play('restriction-violated');
+          combatant.castingAction = null;
+          return;
+        } 
+
+        if (action.name === "Splinter") this.splinterNotCasted = false;
+        action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
+        combatant.castingAction = null;
+      }
     });
   }
 
   executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
-    // Handle Technique
-    if (option.type === OptionType.TECHNIQUE) {
+    // Handle Shatter
+    if (option.type === OptionType.TECHNIQUE ) {
       const technique = (option as Technique);
 
       const idx = caster.activeTechniques.indexOf(technique);
 
       if (idx !== -1) {
+        this.sound.play(technique.soundKeyName);
         updateActionPoints(caster, technique.actionPointsCost);
         caster.activeTechniques.splice(idx, 1);
-      } else {
-        useApResources(caster, technique.actionPointsCost);
-        caster.activeTechniques.push(technique);
-      }
-    
-      this.sound.play(technique.soundKeyName);
-      return;
+        return;
+      } 
     }
 
     // Handle Action
-    const action = (option as Action);
-    useApResources(caster, action.actionPointsCost);
+    if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
+    useApResources(caster, option.actionPointsCost);
 
     caster.castingAction = {
-      action: option as Action,
+      option: option,
       target,
       castedTimeInMs: 0,
     }

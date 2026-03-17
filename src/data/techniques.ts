@@ -6,6 +6,7 @@ export const haste: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Haste',
   actionPointsCost: 1,
+  castTimeInMs: 1500,
   description: 'Technique: Increase Speed',
 
   soundKeyName: 'smirk',
@@ -15,6 +16,7 @@ export const buff: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Buff',
   actionPointsCost: 1,
+  castTimeInMs: 1500,
   description: 'Technique: Increase Strength',
 
   soundKeyName: 'smirk',
@@ -26,6 +28,7 @@ export const counter: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Counter',
   actionPointsCost: 1,
+  castTimeInMs: 1500,
   description: 'Technique: ATTACK enemies who deal damage to you',
 
   soundKeyName: 'smirk',

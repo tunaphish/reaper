@@ -128,9 +128,9 @@ const EnemyView = observer(
 
     const progress = ((enemy.actionPoints % 1) + 1) % 1;
     const actionPointMeterWidth = (progress * 100) + '%';
-    const castingWindowWidth = (enemy.castingAction ? (enemy.castingAction.castedTimeInMs / enemy.castingAction.action.castTimeInMs)*100 : 0) + '%'
+    const castingWindowWidth = (enemy.castingAction ? (enemy.castingAction.castedTimeInMs / enemy.castingAction.option.castTimeInMs)*100 : 0) + '%'
 
-    const displayedAction = enemy.castingAction?.action?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name;
+    const displayedAction = enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name;
 
     return (      
         <PanelWindow window={enemyImageWindow} >

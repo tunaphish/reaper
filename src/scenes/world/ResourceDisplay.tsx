@@ -37,7 +37,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
 
   const progress = ((props.ally.actionPoints % 1) + 1) % 1;
   const actionPointMeterHeight = (progress * 100) + '%';
-  const castingWindowHeight = (props.ally.castingAction ? (props.ally.castingAction.castedTimeInMs / props.ally.castingAction.action.castTimeInMs)*100 : 0) + '%'
+  const castingWindowHeight = (props.ally.castingAction ? (props.ally.castingAction.castedTimeInMs / props.ally.castingAction.option.castTimeInMs)*100 : 0) + '%'
 
   return (
     <>
@@ -108,18 +108,18 @@ const CastingWindow = (props: {ally: Ally}) => {
       width: 150,
     },
     layers: [{
-      src: castingAction?.action?.castingImageSrc,
+      src: castingAction?.option?.castingImageSrc,
     }]
   }
 
   return (
     <AnimatePresence>
       {
-        castingAction && castingAction.action.castingImageSrc &&
+        castingAction && castingAction.option.castingImageSrc &&
         <div style={{ position: 'absolute', top: '-20px', left: '75' }}>
           <PanelWindow window={imageWindow}>
             <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}>
-              <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.action.name }]}/>
+              <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]}/>
               
             </Window>
             <ImageWindowContent imageWindow={imageWindow}/>

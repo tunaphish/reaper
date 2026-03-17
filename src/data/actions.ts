@@ -115,7 +115,7 @@ export const stanch: Action = {
   name: 'Stanch',
   description: 'Heals bleed on self',
   targetType: TargetType.SELF,
-  castTimeInMs: 1000,
+  castTimeInMs: 300,
   actionPointsCost: 1,
 
   events: [

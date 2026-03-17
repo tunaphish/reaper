@@ -115,7 +115,7 @@ const CastingWindow = (props: {ally: Ally}) => {
   return (
     <AnimatePresence>
       {
-        castingAction &&
+        castingAction && castingAction.action.castingImageSrc &&
         <div style={{ position: 'absolute', top: '-20px', left: '75' }}>
           <PanelWindow window={imageWindow}>
             <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}>

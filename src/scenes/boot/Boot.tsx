@@ -76,7 +76,7 @@ export class Boot extends Phaser.Scene {
 
     // this.load.image('crosshair', '/reaper/ui/crosshair.png');
     // this.load.image('pointer', '/reaper/ui/pointer.png');
-
+    this.load.audio('action-ready', '/reaper/sounds/action-ready.mp3');
     this.load.audio('choice-hover', '/reaper/sounds/choice-hover.wav');
     this.load.audio('choice-select', '/reaper/sounds/choice-select.wav');
     this.load.audio('window-advance', '/reaper/sounds/window-advance.wav');

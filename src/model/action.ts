@@ -12,7 +12,7 @@ export type Action = Option & {
   actionPointsCost: number;
   castTimeInMs: number;
 
-  castingImageSrc: string;
+  castingImageSrc?: string;
 
   conditionMet?: (world: World, caster: Combatant, target: Combatant) => boolean;
   events: Event[];

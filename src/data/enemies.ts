@@ -46,7 +46,7 @@ export const fencer: Enemy = {
   status: Status.NORMAL,
   actionPoints: 0,
   maxActionPoints: 2,
-  actionPointsRegenRatePerSecond: .13,
+  actionPointsRegenRatePerSecond: .20,
   
   strategies: [
     { 

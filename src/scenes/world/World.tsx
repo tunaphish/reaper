@@ -136,9 +136,9 @@ export class World extends Phaser.Scene {
     this.processQueuedEvents(delta);
 
     // combat
-    this.worldStore.tickStats(delta);
-    this.worldStore.updateCombatantsState();
-    // this.executeEnemyStrategies();
+    this.tickStats(delta);
+    this.updateCombatantsState();
+    this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    
@@ -444,6 +444,52 @@ export class World extends Phaser.Scene {
   
 
   //#region combat
+  tickStats(delta: number): void {
+    this.worldStore.getCombatants().forEach((combatant) => {
+      if (combatant.status === Status.DEAD) return;
+      if (combatant.bleed > 0) {
+        const DAMAGE_TICK_RATE = (delta / 1000) * 5;
+        combatant.bleed -= DAMAGE_TICK_RATE;
+        combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
+      }
+
+      if (combatant.castingAction) {
+        combatant.castingAction.castedTimeInMs += delta;
+        return;
+      } 
+
+      // handles overflow
+      if (combatant.actionPoints >= combatant.maxActionPoints) {
+        combatant.actionPoints = Math.trunc(combatant.actionPoints);
+        return;
+      }
+      const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
+        (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
+        (delta / 1000) ;
+
+      const newActionPoints = combatant.actionPoints + regenPerTick;
+      if (newActionPoints > combatant.maxActionPoints) {
+        combatant.actionPoints = combatant.maxActionPoints;
+        return;
+      }
+      combatant.actionPoints = newActionPoints;
+    });
+  }
+
+  updateCombatantsState(): void {
+    this.worldStore.getCombatants().forEach((combatant) => {
+      if (combatant.health <= 0) {
+        combatant.status = Status.DEAD;
+        combatant.actionPoints = 0;
+        combatant.activeTechniques = [];
+      } else if (combatant.actionPoints <= 0) {
+        combatant.status = Status.EXHAUSTED;
+      } else {
+        combatant.status = Status.NORMAL;
+      }
+    });
+  }
+
   executeEnemyStrategies(): void {
     if (!this.combatInitiated) return;
     
@@ -541,6 +587,7 @@ export class World extends Phaser.Scene {
 
       if (castingAction.action.conditionMet && !castingAction.action.conditionMet(this, combatant, castingAction.target)) {
         this.sound.play('restriction-violated');
+        combatant.castingAction = null;
         return;
       } 
 

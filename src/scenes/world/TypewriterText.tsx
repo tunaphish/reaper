@@ -40,7 +40,7 @@ const flattenTokens = (tokens: TextToken[]): TypedChar[] => {
 export const TypewriterText = ({
   line,
   textSpeed = TextSpeed.NORMAL,
-}: TypewriterTextProps) => {
+}: TypewriterTextProps): JSX.Element => {
   const chars = React.useMemo(() => flattenTokens(line), [line])
   const [index, setIndex] = React.useState(0)
 

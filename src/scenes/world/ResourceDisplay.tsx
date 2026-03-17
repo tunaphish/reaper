@@ -6,7 +6,8 @@ import classNames from './world.module.css';
 import { Ally } from '../../model/ally';
 import { PanelWindow, Window } from './Window';
 import { ImageWindowContent } from './ImageWindowContent';
-import { EventType, ImageWindow } from '../../model/encounter';
+import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
+import { TypewriterText } from './TypewriterText';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
   const { className, value, max } = props;
@@ -117,7 +118,10 @@ const CastingWindow = (props: {ally: Ally}) => {
         castingAction &&
         <div style={{ position: 'absolute', top: '-20px', left: '75' }}>
           <PanelWindow window={imageWindow}>
-            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, padding: '5px', fontSize: '18px' }}>{castingAction.action.name}</Window>
+            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}>
+              <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.action.name }]}/>
+              
+            </Window>
             <ImageWindowContent imageWindow={imageWindow}/>
           </PanelWindow>
         </div >

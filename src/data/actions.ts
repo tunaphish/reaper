@@ -43,16 +43,18 @@ export const attack: Action = {
   name: 'Attack',
   description: 'Deals damage',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 500,
+  castTimeInMs: 1500,
 
   actionPointsCost: 1,
 
 
-    events: [
-      { type: EventType.SOUND, key: 'attack' },
-      { type: EventType.UPDATE_DAMAGE, value: 50 }
-  
-    ]
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 50 }
+
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
 };
 
 export const engage: Action = {
@@ -60,7 +62,7 @@ export const engage: Action = {
   name: 'Engage',
   description: 'Deals high damage. Condition: target must have full health.',
   targetType: TargetType.SINGLE_TARGET,
-castTimeInMs: 500,
+  castTimeInMs: 1000,
 
   actionPointsCost: 1,
 
@@ -68,7 +70,9 @@ castTimeInMs: 500,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
-  ]
+  ],
+  castingImageSrc:'/reaper/images/test.jpeg',
+
 };
 
 export const splinter: Action = {
@@ -76,7 +80,7 @@ export const splinter: Action = {
   name: 'Splinter',
   description: 'Deals high damage. Condition: Splinter must not have been used during this combat.',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 500,
+  castTimeInMs: 1000,
 
   actionPointsCost: 1,
 
@@ -84,7 +88,9 @@ export const splinter: Action = {
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
-  ]
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
 };
 
 export const smash: Action = {
@@ -92,14 +98,16 @@ export const smash: Action = {
   name: 'Smash',
   description: 'Deals high damage',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 500,
+  castTimeInMs: 1000,
 
   actionPointsCost: 2,
 
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 120 }
-  ]
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
 };
 
 export const stanch: Action = {
@@ -107,13 +115,15 @@ export const stanch: Action = {
   name: 'Stanch',
   description: 'Heals bleed on self',
   targetType: TargetType.SELF,
-  castTimeInMs: 500,
+  castTimeInMs: 1000,
   actionPointsCost: 1,
 
-    events: [
-      { type: EventType.SOUND, key: 'heal' },
-      { type: EventType.UPDATE_DAMAGE, value: -50 }
-    ]
+  events: [
+    { type: EventType.SOUND, key: 'heal' },
+    { type: EventType.UPDATE_DAMAGE, value: -50 }
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
   
 }
 
@@ -127,12 +137,13 @@ export const magic: Action = {
   castTimeInMs: 2000,
   actionPointsCost: 1,
 
-    events: [
-      { type: EventType.SOUND, key: 'debuff' },
-      { type: EventType.UPDATE_DAMAGE, value: 50 },
-      { type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM }
-    ]
-  
+  events: [
+    { type: EventType.SOUND, key: 'debuff' },
+    { type: EventType.UPDATE_DAMAGE, value: 50 },
+    { type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM }
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
 }
 
 // #endregion

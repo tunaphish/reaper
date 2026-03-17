@@ -1,5 +1,4 @@
 import * as React from 'react';
-import classNames from './world.module.css';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
 import { WorldView } from './WorldView';
@@ -30,6 +29,7 @@ import * as Techniques from '../../data/techniques';
 import * as Actions from '../../data/actions';
 import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
+import { actionMenuItem, targetMenuItem } from './CombatMenus';
 
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
@@ -479,11 +479,10 @@ export class World extends Phaser.Scene {
   }
 
   resetDeadAllyCasterMenu(): void {
-    if (this.worldStore.activeAlly && this.worldStore?.activeAlly.status === Status.DEAD) {
-      this.worldStore.setActiveAlly(null);
-      this.worldStore.resetSelections();
-      this.worldStore.closeMenus();
-    }
+    if (!this.worldStore.activeAlly || this.worldStore?.activeAlly.status !== Status.DEAD) return ;
+    this.worldStore.setActiveAlly(null);
+    this.worldStore.resetSelections();
+    this.worldStore.closeMenus();
   }
 
   checkBattleEndConditions(): void {
@@ -497,30 +496,12 @@ export class World extends Phaser.Scene {
 
   getCombatMenu(folder: Folder, title: string): Menu {
     const menuOptions: MenuOption[] = folder.options.map((option) => {
-      let className = ''
-      if (option.type === OptionType.TECHNIQUE) {
-        const technique = option as Technique;
-        if (techniqueIsActive(this.worldStore.activeAlly, technique)) className = classNames.techniqueActive;
-      }
+
       
-      const display = () => (
-        <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} className={className}>
-          <div>
-            <img 
-              src={getIconSrc(option)}
-              alt="" 
-              style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
-            />
-            {option.name}
-          </div>
-          { 'actionPointsCost' in option && <div style={{ marginLeft: '8px' }}>{option.actionPointsCost as string}</div>}
-          
-          
-        </span>
-      )
+
 
       return {
-        display,
+        display: () => actionMenuItem(option, this.worldStore.activeAlly),
         execute: () => {
           this.selectOption(option as CombatOption);
         }
@@ -531,20 +512,8 @@ export class World extends Phaser.Scene {
   
   getTargetsMenu(targets: Combatant[]): Menu {
     const menuOptions: MenuOption[] = targets.map(target => {
-      const display = () => (
-        <span style={{ width: 'max-content' }}>
-          <img 
-            src={getIconSrc(target)}
-            alt="" 
-            style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
-            
-          />
-          {target.name}
-        </span>
-      )
-
       return {
-        display,
+        display: () => targetMenuItem(target),
         execute: () => {
           this.worldStore.setTarget(target);
         }
@@ -621,21 +590,3 @@ export class World extends Phaser.Scene {
   //#endregion
 }
 
-const getIconSrc = (option: { type: OptionType }): string => {
-  switch (option.type) {
-    case OptionType.FOLDER:
-      return '/reaper/ui/icons/folder.png';
-    case OptionType.ENEMY:
-      return '/reaper/ui/icons/enemy.png';
-    case OptionType.ALLY:
-      return '/reaper/ui/icons/ally.png';
-    case OptionType.ACTION:
-      return '/reaper/ui/icons/attack.png';
-    case OptionType.ITEM:
-      return '/reaper/ui/icons/item.png';
-    case OptionType.TECHNIQUE:
-      return '/reaper/ui/icons/magic.png';
-    default:
-      return '/reaper/ui/icons/magic.png'; 
-  }
-}

@@ -32,8 +32,6 @@ export class WorldStore {
   menus: Menu[] = [];
   contextAction?: ContextAction;
 
-
-
   // TODO: potentially make these generic
   enemyJournalContent?: Enemy;
   systemsMenuOpen = false;

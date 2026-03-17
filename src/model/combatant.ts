@@ -2,7 +2,6 @@ import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
 import { Action } from './action';
-import { Combatant } from './combatant';
 
 export enum Status {
   NORMAL = 'NORMAL',

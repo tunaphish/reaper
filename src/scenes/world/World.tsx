@@ -446,22 +446,20 @@ export class World extends Phaser.Scene {
   executeEnemyStrategies(): void {
     if (!this.combatInitiated) return;
     
-    const actionableEnemies = this.worldStore.enemies.filter(enemy => enemy.status === Status.NORMAL)
+    const actionableEnemies = this.worldStore.enemies
+      .filter(enemy => enemy.status === Status.NORMAL)
+      .filter(enemy => !enemy.castingAction)
 
     for (const enemy of actionableEnemies) {
-      if (enemy.castingAction) return;
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
       const option = (strategy.option as CombatOption);
 
-      if (option.type === OptionType.ACTION || option.type === OptionType.TECHNIQUE ) {
-        const action = option as Action;
-        if (enemy.actionPoints < action.actionPointsCost) continue;
+      if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE ) continue;
+      const action = option as Action;
+      if (enemy.actionPoints < action.actionPointsCost) continue;
 
-        const target = strategy.getTarget(this, action, enemy);
-        this.executeOption(enemy, target, option);
-        enemy.status = Status.NORMAL;
-      
-      }
+      const target = strategy.getTarget(this, action, enemy);
+      this.executeOption(enemy, target, option);      
       
       // Select Weighted Strategy
       const viableStrategies = enemy.strategies

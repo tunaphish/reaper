@@ -457,23 +457,13 @@ export class World extends Phaser.Scene {
         const action = option as Action;
         if (enemy.actionPoints < action.actionPointsCost) continue;
 
-        if ('castTimeInMs' in option) {
-          this.sound.play('charged');
-          useApResources(enemy, action.actionPointsCost);
-          enemy.castingAction = {
-            action: option as Action,
-            target: strategy.getTarget(this, action, enemy),
-            castedTimeInMs: 0,
-          }
-        } else {
-          const target = strategy.getTarget(this, action, enemy);
-          this.executeOption(enemy, target, option);
-          enemy.status = Status.NORMAL;
-        }
+        const target = strategy.getTarget(this, action, enemy);
+        this.executeOption(enemy, target, option);
+        enemy.status = Status.NORMAL;
+      
       }
       
       // Select Weighted Strategy
-      // engage probably happens too early
       const viableStrategies = enemy.strategies
         .map((s, i) => ({ s, i }))
         .filter(({ s }) => s.isValid(this, enemy));
@@ -569,7 +559,6 @@ export class World extends Phaser.Scene {
 
     return { menuOptions, onClose, title };
   }
-
 
   executeSelectedOption(): void {
     if (

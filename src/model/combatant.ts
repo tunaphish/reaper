@@ -70,10 +70,10 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
 
 export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(t => t.name === technique.name);
 export const useApResources = (caster: Combatant, cost: number) => {
-  if (cost > caster.actionPoints) {
-    const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost + total, 0);
-    caster.actionPoints += totalAp;
-    caster.activeTechniques = [];
-  }
+  // if (cost > caster.actionPoints) {
+  //   const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost + total, 0);
+  //   caster.actionPoints += totalAp;
+  //   caster.activeTechniques = [];
+  // }
   updateActionPoints(caster, -cost);
 };

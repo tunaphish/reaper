@@ -55,7 +55,7 @@ export const attack: Action = {
 
   ],
 
-  castingImageSrc:'/reaper/images/test.jpeg',
+  castingImageSrc:'/reaper/images/test.gif',
 };
 
 
@@ -72,7 +72,6 @@ export const stanch: Action = {
     { type: EventType.UPDATE_DAMAGE, value: -50 }
   ],
 
-  castingImageSrc:'/reaper/images/test.jpeg',
   
 }
 

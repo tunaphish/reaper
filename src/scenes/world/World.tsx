@@ -31,11 +31,7 @@ import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
 import { actionMenuItem, targetMenuItem } from './CombatMenus';
 
-
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
-
-
-
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -138,6 +134,7 @@ export class World extends Phaser.Scene {
     // combat
     this.tickStats(delta);
     this.updateCombatantsState();
+    
     // this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();

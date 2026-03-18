@@ -8,6 +8,7 @@ import { PanelWindow, Window } from './Window';
 import { ImageWindowContent } from './ImageWindowContent';
 import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
 import { TypewriterText } from './TypewriterText';
+import { Technique } from '../../model/technique';
 
 export const Meter = (props: { value: number, max: number, className?: string }) => {
   const { className, value, max } = props;
@@ -19,6 +20,16 @@ export const Meter = (props: { value: number, max: number, className?: string })
   )
 }
 
+export const CombatantHealthBar = observer((props: { combatant: Combatant }) => {
+  return <div className={classNames.meterContainer}>
+          <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
+          <Meter value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
+            <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
+            <div style={{ fontSize: '12px' }}>{Math.ceil(props.combatant.health)}</div>
+          </div>
+        </div>;
+});
 
 export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {
   const statusToStylesMap = {
@@ -98,6 +109,54 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   )
 });
 
+
+export const TechniqueView = (props: { technique: Technique }) => {
+    const { technique } = props;
+  
+    const getRandomBorderPoint = () => {
+      const boxSize = 100;
+      const y = Math.random() * boxSize;
+      const center = boxSize / 2;
+      const heightFactor = 4; // Adjust this for how high the arc is
+      const x = heightFactor * (1 - Math.pow((y - center) / center, 2)); // Parabolic formula
+      return [x, y];
+    }
+  
+    const style: React.CSSProperties = React.useMemo(() => {
+      const [topPos, leftPos] = getRandomBorderPoint();
+      const top = `${topPos}%`; 
+      const left = `${leftPos}%`;
+      return {
+        position: 'absolute', 
+        top, 
+        left,
+        transform: "translate(-50%, -50%)",
+      }
+    }, []);
+
+    return (
+      <div style={style}>
+        <motion.div
+          className={classNames.window} 
+          style={{ fontSize: '16px' }}
+          initial={{ scaleY: 0 }} 
+          animate={{ scaleY: 1 }} 
+          exit={{ scaleY: 0 }}
+          transition={{ duration: .1, ease: 'easeOut' }} 
+        >
+          {technique.name}
+        </motion.div>
+      </div>
+    )
+  }
+
+export const TechniqueViewManager = observer(((props: {combatant: Combatant }) => {
+  const { combatant } = props;
+  return (
+    [...combatant.activeTechniques].map((technique) => <TechniqueView key={technique.name} technique={technique} />)      
+  )
+})); 
+
 const CastingWindow = (props: {ally: Ally}) => {
   const { castingAction } = props.ally;
   const imageWindow: ImageWindow = {
@@ -116,14 +175,15 @@ const CastingWindow = (props: {ally: Ally}) => {
     <AnimatePresence>
       {
         castingAction && castingAction.option.castingImageSrc &&
-        <div style={{ position: 'absolute', top: '-20px', left: '75' }}>
+        <div style={{ position: 'relative', top: '-40px', left: '75' }}>
           <PanelWindow window={imageWindow}>
-            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}>
+            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }} delay={.2}>
               <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]}/>
               
             </Window>
             <ImageWindowContent imageWindow={imageWindow}/>
           </PanelWindow>
+          <TechniqueViewManager combatant={props.ally}/>
         </div >
       }
       
@@ -131,13 +191,4 @@ const CastingWindow = (props: {ally: Ally}) => {
   )
 }
 
-export const CombatantHealthBar = observer((props: { combatant: Combatant }) => {
-  return <div className={classNames.meterContainer}>
-          <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
-          <Meter value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
-            <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
-            <div style={{ fontSize: '12px' }}>{Math.ceil(props.combatant.health)}</div>
-          </div>
-        </div>;
-});
+

@@ -110,54 +110,36 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
 });
 
 
-export const TechniqueView = (props: { technique: Technique }) => {
-    const { technique } = props;
-  
-    const getRandomBorderPoint = () => {
-      const boxSize = 100;
-      const y = Math.random() * boxSize;
-      const center = boxSize / 2;
-      const heightFactor = 4; // Adjust this for how high the arc is
-      const x = heightFactor * (1 - Math.pow((y - center) / center, 2)); // Parabolic formula
-      return [x, y];
-    }
-  
-    const style: React.CSSProperties = React.useMemo(() => {
-      const [topPos, leftPos] = getRandomBorderPoint();
-      const top = `${topPos}%`; 
-      const left = `${leftPos}%`;
-      return {
-        position: 'absolute', 
-        top, 
-        left,
-        transform: "translate(-50%, -50%)",
-      }
-    }, []);
+export const TechniqueView = (props: { technique: Technique, delay: number }): JSX.Element => {
+  const { technique } = props;
 
-    return (
-      <div style={style}>
-        <motion.div
-          className={classNames.window} 
-          style={{ fontSize: '16px' }}
-          initial={{ scaleY: 0 }} 
-          animate={{ scaleY: 1 }} 
-          exit={{ scaleY: 0 }}
-          transition={{ duration: .1, ease: 'easeOut' }} 
-        >
-          {technique.name}
-        </motion.div>
-      </div>
-    )
+  const getRandomBorderPoint = () => {
+    const boxSize = 100;
+    const y = Math.random() * boxSize;
+    const center = boxSize / 2;
+    const heightFactor = 4; // Adjust this for how high the arc is
+    const x = heightFactor * (1 - Math.pow((y - center) / center, 2)) - 20; // Parabolic formula
+    return [x, y];
   }
 
-export const TechniqueViewManager = observer(((props: {combatant: Combatant }) => {
-  const { combatant } = props;
-  return (
-    [...combatant.activeTechniques].map((technique) => <TechniqueView key={technique.name} technique={technique} />)      
-  )
-})); 
+  const style: React.CSSProperties = React.useMemo(() => {
+    const [topPos, leftPos] = getRandomBorderPoint();
+    const top = `${topPos}px`; 
+    const left = `${leftPos}%`;
 
-const CastingWindow = (props: {ally: Ally}) => {
+    return {
+      position: 'absolute', 
+      top, 
+      left,
+      padding: '5px',
+      zIndex: 10,
+    }
+  }, []);
+
+  return <Window style={style} delay={props.delay}>{technique.name}</Window>
+}
+
+const CastingWindow = (props: {ally: Ally }) => {
   const { castingAction } = props.ally;
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
@@ -171,19 +153,36 @@ const CastingWindow = (props: {ally: Ally}) => {
     }]
   }
 
+  const baseDelay = 0.2; 
+
   return (
     <AnimatePresence>
       {
         castingAction && castingAction.option.castingImageSrc &&
         <div style={{ position: 'relative', top: '-40px', left: '75' }}>
           <PanelWindow window={imageWindow}>
-            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }} delay={.2}>
+            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }} delay={baseDelay}>
               <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]}/>
-              
             </Window>
             <ImageWindowContent imageWindow={imageWindow}/>
           </PanelWindow>
-          <TechniqueViewManager combatant={props.ally}/>
+          {[...props.ally.activeTechniques].map((technique, index, arr) => {
+              const techniques = [...props.ally.activeTechniques];
+              const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
+              const END_BUFFER_RATIO = 0.2;
+              const activeItemCount = techniques.length + 1;
+              const activeTime = castTimeSec * (1 - END_BUFFER_RATIO);
+              const step = activeItemCount > 0 ? activeTime / activeItemCount : 0;
+              const delay = step * (index + 1);
+
+              return (
+                <TechniqueView
+                  key={technique.name}
+                  technique={technique}
+                  delay={delay}
+                />
+              );
+            })}
         </div >
       }
       

@@ -14,8 +14,8 @@ export const Meter = (props: { value: number, max: number, className?: string })
   const { className, value, max } = props;
 
   return (
-    <div className={[classNames.meterBackground, className].join(' ')}>
-      <div className={classNames.meter} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
+    <div className={classNames.meterBackground}>
+      <div className={[classNames.meter, className].join(' ')} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
     </div>
   )
 }
@@ -46,33 +46,14 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   const totalAP = Math.floor(props.ally.actionPoints);
   const overflowAP = Math.max(0, totalAP - baseAP);
 
-  const progress = ((props.ally.actionPoints % 1) + 1) % 1;
-  const actionPointMeterHeight = (progress * 100) + '%';
-  const castingWindowHeight = (props.ally.castingAction ? (props.ally.castingAction.castedTimeInMs / props.ally.castingAction.option.castTimeInMs)*100 : 0) + '%'
-
   return (
     <>
       <div className={className.join(' ')} onClick={props.onClickCell}>
           <div className={classNames.characterCellContainer}>
             <CombatantHealthBar combatant={props.ally} />
-            <div className={classNames.actionPointsContainer}
-              style={{ 
-                flex: '1',
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gridTemplateRows: "1fr", 
-              }}
-            >
-              <motion.div 
-                className={classNames.actionPointMeterWindow}
-                animate={{ height: actionPointMeterHeight }}
-                transition={{ duration: 0 }}
-              />
-              <motion.div 
-                className={classNames.castingWindow}
-                animate={{ height: castingWindowHeight }}
-                transition={{ duration: 0 }}
-              />
+            <div className={classNames.meterContainer}>
+              <Meter value={((props.ally.actionPoints % 1) + 1) % 1} max={1} className={classNames.actionPointMeterWindow} />
+              {props.ally.castingAction && <Meter value={props.ally.castingAction.castedTimeInMs} max={props.ally.castingAction.option.castTimeInMs} />}
               <div className={classNames.actionPointRow}>
                 {Array.from({ length: baseAP }).map((_, i) => (
                   <div

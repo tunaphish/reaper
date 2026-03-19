@@ -139,7 +139,6 @@ overflow: hidden;
   width: 100%;
   font-size: 12px;
   height: 100%;
-  background-color: gray;
 }
 
 .meterContainer > * {
@@ -200,13 +199,6 @@ overflow: hidden;
   grid-row: 1;
 }
 
-.actionPointsContainer {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-}
-
 .actionPointsContainer > * {
   grid-column: 1;
   grid-row: 1;
@@ -238,11 +230,11 @@ overflow: hidden;
 
 
 
-.healthMeter > div {
+.healthMeter  {
   background: white;
 }
 
-.bleedMeter > div{
+.bleedMeter {
   background: pink;
 }
 
@@ -273,21 +265,8 @@ overflow: hidden;
 }
 
 .actionPointMeterWindow {
-  height: 0;
-  width: 100%;
-  background-color: gray;
-  grid-column: 1;
-  grid-row: 1;
+  background: gray;
 }
-
-.castingWindow {
-  height: 0;
-  width: 100%;
-  background-color: white;
-  grid-column: 1;
-  grid-row: 1;
-}
-
 
 .enemyActionPointMeterWindow {
   height: 100%;

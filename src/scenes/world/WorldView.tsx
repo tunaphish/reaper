@@ -51,11 +51,11 @@ export function usePhaserDomShake(
       }
     };
 
-    scene.events.on("shake", handler);
+    scene.events.on("updated-damage", handler);
     return () => {
-      scene.events.off("shake", handler);
+      scene.events.off("updated-damage", handler);
     };
-  }, [scene, ref, "shake"]);
+  }, [scene, ref, "updated-damage"]);
 }
 
 export const EnemiesContainer = observer(({world}: {world: World}) => {

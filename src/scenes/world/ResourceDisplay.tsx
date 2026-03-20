@@ -10,15 +10,29 @@ import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
 import { TypewriterText } from './TypewriterText';
 import { Technique } from '../../model/technique';
 
-export const Meter = (props: { value: number, max: number, className?: string }) => {
-  const { className, value, max } = props;
+export const Meter = (props: {
+  value: number;
+  max: number;
+  className?: string;
+  vertical?: boolean;
+}) => {
+  const { className, value, max, vertical } = props;
+
+  const percent = Math.min(Math.round((value / max) * 100), 100) + "%";
+
+  const style = vertical
+    ? { height: percent }
+    : { width: percent };
 
   return (
     <div className={classNames.meterBackground}>
-      <div className={[classNames.meter, className].join(' ')} style={{ width: Math.min(Math.round(value/max * 100), 100) + "%" }}/>
+      <div
+        className={[classNames.meter, className].join(" ")}
+        style={style}
+      />
     </div>
-  )
-}
+  );
+};
 
 export const CombatantHealthBar = observer((props: { combatant: Combatant }) => {
   return <div className={classNames.meterContainer}>
@@ -31,6 +45,51 @@ export const CombatantHealthBar = observer((props: { combatant: Combatant }) => 
         </div>;
 });
 
+
+export const ActionBar = observer((props: { combatant: Combatant }) => {
+  const { combatant } = props;
+
+  const baseAP = combatant.maxActionPoints;
+  const totalAP = Math.floor(combatant.actionPoints);
+  const overflowAP = Math.max(0, totalAP - baseAP);
+
+  return (
+    <div className={classNames.meterContainer}>
+      <Meter value={((combatant.actionPoints % 1) + 1) % 1} max={1} className={classNames.actionPointMeterWindow} />
+      {combatant.castingAction && <Meter value={combatant.castingAction.castedTimeInMs} max={combatant.castingAction.option.castTimeInMs} />}
+      <div className={classNames.actionPointRow}>
+        {Array.from({ length: baseAP }).map((_, i) => (
+          <div
+            key={`base-${i}`}
+            className={[
+              classNames.actionPointToken,
+              i < totalAP ? classNames.filled : classNames.empty,
+            ].join(' ')}
+          />
+        ))}
+
+        {Array.from({ length: overflowAP }).map((_, i) => (
+          <div
+            key={`overflow-${i}`}
+            className={classNames.overflowToken}
+          />
+        ))}
+
+
+      {combatant.activeTechniques.map((technique, i) => (
+        <img
+          key={`tech-${i}`}
+          src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
+          className={classNames.techniqueIcon}
+        />
+      ))}
+      </div>
+    </div>
+  );
+
+});
+
+
 export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
@@ -42,46 +101,19 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
     statusToStylesMap[props.ally.status],
   ];
   
-  const baseAP = props.ally.maxActionPoints;
-  const totalAP = Math.floor(props.ally.actionPoints);
-  const overflowAP = Math.max(0, totalAP - baseAP);
 
   return (
     <>
       <div className={className.join(' ')} onClick={props.onClickCell}>
-          <div className={classNames.characterCellContainer}>
-            <CombatantHealthBar combatant={props.ally} />
-            <div className={classNames.meterContainer}>
-              <Meter value={((props.ally.actionPoints % 1) + 1) % 1} max={1} className={classNames.actionPointMeterWindow} />
-              {props.ally.castingAction && <Meter value={props.ally.castingAction.castedTimeInMs} max={props.ally.castingAction.option.castTimeInMs} />}
-              <div className={classNames.actionPointRow}>
-                {Array.from({ length: baseAP }).map((_, i) => (
-                  <div
-                    key={`base-${i}`}
-                    className={[
-                      classNames.actionPointToken,
-                      i < totalAP ? classNames.filled : classNames.empty,
-                    ].join(' ')}
-                  />
-                ))}
+          <div className={classNames.characterCellContainer} >
 
-                {Array.from({ length: overflowAP }).map((_, i) => (
-                  <div
-                    key={`overflow-${i}`}
-                    className={classNames.overflowToken}
-                  />
-                ))}
-
-
-              {props.ally.activeTechniques.map((technique, i) => (
-                <img
-                  key={`tech-${i}`}
-                  src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
-                  className={classNames.techniqueIcon}
-                />
-              ))}
-              </div>
+            <div className={classNames.portraitContainer } >
+              <Meter vertical value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter} />
+              <Meter  vertical value={props.ally.health - props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter} />
+              <img  src={'/reaper/images/siffrin.png'}></img>
+              <div className={classNames.healthNumber}>{Math.trunc(props.ally.health)}</div>
             </div>
+            <ActionBar combatant={props.ally} />
         </div>
       </div>
       <CastingWindow ally={props.ally} />

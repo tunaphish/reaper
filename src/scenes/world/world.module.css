@@ -28,7 +28,7 @@
 
 .startBar {
     width: 100%;
-    background-color: black;
+    background-color: var(--ink-black);
 }
 
 .combatantBar {
@@ -47,7 +47,7 @@
 }
 
 .item:disabled {
-    color: gray;
+    color: var(--dust-gray);
 }
 
 .abilitiesContainer {
@@ -99,18 +99,15 @@ overflow: hidden;
 }
 
 .disabled {
-  color: gray;
+  color: var(--dust-gray);
 }
 
 
 
 .window {
-  background: linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -moz-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -webkit-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
-  background: -o-linear-gradient(to bottom right,#0053ad, #001b85, #000223);
+  background: var(--ink-black);
   
-  border: 2px outset white;
+  border: 2px outset var(--paper-offwhite);
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
 
   border-radius: 3px;
@@ -123,9 +120,15 @@ overflow: hidden;
   padding: 3px;
 }
 
+.windowTitleBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+  background: var(--paper-offwhite);
+  color: var(--dust-gray);
+}
+
 .characterCellContainer {
-  grid-column: 1;
-  grid-row: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,8 +137,6 @@ overflow: hidden;
 
 .meterContainer {
   display: grid;
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr;
   width: 100%;
   font-size: 12px;
   height: 100%;
@@ -146,16 +147,43 @@ overflow: hidden;
   grid-row: 1;
 }
 
+.portraitContainer {
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+}
 
-.meterBackground {
-  width: 100%;
-  background-color: transparent;
+.portraitContainer > * {
   grid-column: 1;
   grid-row: 1;
 }
 
+.healthNumber {
+  justify-self: center; 
+  align-self: end;      
+  color: var(--dust-gray);
+}
+
+.portraitContainer img {
+  width: 100%;
+  height: auto;
+}
+
+.meterBackground {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-end; /* makes it fill from bottom */
+}
+
+
+
 .meter {
-  background: white;
+  background: var(--paper-offwhite);
+  width: 100%;
   height: 100%;
 }
 
@@ -228,14 +256,12 @@ overflow: hidden;
   animation: shake 0.5s ease-in-out;
 }
 
-
-
 .healthMeter  {
-  background: white;
+  background: var(--paper-offwhite);
 }
 
 .bleedMeter {
-  background: pink;
+  background: var(--dust-gray);
 }
 
 
@@ -250,7 +276,7 @@ overflow: hidden;
 }
 
 .menuOption:disabled {
-  color: gray;
+  color: var(--dust-gray);
 }
 
 
@@ -264,25 +290,6 @@ overflow: hidden;
   text-shadow: 3px 2px 2px rgba(251, 12, 12,1), 0px -1px 3px rgba(12, 79, 251,.5),-3px 0px 2px rgba(52, 251, 12, 1);
 }
 
-.actionPointMeterWindow {
-  background: gray;
-}
-
-.enemyActionPointMeterWindow {
-  height: 100%;
-  width: 0;
-  background-color: gray;
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.enemyCastingWindow {
-  height: 100%;
-  width: 0;
-  background-color: white;
-  grid-column: 1;
-  grid-row: 1;
-}
 
 @keyframes blink-animation {
   50% { opacity: 1; }
@@ -292,7 +299,7 @@ overflow: hidden;
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 12px;
+  padding: 5px;
 }
 
 .actionPointToken {
@@ -301,11 +308,11 @@ overflow: hidden;
 }
 
 .filled {
-  background: white;
+  background: var(--dust-gray);
 }
 
 .empty {
-  border: 1px solid #666;
+  border: 1px solid var(--dust-gray);
 }
 
 .techniqueIcon {

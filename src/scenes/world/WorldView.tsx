@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu, MenuOption } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { CombatantHealthBar, ResourceDisplay } from './ResourceDisplay';
+import { ActionBar, CombatantHealthBar, ResourceDisplay } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
@@ -15,7 +15,6 @@ import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
 import { MenuOptionsView } from './MenuOptionsView';
 import { getRandomInt } from '../../model/math';
-import { motion } from 'framer-motion';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -81,7 +80,6 @@ const EnemyView = observer(
     usePhaserDomShake(world, ref, enemy.name);
 
     const STAGE_W = 450;
-    const STAGE_H = 800;
     const SIZE = 235;
 
     const positions: { x: number; y: number }[] = (() => {
@@ -126,43 +124,13 @@ const EnemyView = observer(
       ],
     };
 
-    const progress = ((enemy.actionPoints % 1) + 1) % 1;
-    const actionPointMeterWidth = (progress * 100) + '%';
-    const castingWindowWidth = (enemy.castingAction ? (enemy.castingAction.castedTimeInMs / enemy.castingAction.option.castTimeInMs)*100 : 0) + '%'
-
-    const displayedAction = enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name;
-
     return (      
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
             <CombatantHealthBar combatant={enemy} />
             <ImageWindowContent imageWindow={enemyImageWindow} />
-            <div 
-              style={{ 
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gridTemplateRows: "1fr", 
-              }}
-            >
-              <motion.div 
-                className={classNames.enemyActionPointMeterWindow}
-                animate={{ width: actionPointMeterWidth }}
-                transition={{ duration: 0 }}
-              />
-              <motion.div 
-                className={classNames.enemyCastingWindow}
-                animate={{ width: castingWindowWidth }}
-                transition={{ duration: 0 }}
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 1, gridRow: 1  }}>
-                <span>{displayedAction} </span>
-                {
-                  [...enemy.activeTechniques].map((technique) => <span key={technique.name}>{technique.name} </span>)
-                }
-              </div>
-
-            </div>
-
+            <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
+            <ActionBar combatant={enemy} />
           </div>
         </PanelWindow>
     );
@@ -211,7 +179,7 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number, verti
 
   return (
     <Window style={style}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px', background: 'white', color: 'gray' }} onClick={(e) => onClickExit(e)}>
+      <div className={classNames.windowTitleBar} onClick={(e) => onClickExit(e)}>
         <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
         <div>X</div>
       </div>

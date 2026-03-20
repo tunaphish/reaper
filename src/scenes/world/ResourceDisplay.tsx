@@ -152,7 +152,7 @@ export const TechniqueView = (props: { technique: Technique, delay: number }): J
   return <Window style={style} delay={props.delay}>{technique.name}</Window>
 }
 
-const CastingWindow = (props: {ally: Ally }) => {
+const CastingWindow = observer((props: {ally: Ally }) => {
   const { castingAction } = props.ally;
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
@@ -201,6 +201,4 @@ const CastingWindow = (props: {ally: Ally }) => {
       
     </AnimatePresence>
   )
-}
-
-
+});

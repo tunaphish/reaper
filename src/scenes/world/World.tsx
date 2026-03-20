@@ -1,4 +1,4 @@
-const TESTING_COMBAT = true;
+const TESTING_COMBAT = false;
 
 import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
@@ -576,7 +576,6 @@ export class World extends Phaser.Scene {
         const technique = option as Technique;
         combatant.activeTechniques.push(technique);
         this.sound.play(technique.soundKeyName)
-        combatant.castingAction = null;
       }
 
 
@@ -591,9 +590,8 @@ export class World extends Phaser.Scene {
 
         if (action.name === "Splinter") this.splinterNotCasted = false;
         action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
-        combatant.castingAction = null;
       }
-
+      combatant.castingAction = null;
       if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
     });
   }

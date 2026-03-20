@@ -127,10 +127,8 @@ const EnemyView = observer(
     return (      
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
-            <CombatantHealthBar combatant={enemy} />
-            <ImageWindowContent imageWindow={enemyImageWindow} />
+            <ResourceDisplay combatant={enemy} />
             <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
-            <ActionBar combatant={enemy} />
           </div>
         </PanelWindow>
     );
@@ -318,10 +316,9 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         padding: '5px',
         position: 'relative', 
       }}
-      ref={ref}
     >
-      <div style={{ position: 'relative', flex: '1' }} >
-        <ResourceDisplay ally={ally} onClickCell={onClick}/>
+      <div style={{ position: 'relative', flex: '1' }} ref={ref}>
+        <ResourceDisplay combatant={ally} onClickCell={onClick}/>
       </div>
       <div style={{ position: "absolute", top: "-40px", zIndex: 2, left: '20%' }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}

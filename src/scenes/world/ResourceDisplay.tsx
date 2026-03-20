@@ -9,6 +9,7 @@ import { ImageWindowContent } from './ImageWindowContent';
 import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
 import { TypewriterText } from './TypewriterText';
 import { Technique } from '../../model/technique';
+import { OptionType } from '../../model/option';
 
 export const Meter = (props: {
   value: number;
@@ -90,7 +91,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () => void}) => {
+export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: classNames.DEAD,
@@ -98,7 +99,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
   };
   const className = [
     classNames.window,
-    statusToStylesMap[props.ally.status],
+    statusToStylesMap[props.combatant.status],
   ];
   
 
@@ -108,15 +109,15 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
           <div className={classNames.characterCellContainer} >
 
             <div className={classNames.portraitContainer } >
-              <Meter vertical value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter} />
-              <Meter  vertical value={props.ally.health - props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter} />
-              <img  src={'/reaper/images/eji-ui.png'}></img>
-              <div className={classNames.healthNumber}>{Math.trunc(props.ally.health)}</div>
+              <Meter vertical value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
+              <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
+              <img  src={props.combatant.combatPortraitSrc}></img>
+              <div className={classNames.healthNumber}>{Math.trunc(props.combatant.health)}</div>
             </div>
-            <ActionBar combatant={props.ally} />
+            <ActionBar combatant={props.combatant} />
         </div>
       </div>
-      <CastingWindow ally={props.ally} />
+      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as ally} />}
     </>
 
   )

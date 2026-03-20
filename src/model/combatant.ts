@@ -29,6 +29,8 @@ export type Combatant = Option & {
     option: Option;
     castedTimeInMs: number;
   }
+
+  combatPortraitSrc: string;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

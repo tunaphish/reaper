@@ -38,7 +38,7 @@ export const fencer: Enemy = {
   type: OptionType.ENEMY,
   name: 'Fencer',
   journalDescription: 'Debug Enemy meant to use specialized attacks',
-  baseImageSrc: '/reaper/images/fencer.png',
+  combatPortraitSrc: '/reaper/images/fencer-test.png',
 
   health: 100,
   maxHealth: 200,
@@ -89,7 +89,7 @@ export const knight: Enemy = {
   type: OptionType.ENEMY,
   name: 'Knight',
   journalDescription: 'Debug Enemy meant to use defensive actions',
-  baseImageSrc: '/reaper/images/knight.gif',
+  combatPortraitSrc: '/reaper/images/knight.gif',
 
   health: 200,
   maxHealth: 200,

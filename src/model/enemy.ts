@@ -13,7 +13,6 @@ export type Strategy = {
 export type Enemy = Combatant & {
   journalDescription: string;
   type: OptionType.ENEMY;
-  baseImageSrc: string;
   strategies: Strategy[];  
   selectedStrategyIndex: number;
 };

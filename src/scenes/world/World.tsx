@@ -1,3 +1,5 @@
+const TESTING_COMBAT = true;
+
 import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './player/Player';
@@ -120,7 +122,7 @@ export class World extends Phaser.Scene {
         loop: true,  
         volume: 0.2  
       });
-      // this.music.play();
+      if(TESTING_COMBAT) this.music.play();
     }
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
@@ -135,7 +137,7 @@ export class World extends Phaser.Scene {
     this.tickStats(delta);
     this.updateCombatantsState();
     
-    // this.executeEnemyStrategies();
+    if (TESTING_COMBAT) this.executeEnemyStrategies();
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
     this.executeSelectedOption();    

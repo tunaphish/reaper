@@ -297,7 +297,7 @@ overflow: hidden;
 }
 
 .filled {
-  background: var(--dust-gray);
+  background: var(--paper-offwhite);
 }
 
 .empty {

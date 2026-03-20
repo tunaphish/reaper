@@ -102,8 +102,6 @@ overflow: hidden;
   color: var(--dust-gray);
 }
 
-
-
 .window {
   background: var(--ink-black);
   
@@ -114,7 +112,6 @@ overflow: hidden;
   display: flex;
   flex-direction: column;
 }
-
 
 .windowName {
   padding: 3px;
@@ -133,7 +130,6 @@ overflow: hidden;
   flex-direction: column;
   justify-content: center;
 }
-
 
 .meterContainer {
   display: grid;
@@ -164,10 +160,6 @@ overflow: hidden;
   color: var(--dust-gray);
 }
 
-.portraitContainer img {
-  width: 100%;
-  height: auto;
-}
 
 .meterBackground {
   width: 100%;
@@ -176,10 +168,8 @@ overflow: hidden;
   grid-column: 1;
   grid-row: 1;
   display: flex;
-  align-items: flex-end; /* makes it fill from bottom */
+  align-items: flex-end; 
 }
-
-
 
 .meter {
   background: var(--paper-offwhite);
@@ -256,14 +246,13 @@ overflow: hidden;
   animation: shake 0.5s ease-in-out;
 }
 
-.healthMeter  {
-  background: var(--paper-offwhite);
+.healthMeter {
+  background: linear-gradient(to top, var(--paper-offwhite) 60%, transparent 100%);
 }
 
 .bleedMeter {
-  background: var(--dust-gray);
+  background: linear-gradient(to top, var(--dust-gray) 90%, transparent 100%);
 }
-
 
 .menuOption {
   all: unset;

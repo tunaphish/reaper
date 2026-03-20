@@ -122,7 +122,7 @@ export class World extends Phaser.Scene {
         loop: true,  
         volume: 0.2  
       });
-      if(TESTING_COMBAT) this.music.play();
+      if (TESTING_COMBAT) this.music.play();
     }
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
@@ -507,21 +507,6 @@ export class World extends Phaser.Scene {
 
       const target = strategy.getTarget(this, action, enemy);
       this.executeOption(enemy, target, option);      
-      
-      // Select Weighted Strategy
-      const viableStrategies = enemy.strategies
-        .map((s, i) => ({ s, i }))
-        .filter(({ s }) => s.isValid(this, enemy));
-
-      const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
-      let roll = Math.random() * totalWeight
-
-      for (const strategy of viableStrategies) {
-        roll -= strategy.s.weight
-        if (roll <= 0) enemy.selectedStrategyIndex = strategy.i
-        continue;
-      }
-      enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
     }
   }
 
@@ -600,6 +585,7 @@ export class World extends Phaser.Scene {
         if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
           this.sound.play('restriction-violated');
           combatant.castingAction = null;
+          if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
           return;
         } 
 
@@ -607,7 +593,25 @@ export class World extends Phaser.Scene {
         action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
         combatant.castingAction = null;
       }
+
+      if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
     });
+  }
+
+  selectNewStrategy(enemy: Enemy): void {
+    const viableStrategies = enemy.strategies
+      .map((s, i) => ({ s, i }))
+      .filter(({ s }) => s.isValid(this, enemy));
+
+    const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
+    let roll = Math.random() * totalWeight
+
+    for (const strategy of viableStrategies) {
+      roll -= strategy.s.weight
+      if (roll <= 0) enemy.selectedStrategyIndex = strategy.i
+      continue;
+    }
+    enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
   }
 
   executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {

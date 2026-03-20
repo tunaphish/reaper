@@ -1,5 +1,5 @@
 import { Enemy } from '../model/enemy';
-import { Combatant, Status } from '../model/combatant';
+import { Combatant, Status, techniqueIsActive } from '../model/combatant';
 import { OptionType } from '../model/option';
 
 import * as Actions from './actions';
@@ -75,7 +75,7 @@ export const fencer: Enemy = {
       option: Techniques.counter, 
       weight: 2000, 
       getTarget: self, 
-      isValid: (world, caster) => caster.activeTechniques.every(technique => technique.name !== Techniques.counter.name) 
+      isValid: (world, caster) => !techniqueIsActive(caster, Techniques.counter),
     },
   ],
   selectedStrategyIndex: 0,

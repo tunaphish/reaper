@@ -28,7 +28,7 @@ export const counter: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Counter',
   actionPointsCost: 1,
-  castTimeInMs: 1500,
+  castTimeInMs: 500,
   description: 'Technique: ATTACK enemies who deal damage to you',
 
   soundKeyName: 'smirk',

@@ -157,7 +157,7 @@ overflow: hidden;
 .healthNumber {
   justify-self: center; 
   align-self: end;      
-  color: var(--dust-gray);
+  color: var(--paper-offwhite);
 }
 
 

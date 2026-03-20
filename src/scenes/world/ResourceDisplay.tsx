@@ -110,7 +110,7 @@ export const ResourceDisplay = observer((props: {ally: Ally, onClickCell?: () =>
             <div className={classNames.portraitContainer } >
               <Meter vertical value={props.ally.health} max={props.ally.maxHealth} className={classNames.bleedMeter} />
               <Meter  vertical value={props.ally.health - props.ally.bleed} max={props.ally.maxHealth} className={classNames.healthMeter} />
-              <img  src={'/reaper/images/siffrin.png'}></img>
+              <img  src={'/reaper/images/eji-ui.png'}></img>
               <div className={classNames.healthNumber}>{Math.trunc(props.ally.health)}</div>
             </div>
             <ActionBar combatant={props.ally} />

@@ -130,8 +130,7 @@ export const TechniqueView = (props: {
   world: World;
   position: { x: number; y: number };
 }): JSX.Element => {
-  let { technique, world, delay, position } = props;
-  delay = 0;
+  const { technique, world, delay, position } = props;
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       if (technique.soundKeyName) {

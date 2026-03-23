@@ -337,7 +337,19 @@ overflow: hidden;
   font-weight: bold;
   color: red;
   pointer-events: none;
-  animation: floatUp 1s ease-out forwards;
+  animation: floatUp 2s ease-out forwards;
+}
+
+.healPopup {
+  font-size: 72px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: green;
+  pointer-events: none;
+  animation: floatUp 1.5s ease-out forwards;
 }
 
 @keyframes floatUp {

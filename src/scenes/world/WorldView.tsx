@@ -53,7 +53,7 @@ export const usePhaserDamagePopups = (
 
     const handler = (data) => {
       if (data.name !== target) return;
-      if (ref.current) shakeElement(ref.current);
+      if (ref.current && data.value > 0) shakeElement(ref.current);
 
       const id = idRef.current++;
       setPopups((p) => [...p, { id, value: data.value }]);
@@ -146,8 +146,8 @@ const EnemyView = observer(
             <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
           </div>
           {popups.map((p) => (
-            <div key={p.id} className={classNames.damagePopup}>
-              {p.value}
+            <div key={p.id} className={p.value > 0 ? classNames.damagePopup : classNames.healPopup}>
+              {Math.abs(p.value)}
             </div>
           ))}
         </PanelWindow>
@@ -318,7 +318,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   const ref = React.useRef<HTMLDivElement>(null);
   const popups = usePhaserDamagePopups(world, ref, ally.name);
 
-
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
   const onClick = () => {
@@ -345,8 +344,8 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
       {popups.map((p) => (
-        <div key={p.id} className={classNames.damagePopup}>
-          {p.value}
+        <div key={p.id} className={p.value > 0 ? classNames.damagePopup : classNames.healPopup}>
+          {Math.abs(p.value)}
         </div>
       ))}
     </div>

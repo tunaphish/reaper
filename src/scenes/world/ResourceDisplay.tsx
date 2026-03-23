@@ -10,6 +10,7 @@ import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
 import { TypewriterText } from './TypewriterText';
 import { Technique } from '../../model/technique';
 import { OptionType } from '../../model/option';
+import { World } from './World';
 
 export const Meter = (props: {
   value: number;
@@ -91,7 +92,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void}) => {
+export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, world: World}) => {
   const statusToStylesMap = {
     [Status.NORMAL]: '',
     [Status.DEAD]: classNames.DEAD,
@@ -102,7 +103,6 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
     statusToStylesMap[props.combatant.status],
   ];
   
-
   return (
     <>
       <div className={className.join(' ')} onClick={props.onClickCell}>
@@ -117,15 +117,15 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
             <ActionBar combatant={props.combatant} />
         </div>
       </div>
-      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as ally} />}
+      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as ally} world={props.world} />}
     </>
 
   )
 });
 
 
-export const TechniqueView = (props: { technique: Technique, delay: number }): JSX.Element => {
-  const { technique } = props;
+export const TechniqueView = (props: { technique: Technique, delay: number, world: World }): JSX.Element => {
+  const { technique, world, delay } = props;
 
   const getRandomBorderPoint = () => {
     const boxSize = 100;
@@ -135,6 +135,16 @@ export const TechniqueView = (props: { technique: Technique, delay: number }): J
     const x = heightFactor * (1 - Math.pow((y - center) / center, 2)) - 20; // Parabolic formula
     return [x, y];
   }
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (technique.soundKeyName) {
+        world.sound.play(technique.soundKeyName);
+      }
+    }, delay * 1000); 
+
+    return () => clearTimeout(timeout); 
+  }, [technique, world, delay]);
 
   const style: React.CSSProperties = React.useMemo(() => {
     const [topPos, leftPos] = getRandomBorderPoint();
@@ -153,53 +163,45 @@ export const TechniqueView = (props: { technique: Technique, delay: number }): J
   return <Window style={style} delay={props.delay}>{technique.name}</Window>
 }
 
-const CastingWindow = observer((props: {ally: Ally }) => {
-  const { castingAction } = props.ally;
+const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) => {
+  const { castingAction } = ally;
+
+  if (!castingAction?.option?.castingImageSrc) return null;
+
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
-    layout: {
-      x: 25,
-      y: -150,
-      width: 150,
-    },
-    layers: [{
-      src: castingAction?.option?.castingImageSrc,
-    }]
-  }
+    layout: { x: 25, y: -150, width: 150 },
+    layers: [{ src: castingAction.option.castingImageSrc }]
+  };
 
-  const baseDelay = 0.2; 
+  const baseDelay = 0.2;
+  const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
+  const END_BUFFER_RATIO = 0.2;
+  const activeItemCount = castingAction.appliedTechniques.length + 1;
+  const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
 
   return (
     <AnimatePresence>
-      {
-        castingAction && castingAction.option.castingImageSrc &&
-        <div style={{ position: 'relative', top: '-40px', left: '75' }}>
-          <PanelWindow window={imageWindow}>
-            <Window style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }} delay={baseDelay}>
-              <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]}/>
-            </Window>
-            <ImageWindowContent imageWindow={imageWindow}/>
-          </PanelWindow>
-          {[...props.ally.activeTechniques].map((technique, index, arr) => {
-              const techniques = [...props.ally.activeTechniques];
-              const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
-              const END_BUFFER_RATIO = 0.2;
-              const activeItemCount = techniques.length + 1;
-              const activeTime = castTimeSec * (1 - END_BUFFER_RATIO);
-              const step = activeItemCount > 0 ? activeTime / activeItemCount : 0;
-              const delay = step * (index + 1);
+      <div style={{ position: 'relative', top: '-40px', left: '75' }}>
+        <PanelWindow window={imageWindow}>
+          <Window
+            style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}
+            delay={baseDelay}
+          >
+            <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
+          </Window>
+          <ImageWindowContent imageWindow={imageWindow} />
+        </PanelWindow>
 
-              return (
-                <TechniqueView
-                  key={technique.name}
-                  technique={technique}
-                  delay={delay}
-                />
-              );
-            })}
-        </div >
-      }
-      
+        {castingAction.appliedTechniques.map((technique, index) => (
+          <TechniqueView
+            key={technique.name}
+            technique={technique}
+            delay={step * (index + 1)}
+            world={world}
+          />
+        ))}
+      </div>
     </AnimatePresence>
-  )
+  );
 });

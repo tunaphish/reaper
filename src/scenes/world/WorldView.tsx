@@ -142,7 +142,7 @@ const EnemyView = observer(
     return (      
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
-            <ResourceDisplay combatant={enemy} />
+            <ResourceDisplay combatant={enemy} world={world}/>
             <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
           </div>
           {popups.map((p) => (
@@ -338,7 +338,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       }}
     >
       <div style={{ position: 'relative', flex: '1' }} ref={ref}>
-        <ResourceDisplay combatant={ally} onClickCell={onClick}/>
+        <ResourceDisplay combatant={ally} onClickCell={onClick} world={world}/>
       </div>
       <div style={{ position: "absolute", top: "-40px", zIndex: 2, left: '20%' }}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}

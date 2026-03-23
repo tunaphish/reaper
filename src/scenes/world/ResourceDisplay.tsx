@@ -117,54 +117,48 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
             <ActionBar combatant={props.combatant} />
         </div>
       </div>
-      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as ally} world={props.world} />}
+      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as Ally} world={props.world} />}
     </>
 
   )
 });
 
 
-export const TechniqueView = (props: { technique: Technique, delay: number, world: World }): JSX.Element => {
-  const { technique, world, delay } = props;
-
-  const getRandomBorderPoint = () => {
-    const boxSize = 100;
-    const y = Math.random() * boxSize;
-    const center = boxSize / 2;
-    const heightFactor = 4; // Adjust this for how high the arc is
-    const x = heightFactor * (1 - Math.pow((y - center) / center, 2)) - 20; // Parabolic formula
-    return [x, y];
-  }
-
+export const TechniqueView = (props: {
+  technique: Technique;
+  delay: number;
+  world: World;
+  position: { x: number; y: number };
+}): JSX.Element => {
+  let { technique, world, delay, position } = props;
+  delay = 0;
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       if (technique.soundKeyName) {
         world.sound.play(technique.soundKeyName);
       }
-    }, delay * 1000); 
+    }, delay * 1000);
 
-    return () => clearTimeout(timeout); 
+    return () => clearTimeout(timeout);
   }, [technique, world, delay]);
 
-  const style: React.CSSProperties = React.useMemo(() => {
-    const [topPos, leftPos] = getRandomBorderPoint();
-    const top = `${topPos}px`; 
-    const left = `${leftPos}%`;
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    top: `${position.y}%`,
+    left: `${position.x}%`,
+    padding: '5px',
+    zIndex: 10,
+  };
 
-    return {
-      position: 'absolute', 
-      top, 
-      left,
-      padding: '5px',
-      zIndex: 10,
-    }
-  }, []);
-
-  return <Window style={style} delay={props.delay}>{technique.name}</Window>
-}
+  return <Window style={style} delay={delay}>{technique.name}</Window>;
+};
 
 const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) => {
   const { castingAction } = ally;
+
+  const positions = React.useMemo(() => {
+    return getNonOverlappingPositions(ally.activeTechniques.length);
+  }, [ally.activeTechniques.length]);
 
   if (!castingAction?.option?.castingImageSrc) return null;
 
@@ -177,8 +171,9 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
   const baseDelay = 0.2;
   const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
   const END_BUFFER_RATIO = 0.2;
-  const activeItemCount = castingAction.appliedTechniques.length + 1;
+  const activeItemCount = ally.activeTechniques.length + 1;
   const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
+
 
   return (
     <AnimatePresence>
@@ -191,17 +186,52 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
             <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
           </Window>
           <ImageWindowContent imageWindow={imageWindow} />
+          {ally.activeTechniques.map((technique, index) => {
+            const position = positions[index];
+            return (
+              <TechniqueView
+                key={technique.name}
+                technique={technique}
+                delay={step * (index + 1)}
+                world={world}
+                position={position} 
+              />
+            );
+          })}
         </PanelWindow>
 
-        {castingAction.appliedTechniques.map((technique, index) => (
-          <TechniqueView
-            key={technique.name}
-            technique={technique}
-            delay={step * (index + 1)}
-            world={world}
-          />
-        ))}
+
       </div>
     </AnimatePresence>
   );
 });
+
+const getNonOverlappingPositions = (count: number) => {
+  type Position = { x: number; y: number };
+  const positions: Position[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const border = Math.floor(Math.random() * 3);
+    let x = 0;
+    let y = 0;
+
+    switch (border) {
+      case 0:
+        x = 90;
+        y = Math.random() * 50 + 25;
+        break;
+      case 1:
+        x = -20;
+        y = Math.random() * 50 + 25;
+        break;
+      case 2:
+        x = Math.random() * 50 + 25;
+        y = 90;
+        break;
+    }
+
+    positions.push({ x, y });
+  }
+
+  return positions.sort(() => Math.random() - 0.5);
+};

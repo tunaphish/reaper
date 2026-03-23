@@ -34,27 +34,42 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
 
 //#region Combat
 
-export function usePhaserDomShake(
+
+type DamagePopup = {
+  id: number;
+  value: number;
+};
+
+export const usePhaserDamagePopups = (
   scene: Phaser.Scene | null,
-  ref: React.RefObject<Element>,
+  ref: React.RefObject<HTMLElement>,
   target: string,
-): void {
+): DamagePopup[] => {
+  const [popups, setPopups] = React.useState<DamagePopup[]>([]);
+  const idRef = React.useRef(0);
+
   React.useEffect(() => {
-    
     if (!scene || !ref.current) return;
 
     const handler = (data) => {
-      if (data !== target) return;
-      if (ref.current) {
-        shakeElement(ref.current);
-      }
+      if (data.name !== target) return;
+      if (ref.current) shakeElement(ref.current);
+
+      const id = idRef.current++;
+      setPopups((p) => [...p, { id, value: data.value }]);
+
+      setTimeout(() => {
+        setPopups((p) => p.filter((x) => x.id !== id));
+      }, 20000);
     };
 
     scene.events.on("updated-damage", handler);
     return () => {
       scene.events.off("updated-damage", handler);
     };
-  }, [scene, ref, "updated-damage"]);
+  }, [scene, ref, target]);
+
+  return popups;
 }
 
 export const EnemiesContainer = observer(({world}: {world: World}) => {
@@ -77,7 +92,7 @@ const EnemyView = observer(
     const { world, enemy, idx, count } = props;
 
     const ref = React.useRef<HTMLDivElement>(null);
-    usePhaserDomShake(world, ref, enemy.name);
+    const popups = usePhaserDamagePopups(world, ref, enemy.name);
 
     const STAGE_W = 450;
     const SIZE = 235;
@@ -130,6 +145,11 @@ const EnemyView = observer(
             <ResourceDisplay combatant={enemy} />
             <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
           </div>
+          {popups.map((p) => (
+            <div key={p.id} className={classNames.damagePopup}>
+              {p.value}
+            </div>
+          ))}
         </PanelWindow>
     );
   }
@@ -296,7 +316,8 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
   const { world, ally, idx } = props;
   const ref = React.useRef<HTMLDivElement>(null);
-  usePhaserDomShake(world, ref, ally.name);
+  const popups = usePhaserDamagePopups(world, ref, ally.name);
+
 
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
@@ -313,7 +334,6 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
     <div 
       style={{     
         width: '100%',
-        padding: '5px',
         position: 'relative', 
       }}
     >
@@ -324,7 +344,11 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
-
+      {popups.map((p) => (
+        <div key={p.id} className={classNames.damagePopup}>
+          {p.value}
+        </div>
+      ))}
     </div>
 
   )

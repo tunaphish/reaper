@@ -327,3 +327,26 @@ overflow: hidden;
 .shake {
   animation: shake 300ms ease-in-out;
 }
+
+.damagePopup {
+  font-size: 72px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: red;
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40px) scale(1.2);
+  }
+}

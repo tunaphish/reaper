@@ -347,7 +347,7 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_DAMAGE: {
-        this.events.emit('updated-damage', target.name);
+        this.events.emit('updated-damage', { name: target.name, value: event.value });
         updateDamage(target, event.value);
         
         if (techniqueIsActive(target, Techniques.counter)) {

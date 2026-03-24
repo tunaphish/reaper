@@ -62,23 +62,23 @@ export const Keshi: Ally = {
   combatPortraitSrc: '/reaper/images/eji-ui.png',
 };
 
-const eliseFolder: Folder = {
+const phiaFolder: Folder = {
   type: OptionType.FOLDER,
-  desc: 'Soul of Elise',
-  name: 'Elise',
-  options: [Folders.basic],
+  desc: 'Soul of Phia',
+  name: 'Phia',
+  options: [Folders.basic, Folders.cleric],
 };
 
-export const Elise: Ally = {
+export const Phia: Ally = {
   type: OptionType.ALLY,
-  name: 'Elise',
+  name: 'Phia',
   health: 100,
   bleed: 0,
   maxHealth: 100,
   actionPoints: 0,
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .08,
-  folder: eliseFolder,
+  folder: phiaFolder,
 
   activeTechniques: [],
 
@@ -88,4 +88,4 @@ export const Elise: Ally = {
   combatPortraitSrc: '/reaper/images/eji-ui.png',
 };
 
-export const DefaultAllies: Allies = [Eji, Keshi, Elise];
+export const DefaultAllies: Allies = [Eji, Keshi, Phia];

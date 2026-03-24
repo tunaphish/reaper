@@ -24,3 +24,10 @@ export const hunter: Folder = {
   type: OptionType.FOLDER,
   options: [ Actions.ambush, Techniques.haste ]
 }
+
+export const cleric: Folder = {
+  name: 'Cleric',
+  desc: 'Actions based on healing damage',
+  type: OptionType.FOLDER,
+  options: [Actions.heal]
+}

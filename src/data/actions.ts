@@ -223,3 +223,24 @@ export const ambush: Action = {
 };
 
 // #endregion
+
+// #region cleric
+
+export const heal: Action = {
+  type: OptionType.ACTION,
+  name: 'Heal',
+  description: "Heals bleed",
+  targetType: TargetType.SINGLE_TARGET,
+  castTimeInMs: 300,
+
+  actionPointsCost: 1,
+
+  conditionMet: (world, caster, target) => world.firstActionNotTaken,
+  events: [
+    { type: EventType.SOUND, key: 'heal' },
+    { type: EventType.UPDATE_DAMAGE, value: -50 },
+  ],
+
+};
+
+// #endregion

@@ -109,6 +109,21 @@ export const magic: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 }
 
+export const shatter: Action = {
+  type: OptionType.ACTION,
+  name: 'Shatter',
+  description: 'Deals damage',
+  targetType: TargetType.SELF,
+
+  actionPointsCost: 0,
+
+  events: [
+    { type: EventType.SOUND, key: 'charged' },
+    { type: EventType.SHATTER }
+
+  ]
+}
+
 
 // #endregion
 

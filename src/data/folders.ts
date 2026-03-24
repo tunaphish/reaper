@@ -8,7 +8,7 @@ export const basic: Folder = {
   name: 'Basic',
   desc: 'Basic Actions',
   type: OptionType.FOLDER,
-  options: [ Actions.attack, Actions.smash, Actions.stanch, Actions.magic, Techniques.buff ]
+  options: [ Actions.attack, Actions.smash, Actions.stanch, Actions.magic, Techniques.buff, Actions.shatter ]
 }
 
 export const fencer: Folder = {

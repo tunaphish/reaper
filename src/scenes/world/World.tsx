@@ -374,8 +374,14 @@ export class World extends Phaser.Scene {
         }
       }
 
+      case EventType.SHATTER: {
+        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
+        caster.actionPoints += totalAp;
+        caster.activeTechniques = [];
+        return;
+      }
+
       default: {
-        console.log('unhandled event type: ' + event.type);
         return;
       }
     }

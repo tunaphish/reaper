@@ -18,7 +18,7 @@ import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTar
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, Status, techniqueIsActive, updateDamage, useApResources } from '../../model/combatant';
+import { Combatant, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -347,8 +347,13 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_DAMAGE: {
-        this.events.emit('updated-damage', { name: target.name, value: event.value });
-        updateDamage(target, event.value);
+        let value = event.value;
+        if (event.value > 0 && techniqueIsApplied(caster, Techniques.buff)) {
+          value *= 1.3
+        }
+
+        this.events.emit('updated-damage', { name: target.name, value });
+        updateDamage(target, value);
         
         if (techniqueIsActive(target, Techniques.counter)) {
           this.executeOption(target, caster, Actions.attack);
@@ -631,10 +636,14 @@ export class World extends Phaser.Scene {
     if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
     useApResources(caster, option.actionPointsCost);
 
+    const appliedTechniques = [];
+    if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
+
     caster.castingAction = {
       option: option,
       target,
       castedTimeInMs: 0,
+      appliedTechniques,
     }
   }
   //#endregion

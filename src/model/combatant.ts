@@ -2,6 +2,7 @@ import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
 import { Action } from './action';
+import { Scene } from 'phaser';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -28,6 +29,7 @@ export type Combatant = Option & {
     target: Combatant;
     option: Option;
     castedTimeInMs: number;
+    appliedTechniques: Technique[];
   }
 
   combatPortraitSrc: string;
@@ -48,8 +50,7 @@ export const updateBleed = (target: Combatant, change: number): void => {
 export const updateDamage = (target: Combatant, change: number): void => {
   if (target.status === Status.EXHAUSTED) {
     change *= 2;
-  }
-  
+  }  
   if (change < 0) {
     updateBleed(target, change);
     return;
@@ -71,6 +72,11 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
 };
 
 export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(t => t.name === technique.name);
+
+export const techniqueIsApplied = (combatant: Combatant, technique: Technique): boolean => {
+  if (!combatant.castingAction) return false;
+  return combatant.castingAction.appliedTechniques.some(t => t.name === technique.name);
+}
 export const useApResources = (caster: Combatant, cost: number) => {
   // if (cost > caster.actionPoints) {
   //   const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost + total, 0);

@@ -169,7 +169,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
   const baseDelay = 0.2;
   const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
   const END_BUFFER_RATIO = 0.2;
-  const activeItemCount = ally.activeTechniques.length + 1;
+  const activeItemCount = ally.castingAction.appliedTechniques.length + 1;
   const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
 
   return (
@@ -182,7 +182,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
           <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
         </Window>
         <ImageWindowContent imageWindow={imageWindow} />
-        {ally.activeTechniques.map((technique, index) => {
+        {ally.castingAction.appliedTechniques.map((technique, index) => {
           const position = positions[index];
           return (
             <TechniqueView

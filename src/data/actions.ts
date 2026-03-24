@@ -44,7 +44,7 @@ export const attack: Action = {
   name: 'Attack',
   description: 'Deals damage',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 1500,
+  castTimeInMs: 150000,
 
   actionPointsCost: 1,
 

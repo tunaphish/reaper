@@ -162,7 +162,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
 
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
-    layout: { x: 25, y: -160, width: 150 },
+    layout: { x: 10, y: -160, width: 120 },
     layers: [{ src: castingAction.option.castingImageSrc }]
   };
 
@@ -172,12 +172,11 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
   const activeItemCount = ally.activeTechniques.length + 1;
   const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
 
-
   return (
     <AnimatePresence>
       <PanelWindow window={imageWindow} style={{ position: 'absolute' }}>
         <Window
-          style={{ position: 'absolute', top: '-20px', left: '50px',fontSize: '18px' }}
+          style={{ position: 'absolute', top: '-25px', left: '25px',fontSize: '18px' }}
           delay={baseDelay}
         >
           <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
@@ -211,11 +210,11 @@ const getNonOverlappingPositions = (count: number) => {
 
     switch (border) {
       case 0:
-        x = 90;
+        x = 70;
         y = Math.random() * 50 + 25;
         break;
       case 1:
-        x = -20;
+        x = 0;
         y = Math.random() * 50 + 25;
         break;
       case 2:

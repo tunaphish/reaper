@@ -27,7 +27,7 @@ export const Eji: Ally = {
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: [Techniques.buff, Techniques.haste, Techniques.counter],
+  activeTechniques: [Techniques.buff, Techniques.haste],
   
   status: Status.NORMAL,
   
@@ -66,7 +66,7 @@ const phiaFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Phia',
   name: 'Phia',
-  options: [Folders.basic, Folders.cleric],
+  options: [Folders.basic, Folders.cleric, Folders.mage],
 };
 
 export const Phia: Ally = {
@@ -80,7 +80,7 @@ export const Phia: Ally = {
   actionPointsRegenRatePerSecond: .08,
   folder: phiaFolder,
 
-  activeTechniques: [],
+  activeTechniques: [Techniques.infuse],
 
   status: Status.NORMAL,
 

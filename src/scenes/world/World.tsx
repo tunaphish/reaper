@@ -614,7 +614,10 @@ export class World extends Phaser.Scene {
         if (action.name === "Splinter") this.splinterNotCasted = false;
 
         // stagger here
-        action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
+        const events = action.events;
+        if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
+        console.log(events)
+        events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
       }
       combatant.castingAction = null;
       if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
@@ -661,8 +664,9 @@ export class World extends Phaser.Scene {
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
       if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
       if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
+      if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
     }
-    
+
     caster.castingAction = {
       option: option,
       target,

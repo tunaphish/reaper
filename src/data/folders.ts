@@ -31,3 +31,10 @@ export const cleric: Folder = {
   type: OptionType.FOLDER,
   options: [Actions.heal]
 }
+
+export const mage: Folder = {
+  name: 'Mage',
+  desc: 'Actions based on shattering techniques', 
+  type: OptionType.FOLDER,
+  options: [Techniques.infuse]
+}

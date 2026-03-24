@@ -42,3 +42,12 @@ export const shadow: Technique = {
   description: 'Duplicate attacks at half damage',
   soundKeyName: 'smirk'
 }
+
+export const infuse: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Infuse', 
+  actionPointsCost: 2,
+  castTimeInMs: 1000,
+  description: 'Infuses attacks with MAGIC (shatters a random enemy technique)',
+  soundKeyName: 'smirk'
+}

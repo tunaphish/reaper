@@ -116,6 +116,7 @@ export const shatter: Action = {
   name: 'Shatter',
   description: 'Deals damage',
   targetType: TargetType.SELF,
+  castTimeInMs: 300,
 
   actionPointsCost: 0,
 

@@ -146,7 +146,6 @@ export const TechniqueView = (props: {
     top: `${position.y}%`,
     left: `${position.x}%`,
     padding: '5px',
-    zIndex: 10,
   };
 
   return <Window style={style} delay={delay}>{technique.name}</Window>;
@@ -179,7 +178,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
       <div className={classNames.castingWindowWrapper}>
         <PanelWindow window={imageWindow}>
           <Window
-            style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}
+            style={{ position: 'absolute', top: '-20px', left: '50px',fontSize: '18px' }}
             delay={baseDelay}
           >
             <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />

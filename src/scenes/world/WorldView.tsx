@@ -368,7 +368,7 @@ const getEnemyImageView = (enemy: Enemy): ImageWindow => {
       height: 250,
     },
     layers: [{
-      src: enemy.baseImageSrc,
+      src: enemy.combatPortraitSrc,
     }]
   }
 }
@@ -377,11 +377,11 @@ const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
   const enemyImageWindow: ImageWindow = getEnemyImageView(props.enemy);
   return (
     <>
-      <Window style={{ position: 'absolute', top: '175px', left: '100px', padding: '5px', zIndex: 10 }}>{props.enemy.name}</Window>
-      <Window style={{ position: 'absolute', top: '400px', left: '75px', width: '300px', padding: '5px', zIndex: 10 }}>{props.enemy.journalDescription}</Window>
       <PanelWindow window={enemyImageWindow}>
         <ImageWindowContent imageWindow={enemyImageWindow}/>
       </PanelWindow>
+      <Window style={{ position: 'absolute', top: '175px', left: '100px', padding: '5px' }}>{props.enemy.name}</Window>
+      <Window style={{ position: 'absolute', top: '400px', left: '75px', width: '300px', padding: '5px'  }}>{props.enemy.journalDescription}</Window>
     </>
   )
 }

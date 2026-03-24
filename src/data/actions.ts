@@ -6,6 +6,8 @@ import { updateActionPoints } from '../model/combatant';
 import { EventType, ShatterTechniqueTarget } from '../model/encounter';
 import { Folder } from '../model/folder';
 
+export const actionIsAnAttack = (action: Action): boolean => action.events.some(event => event.type === EventType.UPDATE_DAMAGE && event.value > 0);
+
 export const dealDamage = (target, source, potency) => {
   updateDamage(target, potency);
 };

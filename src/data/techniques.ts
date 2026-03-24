@@ -7,7 +7,7 @@ export const haste: Technique = {
   name: 'Haste',
   actionPointsCost: 1,
   castTimeInMs: 1500,
-  description: 'Technique: Increase Speed',
+  description: 'Increase Speed',
 
   soundKeyName: 'smirk',
 };
@@ -17,7 +17,7 @@ export const buff: Technique = {
   name: 'Buff',
   actionPointsCost: 1,
   castTimeInMs: 1500,
-  description: 'Technique: Increase Strength',
+  description: 'Increase Strength',
 
   soundKeyName: 'smirk',
   iconSrc: '/reaper/ui/icons/magic.png',
@@ -29,7 +29,16 @@ export const counter: Technique = {
   name: 'Counter',
   actionPointsCost: 1,
   castTimeInMs: 500,
-  description: 'Technique: ATTACK enemies who deal damage to you',
+  description: 'ATTACK enemies who deal damage to you',
 
   soundKeyName: 'smirk',
 };
+
+export const shadow: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Shadow', 
+  actionPointsCost: 1, 
+  castTimeInMs: 500,
+  description: 'Duplicate attacks at half damage',
+  soundKeyName: 'smirk'
+}

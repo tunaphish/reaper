@@ -43,7 +43,9 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 type QueuedEvent = {
   event: Event,
-  delayInMs: number
+  delayInMs: number,
+  target?: Combatant,
+  caster?: Combatant
 }
 
 export class World extends Phaser.Scene {
@@ -216,12 +218,13 @@ export class World extends Phaser.Scene {
     this.queuedEvents.push(...newEvents);
   }
 
+
   processQueuedEvents(delta: number): void {
     const toDelay: QueuedEvent[] = [];
 
     for (const queuedEvent of this.queuedEvents) {
       if (queuedEvent.delayInMs < 0) {
-        this.executeEvent(queuedEvent.event);
+        this.executeEvent(queuedEvent.event, queuedEvent.target, queuedEvent.caster);
         continue;
       }
       queuedEvent.delayInMs -= delta;
@@ -349,12 +352,15 @@ export class World extends Phaser.Scene {
 
       case EventType.UPDATE_DAMAGE: {
         let value = event.value;
+        
         if (event.value > 0 && techniqueIsApplied(caster, Techniques.buff)) {
           value *= 1.3
         }
 
         this.events.emit('updated-damage', { name: target.name, value });
         updateDamage(target, value);
+
+        
         
         if (techniqueIsActive(target, Techniques.counter)) {
           this.executeOption(target, caster, Actions.attack);
@@ -606,6 +612,8 @@ export class World extends Phaser.Scene {
 
         if (this.firstActionNotTaken) this.firstActionNotTaken = false;
         if (action.name === "Splinter") this.splinterNotCasted = false;
+
+        // stagger here
         action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
       }
       combatant.castingAction = null;
@@ -649,8 +657,12 @@ export class World extends Phaser.Scene {
     useApResources(caster, option.actionPointsCost);
 
     const appliedTechniques = [];
-    if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
 
+    if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
+      if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
+      if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
+    }
+    
     caster.castingAction = {
       option: option,
       target,

@@ -12,7 +12,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
 
 
 import { enemies } from '../../data/enemies';
@@ -218,7 +218,6 @@ export class World extends Phaser.Scene {
     this.queuedEvents.push(...newEvents);
   }
 
-
   processQueuedEvents(delta: number): void {
     const toDelay: QueuedEvent[] = [];
 
@@ -350,9 +349,8 @@ export class World extends Phaser.Scene {
         return;
       }
 
-      case EventType.UPDATE_DAMAGE: {
+      case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
-        
         if (event.value > 0 && techniqueIsApplied(caster, Techniques.buff)) {
           value *= 1.3
         }
@@ -616,8 +614,26 @@ export class World extends Phaser.Scene {
         // stagger here
         const events = action.events;
         if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
-        console.log(events)
-        events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
+        if (techniqueIsActive(combatant, Techniques.shadow)) {
+          const shadowEvents: Event[] = events
+            .map(event => {
+              const newEvent = structuredClone(toJS(event));
+              if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
+              newEvent.delayInMs = (event.delayInMs || 0) + 600;
+              return newEvent;
+            }) 
+          events.push(...shadowEvents);
+          console.log(toJS(events))
+        }
+        
+        const newEvents: QueuedEvent[] = events.map(event => ({
+          event, 
+          delayInMs: event.delayInMs || 300,
+          target: combatant.castingAction.target,
+          caster: combatant
+        }));
+        this.queuedEvents.push(...newEvents);
+
       }
       combatant.castingAction = null;
       if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);

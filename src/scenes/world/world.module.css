@@ -13,10 +13,6 @@
     pointer-events: auto;
 }
 
-.combatantHealthBar {
-  
-}
-
 .menuContainer {
     position: relative;
 
@@ -35,10 +31,11 @@
     background-color: var(--ink-black);
 }
 
-.combatantBar {
+.allyBar {
   position: relative;
   display: flex;
   width: 100%;
+  z-index: var(--ui-layer-player);
 }
 
 .menuTitleText {
@@ -335,12 +332,6 @@ overflow: hidden;
 
 .healthBarLabel {
   font-size: 12px;
-}
-
-.castingWindowWrapper {
-  position: relative;
-  top: -40px;
-  left: 75px;
 }
 
 .filled {

@@ -162,7 +162,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
 
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
-    layout: { x: 25, y: -150, width: 150 },
+    layout: { x: 25, y: -160, width: 150 },
     layers: [{ src: castingAction.option.castingImageSrc }]
   };
 
@@ -175,31 +175,27 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
 
   return (
     <AnimatePresence>
-      <div className={classNames.castingWindowWrapper}>
-        <PanelWindow window={imageWindow}>
-          <Window
-            style={{ position: 'absolute', top: '-20px', left: '50px',fontSize: '18px' }}
-            delay={baseDelay}
-          >
-            <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
-          </Window>
-          <ImageWindowContent imageWindow={imageWindow} />
-          {ally.activeTechniques.map((technique, index) => {
-            const position = positions[index];
-            return (
-              <TechniqueView
-                key={technique.name}
-                technique={technique}
-                delay={step * (index + 1)}
-                world={world}
-                position={position} 
-              />
-            );
-          })}
-        </PanelWindow>
-
-
-      </div>
+      <PanelWindow window={imageWindow} style={{ position: 'absolute' }}>
+        <Window
+          style={{ position: 'absolute', top: '-20px', left: '50px',fontSize: '18px' }}
+          delay={baseDelay}
+        >
+          <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
+        </Window>
+        <ImageWindowContent imageWindow={imageWindow} />
+        {ally.activeTechniques.map((technique, index) => {
+          const position = positions[index];
+          return (
+            <TechniqueView
+              key={technique.name}
+              technique={technique}
+              delay={step * (index + 1)}
+              world={world}
+              position={position} 
+            />
+          );
+        })}
+      </PanelWindow>
     </AnimatePresence>
   );
 });

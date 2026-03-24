@@ -350,7 +350,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
 
 const AllyBarView = observer((props: { world: World }): JSX.Element => (
-  <div className={classNames.combatantBar}>
+  <div className={classNames.allyBar}>
     {props.world.worldStore.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
   </div>
 ));

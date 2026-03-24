@@ -13,6 +13,10 @@
     pointer-events: auto;
 }
 
+.combatantHealthBar {
+  
+}
+
 .menuContainer {
     position: relative;
 
@@ -35,6 +39,34 @@
   position: relative;
   display: flex;
   width: 100%;
+}
+
+.menuTitleText {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.allyViewWrapper {
+  width: 100%;
+  position: relative;
+}
+
+.allyViewInner {
+  position: relative;
+  flex: 1;
+}
+
+.allyMenuOverlay {
+  position: absolute;
+  top: -40px;
+  z-index: 2;
+  left: 20%;
+}
+
+.infoViewWrapper {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 .menuContent {
@@ -294,6 +326,22 @@ overflow: hidden;
 .actionPointToken {
   width: 8px;
   height: 8px;
+}
+
+.healthBarRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.healthBarLabel {
+  font-size: 12px;
+}
+
+.castingWindowWrapper {
+  position: relative;
+  top: -40px;
+  left: 75px;
 }
 
 .filled {

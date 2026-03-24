@@ -198,10 +198,10 @@ const MenuView = observer((props: { world: World, menu: Menu, idx: number, verti
   return (
     <Window style={style}>
       <div className={classNames.windowTitleBar} onClick={(e) => onClickExit(e)}>
-        <div style={{ marginRight: '5px', fontSize: '18px'}}>{menu.title}</div>
+        <div className={classNames.menuTitleText}>{menu.title}</div>
         <div>X</div>
       </div>
-      <div style={{ padding: '5px', width: 'max-content' }}>
+      <div className={classNames.menuContent} style={{ width: 'max-content' }}>
         <MenuOptionsView 
           items={menu.menuOptions}
           getKey={(item) => item.display} 
@@ -330,16 +330,11 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   }
   
   return (
-    <div 
-      style={{     
-        width: '100%',
-        position: 'relative', 
-      }}
-    >
-      <div style={{ position: 'relative', flex: '1' }} ref={ref}>
+    <div className={classNames.allyViewWrapper}>
+      <div className={classNames.allyViewInner} ref={ref}>
         <ResourceDisplay combatant={ally} onClickCell={onClick} world={world}/>
       </div>
-      <div style={{ position: "absolute", top: "-40px", zIndex: 2, left: '20%' }}>
+      <div className={classNames.allyMenuOverlay}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
@@ -393,7 +388,7 @@ const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
 
 const InfoView = (props: { world: World }): JSX.Element => (
   <>
-    <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+    <div className={classNames.infoViewWrapper}>
       <Window style={{ padding: '5px', marginBottom: '5px' }} delay={0.05}>Location: {props.world.mapData.locationName}</Window>
       {props.world.mapData.musicKey && <Window style={{ padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>}
     </div>

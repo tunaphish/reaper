@@ -17,7 +17,7 @@ export const Meter = (props: {
   max: number;
   className?: string;
   vertical?: boolean;
-}) => {
+}): JSX.Element => {
   const { className, value, max, vertical } = props;
 
   const percent = Math.min(Math.round((value / max) * 100), 100) + "%";
@@ -40,9 +40,9 @@ export const CombatantHealthBar = observer((props: { combatant: Combatant }) => 
   return <div className={classNames.meterContainer}>
           <Meter value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
           <Meter value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px' }}>
-            <div style={{ fontSize: '12px' }}>{props.combatant.name}</div>
-            <div style={{ fontSize: '12px' }}>{Math.ceil(props.combatant.health)}</div>
+          <div className={classNames.healthBarRow}>
+            <div className={classNames.healthBarLabel}>{props.combatant.name}</div>
+            <div className={classNames.healthBarLabel}>{Math.ceil(props.combatant.health)}</div>
           </div>
         </div>;
 });
@@ -176,7 +176,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
 
   return (
     <AnimatePresence>
-      <div style={{ position: 'relative', top: '-40px', left: '75' }}>
+      <div className={classNames.castingWindowWrapper}>
         <PanelWindow window={imageWindow}>
           <Window
             style={{ position: 'absolute', top: '-20px', left: '50px', zIndex: 20, fontSize: '18px' }}

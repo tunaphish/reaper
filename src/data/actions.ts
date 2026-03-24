@@ -38,7 +38,6 @@ export const scaleDamageOnCasterBleed = (target, source, potency) => {
 
 
 // #region Basic
-
 export const attack: Action = {
   type: OptionType.ACTION,
   name: 'Attack',
@@ -56,6 +55,23 @@ export const attack: Action = {
   ],
 
   castingImageSrc:'/reaper/images/test.gif',
+};
+
+export const smash: Action = {
+  type: OptionType.ACTION,
+  name: 'Smash',
+  description: 'Deals high damage, long cast time',
+  targetType: TargetType.SINGLE_TARGET,
+  castTimeInMs: 2500,
+
+  actionPointsCost: 2,
+
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 120 }
+  ],
+
+  castingImageSrc:'/reaper/images/test.jpeg',
 };
 
 
@@ -93,13 +109,34 @@ export const magic: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 }
 
+
+// #endregion
+
 // #region fencer
+export const pristine: Action = {
+  type: OptionType.ACTION,
+  name: 'Pristine',
+  description: 'Deals high damage. Condition: caster must have full health.',
+  targetType: TargetType.SINGLE_TARGET,
+  castTimeInMs: 1500,
+
+  actionPointsCost: 1,
+
+  conditionMet: (world, caster, target) => caster.health === caster.maxHealth,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 70 }
+  ],
+  castingImageSrc:'/reaper/images/test.jpeg',
+
+};
+
 export const engage: Action = {
   type: OptionType.ACTION,
   name: 'Engage',
   description: 'Deals high damage. Condition: target must have full health.',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 1000,
+  castTimeInMs: 1500,
 
   actionPointsCost: 1,
 
@@ -117,7 +154,7 @@ export const splinter: Action = {
   name: 'Splinter',
   description: 'Deals high damage. Condition: Splinter must not have been used during this combat.',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 1000,
+  castTimeInMs: 1500,
 
   actionPointsCost: 1,
 
@@ -130,28 +167,44 @@ export const splinter: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 };
 
-export const smash: Action = {
+export const prick: Action = {
   type: OptionType.ACTION,
-  name: 'Smash',
-  description: 'Deals high damage',
+  name: 'Prick',
+  description: 'Deals very low damage. Fast cast time.',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 1000,
+  castTimeInMs: 50,
 
-  actionPointsCost: 2,
+  actionPointsCost: 1,
 
   events: [
     { type: EventType.SOUND, key: 'attack' },
-    { type: EventType.UPDATE_DAMAGE, value: 120 }
+    { type: EventType.UPDATE_DAMAGE, value: 5 }
+  ],
+
+};
+
+// #endregion
+
+
+// #region hunter
+
+export const ambush: Action = {
+  type: OptionType.ACTION,
+  name: 'Ambush',
+  description: "Deals damage. Restore's AP used. Condition: Must be first action taken this combat.",
+  targetType: TargetType.SINGLE_TARGET,
+  castTimeInMs: 1500,
+
+  actionPointsCost: 1,
+
+  conditionMet: (world, caster, target) => world.firstActionNotTaken,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 70 },
+    { type: EventType.UPDATE_AP, value: 1 }
   ],
 
   castingImageSrc:'/reaper/images/test.jpeg',
 };
-
-export const fencer: Folder = {
-  name: 'Fencer',
-  desc: 'Strong Conditional Actions',
-  type: OptionType.FOLDER,
-  options: [ splinter, engage ]
-}
 
 // #endregion

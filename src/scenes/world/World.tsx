@@ -65,6 +65,7 @@ export class World extends Phaser.Scene {
   // combat
   combatInitiated = true;
   splinterNotCasted = true;
+  firstActionNotTaken = true;
 
   constructor() {
     super(sceneConfig);
@@ -361,6 +362,10 @@ export class World extends Phaser.Scene {
         return;
       }
 
+      case EventType.UPDATE_AP: {
+        updateActionPoints(caster, 1);
+      }
+
       case EventType.SHATTER_TECHNIQUE: {
         const shatterTechniqueEvent = event as ShatterTechniqueEvent;
         if (shatterTechniqueEvent.target === ShatterTechniqueTarget.RANDOM) {
@@ -593,6 +598,7 @@ export class World extends Phaser.Scene {
           return;
         } 
 
+        if (this.firstActionNotTaken) this.firstActionNotTaken = false;
         if (action.name === "Splinter") this.splinterNotCasted = false;
         action.events.forEach(event => this.executeEvent(event, combatant.castingAction.target, combatant));    
       }

@@ -4,6 +4,7 @@ import { Status } from '../model/combatant';
 
 import * as Actions from './actions';
 import * as Techniques from './techniques';
+import * as Folders from './folders';
 import { OptionType } from '../model/option';
 
 
@@ -12,7 +13,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Actions.attack, Actions.stanch, Techniques.buff, Actions.magic],
+  options: [Folders.basic],
 }
 
 export const Eji: Ally = {
@@ -26,7 +27,7 @@ export const Eji: Ally = {
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: [Techniques.buff, Techniques.haste],
+  activeTechniques: [],
   
   status: Status.NORMAL,
   
@@ -39,7 +40,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
   desc: 'Soul of Keshi',
-  options: [Actions.attack, Actions.stanch, Actions.fencer],
+  options: [Folders.basic, Folders.fencer, Folders.hunter],
 }
 
 export const Keshi: Ally = {
@@ -65,7 +66,7 @@ const eliseFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Elise',
   name: 'Elise',
-  options: [Actions.attack, Actions.stanch],
+  options: [Folders.basic],
 };
 
 export const Elise: Ally = {

@@ -31,7 +31,7 @@ import * as Techniques from '../../data/techniques';
 import * as Actions from '../../data/actions';
 import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
-import { actionMenuItem, targetMenuItem } from './CombatMenus';
+import { actionMenuItem } from './CombatMenus';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -83,7 +83,8 @@ export class World extends Phaser.Scene {
     this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave, allies);
-    this.worldStore.pushEnemies([enemies[0]]);
+    // this.worldStore.pushEnemies([enemies[0]]);
+    this.worldStore.pushEnemies(enemies);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
@@ -139,13 +140,11 @@ export class World extends Phaser.Scene {
     // combat
     this.tickStats(delta);
     this.updateCombatantsState();
-    
 
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
 
     if (TESTING_COMBAT) this.executeEnemyStrategies();
-    this.executeSelectedOption();    
     
     this.executeCastedOptions();
     this.processQueuedEvents(delta);
@@ -404,9 +403,14 @@ export class World extends Phaser.Scene {
 
   //#region combat input
   setAlly = (ally: Ally): void => {
-    this.worldStore.closeMenus();
     this.playChoiceSelectSound();
     if (this.combatInitiated) {
+
+      if (this.worldStore.executable) {
+          this.selectTarget(ally);
+          return;
+        }
+
         // Could probably just flip this
         const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
         if (CANNOT_OPEN_STATUS.includes(ally.status) || ally.castingAction) {
@@ -414,6 +418,7 @@ export class World extends Phaser.Scene {
           return;
         }
 
+        this.worldStore.closeMenus();
         this.sound.play('choice-select');
         this.worldStore.setActiveAlly(ally);
         this.events.emit('caster-set', ally);
@@ -425,6 +430,28 @@ export class World extends Phaser.Scene {
 
     this.worldStore.setActiveAlly(ally);
   }
+  
+  selectTarget = (combatant: Combatant): void => {
+    if (!this.worldStore.executable) return;
+    if (combatant.name === this.worldStore.target.name) {
+      this.playChoiceDisabledSound();
+      return;
+    }
+
+    switch (this.worldStore.executable.targetType) {
+      case TargetType.SELF:
+        if (combatant.name !== this.worldStore.activeAlly.name) {
+          this.playChoiceDisabledSound();
+        }
+        break;
+      case TargetType.SINGLE_TARGET:
+        this.worldStore.setTarget(combatant);
+        this.playChoiceSelectSound();
+        break;
+      default:
+        break;
+    }
+  }
 
   selectOption(option: CombatOption): void {
     this.sound.play('choice-select');
@@ -434,34 +461,41 @@ export class World extends Phaser.Scene {
         this.worldStore.setExecutable(action);
         switch (action.targetType) {
           case TargetType.SELF:
-            this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
-            break;
-          case TargetType.ENEMIES:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.enemies));
-            break;
-          case TargetType.ALLIES:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.allies));
+            this.worldStore.setTarget(this.worldStore.activeAlly);
             break;
           case TargetType.SINGLE_TARGET:
-            this.worldStore.pushMenu(this.getTargetsMenu(this.worldStore.getCombatants()));
+            this.worldStore.setTarget(this.worldStore.enemies[0]);
             break;
         }
+        this.worldStore.pushMenu(this.getConfirmMenu());
         break;
       case OptionType.TECHNIQUE:
         const technique = option as Technique;
         this.worldStore.setExecutable(technique);
-        this.worldStore.pushMenu(this.getTargetsMenu([this.worldStore.activeAlly]));
-        break;
-      case OptionType.ENEMY:
-      case OptionType.ALLY:
-        const combatant = option as Combatant;
-        this.worldStore.setTarget(combatant);
+        this.worldStore.setTarget(this.worldStore.activeAlly);
+        this.worldStore.pushMenu(this.getConfirmMenu());
         break;
       case OptionType.FOLDER:
         const folder = option as Folder;
         const folderMenu = this.getCombatMenu(folder, folder.name);
         this.worldStore.pushMenu(folderMenu);
         break;
+    }
+  }
+
+  getConfirmMenu(): Menu {
+    return {
+      menuOptions: [{
+        display: () => (<div>Confirm</div>),
+        execute: () => {
+          this.executeOption(this.worldStore.activeAlly, this.worldStore.target, this.worldStore.executable);
+          this.worldStore.resetSelections();  
+        }
+      }],
+      onClose: () => {
+        this.worldStore.setTarget(null);
+        this.worldStore.setExecutable(null);
+      }
     }
   }
 
@@ -569,33 +603,6 @@ export class World extends Phaser.Scene {
     });
     return { menuOptions, title };
   }
-  
-  getTargetsMenu(targets: Combatant[]): Menu {
-    const menuOptions: MenuOption[] = targets.map(target => {
-      return {
-        display: () => targetMenuItem(target),
-        execute: () => {
-          this.worldStore.setTarget(target);
-        }
-      }
-    });
-    const onClose = () => {
-      this.worldStore.setTarget(null);
-    }
-    const title = "Targets";
-
-    return { menuOptions, onClose, title };
-  }
-
-  executeSelectedOption(): void {
-    if (
-      !this.worldStore.activeAlly || 
-      !this.worldStore.executable || 
-      !this.worldStore.target
-    ) return; 
-    this.executeOption(this.worldStore.activeAlly, this.worldStore.target, this.worldStore.executable);
-    this.worldStore.resetSelections();  
-  }
 
   executeCastedOptions(): void {
     this.worldStore.getCombatants().forEach(combatant => { 
@@ -700,10 +707,7 @@ export class World extends Phaser.Scene {
       if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
       if (techniqueIsActive(caster, Techniques.charged)) appliedTechniques.push(Techniques.charged);
       if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
-    }
-
-
-    
+    }    
 
     caster.castingAction = {
       option: option,

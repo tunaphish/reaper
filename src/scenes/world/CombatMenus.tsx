@@ -4,6 +4,7 @@ import { Option, OptionType } from '../../model/option';
 import { Technique } from '../../model/technique';
 import { Combatant, techniqueIsActive } from '../../model/combatant';
 import { Ally } from '../../model/ally';
+import { Menu } from './worldStore';
 
 export const actionMenuItem = (option: Option, ally: Ally): JSX.Element => {
     let className = ''
@@ -24,20 +25,6 @@ export const actionMenuItem = (option: Option, ally: Ally): JSX.Element => {
             {option.name}
             </div>
             { 'actionPointsCost' in option && <div style={{ marginLeft: '8px' }}>{option.actionPointsCost as string}</div>}
-        </span>
-    )
-}
-
-export const targetMenuItem = (target: Combatant) => {
-    return (
-        <span style={{ width: 'max-content' }}>
-            <img 
-            src={getIconSrc(target)}
-            alt="" 
-            style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
-            
-            />
-            {target.name}
         </span>
     )
 }

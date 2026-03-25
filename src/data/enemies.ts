@@ -99,7 +99,36 @@ export const knight: Enemy = {
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .13,
 
-  strategies: [],
+  strategies: [
+    { 
+      option: Actions.magic, 
+      weight: 20, 
+      getTarget: randomAllyWithTechnique, 
+      isValid: (world, caster) => world.worldStore.allies.some(hasTechnique) 
+    },
+    { 
+      option: Actions.attack, 
+      weight: 100, 
+      getTarget: randomAliveAlly, 
+      isValid: (world, caster) => true 
+    },
+    { 
+      option: Actions.splinter, 
+      weight: 500, 
+      getTarget: randomAliveAlly, 
+      isValid: (world, caster) => world.splinterNotCasted },
+    { 
+      option: Actions.engage, 
+      weight: 500, 
+      getTarget: randomAliveAlly, 
+      isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+    { 
+      option: Techniques.counter, 
+      weight: 2000, 
+      getTarget: self, 
+      isValid: (world, caster) => !techniqueIsActive(caster, Techniques.counter),
+    },
+  ],
   selectedStrategyIndex: 0,
   status: Status.NORMAL,
 

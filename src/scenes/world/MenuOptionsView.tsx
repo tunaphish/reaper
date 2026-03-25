@@ -2,15 +2,15 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 
-export const MenuCursor = () => (
+export const MenuCursor = (props: { size: number }): JSX.Element => (
   <motion.img
     src="/reaper/ui/cursor.png" 
     alt=""
     style={{
-      width: '24px',       
+      width: props.size + 'px',       
       imageRendering: 'pixelated',
       position: 'absolute',
-      left: '-24px',
+      left: - + props.size/2 + 'px',
       top: '10%',
     }}
     initial={{ opacity: 0, x: 4 }}
@@ -52,7 +52,7 @@ export const MenuOptionsView = ({items,getKey,renderLabel,onSelect,initialIndex 
           }}
           style={{ position: 'relative', display: 'flex' }}
         >
-          {isCursor && i === selectedIndex && <MenuCursor />}
+          {isCursor && i === selectedIndex && <MenuCursor size={24} />}
           {renderLabel(item)}
         </div>
       ))}

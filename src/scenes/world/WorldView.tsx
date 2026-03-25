@@ -325,7 +325,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
       world.playChoiceDisabledSound();
       return;
     }
-    if (world.worldStore.activeAlly?.name === ally.name && world.worldStore.menus.length > 0) return;
+
     world.setAlly(ally);
   }
   

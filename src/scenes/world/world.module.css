@@ -46,6 +46,7 @@
 .allyViewWrapper {
   width: 100%;
   position: relative;
+  padding: 15px;
 }
 
 .allyViewInner {

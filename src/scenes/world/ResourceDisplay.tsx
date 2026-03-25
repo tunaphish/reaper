@@ -11,6 +11,7 @@ import { TypewriterText } from './TypewriterText';
 import { Technique } from '../../model/technique';
 import { OptionType } from '../../model/option';
 import { World } from './World';
+import { MenuCursor } from './MenuOptionsView';
 
 export const Meter = (props: {
   value: number;
@@ -102,12 +103,16 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
     classNames.window,
     statusToStylesMap[props.combatant.status],
   ];
+
+  const onClick = () => {
+    props.world.selectTarget(props.combatant);
+  }
   
   return (
     <>
-      <div className={className.join(' ')} onClick={props.onClickCell}>
+      <div className={className.join(' ')} onClick={props.onClickCell || onClick}>
           <div className={classNames.characterCellContainer} >
-
+            {props.world.worldStore?.target?.name === props.combatant.name && <MenuCursor size={48}/>}
             <div className={classNames.portraitContainer } >
               <Meter vertical value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />

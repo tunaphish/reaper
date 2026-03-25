@@ -97,7 +97,7 @@ export const magic: Action = {
   type: OptionType.ACTION,
   name: 'Magic',
   description: 'Deals Damage. Shatters random technique.',
-  targetType: TargetType.ENEMIES,
+  targetType: TargetType.SINGLE_TARGET,
   
   castTimeInMs: 2000,
   actionPointsCost: 1,

@@ -80,7 +80,7 @@ export const Phia: Ally = {
   actionPointsRegenRatePerSecond: .08,
   folder: phiaFolder,
 
-  activeTechniques: [Techniques.infuse],
+  activeTechniques: [Techniques.infuse, Techniques.charged],
 
   status: Status.NORMAL,
 

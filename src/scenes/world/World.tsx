@@ -18,7 +18,7 @@ import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTar
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
+import { CastingAction, Combatant, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -45,7 +45,8 @@ type QueuedEvent = {
   event: Event,
   delayInMs: number,
   target?: Combatant,
-  caster?: Combatant
+  caster?: Combatant,
+  techniques?: Technique[],
 }
 
 export class World extends Phaser.Scene {
@@ -134,17 +135,20 @@ export class World extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.player.update(time, delta);
     this.onTriggerExit();
-    this.processQueuedEvents(delta);
 
     // combat
     this.tickStats(delta);
     this.updateCombatantsState();
     
-    if (TESTING_COMBAT) this.executeEnemyStrategies();
+
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
+
+    if (TESTING_COMBAT) this.executeEnemyStrategies();
     this.executeSelectedOption();    
+    
     this.executeCastedOptions();
+    this.processQueuedEvents(delta);
   }
 
 
@@ -223,7 +227,7 @@ export class World extends Phaser.Scene {
 
     for (const queuedEvent of this.queuedEvents) {
       if (queuedEvent.delayInMs < 0) {
-        this.executeEvent(queuedEvent.event, queuedEvent.target, queuedEvent.caster);
+        this.executeEvent(queuedEvent.event, queuedEvent.target, queuedEvent.caster, queuedEvent.techniques);
         continue;
       }
       queuedEvent.delayInMs -= delta;
@@ -309,7 +313,7 @@ export class World extends Phaser.Scene {
   }
   
   // #endregion
-  executeEvent(event: Event, target?: Combatant, caster?: Combatant): void {
+  executeEvent(event: Event, target?: Combatant, caster?: Combatant, techniques?: Technique[]): void {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.TEXT: {
@@ -351,14 +355,17 @@ export class World extends Phaser.Scene {
 
       case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
-        if (event.value > 0 && techniqueIsApplied(caster, Techniques.buff)) {
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.buff.name)) {
           value *= 1.3
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
+          removeTechnique(caster, Techniques.charged);
+          value *= 2.0
         }
 
         this.events.emit('updated-damage', { name: target.name, value });
         updateDamage(target, value);
-
-        
         
         if (techniqueIsActive(target, Techniques.counter)) {
           this.executeOption(target, caster, Actions.attack);
@@ -468,7 +475,7 @@ export class World extends Phaser.Scene {
       if (combatant.status === Status.DEAD) return;
       if (combatant.bleed > 0) {
         let damageTickRate = (delta / 1000) * 5;
-        if (techniqueIsActive(combatant, Techniques.coagulate)) {console.log('hi'), damageTickRate *= .33;}
+        if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
         combatant.bleed -= damageTickRate;
         combatant.health = Math.max(0, combatant.health - damageTickRate);
       }
@@ -625,12 +632,13 @@ export class World extends Phaser.Scene {
             }) 
           events.push(...shadowEvents);
         }
-        
+
         const newEvents: QueuedEvent[] = events.map(event => ({
           event, 
           delayInMs: event.delayInMs || 300,
           target: combatant.castingAction.target,
-          caster: combatant
+          caster: combatant,
+          techniques: structuredClone(toJS(combatant.castingAction.appliedTechniques)),
         }));
         this.queuedEvents.push(...newEvents);
 
@@ -681,6 +689,7 @@ export class World extends Phaser.Scene {
       if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
       if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
       if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
+      if (techniqueIsActive(caster, Techniques.charged)) appliedTechniques.push(Techniques.charged);
     }
 
     caster.castingAction = {

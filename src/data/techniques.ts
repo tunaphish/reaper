@@ -47,7 +47,7 @@ export const infuse: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Infuse', 
   actionPointsCost: 2,
-  castTimeInMs: 1000,
+  castTimeInMs: 500,
   description: 'Infuses attacks with MAGIC (shatters a random enemy technique)',
   soundKeyName: 'smirk'
 }
@@ -56,7 +56,16 @@ export const coagulate: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Coagulate', 
   actionPointsCost: 1, 
-  castTimeInMs: 1,
+  castTimeInMs: 500,
   description: 'Slows bleed (consider making this adds delay to bleed, confusing ux tho)',
+  soundKeyName: 'smirk',
+}
+
+export const charged: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Charged',
+  actionPointsCost: 1,
+  castTimeInMs: 500,
+  description: 'Single Use. Doubles next attack.',
   soundKeyName: 'smirk',
 }

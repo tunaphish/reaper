@@ -10,6 +10,13 @@ export enum Status {
   DEAD = 'DEAD',
 }
 
+export type CastingAction = {
+  target: Combatant;
+  option: Option;
+  castedTimeInMs: number;
+  appliedTechniques: Technique[];
+}
+
 
 export type Combatant = Option & {
   type: OptionType;
@@ -25,12 +32,7 @@ export type Combatant = Option & {
   activeTechniques: Technique[];
   status: Status;
 
-  castingAction?: {
-    target: Combatant;
-    option: Option;
-    castedTimeInMs: number;
-    appliedTechniques: Technique[];
-  }
+  castingAction?: CastingAction
 
   combatPortraitSrc: string;
 }
@@ -77,6 +79,13 @@ export const techniqueIsApplied = (combatant: Combatant, technique: Technique): 
   if (!combatant.castingAction) return false;
   return combatant.castingAction.appliedTechniques.some(t => t.name === technique.name);
 }
+
+export const removeTechnique = (combatant: Combatant, technique: Technique): void => {
+  const techniqueIdx = combatant.activeTechniques.findIndex(activeTechnique => activeTechnique.name === technique.name);
+  if (techniqueIdx === -1) return;
+  combatant.activeTechniques.splice(techniqueIdx,1);
+}
+
 export const useApResources = (caster: Combatant, cost: number) => {
   // if (cost > caster.actionPoints) {
   //   const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost + total, 0);

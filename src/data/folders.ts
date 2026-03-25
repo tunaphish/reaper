@@ -36,7 +36,7 @@ export const mage: Folder = {
   name: 'Mage',
   desc: 'Actions based on shattering techniques', 
   type: OptionType.FOLDER,
-  options: [Techniques.infuse]
+  options: [Techniques.infuse, Techniques.charged]
 }
 
 export const knight: Folder = {

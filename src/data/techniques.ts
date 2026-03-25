@@ -78,3 +78,12 @@ export const reciprocity: Technique = {
   description: 'Attacks on allies heal instead of damaging.',
   soundKeyName: 'smirk',
 }
+
+export const adrenaline: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Adrenaline',
+  actionPointsCost: 1, 
+  castTimeInMs: 500, 
+  description: 'Halves cast time on attacks',
+  soundKeyName: 'smirk'
+}

@@ -250,6 +250,10 @@ overflow: hidden;
   grid-row: 1;
 }
 
+.actionPointMeterWindow {
+  background-color: var(--dust-gray);
+}
+
 .modalContainer {
   position: absolute;
   width: 100%;

@@ -688,8 +688,13 @@ export class World extends Phaser.Scene {
     useApResources(caster, option.actionPointsCost);
 
     const appliedTechniques = [];
+    let castedTimeInMs = 0;
 
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
+      if (techniqueIsActive(caster, Techniques.adrenaline)) {
+        appliedTechniques.push(Techniques.buff);
+        castedTimeInMs = option.castTimeInMs / 2;
+      }
       if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
       if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
       if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
@@ -697,10 +702,13 @@ export class World extends Phaser.Scene {
       if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
     }
 
+
+    
+
     caster.castingAction = {
       option: option,
       target,
-      castedTimeInMs: 0,
+      castedTimeInMs,
       appliedTechniques,
     }
   }

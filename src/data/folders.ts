@@ -8,8 +8,9 @@ export const basic: Folder = {
   name: 'Basic',
   desc: 'Basic Actions',
   type: OptionType.FOLDER,
-  options: [ Actions.attack, Actions.smash, Actions.stanch, Actions.magic, Techniques.buff, Actions.shatter ]
+  options: [ Actions.attack, Actions.stanch, Actions.magic, Techniques.buff, Actions.shatter ]
 }
+
 
 export const fencer: Folder = {
   name: 'Fencer',
@@ -44,4 +45,11 @@ export const knight: Folder = {
   desc: 'Actions based on defense',
   type: OptionType.FOLDER,
   options: [Techniques.coagulate]
+}
+
+export const fighter: Folder = {
+  name: 'Fighter',
+  desc: 'Actions based on cast time',
+  type: OptionType.FOLDER,
+  options: [ Actions.smash, Techniques.adrenaline ]
 }

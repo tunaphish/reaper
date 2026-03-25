@@ -371,7 +371,7 @@ export class World extends Phaser.Scene {
         updateDamage(target, value);
         
         if (techniqueIsActive(target, Techniques.counter)) {
-          this.executeOption(target, caster, Actions.attack);
+          this.executeOption(target, [caster], Actions.attack);
         }
         return;
       }
@@ -433,7 +433,7 @@ export class World extends Phaser.Scene {
   
   selectTarget = (combatant: Combatant): void => {
     if (!this.worldStore.executable) return;
-    if (combatant.name === this.worldStore.target.name) {
+    if (this.worldStore.targets.some(target => combatant.name === target.name) ) {
       this.playChoiceDisabledSound();
       return;
     }
@@ -445,7 +445,7 @@ export class World extends Phaser.Scene {
         }
         break;
       case TargetType.SINGLE_TARGET:
-        this.worldStore.setTarget(combatant);
+        this.worldStore.setTargets([combatant]);
         this.playChoiceSelectSound();
         break;
       default:
@@ -461,10 +461,10 @@ export class World extends Phaser.Scene {
         this.worldStore.setExecutable(action);
         switch (action.targetType) {
           case TargetType.SELF:
-            this.worldStore.setTarget(this.worldStore.activeAlly);
+            this.worldStore.setTargets([this.worldStore.activeAlly]);
             break;
           case TargetType.SINGLE_TARGET:
-            this.worldStore.setTarget(this.worldStore.enemies[0]);
+            this.worldStore.setTargets([this.worldStore.enemies[0]]);
             break;
         }
         this.worldStore.pushMenu(this.getConfirmMenu());
@@ -472,7 +472,7 @@ export class World extends Phaser.Scene {
       case OptionType.TECHNIQUE:
         const technique = option as Technique;
         this.worldStore.setExecutable(technique);
-        this.worldStore.setTarget(this.worldStore.activeAlly);
+        this.worldStore.setTargets([this.worldStore.activeAlly]);
         this.worldStore.pushMenu(this.getConfirmMenu());
         break;
       case OptionType.FOLDER:
@@ -488,12 +488,12 @@ export class World extends Phaser.Scene {
       menuOptions: [{
         display: () => (<div>Confirm</div>),
         execute: () => {
-          this.executeOption(this.worldStore.activeAlly, this.worldStore.target, this.worldStore.executable);
+          this.executeOption(this.worldStore.activeAlly, this.worldStore.targets, this.worldStore.executable);
           this.worldStore.resetSelections();  
         }
       }],
       onClose: () => {
-        this.worldStore.setTarget(null);
+        this.worldStore.setTargets([]);
         this.worldStore.setExecutable(null);
       }
     }
@@ -607,53 +607,56 @@ export class World extends Phaser.Scene {
   executeCastedOptions(): void {
     this.worldStore.getCombatants().forEach(combatant => { 
       if (!combatant.castingAction) return;
-      const { option, target, castedTimeInMs } = combatant.castingAction;
+      const { option, targets, castedTimeInMs } = combatant.castingAction;
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
       if (castedTimeInMs < option.castTimeInMs) return;
       
-      if (option.type === OptionType.TECHNIQUE) {
-        const technique = option as Technique;
-        combatant.activeTechniques.push(technique);
-        this.sound.play(technique.soundKeyName)
+      for (const target of targets) {
+        if (option.type === OptionType.TECHNIQUE) {
+            const technique = option as Technique;
+            combatant.activeTechniques.push(technique);
+            this.sound.play(technique.soundKeyName)
+          }
+
+
+          if (option.type === OptionType.ACTION) {
+            const action = option as Action;
+            if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
+              this.sound.play('restriction-violated');
+              combatant.castingAction = null;
+              if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
+              return;
+            } 
+
+            if (this.firstActionNotTaken) this.firstActionNotTaken = false;
+            if (action.name === "Splinter") this.splinterNotCasted = false;
+
+            // stagger here
+            const events = action.events;
+            if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
+            if (techniqueIsActive(combatant, Techniques.shadow)) {
+              const shadowEvents: Event[] = events
+                .map(event => {
+                  const newEvent = structuredClone(toJS(event));
+                  if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
+                  newEvent.delayInMs = (event.delayInMs || 0) + 600;
+                  return newEvent;
+                }) 
+              events.push(...shadowEvents);
+            }
+
+            const newEvents: QueuedEvent[] = events.map(event => ({
+              event, 
+              delayInMs: event.delayInMs || 300,
+              target,
+              caster: combatant,
+              techniques: structuredClone(toJS(combatant.castingAction.appliedTechniques)),
+            }));
+            this.queuedEvents.push(...newEvents);
+
+          }
       }
-
-
-      if (option.type === OptionType.ACTION) {
-        const action = option as Action;
-        if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
-          this.sound.play('restriction-violated');
-          combatant.castingAction = null;
-          if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
-          return;
-        } 
-
-        if (this.firstActionNotTaken) this.firstActionNotTaken = false;
-        if (action.name === "Splinter") this.splinterNotCasted = false;
-
-        // stagger here
-        const events = action.events;
-        if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
-        if (techniqueIsActive(combatant, Techniques.shadow)) {
-          const shadowEvents: Event[] = events
-            .map(event => {
-              const newEvent = structuredClone(toJS(event));
-              if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
-              newEvent.delayInMs = (event.delayInMs || 0) + 600;
-              return newEvent;
-            }) 
-          events.push(...shadowEvents);
-        }
-
-        const newEvents: QueuedEvent[] = events.map(event => ({
-          event, 
-          delayInMs: event.delayInMs || 300,
-          target: combatant.castingAction.target,
-          caster: combatant,
-          techniques: structuredClone(toJS(combatant.castingAction.appliedTechniques)),
-        }));
-        this.queuedEvents.push(...newEvents);
-
-      }
+ 
       combatant.castingAction = null;
       if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
     });
@@ -675,7 +678,7 @@ export class World extends Phaser.Scene {
     enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
   }
 
-  executeOption(caster: Combatant, target: Combatant, option: CombatOption): void {
+  executeOption(caster: Combatant, targets: Combatant[], option: CombatOption): void {
     // Handle Shatter
     if (option.type === OptionType.TECHNIQUE ) {
       const technique = (option as Technique);
@@ -706,12 +709,14 @@ export class World extends Phaser.Scene {
       if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
       if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
       if (techniqueIsActive(caster, Techniques.charged)) appliedTechniques.push(Techniques.charged);
-      if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
+
+      // need to figure out reciprocity... single target only actions? any action really... mm. it's never applied
+      // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
     }    
 
     caster.castingAction = {
       option: option,
-      target,
+      targets,
       castedTimeInMs,
       appliedTechniques,
     }

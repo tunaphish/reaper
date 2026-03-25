@@ -112,7 +112,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
     <>
       <div className={className.join(' ')} onClick={props.onClickCell || onClick}>
           <div className={classNames.characterCellContainer} >
-            {props.world.worldStore?.target?.name === props.combatant.name && <MenuCursor size={48}/>}
+            { props.world.worldStore?.targets?.some(target => target.name === props.combatant.name) && <MenuCursor size={48}/>}
             <div className={classNames.portraitContainer } >
               <Meter vertical value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />

@@ -1,8 +1,7 @@
 import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
-import { Action } from './action';
-import { Scene } from 'phaser';
+
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -11,7 +10,7 @@ export enum Status {
 }
 
 export type CastingAction = {
-  target: Combatant;
+  targets: Combatant[];
   option: Option;
   castedTimeInMs: number;
   appliedTechniques: Technique[];

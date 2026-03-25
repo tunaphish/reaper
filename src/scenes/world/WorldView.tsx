@@ -3,9 +3,9 @@ import * as React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import classNames from './world.module.css';
 import { World } from './World';
-import { Menu, MenuOption } from './worldStore';
+import { Menu } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { ActionBar, CombatantHealthBar, ResourceDisplay } from './ResourceDisplay';
+import { ResourceDisplay } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
@@ -314,7 +314,7 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 
 
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
-  const { world, ally, idx } = props;
+  const { world, ally } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const popups = usePhaserDamagePopups(world, ref, ally.name);
 

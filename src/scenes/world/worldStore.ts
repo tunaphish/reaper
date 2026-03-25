@@ -39,7 +39,7 @@ export class WorldStore {
 
   activeAlly?: Ally;
   executable?: Executable;
-  target?: Combatant;
+  targets: Combatant[] = [];
 
   constructor(playerSave: PlayerSave, allies: Allies) {
     this.playerSave = playerSave;
@@ -96,8 +96,8 @@ export class WorldStore {
     return [...this.enemies, ...this.allies];
   }
 
-  setTarget(target?: Combatant): void {
-    this.target = target;
+  setTargets(targets: Combatant[]): void {
+    this.targets = targets;
   }
 
   setExecutable(executable?: Executable): void {
@@ -108,7 +108,7 @@ export class WorldStore {
     this.closeMenus();
     this.setActiveAlly(null);
     this.setExecutable(null);
-    this.setTarget(null);
+    this.setTargets([]);
   }
 
   pushEnemies(enemies: Enemy[]): void {

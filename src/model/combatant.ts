@@ -2,7 +2,6 @@ import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
 
-
 export enum Status {
   NORMAL = 'NORMAL',
   EXHAUSTED = 'EXHAUSTED',

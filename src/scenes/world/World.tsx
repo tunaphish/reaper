@@ -448,6 +448,13 @@ export class World extends Phaser.Scene {
         this.worldStore.setTargets([combatant]);
         this.playChoiceSelectSound();
         break;
+      case TargetType.AOE: 
+        if (this.worldStore.enemies.some(enemy => enemy.name === combatant.name)) {
+          this.worldStore.setTargets(this.worldStore.enemies);
+        } else {
+          this.worldStore.setTargets(this.worldStore.allies);
+        }
+        break;
       default:
         break;
     }
@@ -465,6 +472,9 @@ export class World extends Phaser.Scene {
             break;
           case TargetType.SINGLE_TARGET:
             this.worldStore.setTargets([this.worldStore.enemies[0]]);
+            break;
+          case TargetType.AOE:
+            this.worldStore.setTargets(this.worldStore.enemies);
             break;
         }
         this.worldStore.pushMenu(this.getConfirmMenu());
@@ -611,7 +621,7 @@ export class World extends Phaser.Scene {
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
       if (castedTimeInMs < option.castTimeInMs) return;
       
-      for (const target of targets) {
+      for (const [idx, target] of targets.entries()) {
         if (option.type === OptionType.TECHNIQUE) {
             const technique = option as Technique;
             combatant.activeTechniques.push(technique);
@@ -647,7 +657,7 @@ export class World extends Phaser.Scene {
 
             const newEvents: QueuedEvent[] = events.map(event => ({
               event, 
-              delayInMs: event.delayInMs || 300,
+              delayInMs: event.delayInMs || 300 + (idx*300),
               target,
               caster: combatant,
               techniques: structuredClone(toJS(combatant.castingAction.appliedTechniques)),

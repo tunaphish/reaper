@@ -218,7 +218,7 @@ export const ambush: Action = {
   conditionMet: (world, caster, target) => world.firstActionNotTaken,
   events: [
     { type: EventType.SOUND, key: 'attack' },
-    { type: EventType.UPDATE_DAMAGE, value: 70 },
+    { type: EventType.UPDATE_DAMAGE, value: 50 },
     { type: EventType.UPDATE_AP, value: 1 }
   ],
 
@@ -247,3 +247,18 @@ export const heal: Action = {
 };
 
 // #endregion
+
+// #region knight
+export const cleave: Action = {
+  type: OptionType.ACTION,
+  name: 'Cleave',
+  description: "Weak attacks all enemies",
+  targetType: TargetType.AOE,
+  castTimeInMs: 1500,
+  actionPointsCost: 1,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 50 },
+  ]
+}
+// #endregion

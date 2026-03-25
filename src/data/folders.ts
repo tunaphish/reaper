@@ -44,7 +44,7 @@ export const knight: Folder = {
   name: 'Knight',
   desc: 'Actions based on defense',
   type: OptionType.FOLDER,
-  options: [Techniques.coagulate]
+  options: [Techniques.coagulate, Actions.cleave]
 }
 
 export const fighter: Folder = {

@@ -13,7 +13,7 @@ const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',
   desc: 'Soul of Eji',
-  options: [Folders.basic],
+  options: [Folders.basic, Folders.knight],
 }
 
 export const Eji: Ally = {

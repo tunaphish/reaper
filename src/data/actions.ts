@@ -170,7 +170,7 @@ export const engage: Action = {
 export const splinter: Action = {
   type: OptionType.ACTION,
   name: 'Splinter',
-  description: 'Deals high damage. Condition: Splinter must not have been used during this combat.',
+  description: 'Deals high damage. Condition: Splinter must not have been used during this combat.', // consider turning splinter into a technique
   targetType: TargetType.SINGLE_TARGET,
   castTimeInMs: 1500,
 

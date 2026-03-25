@@ -51,3 +51,12 @@ export const infuse: Technique = {
   description: 'Infuses attacks with MAGIC (shatters a random enemy technique)',
   soundKeyName: 'smirk'
 }
+
+export const coagulate: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Coagulate', 
+  actionPointsCost: 1, 
+  castTimeInMs: 1,
+  description: 'Slows bleed (consider making this adds delay to bleed, confusing ux tho)',
+  soundKeyName: 'smirk',
+}

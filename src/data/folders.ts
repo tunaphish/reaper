@@ -38,3 +38,10 @@ export const mage: Folder = {
   type: OptionType.FOLDER,
   options: [Techniques.infuse]
 }
+
+export const knight: Folder = {
+  name: 'Knight',
+  desc: 'Actions based on defense',
+  type: OptionType.FOLDER,
+  options: [Techniques.coagulate]
+}

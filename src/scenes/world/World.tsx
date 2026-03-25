@@ -467,9 +467,10 @@ export class World extends Phaser.Scene {
     this.worldStore.getCombatants().forEach((combatant) => {
       if (combatant.status === Status.DEAD) return;
       if (combatant.bleed > 0) {
-        const DAMAGE_TICK_RATE = (delta / 1000) * 5;
-        combatant.bleed -= DAMAGE_TICK_RATE;
-        combatant.health = Math.max(0, combatant.health - DAMAGE_TICK_RATE);
+        let damageTickRate = (delta / 1000) * 5;
+        if (techniqueIsActive(combatant, Techniques.coagulate)) {console.log('hi'), damageTickRate *= .33;}
+        combatant.bleed -= damageTickRate;
+        combatant.health = Math.max(0, combatant.health - damageTickRate);
       }
 
       if (combatant.castingAction) {
@@ -623,7 +624,6 @@ export class World extends Phaser.Scene {
               return newEvent;
             }) 
           events.push(...shadowEvents);
-          console.log(toJS(events))
         }
         
         const newEvents: QueuedEvent[] = events.map(event => ({

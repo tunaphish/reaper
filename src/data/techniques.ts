@@ -69,3 +69,12 @@ export const charged: Technique = {
   description: 'Single Use. Doubles next attack.',
   soundKeyName: 'smirk',
 }
+
+export const reciprocity: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Reciprocity',
+  actionPointsCost: 1,
+  castTimeInMs: 500,
+  description: 'Attacks on allies heal instead of damaging.',
+  soundKeyName: 'smirk',
+}

@@ -66,7 +66,7 @@ const phiaFolder: Folder = {
   type: OptionType.FOLDER,
   desc: 'Soul of Phia',
   name: 'Phia',
-  options: [Folders.basic, Folders.cleric, Folders.mage],
+  options: [Techniques.reciprocity, Folders.basic, Folders.cleric, Folders.mage],
 };
 
 export const Phia: Ally = {
@@ -80,7 +80,7 @@ export const Phia: Ally = {
   actionPointsRegenRatePerSecond: .08,
   folder: phiaFolder,
 
-  activeTechniques: [Techniques.infuse, Techniques.charged],
+  activeTechniques: [Techniques.infuse, Techniques.charged, Techniques.reciprocity],
 
   status: Status.NORMAL,
 

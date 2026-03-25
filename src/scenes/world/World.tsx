@@ -356,12 +356,16 @@ export class World extends Phaser.Scene {
       case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.buff.name)) {
-          value *= 1.3
+          value *= 1.3;
         }
 
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
           removeTechnique(caster, Techniques.charged);
-          value *= 2.0
+          value *= 2.0;
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.reciprocity.name)) {
+          value *= -1;
         }
 
         this.events.emit('updated-damage', { name: target.name, value });
@@ -690,6 +694,7 @@ export class World extends Phaser.Scene {
       if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
       if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
       if (techniqueIsActive(caster, Techniques.charged)) appliedTechniques.push(Techniques.charged);
+      if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
     }
 
     caster.castingAction = {

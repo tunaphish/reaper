@@ -80,7 +80,7 @@ export const fencer: Enemy = {
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: [Techniques.buff],
+  activeTechniques: [],
 };
 
 

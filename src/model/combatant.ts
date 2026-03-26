@@ -16,6 +16,11 @@ export type CastingExecutable = {
   appliedTechniques: Technique[];
 }
 
+export type ActiveTechnique = {
+  technique: Technique;
+  target: Combatant;
+}
+
 
 export type Combatant = Option & {
   type: OptionType;
@@ -28,7 +33,7 @@ export type Combatant = Option & {
   maxActionPoints: number;
   actionPointsRegenRatePerSecond: number; 
 
-  activeTechniques: Technique[];
+  activeTechniques: ActiveTechnique[];
   status: Status;
 
   castingExecutable?: CastingExecutable
@@ -72,7 +77,7 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
   target.actionPoints = target.actionPoints + change;
 };
 
-export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(t => t.name === technique.name);
+export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === technique.name);
 
 export const techniqueIsApplied = (combatant: Combatant, technique: Technique): boolean => {
   if (!combatant.castingExecutable) return false;
@@ -80,7 +85,7 @@ export const techniqueIsApplied = (combatant: Combatant, technique: Technique): 
 }
 
 export const removeTechnique = (combatant: Combatant, technique: Technique): void => {
-  const techniqueIdx = combatant.activeTechniques.findIndex(activeTechnique => activeTechnique.name === technique.name);
+  const techniqueIdx = combatant.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
   if (techniqueIdx === -1) return;
   combatant.activeTechniques.splice(techniqueIdx,1);
 }

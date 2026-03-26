@@ -24,7 +24,7 @@ export const Eji: Ally = {
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
-  activeTechniques: [Techniques.adrenaline, Techniques.haste],
+  activeTechniques: [],
   
   status: Status.NORMAL,
   
@@ -77,7 +77,7 @@ export const Phia: Ally = {
   actionPointsRegenRatePerSecond: .08,
   folder: phiaFolder,
 
-  activeTechniques: [Techniques.infuse, Techniques.charged],
+  activeTechniques: [],
 
   status: Status.NORMAL,
 

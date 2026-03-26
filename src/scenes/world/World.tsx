@@ -396,7 +396,7 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.SHATTER: {
-        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost+total, 0);
+        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.technique.actionPointsCost+total, 0);
         caster.actionPoints += totalAp;
         caster.activeTechniques = [];
         return;
@@ -546,7 +546,7 @@ export class World extends Phaser.Scene {
         return;
       }
       const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-        (combatant.activeTechniques.some(technique => technique.name === Techniques.haste.name) ? 2 : 1) *
+        (combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === Techniques.haste.name) ? 2 : 1) *
         (delta / 1000) ;
 
       const newActionPoints = combatant.actionPoints + regenPerTick;
@@ -631,7 +631,7 @@ export class World extends Phaser.Scene {
       for (const [idx, target] of targets.entries()) {
         if (option.type === OptionType.TECHNIQUE) {
             const technique = option as Technique;
-            combatant.activeTechniques.push(technique);
+            combatant.activeTechniques.push({technique, target});
             this.sound.play(technique.soundKeyName)
           }
 
@@ -699,7 +699,7 @@ export class World extends Phaser.Scene {
     if (option.type === OptionType.TECHNIQUE ) {
       const technique = (option as Technique);
 
-      const idx = caster.activeTechniques.indexOf(technique);
+      const idx = caster.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
 
       if (idx !== -1) {
         this.sound.play(technique.soundKeyName);

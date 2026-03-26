@@ -7,7 +7,7 @@ export type Strategy = {
   option: Option; 
   weight: number;
   isValid: (world: World, caster: Combatant) => boolean;
-  getTarget: (world: World, action: Action, caster: Enemy) => Combatant;
+  getTargets: (world: World, action: Action, caster: Enemy) => Combatant[];
 }
 
 export type Enemy = Combatant & {

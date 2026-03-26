@@ -12,7 +12,7 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
 
 
 import { enemies } from '../../data/enemies';
@@ -582,8 +582,8 @@ export class World extends Phaser.Scene {
       const action = option as Action;
       if (enemy.actionPoints < action.actionPointsCost) continue;
 
-      const target = strategy.getTarget(this, action, enemy);
-      this.executeOption(enemy, target, option);      
+      const targets = strategy.getTargets(this, action, enemy);
+      this.executeOption(enemy, targets, option);      
     }
   }
 
@@ -647,7 +647,7 @@ export class World extends Phaser.Scene {
             if (techniqueIsActive(combatant, Techniques.shadow) && action.events.some(event => event.type === EventType.UPDATE_DAMAGE)) {
               const shadowEvents: Event[] = events
                 .map(event => {
-                  const newEvent = structuredClone(toJS(event));
+                  const newEvent: UpdateDamageEvent = (structuredClone(toJS(event)) as UpdateDamageEvent);
                   if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
                   newEvent.delayInMs = (event.delayInMs || 0) + 600;
                   return newEvent;

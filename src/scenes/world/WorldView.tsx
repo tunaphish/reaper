@@ -134,7 +134,7 @@ const EnemyView = observer(
       },
       layers: [
         {
-          src: enemy.baseImageSrc,
+          src: enemy.combatPortraitSrc,
         },
       ],
     };

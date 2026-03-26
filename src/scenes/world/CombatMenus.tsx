@@ -2,9 +2,8 @@ import * as React from 'react';
 import classNames from './world.module.css';
 import { Option, OptionType } from '../../model/option';
 import { Technique } from '../../model/technique';
-import { Combatant, techniqueIsActive } from '../../model/combatant';
+import { techniqueIsActive } from '../../model/combatant';
 import { Ally } from '../../model/ally';
-import { Menu } from './worldStore';
 
 export const actionMenuItem = (option: Option, ally: Ally): JSX.Element => {
     let className = ''

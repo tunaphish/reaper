@@ -9,7 +9,7 @@ import { ResourceDisplay } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
-import { TextSpeed, TextWindow, Window as WindowModel, Event, EventType, ImageWindow, ObserveAction, ContextAction, ChoiceAction } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, ObserveAction, ChoiceAction } from '../../model/encounter';
 import { PanelWindow } from './Window';
 import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';

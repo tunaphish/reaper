@@ -2,7 +2,6 @@ import { Ally, Allies } from '../model/ally';
 import { Folder } from '../model/folder';
 import { Status } from '../model/combatant';
 
-import * as Actions from './actions';
 import * as Techniques from './techniques';
 import * as Folders from './folders';
 import { OptionType } from '../model/option';

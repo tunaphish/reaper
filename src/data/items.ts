@@ -11,7 +11,7 @@ export const bomb: Item = {
   targetType: TargetType.SINGLE_TARGET,
   soundKeyName: 'attack',
   description: 'Deals damage to target',
-  execute: (target, source) => {
+  execute: (target) => {
     updateDamage(target, 50);
   },
   charges: 1,

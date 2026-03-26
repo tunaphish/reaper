@@ -33,7 +33,7 @@ export default class ReactOverlay extends Plugins.BasePlugin {
     eventEmitter.on('destroy', this.destroyScene, this);
   }
 
-  pause(system: Phaser.Scenes.Systems, data): void {
+  pause(): void {
     // this.uiMap.set(system.scenePlugin.key, child);
   }
 

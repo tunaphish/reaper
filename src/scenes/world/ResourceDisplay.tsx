@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { Combatant, Status } from '../../model/combatant';
 import classNames from './world.module.css';
 import { Ally } from '../../model/ally';

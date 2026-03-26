@@ -3,7 +3,7 @@ import * as React from 'react';
 import { motion, useMotionValue } from 'framer-motion'
 import { useEffect } from 'react'
 
-export const FrenzyLetter = ({ char, intensity = 4 }: { char: string; intensity?: number }) => {
+export const FrenzyLetter = ({ char, intensity = 4 }: { char: string; intensity?: number }): JSX.Element => {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 

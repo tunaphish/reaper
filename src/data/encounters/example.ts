@@ -1,6 +1,4 @@
-import { Encounter, TextSpeed, EventType, Event } from '../../model/encounter';
-
-
+import { Encounter, TextSpeed, EventType } from '../../model/encounter';
 
 export const MUSIC_SPEED_SPREAD: Encounter = {
   id: 'Typewriter Test Example',

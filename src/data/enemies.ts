@@ -24,7 +24,7 @@ const randomAliveAlly = (scene: World, action: Action, caster: Enemy): Combatant
 };
 
 
-const randomAllyWithTechnique = (scene: World, action: Action, caster: Enemy): Combatant => {
+const randomAllyWithTechnique = (scene: World): Combatant => {
   const potentialTargets = scene.worldStore.allies
     .filter(hasTechnique)
     .filter(isAlive);
@@ -53,29 +53,29 @@ export const fencer: Enemy = {
       option: Actions.magic, 
       weight: 20, 
       getTarget: randomAllyWithTechnique, 
-      isValid: (world, caster) => world.worldStore.allies.some(hasTechnique) 
+      isValid: (world: World): boolean => world.worldStore.allies.some(hasTechnique) 
     },
     { 
       option: Actions.attack, 
       weight: 100, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => true 
+      isValid: (): boolean => true 
     },
     { 
       option: Actions.splinter, 
       weight: 500, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => world.splinterNotCasted },
+      isValid: (world: World): boolean => world.splinterNotCasted },
     { 
       option: Actions.engage, 
       weight: 500, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+      isValid: (world: World): boolean => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
       weight: 2000, 
       getTarget: self, 
-      isValid: (world, caster) => !techniqueIsActive(caster, Techniques.counter),
+      isValid: (world: World, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
     },
   ],
   selectedStrategyIndex: 0,
@@ -104,29 +104,29 @@ export const knight: Enemy = {
       option: Actions.magic, 
       weight: 20, 
       getTarget: randomAllyWithTechnique, 
-      isValid: (world, caster) => world.worldStore.allies.some(hasTechnique) 
+      isValid: (world: World): boolean => world.worldStore.allies.some(hasTechnique) 
     },
     { 
       option: Actions.attack, 
       weight: 100, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => true 
+      isValid: (): boolean => true 
     },
     { 
       option: Actions.splinter, 
       weight: 500, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => world.splinterNotCasted },
+      isValid: (world: World): boolean => world.splinterNotCasted },
     { 
       option: Actions.engage, 
       weight: 500, 
       getTarget: randomAliveAlly, 
-      isValid: (world, caster) => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+      isValid: (world: World): boolean => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
       weight: 2000, 
       getTarget: self, 
-      isValid: (world, caster) => !techniqueIsActive(caster, Techniques.counter),
+      isValid: (world: World, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
     },
   ],
   selectedStrategyIndex: 0,

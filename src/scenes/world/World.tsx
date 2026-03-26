@@ -12,13 +12,13 @@ import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
 import * as EXAMPLE_SPREADS from '../../data/encounters/example';
-import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent } from '../../model/encounter';
 
 
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { CastingAction, Combatant, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
+import { Combatant, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";

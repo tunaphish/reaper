@@ -32,7 +32,7 @@ type WindowProps = {
   onClick?: () => void;
 };
 
-export const Window = ({ children, style, delay = 0, onClick }: WindowProps) => (
+export const Window = ({ children, style, delay = 0, onClick }: WindowProps): JSX.Element => (
   <motion.div 
     variants={expandFromCenterTransition}
     initial="initial"
@@ -55,7 +55,7 @@ type PanelWindowProps = {
   onClick?: () => void;
 };
 
-export const PanelWindow = ({ children, style, delay = 0, onClick, window }: PanelWindowProps) => {
+export const PanelWindow = ({ children, style, delay = 0, onClick, window }: PanelWindowProps): JSX.Element => {
   const layout = window?.layout;
   const wrapperStyle: React.CSSProperties = {
     position: 'absolute',

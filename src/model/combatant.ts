@@ -84,11 +84,5 @@ export const removeTechnique = (combatant: Combatant, technique: Technique): voi
   combatant.activeTechniques.splice(techniqueIdx,1);
 }
 
-export const useApResources = (caster: Combatant, cost: number) => {
-  // if (cost > caster.actionPoints) {
-  //   const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.actionPointsCost + total, 0);
-  //   caster.actionPoints += totalAp;
-  //   caster.activeTechniques = [];
-  // }
-  updateActionPoints(caster, -cost);
-};
+export const useApResources = (caster: Combatant, cost: number): void => updateActionPoints(caster, -cost);
+

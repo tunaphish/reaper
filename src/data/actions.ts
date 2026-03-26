@@ -4,37 +4,37 @@ import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
 import { EventType, ShatterTechniqueTarget } from '../model/encounter';
-import { Folder } from '../model/folder';
+import { World } from '../scenes/world/World';
 
 export const actionIsAnAttack = (action: Action): boolean => action.events.some(event => event.type === EventType.UPDATE_DAMAGE && event.value > 0);
 
-export const dealDamage = (target, source, potency) => {
+export const dealDamage = (target: Combatant, source: Combatant, potency: number): void => {
   updateDamage(target, potency);
 };
 
 // these are potentially confusing lol
-export const healStamina = (target, source, potency) => {
+export const healStamina = (target: Combatant, source: Combatant, potency: number): void => {
   updateActionPoints(target, potency);
 };
-export const healBleed = (target, source, potency) => {
+export const healBleed = (target: Combatant, source: Combatant, potency: number): void => {
   updateBleed(target, -potency);
 };
-export const healHealth = (target, source, potency) => {
+export const healHealth = (target: Combatant, source: Combatant, potency: number): void => {
   updateHealth(target, potency);
 };
 
 // consider converting to getPotency functions
-export const scaleDamageOnBleedCombatants = (target, source, potency, scene) => {
-  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
+export const scaleDamageOnBleedCombatants = (target: Combatant, source: Combatant, potency: number, scene: World): void => {
+  const damagedCombatants = scene.worldStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
   const newPotency = damagedCombatants * potency;
   updateDamage(target, newPotency);
 };
-export const scaleDamageOnCombatantsTargetingTarget = (target, source, potency, scene) => {
-  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.queuedTarget.name === target.name).length;
-  const newPotency = damagedCombatants * potency;
-  updateDamage(target, newPotency);
-};
-export const scaleDamageOnCasterBleed = (target, source, potency) => {
+// export const scaleDamageOnCombatantsTargetingTarget = (target: Combatant, source: Combatant, potency: number, scene: World): void  => {
+//   const damagedCombatants = scene.worldStore.getCombatants().filter(combatant => combatant.target.name === target.name).length;
+//   const newPotency = damagedCombatants * potency;
+//   updateDamage(target, newPotency);
+// };
+export const scaleDamageOnCasterBleed = (target: Combatant, source: Combatant): void => {
   updateDamage(target, source.bleed);
 };
 
@@ -140,7 +140,7 @@ export const pristine: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster, target) => caster.health === caster.maxHealth,
+  conditionMet: (world, caster) => caster.health === caster.maxHealth,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
@@ -176,7 +176,7 @@ export const splinter: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster, target) => world.splinterNotCasted,
+  conditionMet: (world) => world.splinterNotCasted,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
@@ -215,7 +215,7 @@ export const ambush: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster, target) => world.firstActionNotTaken,
+  conditionMet: (world) => world.firstActionNotTaken,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 50 },
@@ -253,7 +253,7 @@ export const heal: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster, target) => world.firstActionNotTaken,
+  conditionMet: (world) => world.firstActionNotTaken,
   events: [
     { type: EventType.SOUND, key: 'heal' },
     { type: EventType.UPDATE_DAMAGE, value: -50 },

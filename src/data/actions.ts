@@ -101,7 +101,8 @@ export const magic: Action = {
   
   castTimeInMs: 2000,
   actionPointsCost: 1,
-
+  interruptible: true,
+  
   events: [
     { type: EventType.SOUND, key: 'debuff' },
     { type: EventType.UPDATE_DAMAGE, value: 50 },

@@ -16,7 +16,7 @@ const ejiFolder: Folder = {
 export const Eji: Ally = {
   type: OptionType.ALLY,
   name: 'Eji',
-  health: 50,
+  health: 100,
   maxHealth: 100,
   bleed: 0,
   actionPoints: 0,

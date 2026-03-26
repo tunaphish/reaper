@@ -16,4 +16,5 @@ export type Action = Option & {
 
   conditionMet?: (world: World, caster: Combatant, target: Combatant) => boolean;
   events: Event[];
+  interruptible?: boolean;
 }

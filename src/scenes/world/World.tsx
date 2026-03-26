@@ -369,10 +369,16 @@ export class World extends Phaser.Scene {
 
         this.events.emit('updated-damage', { name: target.name, value });
         updateDamage(target, value);
-        
-        if (techniqueIsActive(target, Techniques.counter)) {
-          this.executeOption(target, [caster], Actions.attack);
+
+        if (target?.castingExecutable?.executable?.interruptible) {
+          target.castingExecutable = null;
+          this.sound.play('bomb');
         }
+
+        // perhaps counter is only active when I'm executing 
+        // if (techniqueIsActive(target, Techniques.counter)) {
+        //   this.executeOption(target, [caster], Actions.attack);
+        // }
         return;
       }
 

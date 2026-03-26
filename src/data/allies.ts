@@ -37,7 +37,7 @@ const keshiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Keshi',
   desc: 'Soul of Keshi',
-  options: [Techniques.shadow, Folders.basic, Folders.fencer, Folders.hunter],
+  options: [Techniques.shadow, Folders.basic, Folders.fencer, Folders.hunter, Folders.bandit],
 }
 
 export const Keshi: Ally = {
@@ -51,7 +51,7 @@ export const Keshi: Ally = {
   actionPointsRegenRatePerSecond: .12,
   folder: keshiFolder,
 
-  activeTechniques: [Techniques.shadow],
+  activeTechniques: [],
   
   status: Status.NORMAL,
   

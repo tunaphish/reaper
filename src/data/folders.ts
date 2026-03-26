@@ -30,7 +30,7 @@ export const cleric: Folder = {
   name: 'Cleric',
   desc: 'Actions based on healing damage',
   type: OptionType.FOLDER,
-  options: [Actions.heal]
+  options: [Actions.heal, Actions.pray]
 }
 
 export const mage: Folder = {
@@ -52,4 +52,11 @@ export const fighter: Folder = {
   desc: 'Actions based on cast time',
   type: OptionType.FOLDER,
   options: [ Actions.smash, Techniques.adrenaline ]
+}
+
+export const bandit: Folder = {
+  name: 'Bandit',
+  desc: 'Actions based on multi hit',
+  type: OptionType.FOLDER,
+  options: [ Actions.split ],
 }

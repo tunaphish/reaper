@@ -253,10 +253,25 @@ export const heal: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world) => world.firstActionNotTaken,
   events: [
     { type: EventType.SOUND, key: 'heal' },
     { type: EventType.UPDATE_DAMAGE, value: -50 },
+  ],
+
+};
+
+export const pray: Action = {
+  type: OptionType.ACTION,
+  name: 'Pray',
+  description: "Heals bleed",
+  targetType: TargetType.AOE,
+  castTimeInMs: 300,
+
+  actionPointsCost: 1,
+
+  events: [
+    { type: EventType.SOUND, key: 'heal' },
+    { type: EventType.UPDATE_DAMAGE, value: -25 },
   ],
 
 };
@@ -273,7 +288,22 @@ export const cleave: Action = {
   actionPointsCost: 1,
   events: [
     { type: EventType.SOUND, key: 'attack' },
-    { type: EventType.UPDATE_DAMAGE, value: 50 },
+    { type: EventType.UPDATE_DAMAGE, value: 25 },
   ]
 }
 // #endregion
+
+export const split: Action = {
+  type: OptionType.ACTION,
+  name: 'Split',
+  description: "Two weak attacks",
+  targetType: TargetType.SINGLE_TARGET,
+  castTimeInMs: 1500,
+  actionPointsCost: 1,
+  events: [
+    { type: EventType.SOUND, key: 'attack' },
+    { type: EventType.UPDATE_DAMAGE, value: 25 },
+    { type: EventType.SOUND, key: 'attack', delayInMs: 1000 },
+    { type: EventType.UPDATE_DAMAGE, value: 25, delayInMs: 1000 },
+  ]
+}

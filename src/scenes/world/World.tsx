@@ -661,6 +661,7 @@ export class World extends Phaser.Scene {
               caster: combatant,
               techniques: structuredClone(toJS(combatant.castingExecutable.appliedTechniques)),
             }));
+
             this.queuedEvents.push(...newEvents);
 
           }

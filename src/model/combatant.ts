@@ -1,6 +1,7 @@
 import { Option, OptionType } from './option';
 import { clamp } from './math';
 import { Technique } from './technique';
+import { Executable } from './Executable';
 
 export enum Status {
   NORMAL = 'NORMAL',
@@ -8,9 +9,9 @@ export enum Status {
   DEAD = 'DEAD',
 }
 
-export type CastingAction = {
+export type CastingExecutable = {
   targets: Combatant[];
-  option: Option;
+  executable: Executable;
   castedTimeInMs: number;
   appliedTechniques: Technique[];
 }
@@ -30,7 +31,7 @@ export type Combatant = Option & {
   activeTechniques: Technique[];
   status: Status;
 
-  castingAction?: CastingAction
+  castingExecutable?: CastingExecutable
 
   combatPortraitSrc: string;
 }
@@ -74,8 +75,8 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
 export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(t => t.name === technique.name);
 
 export const techniqueIsApplied = (combatant: Combatant, technique: Technique): boolean => {
-  if (!combatant.castingAction) return false;
-  return combatant.castingAction.appliedTechniques.some(t => t.name === technique.name);
+  if (!combatant.castingExecutable) return false;
+  return combatant.castingExecutable.appliedTechniques.some(t => t.name === technique.name);
 }
 
 export const removeTechnique = (combatant: Combatant, technique: Technique): void => {

@@ -143,7 +143,7 @@ const EnemyView = observer(
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
             <ResourceDisplay combatant={enemy} world={world}/>
-            <div>{enemy.castingAction?.option?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
+            <div>{enemy.castingExecutable?.executable?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
           </div>
           {popups.map((p) => (
             <div key={p.id} className={p.value > 0 ? classNames.damagePopup : classNames.healPopup}>

@@ -4,9 +4,7 @@ import { ContextAction, Window } from "../../model/encounter";
 import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant } from "../../model/combatant";
-import { Action, } from '../../model/action';
-import { Item } from '../../model/item';
-import { Technique } from '../../model/technique';
+import { Executable } from "./Executable";
 
 export type MenuOption = {
   display: () => JSX.Element;
@@ -18,8 +16,6 @@ export type Menu =  {
   isCursor?: boolean;
   title?: string;
 };
-
-export type Executable = Action | Item | Technique;
 
 export class WorldStore {
   playerSave: PlayerSave;

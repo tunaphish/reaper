@@ -10,6 +10,8 @@ export type Item = Option & {
     soundKeyName: string;
     charges: number;
     maxCharges: number;
-    castTimeInMs: number;
     canUseOutsideBattle: boolean;
+
+    castTimeInMs: number;
+    castingImageSrc?: string;
 }

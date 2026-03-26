@@ -414,7 +414,7 @@ export class World extends Phaser.Scene {
 
         // Could probably just flip this
         const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
-        if (CANNOT_OPEN_STATUS.includes(ally.status) || ally.castingAction) {
+        if (CANNOT_OPEN_STATUS.includes(ally.status) || ally.castingExecutable) {
           this.sound.play('stamina-depleted');
           return;
         }
@@ -529,8 +529,8 @@ export class World extends Phaser.Scene {
         combatant.health = Math.max(0, combatant.health - damageTickRate);
       }
 
-      if (combatant.castingAction) {
-        combatant.castingAction.castedTimeInMs += delta;
+      if (combatant.castingExecutable) {
+        combatant.castingExecutable.castedTimeInMs += delta;
         return;
       } 
 
@@ -572,7 +572,7 @@ export class World extends Phaser.Scene {
     
     const actionableEnemies = this.worldStore.enemies
       .filter(enemy => enemy.status === Status.NORMAL)
-      .filter(enemy => !enemy.castingAction)
+      .filter(enemy => !enemy.castingExecutable)
 
     for (const enemy of actionableEnemies) {
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
@@ -617,8 +617,8 @@ export class World extends Phaser.Scene {
 
   executeCastedOptions(): void {
     this.worldStore.getCombatants().forEach(combatant => { 
-      if (!combatant.castingAction) return;
-      const { option, targets, castedTimeInMs } = combatant.castingAction;
+      if (!combatant.castingExecutable) return;
+      const { executable: option, targets, castedTimeInMs } = combatant.castingExecutable;
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
       if (castedTimeInMs < option.castTimeInMs) return;
       
@@ -634,7 +634,7 @@ export class World extends Phaser.Scene {
             const action = option as Action;
             if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
               this.sound.play('restriction-violated');
-              combatant.castingAction = null;
+              combatant.castingExecutable = null;
               if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
               return;
             } 
@@ -659,14 +659,14 @@ export class World extends Phaser.Scene {
               delayInMs: event.delayInMs || 300 + (idx*300),
               target,
               caster: combatant,
-              techniques: structuredClone(toJS(combatant.castingAction.appliedTechniques)),
+              techniques: structuredClone(toJS(combatant.castingExecutable.appliedTechniques)),
             }));
             this.queuedEvents.push(...newEvents);
 
           }
       }
  
-      combatant.castingAction = null;
+      combatant.castingExecutable = null;
       if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
     });
   }
@@ -723,8 +723,8 @@ export class World extends Phaser.Scene {
       // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
     }    
 
-    caster.castingAction = {
-      option: option,
+    caster.castingExecutable = {
+      executable: option,
       targets,
       castedTimeInMs,
       appliedTechniques,

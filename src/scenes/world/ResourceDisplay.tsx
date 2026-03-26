@@ -59,7 +59,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
   return (
     <div className={classNames.meterContainer}>
       <Meter value={((combatant.actionPoints % 1) + 1) % 1} max={1} className={classNames.actionPointMeterWindow} />
-      {combatant.castingAction && <Meter value={combatant.castingAction.castedTimeInMs} max={combatant.castingAction.option.castTimeInMs} />}
+      {combatant.castingExecutable && <Meter value={combatant.castingExecutable.castedTimeInMs} max={combatant.castingExecutable.executable.castTimeInMs} />}
       <div className={classNames.actionPointRow}>
         {Array.from({ length: baseAP }).map((_, i) => (
           <div
@@ -157,24 +157,24 @@ export const TechniqueView = (props: {
 };
 
 const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) => {
-  const { castingAction } = ally;
+  const { castingExecutable } = ally;
 
   const positions = React.useMemo(() => {
     return getNonOverlappingPositions(ally.activeTechniques.length);
   }, [ally.activeTechniques.length]);
 
-  if (!castingAction?.option?.castingImageSrc) return null;
+  if (!castingExecutable?.executable?.castingImageSrc) return null;
 
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
     layout: { x: 10, y: -160, width: 120 },
-    layers: [{ src: castingAction.option.castingImageSrc }]
+    layers: [{ src: castingExecutable.executable.castingImageSrc }]
   };
 
   const baseDelay = 0.2;
-  const castTimeSec = (castingAction.option.castTimeInMs ?? 0) / 1000;
+  const castTimeSec = (castingExecutable.executable.castTimeInMs ?? 0) / 1000;
   const END_BUFFER_RATIO = 0.2;
-  const activeItemCount = ally.castingAction.appliedTechniques.length + 1;
+  const activeItemCount = ally.castingExecutable.appliedTechniques.length + 1;
   const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
 
   return (
@@ -184,10 +184,10 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
           style={{ position: 'absolute', top: '-25px', left: '25px',fontSize: '18px' }}
           delay={baseDelay}
         >
-          <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingAction.option.name }]} />
+          <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingExecutable.executable.name }]} />
         </Window>
         <ImageWindowContent imageWindow={imageWindow} />
-        {ally.castingAction.appliedTechniques.map((technique, index) => {
+        {ally.castingExecutable.appliedTechniques.map((technique, index) => {
           const position = positions[index];
           return (
             <TechniqueView

@@ -160,8 +160,8 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
   const { castingExecutable } = ally;
 
   const positions = React.useMemo(() => {
-    return getNonOverlappingPositions(ally.activeTechniques.length);
-  }, [ally.activeTechniques.length]);
+    return getNonOverlappingPositions(ally?.castingExecutable?.appliedTechniques?.length || 0);
+  }, [(ally?.castingExecutable?.appliedTechniques?.length || 0)]);
 
   if (!castingExecutable?.executable?.castingImageSrc) return null;
 
@@ -189,6 +189,7 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
         <ImageWindowContent imageWindow={imageWindow} />
         {ally.castingExecutable.appliedTechniques.map((technique, index) => {
           const position = positions[index];
+
           return (
             <TechniqueView
               key={technique.name}

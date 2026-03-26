@@ -32,6 +32,7 @@ import * as Actions from '../../data/actions';
 import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
 import { actionMenuItem } from './CombatMenus';
+import { Executable } from '../../model/Executable';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -355,7 +356,7 @@ export class World extends Phaser.Scene {
       case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.buff.name)) {
-          value *= 1.3;
+          value *= 1.33;
         }
 
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
@@ -365,6 +366,10 @@ export class World extends Phaser.Scene {
 
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.reciprocity.name)) {
           value *= -1;
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.nerf.name)) {
+          value *= .67;
         }
 
         this.events.emit('updated-damage', { name: target.name, value });
@@ -471,9 +476,10 @@ export class World extends Phaser.Scene {
     this.sound.play('choice-select');
     switch(option.type) {
       case OptionType.ACTION:
-        const action = option as Action;
-        this.worldStore.setExecutable(action);
-        switch (action.targetType) {
+      case OptionType.TECHNIQUE:
+        const executable = option as Executable;
+        this.worldStore.setExecutable(executable);
+        switch (executable.targetType) {
           case TargetType.SELF:
             this.worldStore.setTargets([this.worldStore.activeAlly]);
             break;
@@ -484,12 +490,6 @@ export class World extends Phaser.Scene {
             this.worldStore.setTargets(this.worldStore.enemies);
             break;
         }
-        this.worldStore.pushMenu(this.getConfirmMenu());
-        break;
-      case OptionType.TECHNIQUE:
-        const technique = option as Technique;
-        this.worldStore.setExecutable(technique);
-        this.worldStore.setTargets([this.worldStore.activeAlly]);
         this.worldStore.pushMenu(this.getConfirmMenu());
         break;
       case OptionType.FOLDER:
@@ -713,21 +713,25 @@ export class World extends Phaser.Scene {
     if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
     useApResources(caster, option.actionPointsCost);
 
-    const appliedTechniques = [];
+    const appliedTechniques: Technique[] = [];
     let castedTimeInMs = 0;
 
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
-      if (techniqueIsActive(caster, Techniques.adrenaline)) {
-        appliedTechniques.push(Techniques.buff);
+      
+      const attackTechniquesTargettingCaster: Technique[] = this.worldStore.getCombatants()
+        .reduce((prev, curr) => [...prev, ...curr.activeTechniques], [])
+        .filter(activeTechnique => activeTechnique.target.name === caster.name)
+        .filter(activeTechnique => ATTACK_TECHNIQUES.has(activeTechnique.technique.name))
+        .map(activeTechnique => activeTechnique.technique);
+
+      appliedTechniques.push(...attackTechniquesTargettingCaster);
+
+      if (techniqueIsApplied(caster, Techniques.adrenaline)) {
         castedTimeInMs = option.castTimeInMs / 2;
       }
-      if (techniqueIsActive(caster, Techniques.buff)) appliedTechniques.push(Techniques.buff);
-      if (techniqueIsActive(caster, Techniques.shadow)) appliedTechniques.push(Techniques.shadow);
-      if (techniqueIsActive(caster, Techniques.infuse)) appliedTechniques.push(Techniques.infuse);
-      if (techniqueIsActive(caster, Techniques.charged)) appliedTechniques.push(Techniques.charged);
 
       // need to figure out reciprocity... single target only actions? any action really... mm. it's never applied
-      // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);
+      // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);      
     }    
 
     caster.castingExecutable = {
@@ -740,3 +744,11 @@ export class World extends Phaser.Scene {
   //#endregion
 }
 
+const ATTACK_TECHNIQUES = new Set([
+  Techniques.adrenaline.name,
+  Techniques.buff.name,
+  Techniques.infuse.name,
+  Techniques.shadow.name,
+  Techniques.charged.name,
+  Techniques.nerf.name
+])

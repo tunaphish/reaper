@@ -94,3 +94,13 @@ export const adrenaline: Technique = {
   targetType: TargetType.SELF,
   soundKeyName: 'smirk'
 }
+
+export const nerf: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Nerf',
+  actionPointsCost: 1, 
+  castTimeInMs: 500, 
+  description: 'Weakens attacks',
+  targetType: TargetType.SINGLE_TARGET,
+  soundKeyName: 'smirk',
+}

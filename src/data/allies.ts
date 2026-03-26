@@ -7,8 +7,6 @@ import * as Techniques from './techniques';
 import * as Folders from './folders';
 import { OptionType } from '../model/option';
 
-
-
 const ejiFolder: Folder = {
   type: OptionType.FOLDER,
   name: 'Eji',

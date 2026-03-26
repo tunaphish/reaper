@@ -377,7 +377,8 @@ export class World extends Phaser.Scene {
       }
 
       case EventType.UPDATE_AP: {
-        updateActionPoints(caster, 1);
+        updateActionPoints(target, 1);
+        return;
       }
 
       case EventType.SHATTER_TECHNIQUE: {
@@ -641,10 +642,9 @@ export class World extends Phaser.Scene {
             if (this.firstActionNotTaken) this.firstActionNotTaken = false;
             if (action.name === "Splinter") this.splinterNotCasted = false;
 
-            // stagger here
             const events = action.events;
             if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
-            if (techniqueIsActive(combatant, Techniques.shadow)) {
+            if (techniqueIsActive(combatant, Techniques.shadow) && action.events.some(event => event.type === EventType.UPDATE_DAMAGE)) {
               const shadowEvents: Event[] = events
                 .map(event => {
                   const newEvent = structuredClone(toJS(event));
@@ -654,7 +654,6 @@ export class World extends Phaser.Scene {
                 }) 
               events.push(...shadowEvents);
             }
-
             const newEvents: QueuedEvent[] = events.map(event => ({
               event, 
               delayInMs: event.delayInMs || 300 + (idx*300),

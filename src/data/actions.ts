@@ -225,6 +225,21 @@ export const ambush: Action = {
   castingImageSrc:'/reaper/images/test.jpeg',
 };
 
+export const rally: Action = {
+  type: OptionType.ACTION,
+  name: 'Rally',
+  description: "AOE grant AP",
+  targetType: TargetType.AOE,
+  castTimeInMs: 300,
+
+  actionPointsCost: 3,
+
+  events: [
+    { type: EventType.SOUND, key: 'heal' },
+    { type: EventType.UPDATE_AP, value: 1 }
+  ],
+};
+
 // #endregion
 
 // #region cleric

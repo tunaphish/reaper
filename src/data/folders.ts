@@ -23,7 +23,7 @@ export const hunter: Folder = {
   name: 'Hunter',
   desc: 'Actions surrounding manipulation AP',
   type: OptionType.FOLDER,
-  options: [ Actions.ambush, Techniques.haste ]
+  options: [ Actions.ambush, Techniques.haste, Actions.rally ]
 }
 
 export const cleric: Folder = {

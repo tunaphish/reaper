@@ -20,6 +20,7 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
     <div className={classNames.container}>
+      <Description world={world} />
       <AnimatePresence>
         { world.worldStore.enemyJournalContent && <DisplayedEnemy enemy={world.worldStore.enemyJournalContent} />}
         { world.worldStore.systemsMenuOpen && <InfoView world={world} /> }
@@ -71,6 +72,24 @@ export const usePhaserDamagePopups = (
 
   return popups;
 }
+
+export const Description = observer(({world}: {world: World}) => {
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    padding: "5px",
+  } 
+
+  return (
+  <>
+    { world.worldStore.executable && 
+      <Window style={style}>{world.worldStore.executable.description}</Window>
+    }  
+  </>
+
+  )
+});
 
 export const EnemiesContainer = observer(({world}: {world: World}) => {
   return (

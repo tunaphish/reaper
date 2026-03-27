@@ -118,7 +118,6 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
               <img  src={props.combatant.combatPortraitSrc}></img>
               <div className={classNames.healthNumber}>{Math.trunc(props.combatant.health)}</div>
-              {props.combatant.type === OptionType.ALLY && <Streaks />}
             </div>
             <ActionBar combatant={props.combatant} />
         </div>

@@ -84,8 +84,8 @@ export class World extends Phaser.Scene {
     this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave, allies);
-    // this.worldStore.pushEnemies([enemies[0]]);
-    this.worldStore.pushEnemies(enemies);
+    this.worldStore.pushEnemies([enemies[0]]);
+    // this.worldStore.pushEnemies(enemies);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');

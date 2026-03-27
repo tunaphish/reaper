@@ -29,7 +29,7 @@ export const Eji: Ally = {
   status: Status.NORMAL,
   
   menuPortraitPath: '/reaper/images/cloud.png',
-  combatPortraitSrc: '/reaper/images/eji-ui.png',
+  combatPortraitSrc: '/reaper/ui/ally/omori-neutral.png',
 };
 
 
@@ -56,7 +56,7 @@ export const Keshi: Ally = {
   status: Status.NORMAL,
   
   menuPortraitPath: '/reaper/images/barret.png',
-  combatPortraitSrc: '/reaper/images/eji-ui.png',
+  combatPortraitSrc: '/reaper/ui/ally/kel-neutral.png',
 };
 
 const phiaFolder: Folder = {
@@ -82,7 +82,7 @@ export const Phia: Ally = {
   status: Status.NORMAL,
 
   menuPortraitPath: '/reaper/images/tifa.png',
-  combatPortraitSrc: '/reaper/images/eji-ui.png',
+  combatPortraitSrc: '/reaper/ui/ally/aubrey-neutral.png',
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Phia];

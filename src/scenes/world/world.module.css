@@ -280,7 +280,7 @@ overflow: hidden;
 }
 
 .healthMeter {
-  background: linear-gradient(to top, var(--paper-offwhite) 60%, transparent 100%);
+  background: linear-gradient(to top, var(--ink-black) 60%, transparent 100%);
 }
 
 .bleedMeter {
@@ -403,5 +403,29 @@ overflow: hidden;
   100% {
     opacity: 0;
     transform: translate(-50%, -40px) scale(1.2);
+  }
+}
+
+.streaksContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.streak {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, white, transparent);
+  animation-name: moveUp;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;  
+  filter: blur(0.5px);
+}
+
+@keyframes moveUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
   }
 }

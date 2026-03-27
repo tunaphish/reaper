@@ -118,6 +118,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
               <img  src={props.combatant.combatPortraitSrc}></img>
               <div className={classNames.healthNumber}>{Math.trunc(props.combatant.health)}</div>
+              {props.combatant.type === OptionType.ALLY && <Streaks />}
             </div>
             <ActionBar combatant={props.combatant} />
         </div>
@@ -128,6 +129,65 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
   )
 });
 
+export const Streaks = (): JSX.Element => {
+  const [streaks, setStreaks] = React.useState([]);
+
+  React.useEffect(() => {
+    const generated = Array.from({ length: 60 }).map(() => {
+      const levels = ["low", "medium", "high"] as const;
+      const intensity = levels[Math.floor(Math.random() * levels.length)];
+
+      let heightMod = 1,
+        speedMod = 1,
+        opacityMod = 1;
+
+      switch (intensity) {
+        case "low":
+          heightMod = 0.7;
+          speedMod = 0.7;
+          opacityMod = 0.5;
+          break;
+        case "medium":
+          heightMod = 1;
+          speedMod = 1;
+          opacityMod = 1;
+          break;
+        case "high":
+          heightMod = 1.5;
+          speedMod = 1.5;
+          opacityMod = 1.2;
+          break;
+      }
+
+      return {
+        left: Math.random() * 100,
+        height: (50 + Math.random() * 100) * heightMod,
+        duration: (0.5 + Math.random() * 1.5) / speedMod, // shorter = faster
+        opacity: Math.min(0.2 + Math.random() * 0.3 * opacityMod, 1),
+        intensity
+      };
+    });
+
+    setStreaks(generated);
+  }, []);
+
+  return (
+    <div className={classNames.streaksContainer}>
+      {streaks.map((s, i) => (
+        <div
+          key={i}
+          className={classNames.streak}
+          style={{
+            left: `${s.left}vw`,
+            height: `${s.height}px`,
+            animationDuration: `${s.duration}s`,
+            opacity: s.opacity
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export const TechniqueView = (props: {
   technique: Technique;

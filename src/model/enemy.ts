@@ -15,4 +15,5 @@ export type Enemy = Combatant & {
   type: OptionType.ENEMY;
   strategies: Strategy[];  
   selectedStrategyIndex: number;
+  combatPortraitSrc: string; 
 };

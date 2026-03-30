@@ -15,6 +15,7 @@ import { Ally } from '../../model/ally';
 import { Ticker } from './Ticker';
 import { MenuOptionsView } from './MenuOptionsView';
 import { getRandomInt } from '../../model/math';
+import { getStatus } from '../../model/combatant';
 
 export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
@@ -341,6 +342,8 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
   const isInEncounter = world.worldStore.windows.length > 0 || world.worldStore.contextAction;
 
+  const combatPortraitSrc = `/reaper/ui/ally/${ally.name}-${getStatus(ally)}.png`
+
   const onClick = () => {
     if (isInEncounter) {
       world.playChoiceDisabledSound();
@@ -354,13 +357,15 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
     <div className={classNames.allyViewWrapper}>
       <div className={classNames.allyViewInner} ref={ref}>
         <ResourceDisplayWrapper combatant={ally} world={world} onClickCell={onClick}>
-          <img src={ally.combatPortraitSrc}></img>
+          <img src={combatPortraitSrc}></img>
         </ResourceDisplayWrapper>
       </div>
+
       <div className={classNames.allyMenuOverlay}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}
         {ally.name === "Eji" && world.worldStore.contextAction && <ContextActionView world={world}  />}
       </div>
+      
       {popups.map((p) => (
         <div key={p.id} className={p.value > 0 ? classNames.damagePopup : classNames.healPopup}>
           {Math.abs(p.value)}

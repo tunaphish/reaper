@@ -4,7 +4,7 @@ import { Technique } from './technique';
 import { Executable } from './Executable';
 
 export enum Status {
-  NORMAL = 'NORMAL',
+  NEUTRAL = 'NEUTRAL',
   EXHAUSTED = 'EXHAUSTED',
   DEAD = 'DEAD',
 }
@@ -25,8 +25,6 @@ export type ActiveTechnique = {
 
 export type Combatant = Option & {
   type: OptionType;
-  combatPortraitSrc: string; // to be replaced.. player only resource display.. vs enemies included
-  // perhaps I'd wrap resource display and pass in a combat potrait source
 
   health: number;
   maxHealth: number;
@@ -46,7 +44,7 @@ export const getStatus = (combatant: Combatant): Status => {
   } else if (combatant.actionPoints <= 0) {
     return Status.EXHAUSTED;
   } 
-  return Status.NORMAL;
+  return Status.NEUTRAL;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {

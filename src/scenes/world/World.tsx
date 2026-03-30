@@ -568,7 +568,7 @@ export class World extends Phaser.Scene {
     if (!this.combatInitiated) return;
     
     const actionableEnemies = this.worldStore.enemies
-      .filter(enemy => getStatus(enemy) === Status.NORMAL)
+      .filter(enemy => getStatus(enemy) === Status.NEUTRAL)
       .filter(enemy => !enemy.castingExecutable)
 
     for (const enemy of actionableEnemies) {

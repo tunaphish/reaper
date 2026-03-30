@@ -16,20 +16,15 @@ const ejiFolder: Folder = {
 export const Eji: Ally = {
   type: OptionType.ALLY,
   name: 'Eji',
-  health: 100,
+  health: 10,
   maxHealth: 100,
-  bleed: 0,
-  actionPoints: 0,
+  bleed: 10,
+  actionPoints: -1,
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .13,
   folder: ejiFolder,
 
   activeTechniques: [],
-  
-  status: Status.NORMAL,
-  
-  menuPortraitPath: '/reaper/images/cloud.png',
-  combatPortraitSrc: '/reaper/ui/ally/omori-neutral.png',
 };
 
 
@@ -43,20 +38,16 @@ const keshiFolder: Folder = {
 export const Keshi: Ally = {
   type: OptionType.ALLY,
   name: 'Keshi',
-  health: 100,
+  health: 10,
   maxHealth: 100,
-  bleed: 0,
-  actionPoints: 0,
+  bleed: 10,
+  actionPoints: -1,
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .12,
   folder: keshiFolder,
 
   activeTechniques: [],
-  
-  status: Status.NORMAL,
-  
-  menuPortraitPath: '/reaper/images/barret.png',
-  combatPortraitSrc: '/reaper/ui/ally/kel-neutral.png',
+
 };
 
 const phiaFolder: Folder = {
@@ -69,20 +60,15 @@ const phiaFolder: Folder = {
 export const Phia: Ally = {
   type: OptionType.ALLY,
   name: 'Phia',
-  health: 100,
-  bleed: 0,
+  health: 10,
+  bleed: 10,
   maxHealth: 100,
-  actionPoints: 0,
+  actionPoints: -1,
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .08,
   folder: phiaFolder,
 
   activeTechniques: [],
-
-  status: Status.NORMAL,
-
-  menuPortraitPath: '/reaper/images/tifa.png',
-  combatPortraitSrc: '/reaper/ui/ally/aubrey-neutral.png',
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Phia];

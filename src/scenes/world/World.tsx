@@ -537,7 +537,14 @@ export class World extends Phaser.Scene {
         let damageTickRate = (delta / 1000) * 5;
         if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
         combatant.bleed -= damageTickRate;
-        combatant.health = Math.max(0, combatant.health - damageTickRate);
+
+        const newHealth = Math.max(0, combatant.health - damageTickRate);
+        if (newHealth === 0) {
+          combatant.actionPoints = 0;
+          combatant.activeTechniques = [];
+        }
+
+        combatant.health = newHealth;
       }
 
       if (combatant.castingExecutable) {
@@ -586,6 +593,7 @@ export class World extends Phaser.Scene {
 
   resetDeadAllyCasterMenu(): void {
     if (!this.worldStore.activeAlly || getStatus(this.worldStore?.activeAlly) !== Status.DEAD) return ;
+
     this.worldStore.setActiveAlly(null);
     this.worldStore.resetSelections();
     this.worldStore.closeMenus();

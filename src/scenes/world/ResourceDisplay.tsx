@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence } from 'framer-motion';
-import { Combatant, Status } from '../../model/combatant';
+import { Combatant, Status, techniqueIsViolated } from '../../model/combatant';
 import classNames from './world.module.css';
 import { Ally } from '../../model/ally';
 import { PanelWindow, Window } from './Window';
@@ -12,6 +12,7 @@ import { Technique } from '../../model/technique';
 import { OptionType } from '../../model/option';
 import { World } from './World';
 import { MenuCursor } from './MenuOptionsView';
+import clsx from 'clsx';
 
 export const Meter = (props: {
   value: number;
@@ -83,7 +84,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
         <img
           key={`tech-${i}`}
           src={activeTechnique.technique.iconSrc || "/reaper/ui/icons/attack.png"}
-          className={classNames.techniqueIcon}
+          className={clsx(classNames.techniqueIcon, activeTechnique.violated && classNames.stigma)}
         />
       ))}
       </div>
@@ -188,108 +189,84 @@ export const Streaks = (): JSX.Element => {
   );
 };
 
-export const TechniqueView = (props: {
-  technique: Technique;
-  delay: number;
-  world: World;
-  position: { x: number; y: number };
-}): JSX.Element => {
-  const { technique, world, delay, position } = props;
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (technique.soundKeyName) {
-        world.sound.play(technique.soundKeyName);
-      }
-    }, delay * 1000);
-
-    return () => clearTimeout(timeout);
-  }, [technique, world, delay]);
+export const TechniqueView = (props: {technique: Technique; position: { x: number; y: number }, combatant: Combatant;}): JSX.Element => {
+  const { technique, position, combatant } = props;
+  const color = techniqueIsViolated(combatant, technique) ? 'red' : '';
 
   const style: React.CSSProperties = {
     position: 'absolute',
     top: `${position.y}%`,
     left: `${position.x}%`,
     padding: '5px',
+    color
   };
 
-  return <Window style={style} delay={delay}>{technique.name}</Window>;
+  return <Window style={style}>{technique.name}</Window>;
 };
 
 const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) => {
   const { castingExecutable } = ally;
+  const techniques = castingExecutable?.appliedTechniques || [];
 
-  const positions = React.useMemo(() => {
-    return getNonOverlappingPositions(ally?.castingExecutable?.appliedTechniques?.length || 0);
-  }, [(ally?.castingExecutable?.appliedTechniques?.length || 0)]);
+  const positions = React.useMemo(() => getNonOverlappingPositions(techniques.length), [techniques.length]);
+  const [visibleCount, setVisibleCount] = React.useState(0);
 
-  if (!castingExecutable?.executable?.castingImageSrc) return null;
+  const baseDelay = 200; 
+  const castTimeMs = castingExecutable?.executable?.castTimeInMs ?? 0;
+  const stepMs = techniques.length > 0 
+    ? (castTimeMs * 0.8) / (techniques.length + 1)
+    : 0;
+
+  React.useEffect(() => {
+    if (!castingExecutable) return;
+
+    setVisibleCount(0);
+
+    const timers = techniques.map((technique, i) => {
+      return window.setTimeout(() => {
+        world.checkActionTechniqueConditionMet(ally, castingExecutable.targets, technique);
+        setVisibleCount(prev => prev + 1);
+      }, baseDelay + stepMs * (i + 1));
+    });
+
+    return () => timers.forEach(clearTimeout);
+  }, [castingExecutable, stepMs, baseDelay, techniques, world.sound]);
+
+  const castingImageSrc = castingExecutable?.executable?.castingImageSrc;
+  if (!castingImageSrc) return null;
 
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
     layout: { x: 10, y: -160, width: 120 },
-    layers: [{ src: castingExecutable.executable.castingImageSrc }]
+    layers: [{ src: castingImageSrc }]
   };
-
-  const baseDelay = 0.2;
-  const castTimeSec = (castingExecutable.executable.castTimeInMs ?? 0) / 1000;
-  const END_BUFFER_RATIO = 0.2;
-  const activeItemCount = ally.castingExecutable.appliedTechniques.length + 1;
-  const step = activeItemCount > 0 ? (castTimeSec * (1 - END_BUFFER_RATIO)) / activeItemCount : 0;
 
   return (
     <AnimatePresence>
-      <PanelWindow window={imageWindow} style={{ position: 'absolute' }}>
-        <Window
-          style={{ position: 'absolute', top: '-25px', left: '25px',fontSize: '18px' }}
-          delay={baseDelay}
-        >
+      <PanelWindow window={imageWindow} style={{ position: 'absolute', display: 'grid', gridTemplateColumns: "1fr", gridTemplateRows: "1fr" }}>
+        
+        <Window style={{ position: 'absolute', top: '-25px', left: '25px', fontSize: '18px' }} delay={baseDelay / 1000}>
           <TypewriterText textSpeed={TextSpeed.SLOW} line={[{ text: castingExecutable.executable.name }]} />
         </Window>
-        <ImageWindowContent imageWindow={imageWindow} />
-        {ally.castingExecutable.appliedTechniques.map((technique, index) => {
-          const position = positions[index];
 
-          return (
-            <TechniqueView
-              key={technique.name}
-              technique={technique}
-              delay={step * (index + 1)}
-              world={world}
-              position={position} 
-            />
-          );
-        })}
+        <div style={{ width: '100%', height: '100%', gridRow: 1, gridColumn: 1 }}>
+          <ImageWindowContent imageWindow={imageWindow} />
+        </div>
+        {castingExecutable.violated && <div className={classNames.violation}>VIOLATION</div>}
+        {techniques.slice(0, visibleCount).map((tech, i) => (
+          <TechniqueView key={tech.name} technique={tech} position={positions[i]} combatant={ally}/>
+        ))}
       </PanelWindow>
     </AnimatePresence>
   );
 });
 
-const getNonOverlappingPositions = (count: number) => {
-  type Position = { x: number; y: number };
-  const positions: Position[] = [];
-
-  for (let i = 0; i < count; i++) {
+const getNonOverlappingPositions = (count: number) =>
+  Array.from({ length: count }, () => {
     const border = Math.floor(Math.random() * 3);
-    let x = 0;
-    let y = 0;
-
-    switch (border) {
-      case 0:
-        x = 70;
-        y = Math.random() * 50 + 25;
-        break;
-      case 1:
-        x = 0;
-        y = Math.random() * 50 + 25;
-        break;
-      case 2:
-        x = Math.random() * 50 + 25;
-        y = 90;
-        break;
-    }
-
-    positions.push({ x, y });
-  }
-
-  return positions.sort(() => Math.random() - 0.5);
-};
+    return border === 0
+      ? { x: 70, y: Math.random() * 50 + 25 }
+      : border === 1
+      ? { x: 0, y: Math.random() * 50 + 25 }
+      : { x: Math.random() * 50 + 25, y: 90 };
+  }).sort(() => Math.random() - 0.5);

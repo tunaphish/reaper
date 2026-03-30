@@ -13,6 +13,6 @@ export type Technique = Option & {
   
   soundKeyName: string;
   iconSrc?: string;
-  conditionMet?: (world: World, caster: Combatant, target: Combatant) => boolean;
+  conditionMet?: (world: World, caster: Combatant, targets: Combatant[]) => boolean;
 
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from './world.module.css';
 import { Option, OptionType } from '../../model/option';
 import { Technique } from '../../model/technique';
-import { techniqueIsActive } from '../../model/combatant';
+import { getActiveTechnique } from '../../model/combatant';
 import { Ally } from '../../model/ally';
 
 export const actionMenuItem = (option: Option, ally: Ally): JSX.Element => {
@@ -10,7 +10,10 @@ export const actionMenuItem = (option: Option, ally: Ally): JSX.Element => {
 
     if (option.type === OptionType.TECHNIQUE) {
         const technique = option as Technique;
-        if (techniqueIsActive(ally, technique)) className = classNames.techniqueActive;
+        const activeTechnique = getActiveTechnique(ally, technique);
+        if (activeTechnique !== undefined) {
+          className = activeTechnique.violated ? classNames.stigmaText : classNames.techniqueActive;
+        }
     }
 
     return (

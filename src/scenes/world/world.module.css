@@ -176,6 +176,7 @@ overflow: hidden;
   display: grid;
   grid-template-columns: 1fr; 
   grid-template-rows: 1fr;
+  place-items: center;
 }
 
 .portraitContainer > * {
@@ -280,7 +281,7 @@ overflow: hidden;
 }
 
 .healthMeter {
-  background: linear-gradient(to top, var(--ink-black) 60%, transparent 100%);
+  background: linear-gradient(to top, var(--paper-offwhite) 60%, transparent 100%);
 }
 
 .bleedMeter {
@@ -351,6 +352,27 @@ overflow: hidden;
   width: 8px;
   height: 8px;
   object-fit: contain;
+}
+
+.stigma {
+  filter: hue-rotate(280deg) saturate(1.3) brightness(0.85);
+  animation: stigmaPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes stigmaPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.75;
+  }
+}
+
+.stigmaText {
+  color: #ff4d4d;
+  text-shadow: 0 0 6px rgba(255, 0, 0, 0.7);
 }
 
 .overflowToken {
@@ -428,4 +450,18 @@ overflow: hidden;
   to {
     transform: translateY(-100%);
   }
+}
+
+.violation {
+  background-color: var(--ink-black);
+  color: red;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  grid-row: 1;
+  grid-column: 1;
 }

@@ -14,11 +14,13 @@ export type CastingExecutable = {
   executable: Executable;
   castedTimeInMs: number;
   appliedTechniques: Technique[];
+  violated: boolean;
 }
 
 export type ActiveTechnique = {
   technique: Technique;
   target: Combatant;
+  violated: boolean;
 }
 
 
@@ -78,6 +80,10 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
 };
 
 export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === technique.name);
+
+export const getActiveTechnique = (combatant: Combatant, technique: Technique): ActiveTechnique => combatant.activeTechniques.find(activeTechnique => activeTechnique.technique.name === technique.name);
+
+export const techniqueIsViolated = (combatant: Combatant, technique: Technique): boolean => !!getActiveTechnique(combatant, technique)?.violated;
 
 export const techniqueIsApplied = (combatant: Combatant, technique: Technique): boolean => {
   if (!combatant.castingExecutable) return false;

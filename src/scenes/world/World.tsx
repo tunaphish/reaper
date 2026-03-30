@@ -18,7 +18,7 @@ import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTar
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, updateDamage, useApResources } from '../../model/combatant';
+import { Combatant, getActiveTechnique, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -93,36 +93,36 @@ export class World extends Phaser.Scene {
 
   create(): void {
     // Map
-    const map = this.make.tilemap({ key: this.mapData.tilemapKey });
-    const tileset = map.addTilesetImage(this.mapData.tilesetTiledKey, this.mapData.tilesetPhaserKey);
+    // const map = this.make.tilemap({ key: this.mapData.tilemapKey });
+    // const tileset = map.addTilesetImage(this.mapData.tilesetTiledKey, this.mapData.tilesetPhaserKey);
 
-    map.createLayer('Below Player', tileset, 0, 0);
-    const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
-    map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
+    // map.createLayer('Below Player', tileset, 0, 0);
+    // const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
+    // map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
 
-    const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
+    // const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
 
-    // Create Map Triggers
-    this.triggerGroup = this.physics.add.staticGroup()
-    // TODO: Update to pull trigger data from Tiled
-    // this.createEncounterTriggers(spawnPoint)
+    // // Create Map Triggers
+    // this.triggerGroup = this.physics.add.staticGroup()
+    // // TODO: Update to pull trigger data from Tiled
+    // // this.createEncounterTriggers(spawnPoint)
 
 
-    // Player
-    this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-    this.physics.add.collider(this.player, worldLayer);
-    this.cameras.main.startFollow(this.player);
+    // // Player
+    // this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+    // this.physics.add.collider(this.player, worldLayer);
+    // this.cameras.main.startFollow(this.player);
 
-    // Map Triggers
-    this.physics.add.overlap(
-      this.player,
-      this.triggerGroup,
-      this.onTriggerOverlap,
-      undefined,
-      this
-    )
+    // // Map Triggers
+    // this.physics.add.overlap(
+    //   this.player,
+    //   this.triggerGroup,
+    //   this.onTriggerOverlap,
+    //   undefined,
+    //   this
+    // )
 
-    this.cameras.main.fadeIn(1200);
+    // this.cameras.main.fadeIn(1200);
     if (this.mapData.musicKey) {
       this.music = this.sound.add(this.mapData.musicKey, {
         loop: true,  
@@ -135,8 +135,8 @@ export class World extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    this.player.update(time, delta);
-    this.onTriggerExit();
+    // this.player.update(time, delta);
+    // this.onTriggerExit();
 
     // combat
     this.tickStats(delta);
@@ -355,8 +355,9 @@ export class World extends Phaser.Scene {
 
       case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
-        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.buff.name)) {
-          value *= 1.33;
+        if (event.value > 0) {
+          const technique = (techniques || []).find(t => t.name === Techniques.buff.name);
+          if (technique) value *= techniqueIsViolated(caster, technique) ? .66 : 1.33
         }
 
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
@@ -371,7 +372,7 @@ export class World extends Phaser.Scene {
         if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.nerf.name)) {
           value *= .67;
         }
-
+        value = Math.floor(value);
         this.events.emit('updated-damage', { name: target.name, value });
         updateDamage(target, value);
 
@@ -478,6 +479,11 @@ export class World extends Phaser.Scene {
       case OptionType.ACTION:
       case OptionType.TECHNIQUE:
         const executable = option as Executable;
+        const activeTechnique = getActiveTechnique(this.worldStore.activeAlly, executable);
+        if (activeTechnique !== undefined && activeTechnique.violated) {
+          this.sound.play('restriction-violated');
+          return;
+        }
         this.worldStore.setExecutable(executable);
         switch (executable.targetType) {
           case TargetType.SELF:
@@ -624,14 +630,21 @@ export class World extends Phaser.Scene {
   executeCastedOptions(): void {
     this.worldStore.getCombatants().forEach(combatant => { 
       if (!combatant.castingExecutable) return;
+
       const { executable: option, targets, castedTimeInMs } = combatant.castingExecutable;
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
       if (castedTimeInMs < option.castTimeInMs) return;
-      
+
+      if (combatant.castingExecutable.violated){
+        combatant.castingExecutable = null;
+        if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
+        return;
+      }
+
       for (const [idx, target] of targets.entries()) {
         if (option.type === OptionType.TECHNIQUE) {
             const technique = option as Technique;
-            combatant.activeTechniques.push({technique, target});
+            combatant.activeTechniques.push({technique, target, violated: false});
             this.sound.play(technique.soundKeyName)
           }
 
@@ -665,7 +678,7 @@ export class World extends Phaser.Scene {
               delayInMs: event.delayInMs || 300 + (idx*300),
               target,
               caster: combatant,
-              techniques: structuredClone(toJS(combatant.castingExecutable.appliedTechniques)),
+              techniques: [...combatant.castingExecutable.appliedTechniques],
             }));
 
             this.queuedEvents.push(...newEvents);
@@ -739,8 +752,26 @@ export class World extends Phaser.Scene {
       targets,
       castedTimeInMs,
       appliedTechniques,
+      violated: false,
     }
   }
+
+  checkActionTechniqueConditionMet(caster: Combatant, targets: Combatant[], technique: Technique): void {
+    if (techniqueIsViolated(caster, technique)) {
+      this.sound.play('restriction-violated');
+      return;
+    }
+    if (caster.castingExecutable.violated) return;
+    if (technique.conditionMet && !technique.conditionMet(this, caster, targets)) {
+      this.sound.play('restriction-violated');
+      caster.castingExecutable.violated = true;
+      const activeTechnique = getActiveTechnique(caster, technique);
+      if (activeTechnique) activeTechnique.violated = true;
+      return;
+    }
+    this.sound.play(technique.soundKeyName);    
+  }
+
   //#endregion
 }
 

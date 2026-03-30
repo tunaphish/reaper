@@ -281,7 +281,7 @@ overflow: hidden;
 }
 
 .healthMeter {
-  background: linear-gradient(to top, var(--paper-offwhite) 60%, transparent 100%);
+  background: linear-gradient(to top, var(--paper-offwhite) 90%, transparent 100%);
 }
 
 .bleedMeter {

@@ -5,7 +5,7 @@ import classNames from './world.module.css';
 import { World } from './World';
 import { Menu } from './worldStore';
 import { observer } from 'mobx-react-lite';
-import { ResourceDisplay } from './ResourceDisplay';
+import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { TypewriterText } from './TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent, Window } from '.';
@@ -161,7 +161,9 @@ const EnemyView = observer(
     return (      
         <PanelWindow window={enemyImageWindow} >
           <div ref={ref}>
-            <ResourceDisplay combatant={enemy} world={world}/>
+            <ResourceDisplayWrapper combatant={enemy} world={world}>
+              <img src={enemy.combatPortraitSrc}></img>
+            </ResourceDisplayWrapper>
             <div>{enemy.castingExecutable?.executable?.name || enemy.strategies[enemy.selectedStrategyIndex].option.name}</div>
           </div>
           {popups.map((p) => (
@@ -351,7 +353,9 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   return (
     <div className={classNames.allyViewWrapper}>
       <div className={classNames.allyViewInner} ref={ref}>
-        <ResourceDisplay combatant={ally} onClickCell={onClick} world={world}/>
+        <ResourceDisplayWrapper combatant={ally} world={world} onClickCell={onClick}>
+          <img src={ally.combatPortraitSrc}></img>
+        </ResourceDisplayWrapper>
       </div>
       <div className={classNames.allyMenuOverlay}>
         {ally.name === world.worldStore.activeAlly?.name && <MenuStack world={world} />}

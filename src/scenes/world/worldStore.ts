@@ -4,7 +4,7 @@ import { ContextAction, Window } from "../../model/encounter";
 import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant } from "../../model/combatant";
-import { Executable } from "./Executable";
+import { Executable } from "../../model/Executable";
 
 export type MenuOption = {
   display: () => JSX.Element;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence } from 'framer-motion';
-import { Combatant, getStatus, Status, techniqueIsViolated } from '../../model/combatant';
+import { Combatant, techniqueIsViolated } from '../../model/combatant';
 import classNames from './world.module.css';
 import { Ally } from '../../model/ally';
 import { PanelWindow, Window } from './Window';
@@ -94,16 +94,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCell?: () => void, world: World}) => {
-  const statusToStylesMap = {
-    [Status.NORMAL]: '',
-    [Status.DEAD]: classNames.DEAD,
-    [Status.EXHAUSTED]: classNames.EXHAUSTED,
-  };
-  const className = [
-    classNames.window,
-    statusToStylesMap[getStatus(props.combatant)],
-  ];
+export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World}) => {
 
   const onClick = () => {
     props.world.selectTarget(props.combatant);
@@ -111,21 +102,20 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
   
   return (
     <>
-      <div className={className.join(' ')} onClick={props.onClickCell || onClick}>
+      <Window onClick={props.onClickCell || onClick}>
           <div className={classNames.characterCellContainer} >
             { props.world.worldStore?.targets?.some(target => target.name === props.combatant.name) && <MenuCursor size={48}/>}
             <div className={classNames.portraitContainer } >
               <Meter vertical value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
-              <img  src={props.combatant.combatPortraitSrc}></img>
+              {props.children}
               <div className={classNames.healthNumber}>{Math.trunc(props.combatant.health)}</div>
             </div>
             <ActionBar combatant={props.combatant} />
         </div>
-      </div>
+      </Window>
       {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as Ally} world={props.world} />}
     </>
-
   )
 });
 

@@ -141,7 +141,7 @@ export class World extends Phaser.Scene {
     // combat
     this.tickStats(delta);
 
-    this.checkBattleEndConditions();
+    this.checkBattleEndConditions(); 
     this.resetDeadAllyCasterMenu();
 
     if (TESTING_COMBAT) this.executeEnemyStrategies();

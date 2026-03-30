@@ -23,7 +23,6 @@ export type ActiveTechnique = {
   violated: boolean;
 }
 
-
 export type Combatant = Option & {
   type: OptionType;
   combatPortraitSrc: string; // to be replaced.. player only resource display.. vs enemies included

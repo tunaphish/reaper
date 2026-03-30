@@ -26,6 +26,8 @@ export type ActiveTechnique = {
 
 export type Combatant = Option & {
   type: OptionType;
+  combatPortraitSrc: string; // to be replaced.. player only resource display.. vs enemies included
+  // perhaps I'd wrap resource display and pass in a combat potrait source
 
   health: number;
   maxHealth: number;
@@ -36,11 +38,16 @@ export type Combatant = Option & {
   actionPointsRegenRatePerSecond: number; 
 
   activeTechniques: ActiveTechnique[];
-  status: Status;
-
   castingExecutable?: CastingExecutable
+}
 
-  combatPortraitSrc: string;
+export const getStatus = (combatant: Combatant): Status => {
+  if (combatant.health <= 0) {
+    return Status.DEAD;
+  } else if (combatant.actionPoints <= 0) {
+    return Status.EXHAUSTED;
+  } 
+  return Status.NORMAL;
 }
 
 export const updateHealth = (target: Combatant, change: number): void => {
@@ -56,7 +63,7 @@ export const updateBleed = (target: Combatant, change: number): void => {
 };
 
 export const updateDamage = (target: Combatant, change: number): void => {
-  if (target.status === Status.EXHAUSTED) {
+  if (getStatus(target) === Status.EXHAUSTED) {
     change *= 2;
   }  
   if (change < 0) {

@@ -1,5 +1,5 @@
 import { Enemy } from '../model/enemy';
-import { Combatant, Status, techniqueIsActive } from '../model/combatant';
+import { Combatant, getStatus, Status, techniqueIsActive } from '../model/combatant';
 import { OptionType } from '../model/option';
 
 import * as Actions from './actions';
@@ -9,7 +9,7 @@ import { World } from '../scenes/world/World';
 import { Action } from '../model/action';
 
 
-const isAlive = (target: Combatant) => target.status !== Status.DEAD;
+const isAlive = (target: Combatant) => getStatus(target) !== Status.DEAD;
 const hasTechnique = (combatant => combatant.activeTechniques.length > 0);
 
 const randomTarget = (potentialTargets: Combatant[]): Combatant[] => {
@@ -43,7 +43,6 @@ export const fencer: Enemy = {
   health: 200,
   maxHealth: 200,
   bleed: 0,
-  status: Status.NORMAL,
   actionPoints: 0,
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .20,
@@ -130,7 +129,6 @@ export const knight: Enemy = {
     },
   ],
   selectedStrategyIndex: 0,
-  status: Status.NORMAL,
 
   activeTechniques: [],
 };

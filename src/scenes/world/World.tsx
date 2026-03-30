@@ -18,7 +18,7 @@ import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTar
 import { enemies } from '../../data/enemies';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, getActiveTechnique, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
+import { Combatant, getActiveTechnique, getStatus, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
 import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
@@ -140,7 +140,6 @@ export class World extends Phaser.Scene {
 
     // combat
     this.tickStats(delta);
-    this.updateCombatantsState();
 
     this.checkBattleEndConditions();
     this.resetDeadAllyCasterMenu();
@@ -426,7 +425,7 @@ export class World extends Phaser.Scene {
 
         // Could probably just flip this
         const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
-        if (CANNOT_OPEN_STATUS.includes(ally.status) || ally.castingExecutable) {
+        if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
           this.sound.play('stamina-depleted');
           return;
         }
@@ -533,7 +532,7 @@ export class World extends Phaser.Scene {
   //#region combat
   tickStats(delta: number): void {
     this.worldStore.getCombatants().forEach((combatant) => {
-      if (combatant.status === Status.DEAD) return;
+      if (getStatus(combatant) === Status.DEAD) return;
       if (combatant.bleed > 0) {
         let damageTickRate = (delta / 1000) * 5;
         if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
@@ -565,25 +564,11 @@ export class World extends Phaser.Scene {
     });
   }
 
-  updateCombatantsState(): void {
-    this.worldStore.getCombatants().forEach((combatant) => {
-      if (combatant.health <= 0) {
-        combatant.status = Status.DEAD;
-        combatant.actionPoints = 0;
-        combatant.activeTechniques = [];
-      } else if (combatant.actionPoints <= 0) {
-        combatant.status = Status.EXHAUSTED;
-      } else {
-        combatant.status = Status.NORMAL;
-      }
-    });
-  }
-
   executeEnemyStrategies(): void {
     if (!this.combatInitiated) return;
     
     const actionableEnemies = this.worldStore.enemies
-      .filter(enemy => enemy.status === Status.NORMAL)
+      .filter(enemy => getStatus(enemy) === Status.NORMAL)
       .filter(enemy => !enemy.castingExecutable)
 
     for (const enemy of actionableEnemies) {
@@ -600,17 +585,17 @@ export class World extends Phaser.Scene {
   }
 
   resetDeadAllyCasterMenu(): void {
-    if (!this.worldStore.activeAlly || this.worldStore?.activeAlly.status !== Status.DEAD) return ;
+    if (!this.worldStore.activeAlly || getStatus(this.worldStore?.activeAlly) !== Status.DEAD) return ;
     this.worldStore.setActiveAlly(null);
     this.worldStore.resetSelections();
     this.worldStore.closeMenus();
   }
 
   checkBattleEndConditions(): void {
-    if (this.worldStore.allies.every((member) => member.status === Status.DEAD)) {
+    if (this.worldStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
       console.log('lose')
     }
-    if (this.worldStore.enemies.every((enemy) => enemy.status === Status.DEAD)) {
+    if (this.worldStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
       console.log('win')
     }
   }

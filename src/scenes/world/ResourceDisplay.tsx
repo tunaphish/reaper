@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence } from 'framer-motion';
-import { Combatant, Status, techniqueIsViolated } from '../../model/combatant';
+import { Combatant, getStatus, Status, techniqueIsViolated } from '../../model/combatant';
 import classNames from './world.module.css';
 import { Ally } from '../../model/ally';
 import { PanelWindow, Window } from './Window';
@@ -102,7 +102,7 @@ export const ResourceDisplay = observer((props: {combatant: Combatant, onClickCe
   };
   const className = [
     classNames.window,
-    statusToStylesMap[props.combatant.status],
+    statusToStylesMap[getStatus(props.combatant)],
   ];
 
   const onClick = () => {

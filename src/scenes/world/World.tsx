@@ -67,7 +67,7 @@ export class World extends Phaser.Scene {
   queuedEvents: QueuedEvent[] = [];
 
   // combat
-  combatInitiated = true;
+  combatInitiated = false;
   splinterNotCasted = true;
   firstActionNotTaken = true;
 
@@ -84,8 +84,6 @@ export class World extends Phaser.Scene {
     this.mapData = DEBUG_MAP_DATA;
     
     this.worldStore = new WorldStore(playerSave, allies);
-    this.worldStore.pushEnemies([enemies[0]]);
-    // this.worldStore.pushEnemies(enemies);
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
@@ -93,36 +91,37 @@ export class World extends Phaser.Scene {
 
   create(): void {
     // Map
-    // const map = this.make.tilemap({ key: this.mapData.tilemapKey });
-    // const tileset = map.addTilesetImage(this.mapData.tilesetTiledKey, this.mapData.tilesetPhaserKey);
+    const map = this.make.tilemap({ key: this.mapData.tilemapKey });
+    const tileset = map.addTilesetImage(this.mapData.tilesetTiledKey, this.mapData.tilesetPhaserKey);
 
-    // map.createLayer('Below Player', tileset, 0, 0);
-    // const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
-    // map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
-
-    // const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
-
-    // // Create Map Triggers
-    // this.triggerGroup = this.physics.add.staticGroup()
-    // // TODO: Update to pull trigger data from Tiled
-    // // this.createEncounterTriggers(spawnPoint)
+    map.createLayer('Below Player', tileset, 0, 0);
+    const worldLayer = map.createLayer('World', tileset, 0, 0).setCollisionByProperty({ collides: true });
+    map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
 
 
-    // // Player
-    // this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-    // this.physics.add.collider(this.player, worldLayer);
-    // this.cameras.main.startFollow(this.player);
+    // TEMP STUFF
+    // Create Map Triggers
+    this.triggerGroup = this.physics.add.staticGroup()
+    // TODO: Update to pull trigger data from Tiled
+    const spawnPoint: Phaser.Types.Tilemaps.TiledObject = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
+    this.createEncounterTriggers(spawnPoint)
 
-    // // Map Triggers
-    // this.physics.add.overlap(
-    //   this.player,
-    //   this.triggerGroup,
-    //   this.onTriggerOverlap,
-    //   undefined,
-    //   this
-    // )
 
-    // this.cameras.main.fadeIn(1200);
+    // Player
+    this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+    this.physics.add.collider(this.player, worldLayer);
+    this.cameras.main.startFollow(this.player);
+
+    // Map Triggers
+    this.physics.add.overlap(
+      this.player,
+      this.triggerGroup,
+      this.onTriggerOverlap,
+      undefined,
+      this
+    )
+
+    this.cameras.main.fadeIn(1200);
     if (this.mapData.musicKey) {
       this.music = this.sound.add(this.mapData.musicKey, {
         loop: true,  
@@ -135,8 +134,8 @@ export class World extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    // this.player.update(time, delta);
-    // this.onTriggerExit();
+    this.player.update(time, delta);
+    this.onTriggerExit();
 
     // combat
     this.tickStats(delta);
@@ -166,7 +165,7 @@ export class World extends Phaser.Scene {
         triggerId: 'example_trigger_id',
         encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
         x: spawnPoint.x,
-        y: spawnPoint.y,
+        y: spawnPoint.y - 48,
         width: 48,
         height: 48
       }
@@ -600,6 +599,7 @@ export class World extends Phaser.Scene {
   }
 
   checkBattleEndConditions(): void {
+    if (!this.combatInitiated) return;
     if (this.worldStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
       console.log('lose')
     }

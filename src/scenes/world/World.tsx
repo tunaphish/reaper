@@ -33,6 +33,7 @@ import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
 import { actionMenuItem } from './CombatMenus';
 import { Executable } from '../../model/Executable';
+import VirtualJoystick from './player/VirtualJoystick';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -52,6 +53,8 @@ type QueuedEvent = {
 
 export class World extends Phaser.Scene {
   private player: Player;
+  private joystick: VirtualJoystick;
+
   reactOverlay: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
   mapData: MapData;
@@ -109,6 +112,7 @@ export class World extends Phaser.Scene {
 
     // Player
     this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+    this.joystick = new VirtualJoystick(this);
     this.physics.add.collider(this.player, worldLayer);
     this.cameras.main.startFollow(this.player);
 
@@ -134,7 +138,8 @@ export class World extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    this.player.update(time, delta);
+    this.player.setInput(this.joystick.vector.x, this.joystick.vector.y);
+    this.player.update();
     this.onTriggerExit();
     this.processQueuedEvents(delta);
 

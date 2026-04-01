@@ -136,17 +136,14 @@ export class World extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.player.update(time, delta);
     this.onTriggerExit();
+    this.processQueuedEvents(delta);
 
-    // combat
+    if (!this.combatInitiated) return;
     this.tickStats(delta);
-
     this.checkBattleEndConditions(); 
     this.resetDeadAllyCasterMenu();
-
-    if (TESTING_COMBAT) this.executeEnemyStrategies();
-    
     this.executeCastedOptions();
-    this.processQueuedEvents(delta);
+    if (TESTING_COMBAT) this.executeEnemyStrategies();
   }
 
 
@@ -570,9 +567,7 @@ export class World extends Phaser.Scene {
     });
   }
 
-  executeEnemyStrategies(): void {
-    if (!this.combatInitiated) return;
-    
+  executeEnemyStrategies(): void {    
     const actionableEnemies = this.worldStore.enemies
       .filter(enemy => getStatus(enemy) === Status.NEUTRAL)
       .filter(enemy => !enemy.castingExecutable)
@@ -599,7 +594,6 @@ export class World extends Phaser.Scene {
   }
 
   checkBattleEndConditions(): void {
-    if (!this.combatInitiated) return;
     if (this.worldStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
       console.log('lose')
     }

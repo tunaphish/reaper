@@ -73,6 +73,7 @@ export class Boot extends Phaser.Scene {
     this.load.image('slime', '/reaper/ui/slime.png');
     this.load.image('main-menu', '/reaper/backgrounds/main-menu.png');
 
+    this.load.audio('battle-start', '/reaper/sounds/battle-start.mp3');
     this.load.audio('action-ready', '/reaper/sounds/action-ready.mp3');
     this.load.audio('choice-hover', '/reaper/sounds/choice-hover.wav');
     this.load.audio('choice-select', '/reaper/sounds/choice-select.wav');
@@ -94,6 +95,6 @@ export class Boot extends Phaser.Scene {
 
     this.load.audio('main-menu-music', '/reaper/music/isolate.exe.mp3');
     this.load.audio('knight', '/reaper/music/knight.mp3');
-    this.load.audio('resonance', '/reaper/music/resonance.mp3');
+    this.load.audio('debug-field', '/reaper/music/palace.mp3');
   }
 }

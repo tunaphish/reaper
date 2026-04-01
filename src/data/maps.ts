@@ -4,6 +4,6 @@ export const DEBUG_MAP_DATA: MapData = {
     tilemapKey: "map",
     tilesetTiledKey: "tuxmon-sample-32px-extruded",
     tilesetPhaserKey: "tiles",
-    musicKey: "knight",
+    musicKey: "debug-field",
     locationName: "Debug Map",
 }

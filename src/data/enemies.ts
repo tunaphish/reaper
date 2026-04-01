@@ -40,7 +40,7 @@ export const fencer: Enemy = {
   journalDescription: 'Debug Enemy meant to use specialized attacks',
   combatPortraitSrc: '/reaper/images/fencer-test.png',
 
-  health: 200,
+  health: 10,
   maxHealth: 200,
   bleed: 0,
   actionPoints: 0,

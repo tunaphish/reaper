@@ -1,8 +1,7 @@
-const TESTING_COMBAT = false;
 
 import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
-import Player from './player/Player';
+import Player from './objects/Player';
 import { WorldView } from './WorldView';
 
 import { Allies, Ally } from '../../model/ally';
@@ -33,7 +32,8 @@ import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
 import { actionMenuItem } from './CombatMenus';
 import { Executable } from '../../model/Executable';
-import VirtualJoystick from './player/VirtualJoystick';
+import VirtualJoystick from './objects/VirtualJoystick';
+import FieldEnemy from './objects/FieldEnemy';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -54,9 +54,11 @@ type QueuedEvent = {
 export class World extends Phaser.Scene {
   private player: Player;
   private joystick: VirtualJoystick;
+  private fieldEnemies: FieldEnemy[] = [];
 
   reactOverlay: ReactOverlay;
-  private music: Phaser.Sound.BaseSound;
+  private fieldMusic: Phaser.Sound.BaseSound;
+  private battleMusic: Phaser.Sound.BaseSound;
   mapData: MapData;
   triggerGroup!: Phaser.Physics.Arcade.StaticGroup
 
@@ -69,8 +71,8 @@ export class World extends Phaser.Scene {
 
   queuedEvents: QueuedEvent[] = [];
 
-  // combat
-  combatInitiated = false;
+  // battle
+  battleInitiated = false;
   splinterNotCasted = true;
   firstActionNotTaken = true;
 
@@ -107,8 +109,10 @@ export class World extends Phaser.Scene {
     this.triggerGroup = this.physics.add.staticGroup()
     // TODO: Update to pull trigger data from Tiled
     const spawnPoint: Phaser.Types.Tilemaps.TiledObject = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
-    this.createEncounterTriggers(spawnPoint)
-
+    // this.createEncounterTriggers(spawnPoint)
+    for (let i=0; i<1; i++) {
+      this.fieldEnemies.push(new FieldEnemy(this, spawnPoint.x, spawnPoint.y-48));
+    }
 
     // Player
     this.player = new Player(this, spawnPoint.x, spawnPoint.y);
@@ -125,14 +129,27 @@ export class World extends Phaser.Scene {
       this
     )
 
+    this.physics.add.overlap(
+      this.player,
+      this.fieldEnemies,
+      this.onFieldEnemyOverlap,
+      undefined,
+      this
+    )
+
     this.cameras.main.fadeIn(1200);
     if (this.mapData.musicKey) {
-      this.music = this.sound.add(this.mapData.musicKey, {
+      this.fieldMusic = this.sound.add(this.mapData.musicKey, {
         loop: true,  
         volume: 0.2  
       });
-      if (TESTING_COMBAT) this.music.play();
+      this.fieldMusic.play();
     }
+
+    this.battleMusic = this.sound.add("knight", {
+      loop: true,  
+      volume: 0.2  
+    });
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
   }
@@ -143,12 +160,12 @@ export class World extends Phaser.Scene {
     this.onTriggerExit();
     this.processQueuedEvents(delta);
 
-    if (!this.combatInitiated) return;
+    if (!this.battleInitiated) return;
     this.tickStats(delta);
     this.checkBattleEndConditions(); 
     this.resetDeadAllyCasterMenu();
     this.executeCastedOptions();
-    if (TESTING_COMBAT) this.executeEnemyStrategies();
+    this.executeEnemyStrategies();
   }
 
 
@@ -202,6 +219,21 @@ export class World extends Phaser.Scene {
     const encounter: Encounter  = zone.getData("encounter");
     this.addQueuedEvents(encounter.events);
   } 
+
+  onFieldEnemyOverlap(player: Player, enemy: FieldEnemy): void {
+    if (enemy.inBattle) return;
+    enemy.inBattle = true;
+    this.worldStore.enemies.push(enemies[0]);
+
+    if (this.battleInitiated) return;
+    this.fadeMusic(this.fieldMusic);
+    this.battleInitiated = true;
+    this.sound.play('battle-start');
+       
+    this.time.delayedCall(1000, () => {
+        this.battleMusic.play({ volume: 0.2 });
+    });
+  }
 
   onTriggerExit(): void {
     this.triggerGroup.children.iterate(zone => {
@@ -331,18 +363,18 @@ export class World extends Phaser.Scene {
         const soundEvent = event as SoundEvent;
 
         if (soundEvent.loop) {
-          if (this.music.key === soundEvent.key) return;
+          if (this.fieldMusic.key === soundEvent.key) return;
 
-          if (this.music.isPlaying) {
-            this.music.stop();
+          if (this.fieldMusic.isPlaying) {
+            this.fieldMusic.stop();
           }
 
-          this.music = this.sound.add(soundEvent.key, {
+          this.fieldMusic = this.sound.add(soundEvent.key, {
             loop: true,
             volume: 0.5,
           });
 
-          this.music.play();
+          this.fieldMusic.play();
           return;
         }
 
@@ -414,10 +446,10 @@ export class World extends Phaser.Scene {
     }
   }
 
-  //#region combat input
+  //#region battle input
   setAlly = (ally: Ally): void => {
     this.playChoiceSelectSound();
-    if (this.combatInitiated) {
+    if (this.battleInitiated) {
 
       if (this.worldStore.executable) {
           this.selectTarget(ally);
@@ -539,6 +571,7 @@ export class World extends Phaser.Scene {
         if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
         combatant.bleed -= damageTickRate;
 
+        // TOD: extract 
         const newHealth = Math.max(0, combatant.health - damageTickRate);
         if (newHealth === 0) {
           combatant.actionPoints = 0;
@@ -563,6 +596,8 @@ export class World extends Phaser.Scene {
         (delta / 1000) ;
 
       const newActionPoints = combatant.actionPoints + regenPerTick;
+
+      // TOD: extract 
       if (newActionPoints > combatant.maxActionPoints) {
         this.sound.play('action-ready', { volume: .5 });
         combatant.actionPoints = combatant.maxActionPoints;
@@ -599,11 +634,28 @@ export class World extends Phaser.Scene {
   }
 
   checkBattleEndConditions(): void {
+    this.worldStore.enemies = this.worldStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
+
     if (this.worldStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
-      console.log('lose')
+      this.fadeMusic(this.battleMusic);
     }
+
+    //win
     if (this.worldStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
-      console.log('win')
+      this.fadeMusic(this.battleMusic);
+      this.battleInitiated = false;
+      for (const ally of this.worldStore.allies) {
+        ally.bleed = 0;
+        ally.activeTechniques = [];
+        ally.actionPoints = 0;
+      }
+
+      this.fieldMusic.resume();       
+      this.tweens.add({
+          targets: this.fieldMusic,
+          volume: .2,       
+          duration: 1000,  
+      });
     }
   }
 
@@ -762,6 +814,19 @@ export class World extends Phaser.Scene {
       return;
     }
     this.sound.play(technique.soundKeyName);    
+  }
+
+  fadeMusic(music: Phaser.Sound.BaseSound): void {
+    if (!music.isPlaying) return;
+    
+    this.tweens.add({
+      targets: music,
+      volume: 0,            
+      duration: 1000,       
+      onComplete: () => {
+        music.pause();   
+      }
+    });
   }
 
   //#endregion

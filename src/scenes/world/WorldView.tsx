@@ -29,10 +29,19 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
       <EnemiesContainer world={world} />
       <EncounterContainer world={world} />
       <AllyBarView world={world} />
+      <StartBar world={world}/>
     </div>
 )
 });
 
+
+export const StartBar = observer(({world}: {world: World}) => {
+  return (
+    <Window onClick={() => world.openSystemsMenu()}>
+      start
+    </Window>
+  )
+});
 
 //#region Combat
 
@@ -336,7 +345,7 @@ const MenuStack = observer((props: { world: World }): JSX.Element => {
 
 
 const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JSX.Element => {
-  const { world, ally } = props;
+  const { world, ally, idx } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const popups = usePhaserDamagePopups(world, ref, ally.name);
 
@@ -356,7 +365,7 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
   return (
     <div className={classNames.allyViewWrapper}>
       <div className={classNames.allyViewInner} ref={ref}>
-        <ResourceDisplayWrapper combatant={ally} world={world} onClickCell={onClick}>
+        <ResourceDisplayWrapper combatant={ally} world={world} onClickCell={onClick} idx={idx}>
           <img src={combatPortraitSrc}></img>
         </ResourceDisplayWrapper>
       </div>
@@ -379,7 +388,10 @@ const AllyView = observer((props: { world: World, ally: Ally, idx: number }): JS
 
 const AllyBarView = observer((props: { world: World }): JSX.Element => (
   <div className={classNames.allyBar}>
-    {props.world.worldStore.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
+    <AnimatePresence>
+      {props.world.worldStore.battleInitiated && props.world.worldStore.allies.map((ally,i) => <AllyView world={props.world} ally={ally} key={ally.name} idx={i}/>)}
+    </AnimatePresence>
+    
   </div>
 ));
 

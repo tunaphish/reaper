@@ -94,7 +94,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World}) => {
+export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World, idx: number}) => {
 
   const onClick = () => {
     props.world.selectTarget(props.combatant);
@@ -102,7 +102,7 @@ export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, ch
   
   return (
     <>
-      <Window onClick={props.onClickCell || onClick}>
+      <Window onClick={props.onClickCell || onClick} delay={(props.idx || 0) * .15 + .3}>
           <div className={classNames.characterCellContainer} >
             { props.world.worldStore?.targets?.some(target => target.name === props.combatant.name) && <MenuCursor size={48}/>}
             <div className={classNames.portraitContainer } >

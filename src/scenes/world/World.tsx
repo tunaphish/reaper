@@ -72,7 +72,6 @@ export class World extends Phaser.Scene {
   queuedEvents: QueuedEvent[] = [];
 
   // battle
-  battleInitiated = false;
   splinterNotCasted = true;
   firstActionNotTaken = true;
 
@@ -160,7 +159,7 @@ export class World extends Phaser.Scene {
     this.onTriggerExit();
     this.processQueuedEvents(delta);
 
-    if (!this.battleInitiated) return;
+    if (!this.worldStore.battleInitiated) return;
     this.tickStats(delta);
     this.checkBattleEndConditions(); 
     this.resetDeadAllyCasterMenu();
@@ -225,9 +224,9 @@ export class World extends Phaser.Scene {
     enemy.inBattle = true;
     this.worldStore.enemies.push(enemies[0]);
 
-    if (this.battleInitiated) return;
+    if (this.worldStore.battleInitiated) return;
     this.fadeMusic(this.fieldMusic);
-    this.battleInitiated = true;
+    this.worldStore.battleInitiated = true;
     this.sound.play('battle-start');
        
     this.time.delayedCall(1000, () => {
@@ -449,29 +448,24 @@ export class World extends Phaser.Scene {
   //#region battle input
   setAlly = (ally: Ally): void => {
     this.playChoiceSelectSound();
-    if (this.battleInitiated) {
 
-      if (this.worldStore.executable) {
-          this.selectTarget(ally);
-          return;
-        }
-
-        // Could probably just flip this
-        const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
-        if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
-          this.sound.play('stamina-depleted');
-          return;
-        }
-
-        this.worldStore.closeMenus();
-        this.sound.play('choice-select');
-        this.worldStore.setActiveAlly(ally);
-        this.events.emit('caster-set', ally);
-        this.worldStore.pushMenu(this.getCombatMenu(ally.folder, ally.name));
-    } else {
-      const systemMenu = this.getSystemMenu();
-      this.worldStore.pushMenu(systemMenu);
+    if (this.worldStore.executable) {
+      this.selectTarget(ally);
+      return;
     }
+
+    // Could probably just flip this
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
+    if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
+      this.sound.play('stamina-depleted');
+      return;
+    }
+
+    this.worldStore.closeMenus();
+    this.sound.play('choice-select');
+    this.worldStore.setActiveAlly(ally);
+    this.events.emit('caster-set', ally);
+    this.worldStore.pushMenu(this.getCombatMenu(ally.folder, ally.name));
 
     this.worldStore.setActiveAlly(ally);
   }
@@ -643,7 +637,7 @@ export class World extends Phaser.Scene {
     //win
     if (this.worldStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
       this.fadeMusic(this.battleMusic);
-      this.battleInitiated = false;
+      this.worldStore.battleInitiated = false;
       for (const ally of this.worldStore.allies) {
         ally.bleed = 0;
         ally.activeTechniques = [];
@@ -830,6 +824,16 @@ export class World extends Phaser.Scene {
   }
 
   //#endregion
+
+  openSystemsMenu(): void {
+    if (this.worldStore.battleInitiated) {
+      this.playChoiceDisabledSound();
+      return;
+    }
+    this.playChoiceSelectSound();
+    const systemMenu = this.getSystemMenu();
+    this.worldStore.pushMenu(systemMenu);
+  }
 }
 
 const ATTACK_TECHNIQUES = new Set([

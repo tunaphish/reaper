@@ -30,6 +30,7 @@ export class WorldStore {
   systemsMenuOpen = false;
 
   // Combat
+  battleInitiated = false;
   enemies: Enemy[] = [];
   allies: Allies;
 
@@ -109,5 +110,9 @@ export class WorldStore {
 
   pushEnemies(enemies: Enemy[]): void {
     this.enemies.push(...enemies);
+  }
+
+  setBattleIniated(battleInitiated: boolean): void {
+    this.battleInitiated = battleInitiated;
   }
 }

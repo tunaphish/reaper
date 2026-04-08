@@ -1,0 +1,70 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+
+    height: 100%;
+    width: 100%;
+    pointer-events: none !important;
+}
+
+.container > * {
+    pointer-events: auto;
+}
+
+.menuContainer {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 10px;
+}
+
+.windowTitleBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+  background: var(--paper-offwhite);
+  color: var(--dust-gray);
+}
+
+.menuTitleText {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.infoViewWrapper {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+
+.ticker {
+overflow: hidden;
+  white-space: nowrap;
+}
+
+.tickerTrack {
+  display: inline-flex;
+  animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+.menuStackContainer {
+  position: absolute;
+  bottom: 100px;
+  right: 150px;
+}

@@ -278,70 +278,6 @@ export class World extends Phaser.Scene {
     this.worldStore.closeWindows();
     this.addQueuedEvents(encounter.events);
   }
-
-  getSystemMenu(): Menu {
-    const getDisplayedEnemies = (enemies: Enemy[], seenEnemies: SeenEnemy[]): Enemy[] => {
-      const seenMap = new Map(seenEnemies.map(se => [se.enemyName, se.seenAt]));
-
-      return enemies
-        .filter(enemy => seenMap.has(enemy.name))
-        .sort((a, b) => seenMap.get(b.name) - seenMap.get(a.name));
-    }
-    const enemyJournalMenuOptions: MenuOption[] = getDisplayedEnemies(enemies, this.worldStore.playerSave.seenEnemies)
-      .map(enemy => {
-        return {
-          display: () => <span>{enemy.name}</span>,
-          execute: () => {
-            this.worldStore.setEnemyJournalContent(enemy);
-          }
-        }
-      });
-    const enemyJournalMenu: Menu = {
-      onClose: () => this.worldStore.setEnemyJournalContent(null),
-      menuOptions: enemyJournalMenuOptions,
-      isCursor: true,
-      title: "Enemies"
-    }
-    
-
-    const journalMenu: Menu = {
-      menuOptions: [
-        {
-          display: () => <span>Enemies</span>,
-          execute: () => {  
-            this.worldStore.pushMenu(enemyJournalMenu);
-          }
-        },
-        {
-          display: () => <span>Techniques</span>,
-          execute: () => {  
-            //
-          }
-        },
-      ],
-      title: "Journal",
-    };
-
-    const systemMenu: Menu = {
-      onClose: () => this.worldStore.setSystemsMenuOpen(false),
-      menuOptions: [
-        {
-          display: () => <span>Journal</span>,
-          execute: () => {  
-            this.worldStore.pushMenu(journalMenu);
-          }
-        },
-        {
-          display: () => <span>Exit</span>,
-          execute: () => {  
-            this.worldStore.closeMenus();
-          }
-        },
-      ],
-    }  
-
-    return systemMenu;
-  }
   
   // #endregion
   executeEvent(event: Event, target?: Combatant, caster?: Combatant, techniques?: Technique[]): void {
@@ -824,16 +760,6 @@ export class World extends Phaser.Scene {
   }
 
   //#endregion
-
-  openSystemsMenu(): void {
-    if (this.worldStore.battleInitiated) {
-      this.playChoiceDisabledSound();
-      return;
-    }
-    this.playChoiceSelectSound();
-    const systemMenu = this.getSystemMenu();
-    this.worldStore.pushMenu(systemMenu);
-  }
 }
 
 const ATTACK_TECHNIQUES = new Set([

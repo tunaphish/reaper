@@ -60,12 +60,6 @@
   left: 20%;
 }
 
-.infoViewWrapper {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
-
 .menuContent {
   flex: 1;
   padding: 5px;
@@ -81,16 +75,6 @@
 
 .abilitiesContainer {
     flex: 1;
-}
-
-.ticker {
-overflow: hidden;
-  white-space: nowrap;
-}
-
-.tickerTrack {
-  display: inline-flex;
-  animation: scroll 10s linear infinite;
 }
 
 @keyframes scroll {

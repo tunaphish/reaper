@@ -1,4 +1,5 @@
-import classNames from './world.module.css';
+import classNames from './system-menu.module.css';
+
 import * as React from 'react';
 
 export const Ticker = ({ text }: { text: string; }): JSX.Element => (

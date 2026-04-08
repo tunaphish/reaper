@@ -12,7 +12,6 @@ import { ImageWindowContent, Window } from '.';
 import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, ObserveAction, ChoiceAction } from '../../model/encounter';
 import { PanelWindow } from './Window';
 import { Ally } from '../../model/ally';
-import { Ticker } from './Ticker';
 import { MenuOptionsView } from './MenuOptionsView';
 import { getRandomInt } from '../../model/math';
 import { getStatus } from '../../model/combatant';
@@ -22,10 +21,6 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
   return (
     <div className={classNames.container}>
       <Description world={world} />
-      <AnimatePresence>
-        { world.worldStore.enemyJournalContent && <DisplayedEnemy enemy={world.worldStore.enemyJournalContent} />}
-        { world.worldStore.systemsMenuOpen && <InfoView world={world} /> }
-      </AnimatePresence>
       <EnemiesContainer world={world} />
       <EncounterContainer world={world} />
       <AllyBarView world={world} />
@@ -34,18 +29,16 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
 )
 });
 
-
 export const StartBar = observer(({world}: {world: World}) => {
+
   return (
-    <Window onClick={() => world.openSystemsMenu()}>
-      start
+    <Window onClick={() => console.log('start the game')} style={{ position: 'relative' }}>
+      start    
     </Window>
   )
 });
 
 //#region Combat
-
-
 type DamagePopup = {
   id: number;
   value: number;
@@ -395,49 +388,7 @@ const AllyBarView = observer((props: { world: World }): JSX.Element => (
   </div>
 ));
 
-// #region Menu 
 
-
-const getEnemyImageView = (enemy: Enemy): ImageWindow => {
-  return {
-    type: EventType.IMAGE,
-    layout: {
-      x: 100,
-      y: 200,
-      width: 250,
-      height: 250,
-    },
-    layers: [{
-      src: enemy.combatPortraitSrc,
-    }]
-  }
-}
-
-const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
-  const enemyImageWindow: ImageWindow = getEnemyImageView(props.enemy);
-  return (
-    <>
-      <PanelWindow window={enemyImageWindow}>
-        <ImageWindowContent imageWindow={enemyImageWindow}/>
-      </PanelWindow>
-      <Window style={{ position: 'absolute', top: '175px', left: '100px', padding: '5px' }}>{props.enemy.name}</Window>
-      <Window style={{ position: 'absolute', top: '400px', left: '75px', width: '300px', padding: '5px'  }}>{props.enemy.journalDescription}</Window>
-    </>
-  )
-}
-
-const InfoView = (props: { world: World }): JSX.Element => (
-  <>
-    <div className={classNames.infoViewWrapper}>
-      <Window style={{ padding: '5px', marginBottom: '5px' }} delay={0.05}>Location: {props.world.mapData.locationName}</Window>
-      {props.world.mapData.musicKey && <Window style={{ padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>}
-    </div>
-    <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }} delay={0.25}>Spirits: {props.world.worldStore.playerSave.spirits}</Window>
-  </>
-)
-
-
-// #endregion
 
 // #region Encounter
 

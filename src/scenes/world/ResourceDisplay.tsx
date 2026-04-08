@@ -94,7 +94,7 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World, idx: number}) => {
+export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World, idx?: number}) => {
 
   const onClick = () => {
     props.world.selectTarget(props.combatant);

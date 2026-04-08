@@ -23,16 +23,22 @@ export class SystemMenu extends Phaser.Scene {
   choiceSelectSound: Phaser.Sound.BaseSound;
   choiceDisabledSound: Phaser.Sound.BaseSound;
 
+  locationName: string;
+  musicKey: string;
+
   constructor() {
     super(sceneConfig);
   }
 
 
-  init(): void {
+  init(data: { locationName, musicKey }): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');    
     this.systemMenuStore = new SystemMenuStore(playerSave);
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
+
+    this.locationName = data.locationName;
+    this.musicKey = data.musicKey;
   }
 
   create(): void {
@@ -103,7 +109,8 @@ export class SystemMenu extends Phaser.Scene {
         {
           display: () => <span>Exit</span>,
           execute: () => {  
-            this.systemMenuStore.closeMenus();
+            this.scene.stop('SystemMenu');
+            this.scene.resume('World');
           }
         },
       ],

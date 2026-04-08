@@ -45,7 +45,6 @@ export class World extends Phaser.Scene {
 
   reactOverlay: ReactOverlay;
   private fieldMusic: Phaser.Sound.BaseSound;
-  private battleMusic: Phaser.Sound.BaseSound;
   mapData: MapData;
   triggerGroup!: Phaser.Physics.Arcade.StaticGroup
 
@@ -56,7 +55,6 @@ export class World extends Phaser.Scene {
   inventory: Inventory;
 
   queuedEvents: QueuedEvent[] = [];
-
 
   constructor() {
     super(sceneConfig);
@@ -123,11 +121,6 @@ export class World extends Phaser.Scene {
       });
       this.fieldMusic.play();
     }
-
-    this.battleMusic = this.sound.add("knight", {
-      loop: true,  
-      volume: 0.2  
-    });
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
   }
@@ -197,9 +190,7 @@ export class World extends Phaser.Scene {
   //   this.worldStore.battleInitiated = true;
   //   this.sound.play('battle-start');
        
-  //   this.time.delayedCall(1000, () => {
-  //       this.battleMusic.play({ volume: 0.2 });
-  //   });
+
   // }
 
   // onTriggerExit(): void {
@@ -229,6 +220,22 @@ export class World extends Phaser.Scene {
         music.pause();   
       }
     });
+  }
+
+  pause(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause('World');
+  }
+
+  unpause(): void {
+    this.choiceSelectSound.play();
+    this.scene.resume('World');
+  }
+
+  openSystemMenu(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause('World');
+    this.scene.run('SystemMenu', { locationName: this.mapData.locationName, musicKey: this.fieldMusic.key })
   }
   
 }

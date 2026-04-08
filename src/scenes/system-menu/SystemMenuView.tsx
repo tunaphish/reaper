@@ -59,8 +59,8 @@ const DisplayedEnemy = (props: { enemy: Enemy }): JSX.Element => {
 const InfoView = (props: { systemMenu: SystemMenu }): JSX.Element => (
   <>
     <div className={classNames.infoViewWrapper}>
-      {/* <Window style={{ padding: '5px', marginBottom: '5px' }} delay={0.05}>Location: {props.world.mapData.locationName}</Window> */}
-      {/* {props.world.mapData.musicKey && <Window style={{ padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.world.mapData.musicKey}/></Window>} */}
+      <Window style={{ padding: '5px', marginBottom: '5px' }} delay={0.05}>Location: {props.systemMenu.locationName}</Window>
+      {props.systemMenu.musicKey && <Window style={{ padding: '5px', width: '200px' }} delay={0.15}><Ticker text={"Now Playing: " + props.systemMenu.musicKey}/></Window>}
     </div>
     <Window style={{ position: 'absolute', top: '10px', right: '10px', padding: '5px' }} delay={0.25}>Spirits: {props.systemMenu.systemMenuStore.playerSave.spirits}</Window>
   </>

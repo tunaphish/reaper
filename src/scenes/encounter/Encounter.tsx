@@ -70,7 +70,7 @@ export class EncounterScene extends Phaser.Scene {
 
   // dynamically preload map data here
 
-  init(): void {
+  init(data: { encounter: Encounter }): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');
     const allies: Allies = this.registry.get('allies');
     this.inventory = this.registry.get('inventory');
@@ -80,6 +80,8 @@ export class EncounterScene extends Phaser.Scene {
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
+
+    if (data.encounter) this.addQueuedEvents(data.encounter.events);
   }
 
   create(): void {
@@ -89,8 +91,7 @@ export class EncounterScene extends Phaser.Scene {
       volume: 0.2  
     });
   
-
-    this.encounterStore.pushEnemies([enemies[0]]);
+    // this.encounterStore.pushEnemies([enemies[0]]);
 
     this.reactOverlay.create(<EncounterView encounter={this}/>, this);
   }
@@ -167,7 +168,7 @@ export class EncounterScene extends Phaser.Scene {
 
   onNextEncounter = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
-    this.encounterStore.setContextAction(null);
+    this.encounterStore.setChoiceAction(null);
     this.addQueuedEvents(encounter.events);
   }
 
@@ -186,9 +187,8 @@ export class EncounterScene extends Phaser.Scene {
         return;
       }
 
-      case EventType.OBSERVE:
       case EventType.CHOICE: {
-        this.encounterStore.setContextAction(event);
+        this.encounterStore.setChoiceAction(event);
         return;
       }
 
@@ -196,12 +196,6 @@ export class EncounterScene extends Phaser.Scene {
         const soundEvent = event as SoundEvent;
 
         if (soundEvent.loop) {
-          if (this.battleMusic.key === soundEvent.key) return;
-
-          if (this.battleMusic.isPlaying) {
-            this.battleMusic.stop();
-          }
-
           this.battleMusic = this.sound.add(soundEvent.key, {
             loop: true,
             volume: 0.5,

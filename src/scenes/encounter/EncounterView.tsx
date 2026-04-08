@@ -9,12 +9,13 @@ import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { TypewriterText } from '../ui/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent } from '../ui/ImageWindowContent';
-import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, ObserveAction, ChoiceAction } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, ChoiceAction } from '../../model/encounter';
 import { PanelWindow, Window } from '../ui/Window';
 import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
 import { getRandomInt } from '../../model/math';
 import { getStatus } from '../../model/combatant';
+import { toJS } from 'mobx';
 
 export const EncounterView = observer((props: { encounter: EncounterScene }): JSX.Element => {
   const { encounter: encounter } = props
@@ -24,6 +25,7 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
       <EnemiesContainer encounter={encounter} />
       <EncounterContainer encounter={encounter} />
       <AllyBarView encounter={encounter} />
+      {props.encounter.encounterStore.choiceAction && <ChoiceView encounter={encounter}  />}
     </div>
 )
 });
@@ -75,9 +77,7 @@ export const Description = observer(({encounter}: {encounter: EncounterScene}) =
 
   return (
   <>
-    { encounter.encounterStore.executable && 
-      <Window style={style}>{encounter.encounterStore.executable.description}</Window>
-    }  
+    { encounter.encounterStore.executable && <Window style={style}>{encounter.encounterStore.executable.description}</Window> }  
   </>
 
   )
@@ -228,39 +228,15 @@ const MenuView = observer((props: { encounter: EncounterScene, menu: Menu, idx: 
   )
 });
 
-const ContextActionView = observer((props: { encounter: EncounterScene }): JSX.Element => {
-  const { encounter } = props;
-  switch (encounter.encounterStore.contextAction.type) {
-    case EventType.CHOICE:
-      return <ChoiceView encounter={encounter} />
-    case EventType.OBSERVE:
-      return <ObserveView encounter={encounter} />
-    default:
-      return null
-  }
-});
-
-const ObserveView = observer((props: { encounter: EncounterScene }): JSX.Element => {
-  const { encounter } = props;
-
-  const contextAction = encounter.encounterStore.contextAction as ObserveAction;
-  const onClick = () => {
-    encounter.onNextEncounter(contextAction.nextEncounter);
-  }
-  return (
-    <Window style={{ padding: '5px' }} onClick={onClick}>{contextAction.display}</Window>
-  );
-});
-
 const ChoiceView = (props: { encounter: EncounterScene }): JSX.Element => {
-  const choice = props.encounter.encounterStore.contextAction as ChoiceAction;
+  const choice = props.encounter.encounterStore.choiceAction;
   
   const style: React.CSSProperties = {
     position: "absolute",
     top: "-40px",
     left: "20px",
   }
-  const choices = choice.isMutuallyExclusive ?
+  const choices = !!choice.isMutuallyExclusive ?
     choice.options.map((option, idx) => 
       <div key={idx} onClick={() => props.encounter.onNextEncounter(option.nextEncounter)}>
         {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
@@ -328,7 +304,7 @@ const AllyView = observer((props: { encounter: EncounterScene, ally: Ally, idx: 
   const ref = React.useRef<HTMLDivElement>(null);
   const popups = usePhaserDamagePopups(encounter, ref, ally.name);
 
-  const isInEncounter = encounter.encounterStore.windows.length > 0 || encounter.encounterStore.contextAction;
+  const isInEncounter = encounter.encounterStore.windows.length > 0 || encounter.encounterStore.choiceAction;
 
   const combatPortraitSrc = `/reaper/ui/ally/${ally.name}-${getStatus(ally)}.png`
 
@@ -351,7 +327,6 @@ const AllyView = observer((props: { encounter: EncounterScene, ally: Ally, idx: 
 
       <div className={classNames.allyMenuOverlay}>
         {ally.name === encounter.encounterStore.activeAlly?.name && <MenuStack encounter={encounter} />}
-        {ally.name === "Eji" && encounter.encounterStore.contextAction && <ContextActionView encounter={encounter}  />}
       </div>
       
       {popups.map((p) => (

@@ -16,7 +16,6 @@ export enum EventType {
   IMAGE,
   SOUND,
   CHOICE,
-  OBSERVE,
   
   // Combat
   UPDATE_DAMAGE,
@@ -64,12 +63,6 @@ export type SoundEvent = BaseEvent & {
 
 // #region EncounterActions
 
-export type ObserveAction = BaseEvent & {
-  type: EventType.OBSERVE
-  display: string
-  nextEncounter: Encounter
-}
-
 export type Option = {
   line: TextToken[]
   nextEncounter: Encounter
@@ -114,11 +107,10 @@ export type ShatterEvent = BaseEvent & {
 
 export type Window = TextWindow | ImageWindow;
 
-export type ContextAction =  ObserveAction | ChoiceAction;
 
 export type CombatEvent = UpdateDamageEvent | UpdateApEvent | ShatterTechniqueEvent | ShatterEvent;
 
-export type Event = Window | SoundEvent | ContextAction | CombatEvent;
+export type Event = Window | SoundEvent | ChoiceAction | CombatEvent;
 
 export type Encounter = {
   id: string

@@ -1,8 +1,28 @@
 import { Encounter, TextSpeed, EventType } from '../../model/encounter';
 
-export const MUSIC_SPEED_SPREAD: Encounter = {
-  id: 'Typewriter Test Example',
+export const EXAMPLE_SPREAD: Encounter = {
+  id: 'EXAMPLE_SPREAD',
   events: [
+    {
+      type: EventType.SOUND,
+      key: 'charged',
+    },
+    {
+      type: EventType.TEXT,
+      line: [
+        { text: 'hey this is ' },
+        { text: 'limit', effect: 'limit' },
+        { text: ' break and ' },
+        { text: 'madness', effect: 'frenzy' },
+        { text: '...' },
+      ],
+      layout: {
+        x: 100,
+        y: 100,
+        width: 280,
+        height: 100,
+      }
+    },
     {
       type: EventType.SOUND,
       key: 'knight',
@@ -42,37 +62,6 @@ export const MUSIC_SPEED_SPREAD: Encounter = {
         height: 80,
       },
       delayInMs: 3000,
-    },
-  ],
-};
-
-export const EXAMPLE_SPREAD: Encounter = {
-  id: 'Typewriter Test Example',
-  events: [
-    {
-      type: EventType.SOUND,
-      key: 'charged',
-    },
-    {
-      type: EventType.TEXT,
-      line: [
-        { text: 'hey this is ' },
-        { text: 'limit', effect: 'limit' },
-        { text: ' break and ' },
-        { text: 'madness', effect: 'frenzy' },
-        { text: '...' },
-      ],
-      layout: {
-        x: 100,
-        y: 100,
-        width: 280,
-        height: 100,
-      }
-    },
-    {
-      type:  EventType.OBSERVE,
-      display: 'Observe',
-      nextEncounter: MUSIC_SPEED_SPREAD,
     },
   ],
 };
@@ -225,3 +214,6 @@ export const INTERROGATION_SPREAD: Encounter = {
     },
   ],
 };
+
+
+export const TOP_LEVEL_SPREADS = [EXAMPLE_SPREAD, BUNNY_MASK_SPREAD, YES_NO_CHOICE_SPREAD, INTERROGATION_SPREAD];

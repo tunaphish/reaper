@@ -17,7 +17,7 @@ export type Menu =  {
   title?: string;
 };
 
-export class WorldStore {
+export class EncounterStore {
   playerSave: PlayerSave;
 
   // Navigation Related
@@ -25,12 +25,8 @@ export class WorldStore {
   menus: Menu[] = [];
   contextAction?: ContextAction;
 
-  // TODO: potentially make these generic
-  enemyJournalContent?: Enemy;
-  systemsMenuOpen = false;
-
-  // Combat
-  battleInitiated = false;
+  
+  battleInitiated = true;
   enemies: Enemy[] = [];
   allies: Allies;
 
@@ -76,15 +72,7 @@ export class WorldStore {
   pushMenu(menu: Menu): void {
     this.menus.push(menu);
   }
-
-  setEnemyJournalContent(enemy?: Enemy): void {
-    this.enemyJournalContent = enemy;
-  }
-
-  setSystemsMenuOpen(systemsMenuOpen: boolean): void {
-    this.systemsMenuOpen = systemsMenuOpen;
-  }
-
+  
   setContextAction(contextAction?: ContextAction): void {
     this.contextAction = contextAction;
   }

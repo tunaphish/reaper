@@ -6,12 +6,13 @@ import { SystemMenu } from './SystemMenu';
 import { Menu } from './systemMenuStore';
 import { observer } from 'mobx-react-lite';
 import { Enemy } from '../../model/enemy';
-import { ImageWindowContent, Window } from '../world';
-import { EventType, ImageWindow,  } from '../../model/encounter';
-import { PanelWindow } from '../world/Window';
+import { Window } from '../ui/Window';
+import { ImageWindowContent } from '../ui/ImageWindowContent';
+import { EventType, ImageWindow } from '../../model/encounter';
+import { MenuOptionsView } from '../ui/MenuOptionsView';
+import { PanelWindow } from '../ui/Window';
 
 import { Ticker } from './Ticker';
-import { MenuOptionsView } from '../world/MenuOptionsView';
 
 
 export const SystemMenuView = observer((props: { systemMenu: SystemMenu }): JSX.Element => {

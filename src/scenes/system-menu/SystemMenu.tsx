@@ -2,13 +2,9 @@
 import * as React from 'react';
 import ReactOverlay from '../../plugins/ReactOverlay';
 
-import { Inventory } from '../../model/inventory';
 import { Menu, MenuOption, SystemMenuStore, } from './systemMenuStore';
-
 import { enemies } from '../../data/enemies';
-
 import { Enemy } from '../../model/enemy';
-
 import { SystemMenuView } from './SystemMenuView';
 
 

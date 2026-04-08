@@ -1,6 +1,6 @@
-import { World } from "../scenes/world/World";
 import { Combatant } from "./combatant";
 import { Event } from "./encounter";
+import { EncounterScene } from "../scenes/encounter/Encounter";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 
@@ -14,7 +14,7 @@ export type Action = Option & {
 
   castingImageSrc?: string;
 
-  conditionMet?: (world: World, caster: Combatant, target: Combatant) => boolean;
+  conditionMet?: (encounter: EncounterScene, caster: Combatant, target: Combatant) => boolean;
   events: Event[];
   interruptible?: boolean;
 }

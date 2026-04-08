@@ -1,0 +1,663 @@
+
+import * as React from 'react';
+import ReactOverlay from '../../plugins/ReactOverlay';
+import { EncounterView } from './EncounterView';
+
+import { Allies, Ally } from '../../model/ally';
+import { Inventory } from '../../model/inventory';
+import { EncounterStore, Menu, MenuOption } from './encounterStore';
+import { MapData } from '../../model/mapData';
+import { DEBUG_MAP_DATA } from '../../data/maps';
+
+import * as EXAMPLE_SPREADS from '../../data/encounters/example';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
+
+import { Enemy } from '../../model/enemy';
+import { Combatant, getActiveTechnique, getStatus, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
+import { updateActionPoints } from '../../model/combatant';
+import { Folder } from '../../model/folder';
+import { Action } from "../../model/action";
+import { Item } from "../../model/item";
+import { Technique } from "../../model/technique";
+import { OptionType } from '../../model/option';
+import { TargetType } from '../../model/targetType';
+
+import * as Techniques from '../../data/techniques';
+import * as Actions from '../../data/actions';
+import { toJS } from 'mobx';
+import { getRandomInt } from '../../model/math';
+import { actionMenuItem } from './CombatMenus';
+import { Executable } from '../../model/Executable';
+import { enemies } from '../../data/enemies';
+
+export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
+
+const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
+  active: false,
+  visible: false,
+  key: 'Encounter',
+};
+
+type QueuedEvent = {
+  event: Event,
+  delayInMs: number,
+  target?: Combatant,
+  caster?: Combatant,
+  techniques?: Technique[],
+}
+
+export class EncounterScene extends Phaser.Scene {
+  reactOverlay: ReactOverlay;
+  private battleMusic: Phaser.Sound.BaseSound;
+  mapData: MapData;
+  triggerGroup!: Phaser.Physics.Arcade.StaticGroup
+
+  encounterStore: EncounterStore;
+
+  choiceSelectSound: Phaser.Sound.BaseSound;
+  choiceDisabledSound: Phaser.Sound.BaseSound;
+
+  inventory: Inventory;
+
+  queuedEvents: QueuedEvent[] = [];
+
+  splinterNotCasted = true;
+  firstActionNotTaken = true;
+
+  constructor() {
+    super(sceneConfig);
+  }
+
+  // dynamically preload map data here
+
+  init(): void {
+    const playerSave: PlayerSave = this.registry.get('playerSave');
+    const allies: Allies = this.registry.get('allies');
+    this.inventory = this.registry.get('inventory');
+    this.mapData = DEBUG_MAP_DATA;
+    
+    this.encounterStore = new EncounterStore(playerSave, allies);
+
+    this.choiceSelectSound = this.sound.add('choice-select');
+    this.choiceDisabledSound = this.sound.add('stamina-depleted');
+  }
+
+  create(): void {
+
+    this.battleMusic = this.sound.add("knight", {
+      loop: true,  
+      volume: 0.2  
+    });
+  
+
+    this.encounterStore.pushEnemies([enemies[0]]);
+
+    this.reactOverlay.create(<EncounterView encounter={this}/>, this);
+  }
+
+  update(time: number, delta: number): void {
+    this.processQueuedEvents(delta);
+
+    if (!this.encounterStore.battleInitiated) return;
+    this.tickStats(delta);
+    this.checkBattleEndConditions(); 
+    this.resetDeadAllyCasterMenu();
+    this.executeCastedOptions();
+    this.executeEnemyStrategies();
+  }
+
+
+  playChoiceSelectSound(): void {
+    this.choiceSelectSound.play();
+  }
+
+  playChoiceDisabledSound(): void {
+    this.choiceDisabledSound.play();
+  }
+
+  // #region handle events
+  createEncounterTriggers(spawnPoint: Phaser.Types.Tilemaps.TiledObject): void {
+    const triggers = [
+      {
+        triggerId: 'example_trigger_id',
+        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
+        x: spawnPoint.x,
+        y: spawnPoint.y - 48,
+        width: 48,
+        height: 48
+      }
+    ]
+
+    for (const data of triggers) {
+      const zone = this.add.zone(
+        data.x,
+        data.y,
+        data.width,
+        data.height
+      );
+
+      this.physics.add.existing(zone, true);
+
+      zone.setData("encounter", data.encounter);
+      zone.setData("triggerId", data.triggerId);
+      zone.setData("overlapping", false);
+
+      this.triggerGroup.add(zone);
+    }
+  }
+
+  addQueuedEvents(events: Event[]): void {
+    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
+    this.queuedEvents.push(...newEvents);
+  }
+
+  processQueuedEvents(delta: number): void {
+    const toDelay: QueuedEvent[] = [];
+
+    for (const queuedEvent of this.queuedEvents) {
+      if (queuedEvent.delayInMs < 0) {
+        this.executeEvent(queuedEvent.event, queuedEvent.target, queuedEvent.caster, queuedEvent.techniques);
+        continue;
+      }
+      queuedEvent.delayInMs -= delta;
+      toDelay.push(queuedEvent);
+    }
+    this.queuedEvents = toDelay;
+  }
+
+  onNextEncounter = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.encounterStore.setContextAction(null);
+    this.addQueuedEvents(encounter.events);
+  }
+
+  onMultiSelect = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.encounterStore.closeWindows();
+    this.addQueuedEvents(encounter.events);
+  }
+  
+  // #endregion
+  executeEvent(event: Event, target?: Combatant, caster?: Combatant, techniques?: Technique[]): void {
+    switch (event.type) {
+      case EventType.IMAGE:
+      case EventType.TEXT: {
+        this.encounterStore.pushWindow(event);
+        return;
+      }
+
+      case EventType.OBSERVE:
+      case EventType.CHOICE: {
+        this.encounterStore.setContextAction(event);
+        return;
+      }
+
+      case EventType.SOUND: {
+        const soundEvent = event as SoundEvent;
+
+        if (soundEvent.loop) {
+          if (this.battleMusic.key === soundEvent.key) return;
+
+          if (this.battleMusic.isPlaying) {
+            this.battleMusic.stop();
+          }
+
+          this.battleMusic = this.sound.add(soundEvent.key, {
+            loop: true,
+            volume: 0.5,
+          });
+
+          this.battleMusic.play();
+          return;
+        }
+
+        this.sound.add(soundEvent.key, {
+          loop: false,
+          volume: 0.5,
+        }).play();
+        return;
+      }
+
+      case EventType.UPDATE_DAMAGE: {        
+        let value = event.value;
+        if (event.value > 0) {
+          const technique = (techniques || []).find(t => t.name === Techniques.buff.name);
+          if (technique) value *= techniqueIsViolated(caster, technique) ? .66 : 1.33
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
+          removeTechnique(caster, Techniques.charged);
+          value *= 2.0;
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.reciprocity.name)) {
+          value *= -1;
+        }
+
+        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.nerf.name)) {
+          value *= .67;
+        }
+        value = Math.floor(value);
+        this.events.emit('updated-damage', { name: target.name, value });
+        updateDamage(target, value);
+
+        if (target?.castingExecutable?.executable?.interruptible) {
+          target.castingExecutable = null;
+          this.sound.play('bomb');
+        }
+
+        // perhaps counter is only active when I'm executing 
+        // if (techniqueIsActive(target, Techniques.counter)) {
+        //   this.executeOption(target, [caster], Actions.attack);
+        // }
+        return;
+      }
+
+      case EventType.UPDATE_AP: {
+        updateActionPoints(target, 1);
+        return;
+      }
+
+      case EventType.SHATTER_TECHNIQUE: {
+        const shatterTechniqueEvent = event as ShatterTechniqueEvent;
+        if (shatterTechniqueEvent.target === ShatterTechniqueTarget.RANDOM) {
+          target.activeTechniques.splice(getRandomInt(target.activeTechniques.length),1);
+          return;
+        }
+      }
+
+      case EventType.SHATTER: {
+        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.technique.actionPointsCost+total, 0);
+        caster.actionPoints += totalAp;
+        caster.activeTechniques = [];
+        return;
+      }
+
+      default: {
+        return;
+      }
+    }
+  }
+
+  //#region battle input
+  setAlly = (ally: Ally): void => {
+    this.playChoiceSelectSound();
+
+    if (this.encounterStore.executable) {
+      this.selectTarget(ally);
+      return;
+    }
+
+    // Could probably just flip this
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
+    if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
+      this.sound.play('stamina-depleted');
+      return;
+    }
+
+    this.encounterStore.closeMenus();
+    this.sound.play('choice-select');
+    this.encounterStore.setActiveAlly(ally);
+    this.events.emit('caster-set', ally);
+    this.encounterStore.pushMenu(this.getCombatMenu(ally.folder, ally.name));
+
+    this.encounterStore.setActiveAlly(ally);
+  }
+  
+  selectTarget = (combatant: Combatant): void => {
+    if (!this.encounterStore.executable) return;
+    if (this.encounterStore.targets.some(target => combatant.name === target.name) ) {
+      this.playChoiceDisabledSound();
+      return;
+    }
+
+    switch (this.encounterStore.executable.targetType) {
+      case TargetType.SELF:
+        if (combatant.name !== this.encounterStore.activeAlly.name) {
+          this.playChoiceDisabledSound();
+        }
+        break;
+      case TargetType.SINGLE_TARGET:
+        this.encounterStore.setTargets([combatant]);
+        this.playChoiceSelectSound();
+        break;
+      case TargetType.AOE: 
+        if (this.encounterStore.enemies.some(enemy => enemy.name === combatant.name)) {
+          this.encounterStore.setTargets(this.encounterStore.enemies);
+        } else {
+          this.encounterStore.setTargets(this.encounterStore.allies);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  selectOption(option: CombatOption): void {
+    this.sound.play('choice-select');
+    switch(option.type) {
+      case OptionType.ACTION:
+      case OptionType.TECHNIQUE:
+        const executable = option as Executable;
+        const activeTechnique = getActiveTechnique(this.encounterStore.activeAlly, executable);
+        if (activeTechnique !== undefined && activeTechnique.violated) {
+          this.sound.play('restriction-violated');
+          return;
+        }
+        this.encounterStore.setExecutable(executable);
+        switch (executable.targetType) {
+          case TargetType.SELF:
+            this.encounterStore.setTargets([this.encounterStore.activeAlly]);
+            break;
+          case TargetType.SINGLE_TARGET:
+            this.encounterStore.setTargets([this.encounterStore.enemies[0]]);
+            break;
+          case TargetType.AOE:
+            this.encounterStore.setTargets(this.encounterStore.enemies);
+            break;
+        }
+        this.encounterStore.pushMenu(this.getConfirmMenu());
+        break;
+      case OptionType.FOLDER:
+        const folder = option as Folder;
+        const folderMenu = this.getCombatMenu(folder, folder.name);
+        this.encounterStore.pushMenu(folderMenu);
+        break;
+    }
+  }
+
+  getConfirmMenu(): Menu {
+    return {
+      menuOptions: [{
+        display: () => (<div>Confirm</div>),
+        execute: () => {
+          this.executeOption(this.encounterStore.activeAlly, this.encounterStore.targets, this.encounterStore.executable);
+          this.encounterStore.resetSelections();  
+        }
+      }],
+      onClose: () => {
+        this.encounterStore.setTargets([]);
+        this.encounterStore.setExecutable(null);
+      }
+    }
+  }
+
+  popMenu = (): void => {
+    this.playChoiceDisabledSound();
+    this.encounterStore.popMenu();
+  }
+
+  //#endregion
+  
+
+  //#region combat
+  tickStats(delta: number): void {
+    this.encounterStore.getCombatants().forEach((combatant) => {
+      if (getStatus(combatant) === Status.DEAD) return;
+      if (combatant.bleed > 0) {
+        let damageTickRate = (delta / 1000) * 5;
+        if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
+        combatant.bleed -= damageTickRate;
+
+        // TOD: extract 
+        const newHealth = Math.max(0, combatant.health - damageTickRate);
+        if (newHealth === 0) {
+          combatant.actionPoints = 0;
+          combatant.activeTechniques = [];
+        }
+
+        combatant.health = newHealth;
+      }
+
+      if (combatant.castingExecutable) {
+        combatant.castingExecutable.castedTimeInMs += delta;
+        return;
+      } 
+
+      // handles overflow
+      if (combatant.actionPoints >= combatant.maxActionPoints) {
+        combatant.actionPoints = Math.trunc(combatant.actionPoints);
+        return;
+      }
+      const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
+        (combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === Techniques.haste.name) ? 2 : 1) *
+        (delta / 1000) ;
+
+      const newActionPoints = combatant.actionPoints + regenPerTick;
+
+      // TOD: extract 
+      if (newActionPoints > combatant.maxActionPoints) {
+        this.sound.play('action-ready', { volume: .5 });
+        combatant.actionPoints = combatant.maxActionPoints;
+        return;
+      }
+      combatant.actionPoints = newActionPoints;
+    });
+  }
+
+  executeEnemyStrategies(): void {    
+    const actionableEnemies = this.encounterStore.enemies
+      .filter(enemy => getStatus(enemy) === Status.NEUTRAL)
+      .filter(enemy => !enemy.castingExecutable)
+
+    for (const enemy of actionableEnemies) {
+      const strategy = enemy.strategies[enemy.selectedStrategyIndex];
+      const option = (strategy.option as CombatOption);
+
+      if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE ) continue;
+      const action = option as Action;
+      if (enemy.actionPoints < action.actionPointsCost) continue;
+
+      const targets = strategy.getTargets(this, action, enemy);
+      this.executeOption(enemy, targets, option);      
+    }
+  }
+
+  resetDeadAllyCasterMenu(): void {
+    if (!this.encounterStore.activeAlly || getStatus(this.encounterStore?.activeAlly) !== Status.DEAD) return ;
+
+    this.encounterStore.setActiveAlly(null);
+    this.encounterStore.resetSelections();
+    this.encounterStore.closeMenus();
+  }
+
+  checkBattleEndConditions(): void {
+    this.encounterStore.enemies = this.encounterStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
+
+    if (this.encounterStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
+      this.fadeMusic(this.battleMusic);
+    }
+
+    //win
+    if (this.encounterStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
+      this.fadeMusic(this.battleMusic);
+      this.encounterStore.battleInitiated = false;
+      for (const ally of this.encounterStore.allies) {
+        ally.bleed = 0;
+        ally.activeTechniques = [];
+        ally.actionPoints = 0;
+      }
+    }
+  }
+
+  getCombatMenu(folder: Folder, title: string): Menu {
+    const menuOptions: MenuOption[] = folder.options.map((option) => {
+      return {
+        display: () => actionMenuItem(option, this.encounterStore.activeAlly),
+        execute: () => {
+          this.selectOption(option as CombatOption);
+        }
+      }
+    });
+    return { menuOptions, title };
+  }
+
+  executeCastedOptions(): void {
+    this.encounterStore.getCombatants().forEach(combatant => { 
+      if (!combatant.castingExecutable) return;
+
+      const { executable: option, targets, castedTimeInMs } = combatant.castingExecutable;
+      if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
+      if (castedTimeInMs < option.castTimeInMs) return;
+
+      if (combatant.castingExecutable.violated){
+        combatant.castingExecutable = null;
+        if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
+        return;
+      }
+
+      for (const [idx, target] of targets.entries()) {
+        if (option.type === OptionType.TECHNIQUE) {
+            const technique = option as Technique;
+            combatant.activeTechniques.push({technique, target, violated: false});
+            this.sound.play(technique.soundKeyName)
+          }
+
+
+          if (option.type === OptionType.ACTION) {
+            const action = option as Action;
+            if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
+              this.sound.play('restriction-violated');
+              combatant.castingExecutable = null;
+              if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
+              return;
+            } 
+
+            if (this.firstActionNotTaken) this.firstActionNotTaken = false;
+            if (action.name === "Splinter") this.splinterNotCasted = false;
+
+            const events = action.events;
+            if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
+            if (techniqueIsActive(combatant, Techniques.shadow) && action.events.some(event => event.type === EventType.UPDATE_DAMAGE)) {
+              const shadowEvents: Event[] = events
+                .map(event => {
+                  const newEvent: UpdateDamageEvent = (structuredClone(toJS(event)) as UpdateDamageEvent);
+                  if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
+                  newEvent.delayInMs = (event.delayInMs || 0) + 600;
+                  return newEvent;
+                }) 
+              events.push(...shadowEvents);
+            }
+            const newEvents: QueuedEvent[] = events.map(event => ({
+              event, 
+              delayInMs: event.delayInMs || 300 + (idx*300),
+              target,
+              caster: combatant,
+              techniques: [...combatant.castingExecutable.appliedTechniques],
+            }));
+
+            this.queuedEvents.push(...newEvents);
+
+          }
+      }
+ 
+      combatant.castingExecutable = null;
+      if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
+    });
+  }
+
+  selectNewStrategy(enemy: Enemy): void {
+    const viableStrategies = enemy.strategies
+      .map((s, i) => ({ s, i }))
+      .filter(({ s }) => s.isValid(this, enemy));
+
+    const totalWeight = viableStrategies.reduce((sum, v) => sum + v.s.weight, 0)
+    let roll = Math.random() * totalWeight
+
+    for (const strategy of viableStrategies) {
+      roll -= strategy.s.weight
+      if (roll <= 0) enemy.selectedStrategyIndex = strategy.i
+      continue;
+    }
+    enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
+  }
+
+  executeOption(caster: Combatant, targets: Combatant[], option: CombatOption): void {
+    // Handle Shatter
+    if (option.type === OptionType.TECHNIQUE ) {
+      const technique = (option as Technique);
+
+      const idx = caster.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
+
+      if (idx !== -1) {
+        this.sound.play(technique.soundKeyName);
+        updateActionPoints(caster, technique.actionPointsCost);
+        caster.activeTechniques.splice(idx, 1);
+        return;
+      } 
+    }
+
+    // Handle Action
+    if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
+    useApResources(caster, option.actionPointsCost);
+
+    const appliedTechniques: Technique[] = [];
+    let castedTimeInMs = 0;
+
+    if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
+      
+      const attackTechniquesTargettingCaster: Technique[] = this.encounterStore.getCombatants()
+        .reduce((prev, curr) => [...prev, ...curr.activeTechniques], [])
+        .filter(activeTechnique => activeTechnique.target.name === caster.name)
+        .filter(activeTechnique => ATTACK_TECHNIQUES.has(activeTechnique.technique.name))
+        .map(activeTechnique => activeTechnique.technique);
+
+      appliedTechniques.push(...attackTechniquesTargettingCaster);
+
+      if (techniqueIsApplied(caster, Techniques.adrenaline)) {
+        castedTimeInMs = option.castTimeInMs / 2;
+      }
+
+      // need to figure out reciprocity... single target only actions? any action really... mm. it's never applied
+      // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);      
+    }    
+
+    caster.castingExecutable = {
+      executable: option,
+      targets,
+      castedTimeInMs,
+      appliedTechniques,
+      violated: false,
+    }
+  }
+
+  checkActionTechniqueConditionMet(caster: Combatant, targets: Combatant[], technique: Technique): void {
+    if (techniqueIsViolated(caster, technique)) {
+      this.sound.play('restriction-violated');
+      return;
+    }
+    if (caster.castingExecutable.violated) return;
+    if (technique.conditionMet && !technique.conditionMet(this, caster, targets)) {
+      this.sound.play('restriction-violated');
+      caster.castingExecutable.violated = true;
+      const activeTechnique = getActiveTechnique(caster, technique);
+      if (activeTechnique) activeTechnique.violated = true;
+      return;
+    }
+    this.sound.play(technique.soundKeyName);    
+  }
+
+  fadeMusic(music: Phaser.Sound.BaseSound): void {
+    if (!music.isPlaying) return;
+    
+    this.tweens.add({
+      targets: music,
+      volume: 0,            
+      duration: 1000,       
+      onComplete: () => {
+        music.pause();   
+      }
+    });
+  }
+
+  //#endregion
+}
+
+const ATTACK_TECHNIQUES = new Set([
+  Techniques.adrenaline.name,
+  Techniques.buff.name,
+  Techniques.infuse.name,
+  Techniques.shadow.name,
+  Techniques.charged.name,
+  Techniques.nerf.name
+])

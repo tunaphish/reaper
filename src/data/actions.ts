@@ -4,7 +4,7 @@ import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
 import { EventType, ShatterTechniqueTarget } from '../model/encounter';
-import { World } from '../scenes/world/World';
+import { EncounterScene } from '../scenes/encounter/Encounter';
 
 export const actionIsAnAttack = (action: Action): boolean => action.events.some(event => event.type === EventType.UPDATE_DAMAGE && event.value > 0);
 
@@ -24,13 +24,13 @@ export const healHealth = (target: Combatant, source: Combatant, potency: number
 };
 
 // consider converting to getPotency functions
-export const scaleDamageOnBleedCombatants = (target: Combatant, source: Combatant, potency: number, scene: World): void => {
-  const damagedCombatants = scene.worldStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
+export const scaleDamageOnBleedCombatants = (target: Combatant, source: Combatant, potency: number, scene: EncounterScene): void => {
+  const damagedCombatants = scene.encounterStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
   const newPotency = damagedCombatants * potency;
   updateDamage(target, newPotency);
 };
-// export const scaleDamageOnCombatantsTargetingTarget = (target: Combatant, source: Combatant, potency: number, scene: World): void  => {
-//   const damagedCombatants = scene.worldStore.getCombatants().filter(combatant => combatant.target.name === target.name).length;
+// export const scaleDamageOnCombatantsTargetingTarget = (target: Combatant, source: Combatant, potency: number, scene: Encounter): void  => {
+//   const damagedCombatants = scene.encounterStore.getCombatants().filter(combatant => combatant.target.name === target.name).length;
 //   const newPotency = damagedCombatants * potency;
 //   updateDamage(target, newPotency);
 // };
@@ -141,7 +141,7 @@ export const pristine: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster) => caster.health === caster.maxHealth,
+  conditionMet: (encounter, caster) => caster.health === caster.maxHealth,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
@@ -159,7 +159,7 @@ export const engage: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world, caster, target) => target.health === target.maxHealth,
+  conditionMet: (encounter, caster, target) => target.health === target.maxHealth,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
@@ -177,7 +177,7 @@ export const splinter: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world) => world.splinterNotCasted,
+  conditionMet: (encounter) => encounter.splinterNotCasted,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 70 }
@@ -216,7 +216,7 @@ export const ambush: Action = {
 
   actionPointsCost: 1,
 
-  conditionMet: (world) => world.firstActionNotTaken,
+  conditionMet: (encounter) => encounter.firstActionNotTaken,
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 50 },

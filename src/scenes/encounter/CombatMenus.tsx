@@ -1,5 +1,5 @@
 import * as React from 'react';
-import classNames from './world.module.css';
+import classNames from './encounter.module.css';
 import { Option, OptionType } from '../../model/option';
 import { Technique } from '../../model/technique';
 import { getActiveTechnique } from '../../model/combatant';

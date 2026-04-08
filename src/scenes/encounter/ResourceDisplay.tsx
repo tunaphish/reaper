@@ -2,16 +2,16 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { AnimatePresence } from 'framer-motion';
 import { Combatant, techniqueIsViolated } from '../../model/combatant';
-import classNames from './world.module.css';
+import classNames from './encounter.module.css';
 import { Ally } from '../../model/ally';
-import { PanelWindow, Window } from './Window';
-import { ImageWindowContent } from './ImageWindowContent';
+import { PanelWindow, Window } from '../ui/Window';
+import { ImageWindowContent } from '../ui/ImageWindowContent';
 import { EventType, ImageWindow, TextSpeed } from '../../model/encounter';
-import { TypewriterText } from './TypewriterText';
+import { TypewriterText } from '../ui/TypewriterText';
 import { Technique } from '../../model/technique';
 import { OptionType } from '../../model/option';
-import { World } from './World';
-import { MenuCursor } from './MenuOptionsView';
+import { EncounterScene } from './Encounter';
+import { MenuCursor } from '../ui/MenuOptionsView';
 import clsx from 'clsx';
 
 export const Meter = (props: {
@@ -94,17 +94,17 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 });
 
 
-export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, world: World, idx?: number}) => {
+export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, children: React.ReactNode, onClickCell?: () => void, encounter: EncounterScene, idx?: number}) => {
 
   const onClick = () => {
-    props.world.selectTarget(props.combatant);
+    props.encounter.selectTarget(props.combatant);
   }
   
   return (
     <>
       <Window onClick={props.onClickCell || onClick} delay={(props.idx || 0) * .15 + .3}>
           <div className={classNames.characterCellContainer} >
-            { props.world.worldStore?.targets?.some(target => target.name === props.combatant.name) && <MenuCursor size={48}/>}
+            { props.encounter.encounterStore?.targets?.some(target => target.name === props.combatant.name) && <MenuCursor size={48}/>}
             <div className={classNames.portraitContainer } >
               <Meter vertical value={props.combatant.health} max={props.combatant.maxHealth} className={classNames.bleedMeter} />
               <Meter  vertical value={props.combatant.health - props.combatant.bleed} max={props.combatant.maxHealth} className={classNames.healthMeter} />
@@ -114,7 +114,7 @@ export const ResourceDisplayWrapper = observer((props: {combatant: Combatant, ch
             <ActionBar combatant={props.combatant} />
         </div>
       </Window>
-      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as Ally} world={props.world} />}
+      {props.combatant.type === OptionType.ALLY && <CastingWindow ally={props.combatant as Ally} encounter={props.encounter} />}
     </>
   )
 });
@@ -194,7 +194,7 @@ export const TechniqueView = (props: {technique: Technique; position: { x: numbe
   return <Window style={style}>{technique.name}</Window>;
 };
 
-const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) => {
+const CastingWindow = observer(({ ally, encounter }: { ally: Ally, encounter: EncounterScene }) => {
   const { castingExecutable } = ally;
   const techniques = castingExecutable?.appliedTechniques || [];
 
@@ -214,13 +214,13 @@ const CastingWindow = observer(({ ally, world }: { ally: Ally, world: World }) =
 
     const timers = techniques.map((technique, i) => {
       return window.setTimeout(() => {
-        world.checkActionTechniqueConditionMet(ally, castingExecutable.targets, technique);
+        encounter.checkActionTechniqueConditionMet(ally, castingExecutable.targets, technique);
         setVisibleCount(prev => prev + 1);
       }, baseDelay + stepMs * (i + 1));
     });
 
     return () => timers.forEach(clearTimeout);
-  }, [castingExecutable, stepMs, baseDelay, techniques, world.sound]);
+  }, [castingExecutable, stepMs, baseDelay, techniques, encounter.sound]);
 
   const castingImageSrc = castingExecutable?.executable?.castingImageSrc;
   if (!castingImageSrc) return null;

@@ -1,0 +1,451 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+
+    height: 100%;
+    width: 100%;
+    pointer-events: none !important;
+}
+
+.container > * {
+    pointer-events: auto;
+}
+
+.menuContainer {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 10px;
+}
+
+.startBar {
+    width: 100%;
+    background-color: var(--ink-black);
+}
+
+.allyBar {
+  position: relative;
+  display: flex;
+  width: 100%;
+  z-index: var(--ui-layer-player);
+}
+
+.menuTitleText {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.allyViewWrapper {
+  width: 100%;
+  position: relative;
+  padding: 15px;
+}
+
+.allyViewInner {
+  position: relative;
+  flex: 1;
+}
+
+.allyMenuOverlay {
+  position: absolute;
+  top: -40px;
+  left: 20%;
+}
+
+.menuContent {
+  flex: 1;
+  padding: 5px;
+}
+
+.item {
+    all: unset;
+}
+
+.item:disabled {
+    color: var(--dust-gray);
+}
+
+.abilitiesContainer {
+    flex: 1;
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.textContainer {
+  white-space: pre-wrap;   
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin: 10px;
+}
+
+/* Each letter cycles colors independently */
+.limitBreakLetter {
+  display: inline-block;
+  color: red;
+  animation: rainbowCycle 0.9s steps(1, end) infinite;
+  will-change: color, filter;
+
+}
+
+/* Classic palette-cycling rainbow */
+@keyframes rainbowCycle {
+  0%   { color: #ff0000; }
+  14%  { color: #ff7f00; }
+  28%  { color: #ffff00; }
+  42%  { color: #00ff00; }
+  57%  { color: #00ffff; }
+  71%  { color: #0000ff; }
+  85%  { color: #8b00ff; }
+  100% { color: #ff0000; }
+}
+
+.disabled {
+  color: var(--dust-gray);
+}
+
+.window {
+  background: var(--ink-black);
+  
+  border: 2px outset var(--paper-offwhite);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 1);
+
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.windowName {
+  padding: 3px;
+}
+
+.windowTitleBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+  background: var(--paper-offwhite);
+  color: var(--dust-gray);
+}
+
+.characterCellContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.meterContainer {
+  display: grid;
+  width: 100%;
+  font-size: 12px;
+  height: 100%;
+}
+
+.meterContainer > * {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.portraitContainer {
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.portraitContainer > * {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.healthNumber {
+  justify-self: center; 
+  align-self: end;      
+  color: var(--paper-offwhite);
+}
+
+
+.meterBackground {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-end; 
+}
+
+.meter {
+  background: var(--paper-offwhite);
+  width: 100%;
+  height: 100%;
+}
+
+.resourceContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.statContainer {
+  display: flex;
+}
+
+.EXHAUSTED {
+  border: 1px solid yellow;
+  color: yellow;
+}
+
+.DEAD {
+  border: 1px solid red;
+  color: red;
+}
+
+.tvContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr;
+  overflow: hidden;  
+}
+
+.background, .enemyPortait {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
+  width: 100%;
+
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.actionPointsContainer > * {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.actionPointMeterWindow {
+  background-color: var(--dust-gray);
+}
+
+.modalContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: all;
+}
+
+.modalMenu {
+  position: absolute;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-10px, -10px); }
+  20%, 40%, 60%, 80% { transform: translate(10px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.healthMeter {
+  background: linear-gradient(to top, var(--paper-offwhite) 90%, transparent 100%);
+}
+
+.bleedMeter {
+  background: linear-gradient(to top, var(--dust-gray) 90%, transparent 100%);
+}
+
+.menuOption {
+  all: unset;
+  
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  font-size: 32px;
+  width: 100%;
+}
+
+.menuOption:disabled {
+  color: var(--dust-gray);
+}
+
+
+.optionCost {
+  text-align: end;
+  flex: 1;
+  padding-left: 5px;
+}
+
+.techniqueActive {
+  text-shadow: 3px 2px 2px rgba(251, 12, 12,1), 0px -1px 3px rgba(12, 79, 251,.5),-3px 0px 2px rgba(52, 251, 12, 1);
+}
+
+
+@keyframes blink-animation {
+  50% { opacity: 1; }
+}
+
+.actionPointRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+}
+
+.actionPointToken {
+  width: 8px;
+  height: 8px;
+}
+
+.healthBarRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.healthBarLabel {
+  font-size: 12px;
+}
+
+.filled {
+  background: var(--paper-offwhite);
+}
+
+.empty {
+  border: 1px solid var(--dust-gray);
+}
+
+.techniqueIcon {
+  width: 8px;
+  height: 8px;
+  object-fit: contain;
+}
+
+.stigma {
+  filter: hue-rotate(280deg) saturate(1.3) brightness(0.85);
+  animation: stigmaPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes stigmaPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.75;
+  }
+}
+
+.stigmaText {
+  color: #ff4d4d;
+  text-shadow: 0 0 6px rgba(255, 0, 0, 0.7);
+}
+
+.overflowToken {
+  width: 8px;
+  height: 8px;
+  background: gold; 
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 300ms ease-in-out;
+}
+
+.damagePopup {
+  font-size: 72px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: red;
+  pointer-events: none;
+  animation: floatUp 2s ease-out forwards;
+}
+
+.healPopup {
+  font-size: 72px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: green;
+  pointer-events: none;
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40px) scale(1.2);
+  }
+}
+
+.streaksContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.streak {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, white, transparent);
+  animation-name: moveUp;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;  
+  filter: blur(0.5px);
+}
+
+@keyframes moveUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.violation {
+  background-color: var(--ink-black);
+  color: red;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  grid-row: 1;
+  grid-column: 1;
+}

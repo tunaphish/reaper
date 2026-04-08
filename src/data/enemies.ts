@@ -5,9 +5,8 @@ import { OptionType } from '../model/option';
 import * as Actions from './actions';
 import * as Techniques from './techniques';
 import { getRandomInt } from '../model/math';
-import { World } from '../scenes/world/World';
+import { EncounterScene as EncounterScene} from '../scenes/encounter/Encounter';
 import { Action } from '../model/action';
-
 
 const isAlive = (target: Combatant) => getStatus(target) !== Status.DEAD;
 const hasTechnique = (combatant => combatant.activeTechniques.length > 0);
@@ -16,22 +15,22 @@ const randomTarget = (potentialTargets: Combatant[]): Combatant[] => {
   return [potentialTargets.at(getRandomInt(potentialTargets.length))];
 };
 
-const randomAliveAlly = (scene: World, action: Action, caster: Enemy): Combatant[] => {
-  const potentialTargets = scene.worldStore.allies
+const randomAliveAlly = (scene: EncounterScene, action: Action, caster: Enemy): Combatant[] => {
+  const potentialTargets = scene.encounterStore.allies
     .filter(ally => !action.conditionMet || action.conditionMet(scene, caster, ally))
     .filter(isAlive);
-  return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.worldStore.allies);
+  return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.encounterStore.allies);
 };
 
 
-const randomAllyWithTechnique = (scene: World): Combatant[] => {
-  const potentialTargets = scene.worldStore.allies
+const randomAllyWithTechnique = (scene: EncounterScene): Combatant[] => {
+  const potentialTargets = scene.encounterStore.allies
     .filter(hasTechnique)
     .filter(isAlive);
-  return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.worldStore.allies);
+  return randomTarget(potentialTargets.length > 0 ? potentialTargets : scene.encounterStore.allies);
 };
 
-const self = (scene: World, action: Action, caster: Enemy): Combatant[] => [caster];
+const self = (scene: EncounterScene, action: Action, caster: Enemy): Combatant[] => [caster];
 
 
 export const fencer: Enemy = {
@@ -40,7 +39,7 @@ export const fencer: Enemy = {
   journalDescription: 'Debug Enemy meant to use specialized attacks',
   combatPortraitSrc: '/reaper/images/fencer-test.png',
 
-  health: 10,
+  health: 200,
   maxHealth: 200,
   bleed: 0,
   actionPoints: 0,
@@ -52,7 +51,7 @@ export const fencer: Enemy = {
       option: Actions.magic, 
       weight: 20, 
       getTargets: randomAllyWithTechnique, 
-      isValid: (world: World): boolean => world.worldStore.allies.some(hasTechnique) 
+      isValid: (encounter: EncounterScene): boolean => encounter.encounterStore.allies.some(hasTechnique) 
     },
     { 
       option: Actions.attack, 
@@ -64,17 +63,17 @@ export const fencer: Enemy = {
       option: Actions.splinter, 
       weight: 500, 
       getTargets: randomAliveAlly, 
-      isValid: (world: World): boolean => world.splinterNotCasted },
+      isValid: (encounter: EncounterScene): boolean => encounter.splinterNotCasted },
     { 
       option: Actions.engage, 
       weight: 500, 
       getTargets: randomAliveAlly, 
-      isValid: (world: World): boolean => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+      isValid: (encounter: EncounterScene): boolean => encounter.encounterStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
       weight: 2000, 
       getTargets: self, 
-      isValid: (world: World, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
+      isValid: (encounter: EncounterScene, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
     },
   ],
   selectedStrategyIndex: 0,
@@ -103,7 +102,7 @@ export const knight: Enemy = {
       option: Actions.magic, 
       weight: 20, 
       getTargets: randomAllyWithTechnique, 
-      isValid: (world: World): boolean => world.worldStore.allies.some(hasTechnique) 
+      isValid: (encounter: EncounterScene): boolean => encounter.encounterStore.allies.some(hasTechnique) 
     },
     { 
       option: Actions.attack, 
@@ -115,17 +114,17 @@ export const knight: Enemy = {
       option: Actions.splinter, 
       weight: 500, 
       getTargets: randomAliveAlly, 
-      isValid: (world: World): boolean => world.splinterNotCasted },
+      isValid: (encounter: EncounterScene): boolean => encounter.splinterNotCasted },
     { 
       option: Actions.engage, 
       weight: 500, 
       getTargets: randomAliveAlly, 
-      isValid: (world: World): boolean => world.worldStore.allies.some(ally => ally.health === ally.maxHealth ) },
+      isValid: (encounter: EncounterScene): boolean => encounter.encounterStore.allies.some(ally => ally.health === ally.maxHealth ) },
     { 
       option: Techniques.counter, 
       weight: 2000, 
       getTargets: self, 
-      isValid: (world: World, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
+      isValid: (encounter: EncounterScene, caster: Combatant): boolean => !techniqueIsActive(caster, Techniques.counter),
     },
   ],
   selectedStrategyIndex: 0,

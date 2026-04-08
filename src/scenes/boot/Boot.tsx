@@ -7,6 +7,7 @@ import { DefaultAllies } from '../../data/allies';
 import { DEFAULT_INVENTORY } from '../../data/items';
 import { LocalStorageAdapter } from '../../external/LocalStorageAdapter';
 
+// const SCENE_TO_START = 'Encounter';
 const SCENE_TO_START = 'World';
 // const SCENE_TO_START = 'SystemMenu';
 

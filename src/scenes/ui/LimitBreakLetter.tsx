@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from './world.module.css'
+import classNames from './ui.module.css'
 
 type LimitBreakLetterProps = {
   char: string

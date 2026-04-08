@@ -1,4 +1,4 @@
-import { World } from "../scenes/world/World";
+import { EncounterScene } from "../scenes/encounter/Encounter";
 import { Combatant } from "./combatant";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
@@ -13,6 +13,6 @@ export type Technique = Option & {
   
   soundKeyName: string;
   iconSrc?: string;
-  conditionMet?: (world: World, caster: Combatant, targets: Combatant[]) => boolean;
+  conditionMet?: (encounter: EncounterScene, caster: Combatant, targets: Combatant[]) => boolean;
 
 }

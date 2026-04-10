@@ -9,7 +9,7 @@ import { EncounterStore, Menu, MenuOption } from './encounterStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
+import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, Topic, UpdateDamageEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
 import { Combatant, getActiveTechnique, getStatus, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
@@ -83,7 +83,7 @@ export class EncounterScene extends Phaser.Scene {
       this.encounterStore.setBattleInitiated(true);
     }
     if (data.encounter) {
-      this.encounterStore.activeEncounter = { encounter: data.encounter, eventIdx: -1, timeSinceLastEventInMs: 0 };
+      this.encounterStore.setActiveEncounter(data.encounter);
       this.advanceEvent();
     }
   }
@@ -153,7 +153,7 @@ export class EncounterScene extends Phaser.Scene {
 
   // #region handle events
   addQueuedEvents(events: Event[]): void {
-    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.autoAdvanceInMs || 300}));
+    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.autoAdvanceInMs || 0}));
     this.queuedEvents.push(...newEvents);
   }
 
@@ -201,6 +201,7 @@ export class EncounterScene extends Phaser.Scene {
     switch (event.type) {
       case EventType.IMAGE:
       case EventType.DECISION:
+      case EventType.INQUIRY:
       case EventType.TEXT: {
         this.encounterStore.pushWindow(event);
         return;
@@ -289,8 +290,13 @@ export class EncounterScene extends Phaser.Scene {
 
   // #region encounter input
   onChoiceSelect = (encounter: Encounter): void => {
+    this.encounterStore.setActiveEncounter(encounter);
+    this.advanceEvent();
+  }
+
+  onTopicSelect = (topic: Topic): void => {
     this.playChoiceSelectSound();
-    this.addQueuedEvents(encounter.events);
+    this.addQueuedEvents(topic.events);
   }
 
   //#endregion

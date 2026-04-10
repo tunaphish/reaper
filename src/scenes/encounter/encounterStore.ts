@@ -106,7 +106,7 @@ export class EncounterStore {
     this.battleInitiated = battleInitiated;
   }
 
-  setActiveEncounter(activeEncounter?: ActiveEncounter): void {
-    this.activeEncounter = activeEncounter;
+  setActiveEncounter(encounter?: Encounter): void {
+    this.activeEncounter = { encounter, eventIdx: -1, timeSinceLastEventInMs: 0 };
   }
 }

@@ -16,6 +16,7 @@ export enum EventType {
   IMAGE,
   SOUND,
   DECISION,
+  INQUIRY,
   
   // Combat
   UPDATE_DAMAGE,
@@ -74,6 +75,17 @@ export type Decision = BaseEvent & {
   choices: Choice[]
 }
 
+export type Topic = {
+  line: TextToken[];
+  events: Event[];
+}
+
+export type Inquiry = BaseEvent & {
+  type: EventType.INQUIRY;
+  title?: TextToken[];
+  topics: Topic[];
+}
+
 // #endregion
 
 // #region CombatEvents
@@ -104,7 +116,7 @@ export type ShatterEvent = BaseEvent & {
 
 // #endregion
 
-export type Window = TextWindow | ImageWindow | Decision;
+export type Window = TextWindow | ImageWindow | Decision | Inquiry;
 
 export type CombatEvent = UpdateDamageEvent | UpdateApEvent | ShatterTechniqueEvent | ShatterEvent;
 

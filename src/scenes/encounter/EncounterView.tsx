@@ -9,7 +9,7 @@ import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { TypewriterText } from '../ui/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent } from '../ui/ImageWindowContent';
-import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, Decision } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, Decision, Inquiry } from '../../model/encounter';
 import { PanelWindow, Window } from '../ui/Window';
 import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
@@ -267,6 +267,28 @@ const DecisionView = (props: { decision: Decision, encounter: EncounterScene }):
   )
 }
 
+// when I actually make the proper assets for this i'll protect against reselecting
+const InquiryView = (props: { inquiry: Inquiry, encounter: EncounterScene }): JSX.Element => {
+  const { inquiry } = props;  
+
+  const onClick = (item) => {
+    props.encounter.onTopicSelect(item)
+  }
+  
+  return (
+    <>
+      {inquiry.title && <TypewriterText line={inquiry.title} textSpeed={TextSpeed.NORMAL} />}
+      <MenuOptionsView 
+        getKey={(item) => item.line}
+        items={inquiry.topics}
+        renderLabel={(item) => <TypewriterText line={item.line} textSpeed={TextSpeed.NORMAL} />}
+        onSelect={onClick}
+        isCursor={true}
+      />
+    </>
+  )
+}
+
 const MenuStack = observer((props: { encounter: EncounterScene }): JSX.Element => {
   const { encounter } = props;
   const { menus } = encounter.encounterStore;
@@ -369,6 +391,8 @@ const WindowContentView = (props: { window: WindowModel, encounter: EncounterSce
       return <TextWindowView textWindow={props.window} />
     case EventType.DECISION:
       return <DecisionView decision={props.window} encounter={props.encounter}/>
+    case EventType.INQUIRY:
+      return <InquiryView inquiry={props.window} encounter={props.encounter}/>
     default:
       return null
   }

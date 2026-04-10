@@ -153,59 +153,49 @@ export const YES_NO_DECISION_SPREAD: Encounter = {
   ],
 };
 
-// export const INTERROGATION_VICTIM_ENCOUNTER: Encounter = {
-//   id: 'asdf',
-//   events: [
-//     {
-//       type: EventType.TEXT,
-//       line: [{ text: 'he was my brother' }],
-//       speed: TextSpeed.FAST,
-//       layout: {
-//         x: 100,
-//         y: 550,
-//         width: 150,
-//         height: 100,
-//       },
-//     },
-//   ],
-// };
-
-// export const INTERROGATION_MODELS_ENCOUNTER: Encounter = {
-//   id: 'zoolander',
-//   events: [
-//     {
-//       type: EventType.TEXT,
-//       line: [{ text: 'Are you serious?' }],
-//       speed: TextSpeed.FAST,
-//       layout: {
-//         x: 300,
-//         y: 550,
-//         width: 150,
-//         height: 100,
-//       },
-//     },
-//   ],
-// };
-
-// export const INTERROGATION_SPREAD: Encounter = {
-//   id: 'INTERROGATION Spread',
-//   events: [
-//     {
-//       type: EventType.CHOICE,
-//       title: [{ text: 'what do you wanna know?' }],
-//       choices: [
-//         {
-//           line: [{ text: 'who was the victim?' }],
-//           nextEncounter: INTERROGATION_VICTIM_ENCOUNTER,
-//         },
-//         {
-//           line: [{ text: 'but why male models' }],
-//           nextEncounter: INTERROGATION_MODELS_ENCOUNTER,
-//         },
-//       ],
-//     },
-//   ],
-// };
+export const INTERROGATION_SPREAD: Encounter = {
+  id: 'INTERROGATION Spread',
+  events: [
+    {
+      type: EventType.INQUIRY,
+      title: [{ text: 'what do you wanna know?' }],
+      topics: [
+        {
+          line: [{ text: 'who was the victim?' }],
+          events: [
+            {
+              type: EventType.TEXT,
+              line: [{ text: 'he was my brother' }],
+              speed: TextSpeed.FAST,
+              layout: {
+                x: 100,
+                y: 550,
+                width: 150,
+                height: 100,
+              },
+            },
+          ],
+        },
+        {
+          line: [{ text: 'but why male models' }],
+          events: [
+            {
+              type: EventType.TEXT,
+              line: [{ text: 'Are you serious?' }],
+              speed: TextSpeed.FAST,
+              layout: {
+                x: 300,
+                y: 550,
+                width: 150,
+                height: 100,
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 
-export const TOP_LEVEL_SPREADS = [EXAMPLE_SPREAD, BUNNY_MASK_SPREAD, YES_NO_DECISION_SPREAD];
+export const TOP_LEVEL_SPREADS = [EXAMPLE_SPREAD, BUNNY_MASK_SPREAD, YES_NO_DECISION_SPREAD, INTERROGATION_SPREAD];

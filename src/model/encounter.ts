@@ -15,7 +15,7 @@ export enum EventType {
   TEXT,
   IMAGE,
   SOUND,
-  CHOICE,
+  DECISION,
   
   // Combat
   UPDATE_DAMAGE,
@@ -63,16 +63,15 @@ export type SoundEvent = BaseEvent & {
 
 // #region EncounterActions
 
-export type Option = {
+export type Choice = {
   line: TextToken[]
   nextEncounter: Encounter
 }
 
-export type ChoiceAction = BaseEvent & {
-  type: EventType.CHOICE
+export type Decision = BaseEvent & {
+  type: EventType.DECISION
   title?: TextToken[]
-  options: Option[]
-  isMutuallyExclusive: boolean
+  choices: Choice[]
 }
 
 // #endregion
@@ -105,12 +104,11 @@ export type ShatterEvent = BaseEvent & {
 
 // #endregion
 
-export type Window = TextWindow | ImageWindow;
-
+export type Window = TextWindow | ImageWindow | Decision;
 
 export type CombatEvent = UpdateDamageEvent | UpdateApEvent | ShatterTechniqueEvent | ShatterEvent;
 
-export type Event = Window | SoundEvent | ChoiceAction | CombatEvent;
+export type Event = Window | SoundEvent | CombatEvent;
 
 export type Encounter = {
   id: string

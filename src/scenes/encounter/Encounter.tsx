@@ -200,13 +200,9 @@ export class EncounterScene extends Phaser.Scene {
   executeEvent(event: Event, target?: Combatant, caster?: Combatant, techniques?: Technique[]): void {
     switch (event.type) {
       case EventType.IMAGE:
+      case EventType.DECISION:
       case EventType.TEXT: {
         this.encounterStore.pushWindow(event);
-        return;
-      }
-
-      case EventType.CHOICE: {
-        this.encounterStore.setChoiceAction(event);
         return;
       }
 
@@ -292,17 +288,11 @@ export class EncounterScene extends Phaser.Scene {
   }
 
   // #region encounter input
-  onNextEncounter = (encounter: Encounter): void => {
+  onChoiceSelect = (encounter: Encounter): void => {
     this.playChoiceSelectSound();
-    this.encounterStore.setChoiceAction(null);
     this.addQueuedEvents(encounter.events);
   }
 
-  onMultiSelect = (encounter: Encounter): void => {
-    this.playChoiceSelectSound();
-    this.encounterStore.closeWindows();
-    this.addQueuedEvents(encounter.events);
-  }
   //#endregion
 
 

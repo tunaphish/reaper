@@ -133,14 +133,13 @@ export const NO_YIELD_ENCOUNTER: Encounter = {
   ],
 };
 
-export const YES_NO_CHOICE_SPREAD: Encounter = {
-  id: 'Yes No Choice Spread',
+export const YES_NO_DECISION_SPREAD: Encounter = {
+  id: 'Yes No Decision Spread',
   events: [
     {
-      type: EventType.CHOICE,
-      isMutuallyExclusive: true,
+      type: EventType.DECISION,
       title: [{ text: 'do you yield? ' }],
-      options: [
+      choices: [
         {
           line: [{ text: 'yes' }],
           nextEncounter: YES_YIELD_ENCOUNTER,
@@ -154,60 +153,59 @@ export const YES_NO_CHOICE_SPREAD: Encounter = {
   ],
 };
 
-export const INTERROGATION_VICTIM_ENCOUNTER: Encounter = {
-  id: 'asdf',
-  events: [
-    {
-      type: EventType.TEXT,
-      line: [{ text: 'he was my brother' }],
-      speed: TextSpeed.FAST,
-      layout: {
-        x: 100,
-        y: 550,
-        width: 150,
-        height: 100,
-      },
-    },
-  ],
-};
+// export const INTERROGATION_VICTIM_ENCOUNTER: Encounter = {
+//   id: 'asdf',
+//   events: [
+//     {
+//       type: EventType.TEXT,
+//       line: [{ text: 'he was my brother' }],
+//       speed: TextSpeed.FAST,
+//       layout: {
+//         x: 100,
+//         y: 550,
+//         width: 150,
+//         height: 100,
+//       },
+//     },
+//   ],
+// };
 
-export const INTERROGATION_MODELS_ENCOUNTER: Encounter = {
-  id: 'zoolander',
-  events: [
-    {
-      type: EventType.TEXT,
-      line: [{ text: 'Are you serious?' }],
-      speed: TextSpeed.FAST,
-      layout: {
-        x: 300,
-        y: 550,
-        width: 150,
-        height: 100,
-      },
-    },
-  ],
-};
+// export const INTERROGATION_MODELS_ENCOUNTER: Encounter = {
+//   id: 'zoolander',
+//   events: [
+//     {
+//       type: EventType.TEXT,
+//       line: [{ text: 'Are you serious?' }],
+//       speed: TextSpeed.FAST,
+//       layout: {
+//         x: 300,
+//         y: 550,
+//         width: 150,
+//         height: 100,
+//       },
+//     },
+//   ],
+// };
 
-export const INTERROGATION_SPREAD: Encounter = {
-  id: 'INTERROGATION Spread',
-  events: [
-    {
-      type: EventType.CHOICE,
-      isMutuallyExclusive: false,
-      title: [{ text: 'what do you wanna know?' }],
-      options: [
-        {
-          line: [{ text: 'who was the victim?' }],
-          nextEncounter: INTERROGATION_VICTIM_ENCOUNTER,
-        },
-        {
-          line: [{ text: 'but why male models' }],
-          nextEncounter: INTERROGATION_MODELS_ENCOUNTER,
-        },
-      ],
-    },
-  ],
-};
+// export const INTERROGATION_SPREAD: Encounter = {
+//   id: 'INTERROGATION Spread',
+//   events: [
+//     {
+//       type: EventType.CHOICE,
+//       title: [{ text: 'what do you wanna know?' }],
+//       choices: [
+//         {
+//           line: [{ text: 'who was the victim?' }],
+//           nextEncounter: INTERROGATION_VICTIM_ENCOUNTER,
+//         },
+//         {
+//           line: [{ text: 'but why male models' }],
+//           nextEncounter: INTERROGATION_MODELS_ENCOUNTER,
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 
-export const TOP_LEVEL_SPREADS = [EXAMPLE_SPREAD, BUNNY_MASK_SPREAD, YES_NO_CHOICE_SPREAD, INTERROGATION_SPREAD];
+export const TOP_LEVEL_SPREADS = [EXAMPLE_SPREAD, BUNNY_MASK_SPREAD, YES_NO_DECISION_SPREAD];

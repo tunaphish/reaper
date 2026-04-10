@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-import { ChoiceAction, Encounter, Window } from "../../model/encounter";
+import { Encounter, Window } from "../../model/encounter";
 import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant } from "../../model/combatant";
@@ -29,7 +29,6 @@ export class EncounterStore {
   // Navigation Related
   windows: Window[] = [];
   menus: Menu[] = [];
-  choiceAction?: ChoiceAction;
   
   battleInitiated = false;
   enemies: Enemy[] = [];
@@ -78,10 +77,6 @@ export class EncounterStore {
 
   pushMenu(menu: Menu): void {
     this.menus.push(menu);
-  }
-  
-  setChoiceAction(choiceAction?: ChoiceAction): void {
-    this.choiceAction = choiceAction;
   }
 
   getCombatants(): Combatant[] {

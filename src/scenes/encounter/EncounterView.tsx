@@ -9,7 +9,7 @@ import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { TypewriterText } from '../ui/TypewriterText';
 import { Enemy } from '../../model/enemy';
 import { ImageWindowContent } from '../ui/ImageWindowContent';
-import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, ChoiceAction } from '../../model/encounter';
+import { TextSpeed, TextWindow, Window as WindowModel, EventType, ImageWindow, Decision } from '../../model/encounter';
 import { PanelWindow, Window } from '../ui/Window';
 import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
@@ -25,7 +25,6 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
       <EncounterContainer encounter={encounter} />
       <AllyBarView encounter={encounter} />
       <ActionBar encounter={encounter} />
-      {props.encounter.encounterStore.choiceAction && <ChoiceView encounter={encounter}  />}
     </div>
 )
 });
@@ -244,39 +243,27 @@ const MenuView = observer((props: { encounter: EncounterScene, menu: Menu, idx: 
   )
 });
 
-const ChoiceView = (props: { encounter: EncounterScene }): JSX.Element => {
-  const choice = props.encounter.encounterStore.choiceAction;
-  
-  const style: React.CSSProperties = {
-    position: "absolute",
-    top: "-40px",
-    left: "20px",
+const DecisionView = (props: { decision: Decision, encounter: EncounterScene }): JSX.Element => {
+  const { decision } = props;  
+  const [selected, setSelected] = React.useState(false);
+
+  const onClick = (item) => {
+    if (selected) return;
+    setSelected(true);
+    props.encounter.onChoiceSelect(item.nextEncounter)
   }
-  const choices = !!choice.isMutuallyExclusive ?
-    choice.options.map((option, idx) => 
-      <div key={idx} onClick={() => props.encounter.onNextEncounter(option.nextEncounter)}>
-        {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
-      </div>
-    ) :
-    <MenuOptionsView 
-      getKey={(item) => item.nextEncounter.id}
-      items={choice.options}
-      renderLabel={(item) => <TypewriterText line={item.line} textSpeed={TextSpeed.NORMAL} />}
-      onSelect={(item) => props.encounter.onMultiSelect(item.nextEncounter)}
-      isCursor={true}
-    />
-
-    choice.options.map((option, idx) =>
-      <div key={idx} onClick={() => props.encounter.onMultiSelect(option.nextEncounter)}>
-        {<TypewriterText line={option.line} textSpeed={TextSpeed.NORMAL} />}
-      </div>
-    );
-
+  
   return (
-    <Window style={style}>
-      {choice.title && <TypewriterText line={choice.title} textSpeed={TextSpeed.NORMAL} />}
-      { choices }
-    </Window>
+    <>
+      {decision.title && <TypewriterText line={decision.title} textSpeed={TextSpeed.NORMAL} />}
+      <MenuOptionsView 
+        getKey={(item) => item.nextEncounter.id}
+        items={decision.choices}
+        renderLabel={(item) => <TypewriterText line={item.line} textSpeed={TextSpeed.NORMAL} />}
+        onSelect={onClick}
+        isCursor={true}
+      />
+    </>
   )
 }
 
@@ -320,23 +307,14 @@ const AllyView = observer((props: { encounter: EncounterScene, ally: Ally, idx: 
   const ref = React.useRef<HTMLDivElement>(null);
   const popups = usePhaserDamagePopups(encounter, ref, ally.name);
 
-  const isInEncounter = encounter.encounterStore.windows.length > 0 || encounter.encounterStore.choiceAction;
 
   const combatPortraitSrc = `/reaper/ui/ally/${ally.name}-${getStatus(ally)}.png`
 
-  const onClick = () => {
-    if (isInEncounter) {
-      encounter.playChoiceDisabledSound();
-      return;
-    }
-
-    encounter.setAlly(ally);
-  }
   
   return (
     <div className={classNames.allyViewWrapper}>
       <div className={classNames.allyViewInner} ref={ref}>
-        <ResourceDisplayWrapper combatant={ally} encounter={encounter} onClickCell={onClick} idx={idx}>
+        <ResourceDisplayWrapper combatant={ally} encounter={encounter} onClickCell={() => encounter.setAlly(ally)} idx={idx}>
           <img src={combatPortraitSrc}></img>
         </ResourceDisplayWrapper>
       </div>
@@ -389,6 +367,8 @@ const WindowContentView = (props: { window: WindowModel, encounter: EncounterSce
       return <ImageWindowContent imageWindow={props.window} />
     case EventType.TEXT:
       return <TextWindowView textWindow={props.window} />
+    case EventType.DECISION:
+      return <DecisionView decision={props.window} encounter={props.encounter}/>
     default:
       return null
   }

@@ -24,6 +24,7 @@ export default class ReactOverlay extends Plugins.BasePlugin {
   }
 
   create(child: React.ReactElement, scene: Phaser.Scene): void {
+    console.log('create: ' + scene.scene.key);
     this.uiMap.set(scene.scene.key, child);
     this.root.render(child);
     const eventEmitter = scene.events;
@@ -38,15 +39,21 @@ export default class ReactOverlay extends Plugins.BasePlugin {
   }
 
   resume(system: Phaser.Scenes.Systems): void {
+    console.log('resume: ' + system.scenePlugin.key);
+
     const element = this.uiMap.get(system.scenePlugin.key);
+
     this.root.render(element);
   }
 
   shutdown(system: Phaser.Scenes.Systems): void {
-    this.clearUi(system.scenePlugin.key);
+    console.log('shutdown: ' + system.scenePlugin.key);
+    // shutdown is run during pause... do NOT clear UI
+    // this.clearUi(system.scenePlugin.key);
   }
 
   destroyScene(system: Phaser.Scenes.Systems): void {
+    console.log('destroy: ' + system.scenePlugin.key);
     this.clearUi(system.scenePlugin.key);
   }
 

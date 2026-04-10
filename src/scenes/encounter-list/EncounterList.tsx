@@ -13,7 +13,8 @@ const Ui = (props: { encounterList: EncounterList }): React.ReactElement => {
   const encounterLinks = TOP_LEVEL_SPREADS.map((encounter) => {
     const onClickSceneListItem = () => {
       props.encounterList.choiceSelectSound.play();
-      props.encounterList.scene.start('Encounter', { encounter });
+      props.encounterList.scene.pause();
+      props.encounterList.scene.start('Encounter', { encounter, callingSceneKey: sceneConfig.key });
     };
     return <div key={encounter.id} className={classNames.scriptButton} onClick={() => onClickSceneListItem()}>- {encounter.id}</div>;
   });

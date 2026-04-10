@@ -16,10 +16,18 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
 });
 
 export const StartBar = observer(({world}: {world: World}) => {
+  const style: React.CSSProperties = { 
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  };
 
   return (
-    <Window onClick={() => world.openSystemMenu()} style={{ position: 'relative' }}>
-      start    
+    <Window style={style}>
+      <span onClick={() => world.openSystemMenu()}>menu</span>
+      <span onClick={() => world.openBattleEncounter()}>battle</span>
+      <span onClick={() => world.openTalkEncounter()}>talk</span>
     </Window>
   )
 });

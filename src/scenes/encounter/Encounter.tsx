@@ -28,7 +28,6 @@ import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
 import { actionMenuItem } from './CombatMenus';
 import { Executable } from '../../model/Executable';
-import { enemies } from '../../data/enemies';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -48,7 +47,7 @@ type QueuedEvent = {
 
 export class EncounterScene extends Phaser.Scene {
   reactOverlay: ReactOverlay;
-  private battleMusic: Phaser.Sound.BaseSound;
+  private music: Phaser.Sound.BaseSound;
   mapData: MapData;
   triggerGroup!: Phaser.Physics.Arcade.StaticGroup
 
@@ -64,13 +63,15 @@ export class EncounterScene extends Phaser.Scene {
   splinterNotCasted = true;
   firstActionNotTaken = true;
 
+  callingSceneKey: string;
+
   constructor() {
     super(sceneConfig);
   }
 
   // dynamically preload map data here
 
-  init(data: { encounter: Encounter }): void {
+  init(data: { encounter?: Encounter, enemies?: Enemy[], callingSceneKey: string, }): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');
     const allies: Allies = this.registry.get('allies');
     this.inventory = this.registry.get('inventory');
@@ -81,27 +82,30 @@ export class EncounterScene extends Phaser.Scene {
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
 
+    this.callingSceneKey = data.callingSceneKey;
+    if (data.enemies) {
+      this.encounterStore.pushEnemies(data.enemies);
+      this.encounterStore.setBattleInitiated(true);
+    }
     if (data.encounter) this.addQueuedEvents(data.encounter.events);
   }
 
   create(): void {
-
-    this.battleMusic = this.sound.add("knight", {
+    this.music = this.sound.add("knight", {
       loop: true,  
       volume: 0.2  
     });
-  
-    // this.encounterStore.pushEnemies([enemies[0]]);
+    this.events.on('shutdown', () => this.music.stop());
 
     this.reactOverlay.create(<EncounterView encounter={this}/>, this);
   }
 
   update(time: number, delta: number): void {
     this.processQueuedEvents(delta);
+    this.checkEndEncounterConditions(); 
 
     if (!this.encounterStore.battleInitiated) return;
     this.tickStats(delta);
-    this.checkBattleEndConditions(); 
     this.resetDeadAllyCasterMenu();
     this.executeCastedOptions();
     this.executeEnemyStrategies();
@@ -196,12 +200,12 @@ export class EncounterScene extends Phaser.Scene {
         const soundEvent = event as SoundEvent;
 
         if (soundEvent.loop) {
-          this.battleMusic = this.sound.add(soundEvent.key, {
+          this.music = this.sound.add(soundEvent.key, {
             loop: true,
             volume: 0.5,
           });
 
-          this.battleMusic.play();
+          this.music.play();
           return;
         }
 
@@ -455,22 +459,26 @@ export class EncounterScene extends Phaser.Scene {
     this.encounterStore.closeMenus();
   }
 
-  checkBattleEndConditions(): void {
+  checkEndEncounterConditions(): void {
     this.encounterStore.enemies = this.encounterStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
 
+    if (this.queuedEvents.length > 0) return;
+
     if (this.encounterStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
-      this.fadeMusic(this.battleMusic);
+      this.scene.start('GameOver');
     }
 
     //win
     if (this.encounterStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
-      this.fadeMusic(this.battleMusic);
+      this.fadeMusic(this.music);
       this.encounterStore.battleInitiated = false;
       for (const ally of this.encounterStore.allies) {
         ally.bleed = 0;
         ally.activeTechniques = [];
         ally.actionPoints = 0;
       }
+      this.scene.resume(this.callingSceneKey);
+      this.scene.stop();
     }
   }
 

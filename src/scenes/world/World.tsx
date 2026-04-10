@@ -9,7 +9,6 @@ import { Inventory } from '../../model/inventory';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import * as EXAMPLE_SPREADS from '../../data/encounters/example';
 import { Event } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
@@ -21,6 +20,8 @@ import { Technique } from "../../model/technique";
 
 import VirtualJoystick from './objects/VirtualJoystick';
 import FieldEnemy from './objects/FieldEnemy';
+import { TOP_LEVEL_SPREADS } from '../../data/encounters/example';
+import { enemies } from '../../data/enemies';
 
 export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
@@ -145,7 +146,7 @@ export class World extends Phaser.Scene {
     const triggers = [
       {
         triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
+        encounter: TOP_LEVEL_SPREADS[0],
         x: spawnPoint.x,
         y: spawnPoint.y - 48,
         width: 48,
@@ -222,21 +223,22 @@ export class World extends Phaser.Scene {
     });
   }
 
-  pause(): void {
-    this.choiceSelectSound.play();
-    this.scene.pause('World');
-  }
-
-  unpause(): void {
-    this.choiceSelectSound.play();
-    this.scene.resume('World');
-  }
-
   openSystemMenu(): void {
     this.choiceSelectSound.play();
     this.scene.pause('World');
     this.scene.run('SystemMenu', { locationName: this.mapData.locationName, musicKey: this.fieldMusic.key })
   }
-  
+
+  openTalkEncounter(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause('World')
+    this.scene.launch('Encounter', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
+  }
+
+  openBattleEncounter(): void {
+    this.choiceSelectSound.play();
+    this.scene.pause('World')
+    this.scene.launch('Encounter', { enemies: [enemies[0]], callingSceneKey: sceneConfig.key });
+  }
 }
 

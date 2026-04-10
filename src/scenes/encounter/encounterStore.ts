@@ -24,9 +24,8 @@ export class EncounterStore {
   windows: Window[] = [];
   menus: Menu[] = [];
   choiceAction?: ChoiceAction;
-
   
-  battleInitiated = true;
+  battleInitiated = false;
   enemies: Enemy[] = [];
   allies: Allies;
 
@@ -100,7 +99,7 @@ export class EncounterStore {
     this.enemies.push(...enemies);
   }
 
-  setBattleIniated(battleInitiated: boolean): void {
+  setBattleInitiated(battleInitiated: boolean): void {
     this.battleInitiated = battleInitiated;
   }
 }

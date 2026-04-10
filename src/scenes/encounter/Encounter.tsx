@@ -44,11 +44,6 @@ type QueuedEvent = {
   techniques?: Technique[],
 }
 
-type ActiveEncounter = {
-  encounter: Encounter;
-  eventIdx: number;
-}
-
 export class EncounterScene extends Phaser.Scene {
   reactOverlay: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
@@ -61,8 +56,6 @@ export class EncounterScene extends Phaser.Scene {
 
   queuedEvents: QueuedEvent[] = [];
   callingSceneKey: string;
-
-  activeEncounter: ActiveEncounter;
   
   // Battle 
   splinterNotCasted = true;
@@ -90,7 +83,7 @@ export class EncounterScene extends Phaser.Scene {
       this.encounterStore.setBattleInitiated(true);
     }
     if (data.encounter) {
-      this.activeEncounter = { encounter: data.encounter, eventIdx: 0 };
+      this.encounterStore.activeEncounter = { encounter: data.encounter, eventIdx: -1, timeSinceLastEventInMs: 0 };
       this.advanceEvent();
     }
   }
@@ -107,6 +100,7 @@ export class EncounterScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.processQueuedEvents(delta);
+    this.autoAdvanceActiveEncounter(delta);
 
     if (!this.encounterStore.battleInitiated) return;
     this.checkEndBattleConditions(); 
@@ -116,16 +110,36 @@ export class EncounterScene extends Phaser.Scene {
     this.executeEnemyStrategies();
   }
 
+  autoAdvanceActiveEncounter(delta: number): void {
+    if (!this.encounterStore.activeEncounter) return;
+    if (this.encounterStore.activeEncounter.eventIdx >= this.encounterStore.activeEncounter.encounter.events.length) return;
+    const lastEvent = this.encounterStore.activeEncounter.encounter.events[this.encounterStore.activeEncounter.eventIdx];
+    if (!lastEvent.autoAdvanceInMs) return;
+    this.encounterStore.activeEncounter.timeSinceLastEventInMs = Math.min(this.encounterStore.activeEncounter.timeSinceLastEventInMs+delta, 1000000);
+    if (this.encounterStore.activeEncounter.timeSinceLastEventInMs < lastEvent.autoAdvanceInMs) return;
+    this.encounterStore.activeEncounter.timeSinceLastEventInMs = 0;
+    this.advanceEvent();
+  };
+
+  canAdvance(): boolean {
+    if (!this.encounterStore.activeEncounter) return false;
+    if (this.encounterStore.activeEncounter.eventIdx >= this.encounterStore.activeEncounter.encounter.events.length) return true;
+    const lastEvent = this.encounterStore.activeEncounter.encounter.events[this.encounterStore.activeEncounter.eventIdx];
+    if (!lastEvent.autoAdvanceInMs) return true;
+    if (this.encounterStore.activeEncounter.timeSinceLastEventInMs < lastEvent.autoAdvanceInMs) return false;
+    return true;
+  }
+
   advanceEvent(): void {
-    if (!this.activeEncounter) return;
+    if (!this.encounterStore.activeEncounter) return;
     this.playChoiceSelectSound();
-    if (this.activeEncounter.eventIdx >= this.activeEncounter.encounter.events.length) {
+    this.encounterStore.activeEncounter.eventIdx++;
+    if (this.encounterStore.activeEncounter.eventIdx >= this.encounterStore.activeEncounter.encounter.events.length) {
       this.endScene();
       return;
     }
         
-    this.executeEvent(this.activeEncounter.encounter.events[this.activeEncounter.eventIdx]);
-    this.activeEncounter.eventIdx++;
+    this.executeEvent(this.encounterStore.activeEncounter.encounter.events[this.encounterStore.activeEncounter.eventIdx]);
   }
 
 

@@ -4,10 +4,6 @@ export const EXAMPLE_SPREAD: Encounter = {
   id: 'EXAMPLE_SPREAD',
   events: [
     {
-      type: EventType.SOUND,
-      key: 'charged',
-    },
-    {
       type: EventType.TEXT,
       line: [
         { text: 'hey this is ' },
@@ -21,12 +17,7 @@ export const EXAMPLE_SPREAD: Encounter = {
         y: 100,
         width: 280,
         height: 100,
-      }
-    },
-    {
-      type: EventType.SOUND,
-      key: 'knight',
-      loop: true,
+      },
     },
     {
       type: EventType.TEXT,
@@ -38,6 +29,12 @@ export const EXAMPLE_SPREAD: Encounter = {
         width: 280,
         height: 80,
       },
+    },
+    {
+      type: EventType.SOUND,
+      key: 'knight',
+      loop: true,
+      autoAdvanceInMs: 200,
     },
     {
       type: EventType.TEXT,
@@ -83,6 +80,7 @@ export const BUNNY_MASK_SPREAD: Encounter = {
         width: 140,
         height: 300,
       },
+      autoAdvanceInMs: 200,
     },
     {
       type: EventType.IMAGE,
@@ -102,7 +100,6 @@ export const BUNNY_MASK_SPREAD: Encounter = {
     },
     {
       type: EventType.TEXT,
-      autoAdvanceInMs: 300,
       line: [{ text: "Don't worry about what I look like . . ." }],
       layout: {
         x: 100,

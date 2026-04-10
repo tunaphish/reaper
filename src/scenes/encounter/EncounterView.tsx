@@ -34,13 +34,14 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
   const { encounter: encounter } = props
   const style: React.CSSProperties = {
     width: '100%',
+    color: encounter.canAdvance() ? 'var(--paper-offwhite)' : 'gray',
   }
   const onClick = () => {
-    if(!encounter.activeEncounter) return;
+    if (!encounter.canAdvance()) return;
     encounter.advanceEvent();
   }
   return (
-    <Window onClick={onClick} style={style}>{encounter.activeEncounter && "Action"}</Window>
+    <Window onClick={onClick} style={style}>Action</Window>
 )
 });
 

@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-import { ChoiceAction, Window } from "../../model/encounter";
+import { ChoiceAction, Encounter, Window } from "../../model/encounter";
 import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant } from "../../model/combatant";
@@ -17,6 +17,12 @@ export type Menu =  {
   title?: string;
 };
 
+export type ActiveEncounter = {
+  encounter: Encounter;
+  eventIdx: number;
+  timeSinceLastEventInMs: number;
+}
+
 export class EncounterStore {
   playerSave: PlayerSave;
 
@@ -32,6 +38,8 @@ export class EncounterStore {
   activeAlly?: Ally;
   executable?: Executable;
   targets: Combatant[] = [];
+
+  activeEncounter?: ActiveEncounter;
 
   constructor(playerSave: PlayerSave, allies: Allies) {
     this.playerSave = playerSave;
@@ -101,5 +109,9 @@ export class EncounterStore {
 
   setBattleInitiated(battleInitiated: boolean): void {
     this.battleInitiated = battleInitiated;
+  }
+
+  setActiveEncounter(activeEncounter?: ActiveEncounter): void {
+    this.activeEncounter = activeEncounter;
   }
 }

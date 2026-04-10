@@ -12,7 +12,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 const Ui = (props: { encounterList: EncounterList }): React.ReactElement => {
   const encounterLinks = TOP_LEVEL_SPREADS.map((encounter) => {
     const onClickSceneListItem = () => {
-      props.encounterList.choiceSelectSound.play();
       props.encounterList.scene.pause();
       props.encounterList.scene.start('Encounter', { encounter, callingSceneKey: sceneConfig.key });
     };

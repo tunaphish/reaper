@@ -38,7 +38,6 @@ export const EXAMPLE_SPREAD: Encounter = {
         width: 280,
         height: 80,
       },
-      delayInMs: 1000,
     },
     {
       type: EventType.TEXT,
@@ -50,7 +49,6 @@ export const EXAMPLE_SPREAD: Encounter = {
         width: 280,
         height: 80,
       },
-      delayInMs: 2000,
     },
     {
       type: EventType.TEXT,
@@ -61,7 +59,6 @@ export const EXAMPLE_SPREAD: Encounter = {
         width: 280,
         height: 80,
       },
-      delayInMs: 3000,
     },
   ],
 };
@@ -101,11 +98,11 @@ export const BUNNY_MASK_SPREAD: Encounter = {
         width: 80,
         height: 110,
       },
-      delayInMs: 200,
+      autoAdvanceInMs: 200,
     },
     {
       type: EventType.TEXT,
-      delayInMs: 300,
+      autoAdvanceInMs: 300,
       line: [{ text: "Don't worry about what I look like . . ." }],
       layout: {
         x: 100,

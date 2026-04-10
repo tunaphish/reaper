@@ -15,7 +15,6 @@ import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
 import { getRandomInt } from '../../model/math';
 import { getStatus } from '../../model/combatant';
-import { toJS } from 'mobx';
 
 export const EncounterView = observer((props: { encounter: EncounterScene }): JSX.Element => {
   const { encounter: encounter } = props
@@ -25,10 +24,26 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
       <EnemiesContainer encounter={encounter} />
       <EncounterContainer encounter={encounter} />
       <AllyBarView encounter={encounter} />
+      <ActionBar encounter={encounter} />
       {props.encounter.encounterStore.choiceAction && <ChoiceView encounter={encounter}  />}
     </div>
 )
 });
+
+ const ActionBar = observer((props: { encounter: EncounterScene }): JSX.Element => {
+  const { encounter: encounter } = props
+  const style: React.CSSProperties = {
+    width: '100%',
+  }
+  const onClick = () => {
+    if(!encounter.activeEncounter) return;
+    encounter.advanceEvent();
+  }
+  return (
+    <Window onClick={onClick} style={style}>{encounter.activeEncounter && "Action"}</Window>
+)
+});
+
 
 type DamagePopup = {
   id: number;

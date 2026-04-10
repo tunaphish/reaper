@@ -9,7 +9,6 @@ import { EncounterStore, Menu, MenuOption } from './encounterStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import * as EXAMPLE_SPREADS from '../../data/encounters/example';
 import { Encounter, Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
@@ -45,31 +44,34 @@ type QueuedEvent = {
   techniques?: Technique[],
 }
 
+type ActiveEncounter = {
+  encounter: Encounter;
+  eventIdx: number;
+}
+
 export class EncounterScene extends Phaser.Scene {
   reactOverlay: ReactOverlay;
   private music: Phaser.Sound.BaseSound;
   mapData: MapData;
-  triggerGroup!: Phaser.Physics.Arcade.StaticGroup
-
   encounterStore: EncounterStore;
-
   choiceSelectSound: Phaser.Sound.BaseSound;
   choiceDisabledSound: Phaser.Sound.BaseSound;
 
   inventory: Inventory;
 
   queuedEvents: QueuedEvent[] = [];
+  callingSceneKey: string;
 
+  activeEncounter: ActiveEncounter;
+  
+  // Battle 
   splinterNotCasted = true;
   firstActionNotTaken = true;
 
-  callingSceneKey: string;
 
   constructor() {
     super(sceneConfig);
   }
-
-  // dynamically preload map data here
 
   init(data: { encounter?: Encounter, enemies?: Enemy[], callingSceneKey: string, }): void {
     const playerSave: PlayerSave = this.registry.get('playerSave');
@@ -87,7 +89,10 @@ export class EncounterScene extends Phaser.Scene {
       this.encounterStore.pushEnemies(data.enemies);
       this.encounterStore.setBattleInitiated(true);
     }
-    if (data.encounter) this.addQueuedEvents(data.encounter.events);
+    if (data.encounter) {
+      this.activeEncounter = { encounter: data.encounter, eventIdx: 0 };
+      this.advanceEvent();
+    }
   }
 
   create(): void {
@@ -102,13 +107,25 @@ export class EncounterScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.processQueuedEvents(delta);
-    this.checkEndEncounterConditions(); 
 
     if (!this.encounterStore.battleInitiated) return;
+    this.checkEndBattleConditions(); 
     this.tickStats(delta);
     this.resetDeadAllyCasterMenu();
     this.executeCastedOptions();
     this.executeEnemyStrategies();
+  }
+
+  advanceEvent(): void {
+    if (!this.activeEncounter) return;
+    this.playChoiceSelectSound();
+    if (this.activeEncounter.eventIdx >= this.activeEncounter.encounter.events.length) {
+      this.endScene();
+      return;
+    }
+        
+    this.executeEvent(this.activeEncounter.encounter.events[this.activeEncounter.eventIdx]);
+    this.activeEncounter.eventIdx++;
   }
 
 
@@ -121,38 +138,8 @@ export class EncounterScene extends Phaser.Scene {
   }
 
   // #region handle events
-  createEncounterTriggers(spawnPoint: Phaser.Types.Tilemaps.TiledObject): void {
-    const triggers = [
-      {
-        triggerId: 'example_trigger_id',
-        encounter: EXAMPLE_SPREADS.EXAMPLE_SPREAD,
-        x: spawnPoint.x,
-        y: spawnPoint.y - 48,
-        width: 48,
-        height: 48
-      }
-    ]
-
-    for (const data of triggers) {
-      const zone = this.add.zone(
-        data.x,
-        data.y,
-        data.width,
-        data.height
-      );
-
-      this.physics.add.existing(zone, true);
-
-      zone.setData("encounter", data.encounter);
-      zone.setData("triggerId", data.triggerId);
-      zone.setData("overlapping", false);
-
-      this.triggerGroup.add(zone);
-    }
-  }
-
   addQueuedEvents(events: Event[]): void {
-    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.delayInMs || 300}));
+    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.autoAdvanceInMs || 300}));
     this.queuedEvents.push(...newEvents);
   }
 
@@ -170,16 +157,29 @@ export class EncounterScene extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-  onNextEncounter = (encounter: Encounter): void => {
-    this.playChoiceSelectSound();
-    this.encounterStore.setChoiceAction(null);
-    this.addQueuedEvents(encounter.events);
+    checkEndBattleConditions(): void {
+    this.encounterStore.enemies = this.encounterStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
+
+    if (this.encounterStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
+      this.scene.start('GameOver');
+    }
+
+    //win
+    if (this.encounterStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
+      this.fadeMusic(this.music);
+      this.encounterStore.battleInitiated = false;
+      for (const ally of this.encounterStore.allies) {
+        ally.bleed = 0;
+        ally.activeTechniques = [];
+        ally.actionPoints = 0;
+      }
+      this.endScene();
+    }
   }
 
-  onMultiSelect = (encounter: Encounter): void => {
-    this.playChoiceSelectSound();
-    this.encounterStore.closeWindows();
-    this.addQueuedEvents(encounter.events);
+  endScene(): void {
+    this.scene.resume(this.callingSceneKey);
+    this.scene.stop();
   }
   
   // #endregion
@@ -277,6 +277,21 @@ export class EncounterScene extends Phaser.Scene {
     }
   }
 
+  // #region encounter input
+  onNextEncounter = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.encounterStore.setChoiceAction(null);
+    this.addQueuedEvents(encounter.events);
+  }
+
+  onMultiSelect = (encounter: Encounter): void => {
+    this.playChoiceSelectSound();
+    this.encounterStore.closeWindows();
+    this.addQueuedEvents(encounter.events);
+  }
+  //#endregion
+
+
   //#region battle input
   setAlly = (ally: Ally): void => {
     this.playChoiceSelectSound();
@@ -296,7 +311,6 @@ export class EncounterScene extends Phaser.Scene {
     this.encounterStore.closeMenus();
     this.sound.play('choice-select');
     this.encounterStore.setActiveAlly(ally);
-    this.events.emit('caster-set', ally);
     this.encounterStore.pushMenu(this.getCombatMenu(ally.folder, ally.name));
 
     this.encounterStore.setActiveAlly(ally);
@@ -388,7 +402,7 @@ export class EncounterScene extends Phaser.Scene {
   //#endregion
   
 
-  //#region combat
+  //#region battle
   tickStats(delta: number): void {
     this.encounterStore.getCombatants().forEach((combatant) => {
       if (getStatus(combatant) === Status.DEAD) return;
@@ -459,28 +473,6 @@ export class EncounterScene extends Phaser.Scene {
     this.encounterStore.closeMenus();
   }
 
-  checkEndEncounterConditions(): void {
-    this.encounterStore.enemies = this.encounterStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
-
-    if (this.queuedEvents.length > 0) return;
-
-    if (this.encounterStore.allies.every((member) => getStatus(member) === Status.DEAD)) {
-      this.scene.start('GameOver');
-    }
-
-    //win
-    if (this.encounterStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
-      this.fadeMusic(this.music);
-      this.encounterStore.battleInitiated = false;
-      for (const ally of this.encounterStore.allies) {
-        ally.bleed = 0;
-        ally.activeTechniques = [];
-        ally.actionPoints = 0;
-      }
-      this.scene.resume(this.callingSceneKey);
-      this.scene.stop();
-    }
-  }
 
   getCombatMenu(folder: Folder, title: string): Menu {
     const menuOptions: MenuOption[] = folder.options.map((option) => {
@@ -535,14 +527,14 @@ export class EncounterScene extends Phaser.Scene {
                 .map(event => {
                   const newEvent: UpdateDamageEvent = (structuredClone(toJS(event)) as UpdateDamageEvent);
                   if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
-                  newEvent.delayInMs = (event.delayInMs || 0) + 600;
+                  newEvent.autoAdvanceInMs = (event.autoAdvanceInMs || 0) + 600;
                   return newEvent;
                 }) 
               events.push(...shadowEvents);
             }
             const newEvents: QueuedEvent[] = events.map(event => ({
               event, 
-              delayInMs: event.delayInMs || 300 + (idx*300),
+              delayInMs: event.autoAdvanceInMs || 300 + (idx*300),
               target,
               caster: combatant,
               techniques: [...combatant.castingExecutable.appliedTechniques],

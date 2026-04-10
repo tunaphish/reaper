@@ -25,7 +25,7 @@ export enum EventType {
 }
 
 export type BaseEvent = {
-  delayInMs?: number;
+  autoAdvanceInMs?: number;
 }
 
 export type BaseWindow = BaseEvent & {

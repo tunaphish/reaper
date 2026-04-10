@@ -124,7 +124,6 @@ export const shatter: Action = {
   events: [
     { type: EventType.SOUND, key: 'charged' },
     { type: EventType.SHATTER }
-
   ]
 }
 
@@ -304,7 +303,7 @@ export const split: Action = {
   events: [
     { type: EventType.SOUND, key: 'attack' },
     { type: EventType.UPDATE_DAMAGE, value: 25 },
-    { type: EventType.SOUND, key: 'attack', delayInMs: 1000 },
-    { type: EventType.UPDATE_DAMAGE, value: 25, delayInMs: 1000 },
+    { type: EventType.SOUND, key: 'attack', autoAdvanceInMs: 1000 },
+    { type: EventType.UPDATE_DAMAGE, value: 25, autoAdvanceInMs: 1000 },
   ]
 }

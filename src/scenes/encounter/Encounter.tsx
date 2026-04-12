@@ -76,9 +76,15 @@ export class EncounterScene extends Phaser.Scene {
 
     this.choiceSelectSound = this.sound.add('choice-select');
     this.choiceDisabledSound = this.sound.add('stamina-depleted');
+    this.music = this.sound.add("knight", {
+      loop: true,  
+      volume: 0.2  
+    });
+
 
     this.callingSceneKey = data.callingSceneKey;
     if (data.enemies) {
+      this.music.play();
       this.encounterStore.pushEnemies(data.enemies);
       this.encounterStore.setBattleInitiated(true);
     }
@@ -89,10 +95,6 @@ export class EncounterScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.music = this.sound.add("knight", {
-      loop: true,  
-      volume: 0.2  
-    });
     this.events.on('shutdown', () => this.music.stop());
 
     this.reactOverlay.create(<EncounterView encounter={this}/>, this);
@@ -180,7 +182,6 @@ export class EncounterScene extends Phaser.Scene {
 
     //win
     if (this.encounterStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
-      this.fadeMusic(this.music);
       this.encounterStore.battleInitiated = false;
       for (const ally of this.encounterStore.allies) {
         ally.bleed = 0;
@@ -192,6 +193,7 @@ export class EncounterScene extends Phaser.Scene {
   }
 
   endScene(): void {
+    this.fadeMusic(this.music);
     this.scene.resume(this.callingSceneKey);
     this.scene.stop();
   }

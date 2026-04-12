@@ -4,26 +4,16 @@ import ReactOverlay from '../../plugins/ReactOverlay';
 import Player from './objects/Player';
 import { WorldView } from './WorldView';
 
-import { Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import { Event } from '../../model/encounter';
-
-import { Enemy } from '../../model/enemy';
-import { Combatant } from '../../model/combatant';
-import { Folder } from '../../model/folder';
-import { Action } from "../../model/action";
-import { Item } from "../../model/item";
-import { Technique } from "../../model/technique";
 
 import VirtualJoystick from './objects/VirtualJoystick';
 import FieldEnemy from './objects/FieldEnemy';
 import { TOP_LEVEL_SPREADS } from '../../data/encounters/example';
 import { enemies } from '../../data/enemies';
 
-export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
@@ -31,13 +21,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'World',
 };
 
-type QueuedEvent = {
-  event: Event,
-  delayInMs: number,
-  target?: Combatant,
-  caster?: Combatant,
-  techniques?: Technique[],
-}
 
 export class World extends Phaser.Scene {
   private player: Player;
@@ -55,7 +38,6 @@ export class World extends Phaser.Scene {
 
   inventory: Inventory;
 
-  queuedEvents: QueuedEvent[] = [];
 
   constructor() {
     super(sceneConfig);
@@ -121,6 +103,7 @@ export class World extends Phaser.Scene {
         volume: 0.2  
       });
       this.fieldMusic.play();
+      this.events.on('resume', () => this.fieldMusic.resume());
     }
     
     this.reactOverlay.create(<WorldView world={this}/>, this);
@@ -187,7 +170,7 @@ export class World extends Phaser.Scene {
   //   this.worldStore.enemies.push(enemies[0]);
 
   //   if (this.worldStore.battleInitiated) return;
-  //   this.fadeMusic(this.fieldMusic);
+  //   this.fieldMusic.pause();
   //   this.worldStore.battleInitiated = true;
   //   this.sound.play('battle-start');
        
@@ -210,18 +193,7 @@ export class World extends Phaser.Scene {
   
   // #endregion
   
-  fadeMusic(music: Phaser.Sound.BaseSound): void {
-    if (!music.isPlaying) return;
-    
-    this.tweens.add({
-      targets: music,
-      volume: 0,            
-      duration: 1000,       
-      onComplete: () => {
-        music.pause();   
-      }
-    });
-  }
+
 
   openSystemMenu(): void {
     this.choiceSelectSound.play();
@@ -231,14 +203,18 @@ export class World extends Phaser.Scene {
 
   openTalkEncounter(): void {
     this.choiceSelectSound.play();
+    this.fieldMusic.pause();
     this.scene.pause('World')
     this.scene.launch('Encounter', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
   }
 
   openBattleEncounter(): void {
     this.choiceSelectSound.play();
+    this.fieldMusic.pause();
     this.scene.pause('World')
     this.scene.launch('Encounter', { enemies: [enemies[0]], callingSceneKey: sceneConfig.key });
   }
+
+  
 }
 

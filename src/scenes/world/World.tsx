@@ -113,6 +113,7 @@ export class World extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.player.setInput(this.joystick.vector.x, this.joystick.vector.y);
     this.player.update();
+    this.fieldEnemies.forEach(fieldEnemy => fieldEnemy.update(delta));
     // this.onTriggerExit();
   }
 

@@ -168,7 +168,7 @@ export class World extends Phaser.Scene {
   onFieldEnemyOverlap(player: Player, fieldEnemy: FieldEnemy): void {
     if (fieldEnemy.inBattle) return;
     fieldEnemy.inBattle = true;
-    this.openBattleEncounter(fieldEnemy.enemies);
+    this.openBattleEncounter(fieldEnemy);
   }
 
   // onTriggerExit(): void {
@@ -200,11 +200,19 @@ export class World extends Phaser.Scene {
     this.scene.launch('Encounter', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
   }
 
-  openBattleEncounter(enemies: Enemy[]): void {
+  openBattleEncounter(fieldEnemy: FieldEnemy): void {
     this.sound.play('battle-start');
     this.fieldMusic.pause();
+
+    // Listen for when Encounter stops, clean up here
+    this.scene.get('Encounter').events.once('shutdown', () => {
+      const idx = this.fieldEnemies.indexOf(fieldEnemy);
+      if (idx !== -1) this.fieldEnemies.splice(idx, 1);
+      fieldEnemy.destroy();  
+    });
+
     this.scene.pause('World')
-    this.scene.launch('Encounter', { enemies, callingSceneKey: sceneConfig.key });
+    this.scene.launch('Encounter', { enemies: fieldEnemy.enemies, callingSceneKey: sceneConfig.key });
   }  
 }
 

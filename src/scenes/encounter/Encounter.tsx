@@ -173,7 +173,7 @@ export class EncounterScene extends Phaser.Scene {
     this.queuedEvents = toDelay;
   }
 
-    checkEndBattleConditions(): void {
+  checkEndBattleConditions(): void {
     this.encounterStore.enemies = this.encounterStore.enemies.filter(enemy => getStatus(enemy) !== Status.DEAD);
 
     if (this.encounterStore.allies.every((member) => getStatus(member) === Status.DEAD)) {

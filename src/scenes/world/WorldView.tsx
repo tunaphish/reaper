@@ -25,9 +25,9 @@ export const StartBar = observer(({world}: {world: World}) => {
 
   return (
     <Window style={style}>
+      {/* <span onClick={() => world.openBattleEncounter()}>battle</span> */}
+      <span onClick={() => world.openTalkEncounter()}>interact</span>
       <span onClick={() => world.openSystemMenu()}>menu</span>
-      <span onClick={() => world.openBattleEncounter()}>battle</span>
-      <span onClick={() => world.openTalkEncounter()}>talk</span>
     </Window>
   )
 });

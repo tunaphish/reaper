@@ -12,7 +12,7 @@ import { DEBUG_MAP_DATA } from '../../data/maps';
 import VirtualJoystick from './objects/VirtualJoystick';
 import FieldEnemy from './objects/FieldEnemy';
 import { TOP_LEVEL_SPREADS } from '../../data/encounters/example';
-import { enemies } from '../../data/enemies';
+import { Enemy } from '../../model/enemy';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -63,15 +63,11 @@ export class World extends Phaser.Scene {
     map.createLayer('Above Player', tileset, 0, 0).setDepth(10);
 
 
-    // TEMP STUFF
     // Create Map Triggers
     this.triggerGroup = this.physics.add.staticGroup()
     // TODO: Update to pull trigger data from Tiled
     const spawnPoint: Phaser.Types.Tilemaps.TiledObject = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
     // this.createEncounterTriggers(spawnPoint)
-    for (let i=0; i<1; i++) {
-      this.fieldEnemies.push(new FieldEnemy(this, spawnPoint.x, spawnPoint.y-48));
-    }
 
     // Player
     this.player = new Player(this, spawnPoint.x, spawnPoint.y);
@@ -88,13 +84,18 @@ export class World extends Phaser.Scene {
       this
     )
 
-    // this.physics.add.overlap(
-    //   this.player,
-    //   this.fieldEnemies,
-    //   this.onFieldEnemyOverlap,
-    //   undefined,
-    //   this
-    // )
+
+    // Initialize Enemies
+    for (let i=0; i<1; i++) {
+      this.fieldEnemies.push(new FieldEnemy(this, spawnPoint.x, spawnPoint.y-48));
+    }
+    this.physics.add.overlap(
+      this.player,
+      this.fieldEnemies,
+      this.onFieldEnemyOverlap,
+      undefined,
+      this
+    )
 
     this.cameras.main.fadeIn(1200);
     if (this.mapData.musicKey) {
@@ -164,18 +165,11 @@ export class World extends Phaser.Scene {
     zone.setData("overlapping", true);
   } 
 
-  // onFieldEnemyOverlap(player: Player, enemy: FieldEnemy): void {
-  //   if (enemy.inBattle) return;
-  //   enemy.inBattle = true;
-  //   this.worldStore.enemies.push(enemies[0]);
-
-  //   if (this.worldStore.battleInitiated) return;
-  //   this.fieldMusic.pause();
-  //   this.worldStore.battleInitiated = true;
-  //   this.sound.play('battle-start');
-       
-
-  // }
+  onFieldEnemyOverlap(player: Player, fieldEnemy: FieldEnemy): void {
+    if (fieldEnemy.inBattle) return;
+    fieldEnemy.inBattle = true;
+    this.openBattleEncounter(fieldEnemy.enemies);
+  }
 
   // onTriggerExit(): void {
   //   this.triggerGroup.children.iterate(zone => {
@@ -192,8 +186,6 @@ export class World extends Phaser.Scene {
   // }
   
   // #endregion
-  
-
 
   openSystemMenu(): void {
     this.choiceSelectSound.play();
@@ -208,13 +200,11 @@ export class World extends Phaser.Scene {
     this.scene.launch('Encounter', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
   }
 
-  openBattleEncounter(): void {
-    this.choiceSelectSound.play();
+  openBattleEncounter(enemies: Enemy[]): void {
+    this.sound.play('battle-start');
     this.fieldMusic.pause();
     this.scene.pause('World')
-    this.scene.launch('Encounter', { enemies: [enemies[0]], callingSceneKey: sceneConfig.key });
-  }
-
-  
+    this.scene.launch('Encounter', { enemies, callingSceneKey: sceneConfig.key });
+  }  
 }
 

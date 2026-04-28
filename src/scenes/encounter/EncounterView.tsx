@@ -24,12 +24,13 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
       <EnemiesContainer encounter={encounter} />
       <EncounterContainer encounter={encounter} />
       <AllyBarView encounter={encounter} />
-      <ActionBar encounter={encounter} />
+      { encounter.encounterStore.activeEncounter && !encounter.encounterStore.battleInitiated && <ActionBar encounter={encounter} /> }
+      { encounter.encounterStore.battleInitiated && <EscapeBar encounter={encounter} /> }
     </div>
-)
+  )
 });
 
- const ActionBar = observer((props: { encounter: EncounterScene }): JSX.Element => {
+const ActionBar = observer((props: { encounter: EncounterScene }): JSX.Element => {
   const { encounter: encounter } = props
   const style: React.CSSProperties = {
     width: '100%',
@@ -41,7 +42,25 @@ export const EncounterView = observer((props: { encounter: EncounterScene }): JS
   }
   return (
     <Window onClick={onClick} style={style}>Action</Window>
-)
+  )
+});
+
+// TODO: Hold to Escape
+const EscapeBar = observer((props: { encounter: EncounterScene }): JSX.Element => {
+  const { encounter: encounter } = props
+  const style: React.CSSProperties = {
+    width: '100%',
+    color: 'var(--paper-offwhite)',
+  }
+  
+  const onClick = () => {
+    encounter.playChoiceSelectSound();
+    encounter.endScene();
+  }
+
+  return (
+    <Window onClick={onClick} style={style}>Escape</Window>
+  )
 });
 
 

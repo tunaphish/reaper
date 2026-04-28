@@ -10,24 +10,23 @@ export const WorldView = observer((props: { world: World }): JSX.Element => {
   const { world } = props
   return (
     <div className={classNames.container}>
-      <StartBar world={world}/>
+      <MenuBar world={world}/>
     </div>
 )
 });
 
-export const StartBar = observer(({world}: {world: World}) => {
-  const style: React.CSSProperties = { 
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  };
+
+const MenuBar = observer(({world}: {world: World}) => {
+  const style: React.CSSProperties = {
+    width: '100%',
+    color: 'var(--paper-offwhite)',
+  }
+  
+  const onClick = () => {
+    world.openSystemMenu()
+  }
 
   return (
-    <Window style={style}>
-      {/* <span onClick={() => world.openBattleEncounter()}>battle</span> */}
-      <span onClick={() => world.openTalkEncounter()}>interact</span>
-      <span onClick={() => world.openSystemMenu()}>menu</span>
-    </Window>
+    <Window onClick={onClick} style={style}>Menu</Window>
   )
 });

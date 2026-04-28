@@ -24,8 +24,27 @@ export const SystemMenuView = observer((props: { systemMenu: SystemMenu }): JSX.
         <InfoView systemMenu={systemMenu} />
       </AnimatePresence>
       <MenuStack systemMenu={systemMenu}/>
+      <ExitBar systemMenu={systemMenu} />
     </div>
 )
+});
+
+// TODO: Hold to Escape
+const ExitBar = observer((props: { systemMenu: SystemMenu }): JSX.Element => {
+  const { systemMenu } = props
+  const style: React.CSSProperties = {
+    width: '100%',
+    color: 'var(--paper-offwhite)',
+  }
+  
+  const onClick = () => {
+    systemMenu.playChoiceSelectSound();
+    systemMenu.endScene();
+  }
+
+  return (
+    <Window onClick={onClick} style={style}>Exit</Window>
+  )
 });
 
 const getEnemyImageView = (enemy: Enemy): ImageWindow => {

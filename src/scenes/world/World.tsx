@@ -8,11 +8,9 @@ import { Inventory } from '../../model/inventory';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-
 import VirtualJoystick from './objects/VirtualJoystick';
 import FieldEnemy from './objects/FieldEnemy';
 import { TOP_LEVEL_SPREADS } from '../../data/encounters/example';
-import { Enemy } from '../../model/enemy';
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {

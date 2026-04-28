@@ -106,17 +106,15 @@ export class SystemMenu extends Phaser.Scene {
             this.systemMenuStore.pushMenu(journalMenu);
           }
         },
-        {
-          display: () => <span>Exit</span>,
-          execute: () => {  
-            this.scene.stop('SystemMenu');
-            this.scene.resume('World');
-          }
-        },
       ],
     }  
 
     return systemMenu;
+  }
+
+  endScene(): void {
+    this.scene.stop('SystemMenu');
+    this.scene.resume('World');
   }
 
   popMenu = (): void => {

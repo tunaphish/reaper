@@ -1,4 +1,4 @@
-import { EncounterScene } from '../scenes/encounter/Encounter';
+import { Battle } from '../scenes/battle/Battle';
 import { Action } from './action';
 import { Combatant } from './combatant';
 import { Option, OptionType } from './option';
@@ -6,8 +6,8 @@ import { Option, OptionType } from './option';
 export type Strategy = {
   option: Option; 
   weight: number;
-  isValid: (encounter: EncounterScene, caster: Combatant) => boolean;
-  getTargets: (encounter: EncounterScene, action: Action, caster: Enemy) => Combatant[];
+  isValid: (battle: Battle, caster: Combatant) => boolean;
+  getTargets: (battle: Battle, action: Action, caster: Enemy) => Combatant[];
 }
 
 export type Enemy = Combatant & {

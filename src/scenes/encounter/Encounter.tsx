@@ -185,7 +185,7 @@ export class EncounterScene extends Phaser.Scene {
       this.encounterStore.battleInitiated = false;
       for (const ally of this.encounterStore.allies) {
         ally.bleed = 0;
-        ally.activeTechniques = [];
+        ally.techniques = [];
         ally.actionPoints = 0;
       }
       this.endScene();
@@ -272,15 +272,15 @@ export class EncounterScene extends Phaser.Scene {
       case EventType.SHATTER_TECHNIQUE: {
         const shatterTechniqueEvent = event as ShatterTechniqueEvent;
         if (shatterTechniqueEvent.target === ShatterTechniqueTarget.RANDOM) {
-          target.activeTechniques.splice(getRandomInt(target.activeTechniques.length),1);
+          target.techniques.splice(getRandomInt(target.techniques.length),1);
           return;
         }
       }
 
       case EventType.SHATTER: {
-        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.technique.actionPointsCost+total, 0);
+        const totalAp = [...caster.techniques].reduce((total, curr) => curr.technique.actionPointsCost+total, 0);
         caster.actionPoints += totalAp;
-        caster.activeTechniques = [];
+        caster.techniques = [];
         return;
       }
 
@@ -427,7 +427,7 @@ export class EncounterScene extends Phaser.Scene {
         const newHealth = Math.max(0, combatant.health - damageTickRate);
         if (newHealth === 0) {
           combatant.actionPoints = 0;
-          combatant.activeTechniques = [];
+          combatant.techniques = [];
         }
 
         combatant.health = newHealth;
@@ -444,7 +444,7 @@ export class EncounterScene extends Phaser.Scene {
         return;
       }
       const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-        (combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === Techniques.haste.name) ? 2 : 1) *
+        (combatant.techniques.some(activeTechnique => activeTechnique.technique.name === Techniques.haste.name) ? 2 : 1) *
         (delta / 1000) ;
 
       const newActionPoints = combatant.actionPoints + regenPerTick;
@@ -515,7 +515,7 @@ export class EncounterScene extends Phaser.Scene {
       for (const [idx, target] of targets.entries()) {
         if (option.type === OptionType.TECHNIQUE) {
             const technique = option as Technique;
-            combatant.activeTechniques.push({technique, target, violated: false});
+            combatant.techniques.push({technique, target, violated: false});
             this.sound.play(technique.soundKeyName)
           }
 
@@ -583,12 +583,12 @@ export class EncounterScene extends Phaser.Scene {
     if (option.type === OptionType.TECHNIQUE ) {
       const technique = (option as Technique);
 
-      const idx = caster.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
+      const idx = caster.techniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
 
       if (idx !== -1) {
         this.sound.play(technique.soundKeyName);
         updateActionPoints(caster, technique.actionPointsCost);
-        caster.activeTechniques.splice(idx, 1);
+        caster.techniques.splice(idx, 1);
         return;
       } 
     }
@@ -603,7 +603,7 @@ export class EncounterScene extends Phaser.Scene {
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
       
       const attackTechniquesTargettingCaster: Technique[] = this.encounterStore.getCombatants()
-        .reduce((prev, curr) => [...prev, ...curr.activeTechniques], [])
+        .reduce((prev, curr) => [...prev, ...curr.techniques], [])
         .filter(activeTechnique => activeTechnique.target.name === caster.name)
         .filter(activeTechnique => ATTACK_TECHNIQUES.has(activeTechnique.technique.name))
         .map(activeTechnique => activeTechnique.technique);

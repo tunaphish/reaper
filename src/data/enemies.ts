@@ -78,7 +78,7 @@ export const fencer: Enemy = {
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: [],
+  techniques: [],
 };
 
 
@@ -129,7 +129,7 @@ export const knight: Enemy = {
   ],
   selectedStrategyIndex: 0,
 
-  activeTechniques: [],
+  techniques: [],
 };
 
 export const enemies = [

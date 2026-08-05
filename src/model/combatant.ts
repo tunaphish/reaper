@@ -17,11 +17,6 @@ export type CastingExecutable = {
   violated: boolean;
 }
 
-export type ActiveTechnique = {
-  technique: Technique;
-  target: Combatant;
-  violated: boolean;
-}
 
 export type Combatant = Option & {
   type: OptionType;
@@ -34,7 +29,7 @@ export type Combatant = Option & {
   maxActionPoints: number;
   actionPointsRegenRatePerSecond: number; 
 
-  activeTechniques: ActiveTechnique[];
+  techniques: Technique[];
   castingExecutable?: CastingExecutable
 }
 
@@ -83,9 +78,9 @@ export const updateActionPoints = (target: Combatant, change: number): void => {
   target.actionPoints = target.actionPoints + change;
 };
 
-export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === technique.name);
+export const techniqueIsActive = (combatant: Combatant, technique: Technique): boolean => combatant.techniques.some(activeTechnique => activeTechnique.technique.name === technique.name);
 
-export const getActiveTechnique = (combatant: Combatant, technique: Technique): ActiveTechnique => combatant.activeTechniques.find(activeTechnique => activeTechnique.technique.name === technique.name);
+export const getActiveTechnique = (combatant: Combatant, technique: Technique): ActiveTechnique => combatant.techniques.find(activeTechnique => activeTechnique.technique.name === technique.name);
 
 export const techniqueIsViolated = (combatant: Combatant, technique: Technique): boolean => !!getActiveTechnique(combatant, technique)?.violated;
 
@@ -95,9 +90,9 @@ export const techniqueIsApplied = (combatant: Combatant, technique: Technique): 
 }
 
 export const removeTechnique = (combatant: Combatant, technique: Technique): void => {
-  const techniqueIdx = combatant.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
+  const techniqueIdx = combatant.techniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
   if (techniqueIdx === -1) return;
-  combatant.activeTechniques.splice(techniqueIdx,1);
+  combatant.techniques.splice(techniqueIdx,1);
 }
 
 export const useApResources = (caster: Combatant, cost: number): void => updateActionPoints(caster, -cost);

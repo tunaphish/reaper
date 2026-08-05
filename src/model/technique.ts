@@ -8,6 +8,7 @@ export type Technique = Option & {
   actionPointsCost: number;
 
   imageSrc?: string;
+  position: {x: number, y: number},
   description: string;
 
 

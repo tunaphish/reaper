@@ -10,8 +10,12 @@ export const basic: Technique = {
   actionPointsCost: 1,
   castTimeInMs: 1500,
 
-  imageSrc: '/reaper/ui/ally/eji.png',
-  description: 'Increase Strength',
+  imageSrc: '/reaper/ui/ally/Eji-NEUTRAL.png',
+  position: {
+    x: 150,
+    y: 400,
+  },
+  description: 'Basic Eji Reaper Actions',
   
   targetType: TargetType.SELF,
   soundKeyName: 'smirk',

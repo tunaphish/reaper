@@ -1,5 +1,6 @@
 import { Ally, Allies } from '../model/ally';
 import { OptionType } from '../model/option';
+import * as Techniques from './techniques';
 
 
 export const Eji: Ally = {
@@ -12,7 +13,7 @@ export const Eji: Ally = {
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .13,
 
-  activeTechniques: [],
+  techniques: [Techniques.basic],
 };
 
 export const Keshi: Ally = {
@@ -25,7 +26,7 @@ export const Keshi: Ally = {
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .12,
 
-  activeTechniques: [],
+  techniques: [],
 };
 
 export const Phia: Ally = {
@@ -38,7 +39,7 @@ export const Phia: Ally = {
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .08,
 
-  activeTechniques: [],
+  techniques: [],
 };
 
 export const DefaultAllies: Allies = [Eji, Keshi, Phia];

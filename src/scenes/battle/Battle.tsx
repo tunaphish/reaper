@@ -147,7 +147,7 @@ export class Battle extends Phaser.Scene {
     if (this.battleStore.enemies.every((enemy) => getStatus(enemy) === Status.DEAD)) {
       for (const ally of this.battleStore.allies) {
         ally.bleed = 0;
-        ally.activeTechniques = [];
+        ally.techniques = [];
         ally.actionPoints = 0;
       }
       this.endScene();
@@ -214,17 +214,12 @@ export class Battle extends Phaser.Scene {
       case EventType.SHATTER_TECHNIQUE: {
         const shatterTechniqueEvent = event as ShatterTechniqueEvent;
         if (shatterTechniqueEvent.target === ShatterTechniqueTarget.RANDOM) {
-          target.activeTechniques.splice(getRandomInt(target.activeTechniques.length),1);
+          target.techniques.splice(getRandomInt(target.techniques.length),1);
           return;
         }
       }
 
-      case EventType.SHATTER: {
-        const totalAp = [...caster.activeTechniques].reduce((total, curr) => curr.technique.actionPointsCost+total, 0);
-        caster.actionPoints += totalAp;
-        caster.activeTechniques = [];
-        return;
-      }
+
 
       default: {
         return;
@@ -326,7 +321,7 @@ export class Battle extends Phaser.Scene {
         const newHealth = Math.max(0, combatant.health - damageTickRate);
         if (newHealth === 0) {
           combatant.actionPoints = 0;
-          combatant.activeTechniques = [];
+          combatant.techniques = [];
         }
 
         combatant.health = newHealth;
@@ -398,7 +393,7 @@ export class Battle extends Phaser.Scene {
       for (const [idx, target] of targets.entries()) {
         if (option.type === OptionType.TECHNIQUE) {
             const technique = option as Technique;
-            combatant.activeTechniques.push({technique, target, violated: false});
+            combatant.techniques.push(technique);
             this.sound.play(technique.soundKeyName)
           }
 
@@ -452,19 +447,7 @@ export class Battle extends Phaser.Scene {
   }
 
   executeOption(caster: Combatant, targets: Combatant[], option: CombatOption): void {
-    // Handle Shatter
-    if (option.type === OptionType.TECHNIQUE ) {
-      const technique = (option as Technique);
 
-      const idx = caster.activeTechniques.findIndex(activeTechnique => activeTechnique.technique.name === technique.name);
-
-      if (idx !== -1) {
-        this.sound.play(technique.soundKeyName);
-        updateActionPoints(caster, technique.actionPointsCost);
-        caster.activeTechniques.splice(idx, 1);
-        return;
-      } 
-    }
 
     // Handle Action
     if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
@@ -476,7 +459,7 @@ export class Battle extends Phaser.Scene {
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
       
       const attackTechniquesTargettingCaster: Technique[] = this.battleStore.getCombatants()
-        .reduce((prev, curr) => [...prev, ...curr.activeTechniques], [])
+        .reduce((prev, curr) => [...prev, ...curr.techniques], [])
         .filter(activeTechnique => activeTechnique.target.name === caster.name)
         .map(activeTechnique => activeTechnique.technique);
 

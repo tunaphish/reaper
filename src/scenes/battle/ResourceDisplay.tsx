@@ -77,11 +77,11 @@ export const ActionBar = observer((props: { combatant: Combatant }) => {
 
 
 
-      {combatant.activeTechniques.map((activeTechnique, i) => (
+      {combatant.techniques.map((technique, i) => (
         <img
           key={`tech-${i}`}
-          src={activeTechnique.technique.iconSrc || "/reaper/ui/icons/attack.png"}
-          className={clsx(classNames.techniqueIcon, activeTechnique.violated && classNames.stigma)}
+          src={technique.iconSrc || "/reaper/ui/icons/attack.png"}
+          className={clsx(classNames.techniqueIcon)}
         />
       ))}
       </div>

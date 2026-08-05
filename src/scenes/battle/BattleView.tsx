@@ -7,11 +7,13 @@ import { Menu } from './battleStore';
 import { observer } from 'mobx-react-lite';
 import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { Enemy } from '../../model/enemy';
-import { Window } from '../ui/Window';
+import { PanelWindow, Window } from '../ui/Window';
 import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
 import { getRandomInt } from '../../model/math';
-import { Combatant, getStatus } from '../../model/combatant';
+import { Technique } from '../../model/technique';
+import { BaseWindow, EventType, ImageWindow, WindowLayout } from '../../model/encounter';
+import { ImageWindowContent } from '../ui/ImageWindowContent';
 
 export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
   const { battle: battle } = props
@@ -19,11 +21,12 @@ export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
     <div className={classNames.container}>
       <EnemiesContainer battle={battle} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column',  }}>
-        <div style={{ flex: 1, justifyContent: "center", alignItems: "center", display: "flex" }}>
-          {props.battle.battleStore.activeAlly && <CombatantView battle={props.battle} combatant={props.battle.battleStore.activeAlly} />}
-        </div>
-        <AllyBarView battle={props.battle} /> 
+          {
+            props.battle.battleStore.activeAlly && 
+            props.battle.battleStore.activeAlly.techniques.map(technique => <TechniqueView battle={props.battle} technique={technique} key={technique.name}/>)
+          }
       </div>
+      <AllyBarView battle={props.battle} /> 
       {/* <Description battle={battle} /> */}      
     </div>
   )
@@ -197,24 +200,27 @@ const AllyView = observer((props: { battle: Battle, ally: Ally, idx: number }): 
   )
 });
 
-const CombatantView = observer((props: { battle: Battle, combatant: Combatant }): JSX.Element => {
-  const combatPortraitSrc = `/reaper/ui/ally/${props.combatant.name}-${getStatus(props.combatant)}.png`
+const TechniqueView = observer((props: { battle: Battle, technique: Technique }): JSX.Element => {
+  const imageWindow: ImageWindow = {
+    type: EventType.IMAGE,
+    layout: {
+      x: props.technique.position.x,
+      y: props.technique.position.y,
+    },
+    layers: [{
+      src: props.technique.imageSrc
+    }],
+  };
   const style: React.CSSProperties = {
     width: 'fit-content',
   };
 
   return (
-    <Window style={style}>
-      <div className={classNames.windowTitleBar}>
-        <div className={classNames.menuTitleText}>{props.combatant.name}</div>
-      </div>
-      <div>
-        <img src={combatPortraitSrc}></img>
-      </div>
-    </Window>
+    <PanelWindow style={style} window={imageWindow}>
+      {props.technique.imageSrc ? <ImageWindowContent imageWindow={imageWindow}/> : <div>{props.technique.name}</div>}
+    </PanelWindow>
   )
 });
-
 
 
 const AllyBarView = observer((props: { battle: Battle }): JSX.Element => (

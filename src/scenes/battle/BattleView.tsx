@@ -18,7 +18,12 @@ export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
   return (
     <div className={classNames.container}>
       <EnemiesContainer battle={battle} />
-      <AlliesContainer battle={battle} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column',  }}>
+        <div style={{ flex: 1, justifyContent: "center", alignItems: "center", display: "flex" }}>
+          {props.battle.battleStore.activeAlly && <CombatantView battle={props.battle} combatant={props.battle.battleStore.activeAlly} />}
+        </div>
+        <AllyBarView battle={props.battle} /> 
+      </div>
       {/* <Description battle={battle} /> */}      
     </div>
   )
@@ -178,7 +183,7 @@ const AllyView = observer((props: { battle: Battle, ally: Ally, idx: number }): 
     <div className={classNames.allyViewWrapper}>
       <div className={classNames.allyViewInner} ref={ref}>
         <ResourceDisplayWrapper combatant={ally} battle={battle} onClickCell={() => battle.setAlly(ally)} idx={idx}>
-          <div></div>
+          <></>
         </ResourceDisplayWrapper>
       </div>
       
@@ -210,15 +215,7 @@ const CombatantView = observer((props: { battle: Battle, combatant: Combatant })
   )
 });
 
-const AlliesContainer = observer((props: { battle: Battle }): JSX.Element => (
-  <div style={{ flex: 1, display: 'flex', flexDirection: 'column',  }}>
-    <div style={{ flex: 1, justifyContent: "center", alignItems: "center", display: "flex" }}>
-      {props.battle.battleStore.activeAlly && <CombatantView battle={props.battle} combatant={props.battle.battleStore.activeAlly} />}
-    </div>
-    <AllyBarView battle={props.battle} /> 
-  
-  </div>
-));
+
 
 const AllyBarView = observer((props: { battle: Battle }): JSX.Element => (
   <div className={classNames.allyBar}>

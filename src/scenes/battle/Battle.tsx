@@ -5,32 +5,28 @@ import { BattleView } from './BattleView';
 
 import { Allies, Ally } from '../../model/ally';
 import { Inventory } from '../../model/inventory';
-import { BattleStore, Menu, MenuOption } from './battleStore';
+import { BattleStore } from './battleStore';
 import { MapData } from '../../model/mapData';
 import { DEBUG_MAP_DATA } from '../../data/maps';
 
-import { Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, UpdateDamageEvent } from '../../model/encounter';
+import { Event, EventType, ShatterTechniqueEvent, ShatterTechniqueTarget, SoundEvent, } from '../../model/encounter';
 
 import { Enemy } from '../../model/enemy';
-import { Combatant, getActiveTechnique, getStatus, removeTechnique, Status, techniqueIsActive, techniqueIsApplied, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
+import { Combatant, getActiveTechnique, getStatus, Status, techniqueIsViolated, updateDamage, useApResources } from '../../model/combatant';
 import { updateActionPoints } from '../../model/combatant';
-import { Folder } from '../../model/folder';
 import { Action } from "../../model/action";
 import { Item } from "../../model/item";
 import { Technique } from "../../model/technique";
 import { OptionType } from '../../model/option';
 import { TargetType } from '../../model/targetType';
 
-import * as Techniques from '../../data/techniques';
 import * as Actions from '../../data/actions';
-import { toJS } from 'mobx';
 import { getRandomInt } from '../../model/math';
-import { actionMenuItem } from './Menus';
 import { Executable } from '../../model/Executable';
 
 import { enemies } from '../../data/enemies';
 
-export type CombatOption = Folder | Enemy | Ally | Action | Item | Technique;
+export type CombatOption = Action | Item | Technique;
 
 const TEST_ENCOUNTER_ENEMIES = [enemies[0]];
 
@@ -197,23 +193,7 @@ export class Battle extends Phaser.Scene {
 
       case EventType.UPDATE_DAMAGE: {        
         let value = event.value;
-        if (event.value > 0) {
-          const technique = (techniques || []).find(t => t.name === Techniques.buff.name);
-          if (technique) value *= techniqueIsViolated(caster, technique) ? .66 : 1.33
-        }
 
-        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.charged.name)) {
-          removeTechnique(caster, Techniques.charged);
-          value *= 2.0;
-        }
-
-        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.reciprocity.name)) {
-          value *= -1;
-        }
-
-        if (event.value > 0 && (techniques || []).some(t => t.name === Techniques.nerf.name)) {
-          value *= .67;
-        }
         value = Math.floor(value);
         this.events.emit('updated-damage', { name: target.name, value });
         updateDamage(target, value);
@@ -223,10 +203,6 @@ export class Battle extends Phaser.Scene {
           this.sound.play('bomb');
         }
 
-        // perhaps counter is only active when I'm executing 
-        // if (techniqueIsActive(target, Techniques.counter)) {
-        //   this.executeOption(target, [caster], Actions.attack);
-        // }
         return;
       }
 
@@ -255,9 +231,6 @@ export class Battle extends Phaser.Scene {
       }
     }
   }
-
- 
-
 
 
   //#region battle input
@@ -335,22 +308,6 @@ export class Battle extends Phaser.Scene {
             break;
         }
         break;
-      case OptionType.FOLDER:
-        // const folder = option as Folder;
-        // const folderMenu = this.getCombatMenu(folder, folder.name);
-        break;
-    }
-  }
-
-  getConfirmMenu(): Menu {
-    return {
-      menuOptions: [{
-        display: () => (<div>Confirm</div>),
-        execute: () => {
-          this.executeOption(this.battleStore.activeAlly, this.battleStore.targets, this.battleStore.executable);
-          this.battleStore.resetSelections();  
-        }
-      }],
     }
   }
 
@@ -362,11 +319,10 @@ export class Battle extends Phaser.Scene {
     this.battleStore.getCombatants().forEach((combatant) => {
       if (getStatus(combatant) === Status.DEAD) return;
       if (combatant.bleed > 0) {
-        let damageTickRate = (delta / 1000) * 5;
-        if (techniqueIsActive(combatant, Techniques.coagulate)) damageTickRate *= .33;
+        const damageTickRate = (delta / 1000) * 5;
         combatant.bleed -= damageTickRate;
 
-        // TOD: extract 
+        // TODO: extract 
         const newHealth = Math.max(0, combatant.health - damageTickRate);
         if (newHealth === 0) {
           combatant.actionPoints = 0;
@@ -386,9 +342,7 @@ export class Battle extends Phaser.Scene {
         combatant.actionPoints = Math.trunc(combatant.actionPoints);
         return;
       }
-      const regenPerTick = combatant.actionPointsRegenRatePerSecond * 
-        (combatant.activeTechniques.some(activeTechnique => activeTechnique.technique.name === Techniques.haste.name) ? 2 : 1) *
-        (delta / 1000) ;
+      const regenPerTick = combatant.actionPointsRegenRatePerSecond * (delta / 1000) ;
 
       const newActionPoints = combatant.actionPoints + regenPerTick;
 
@@ -427,19 +381,6 @@ export class Battle extends Phaser.Scene {
     this.battleStore.resetSelections();
   }
 
-
-  getCombatMenu(folder: Folder, title: string): Menu {
-    const menuOptions: MenuOption[] = folder.options.map((option) => {
-      return {
-        display: () => actionMenuItem(option, this.battleStore.activeAlly),
-        execute: () => {
-          this.selectOption(option as CombatOption);
-        }
-      }
-    });
-    return { menuOptions, title };
-  }
-
   executeCastedOptions(): void {
     this.battleStore.getCombatants().forEach(combatant => { 
       if (!combatant.castingExecutable) return;
@@ -475,17 +416,7 @@ export class Battle extends Phaser.Scene {
             if (action.name === "Splinter") this.splinterNotCasted = false;
 
             const events = action.events;
-            if (techniqueIsApplied(combatant, Techniques.infuse) && action.events.every(event => event.type !== EventType.SHATTER) ) events.push({ type: EventType.SHATTER_TECHNIQUE, target: ShatterTechniqueTarget.RANDOM })
-            if (techniqueIsActive(combatant, Techniques.shadow) && action.events.some(event => event.type === EventType.UPDATE_DAMAGE)) {
-              const shadowEvents: Event[] = events
-                .map(event => {
-                  const newEvent: UpdateDamageEvent = (structuredClone(toJS(event)) as UpdateDamageEvent);
-                  if (event.type === EventType.UPDATE_DAMAGE && event.value > 0) newEvent.value = event.value * .5;
-                  newEvent.autoAdvanceInMs = (event.autoAdvanceInMs || 0) + 600;
-                  return newEvent;
-                }) 
-              events.push(...shadowEvents);
-            }
+ 
             const newEvents: QueuedEvent[] = events.map(event => ({
               event, 
               delayInMs: event.autoAdvanceInMs || 300 + (idx*300),
@@ -540,24 +471,16 @@ export class Battle extends Phaser.Scene {
     useApResources(caster, option.actionPointsCost);
 
     const appliedTechniques: Technique[] = [];
-    let castedTimeInMs = 0;
+    const castedTimeInMs = 0;
 
     if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
       
       const attackTechniquesTargettingCaster: Technique[] = this.battleStore.getCombatants()
         .reduce((prev, curr) => [...prev, ...curr.activeTechniques], [])
         .filter(activeTechnique => activeTechnique.target.name === caster.name)
-        .filter(activeTechnique => ATTACK_TECHNIQUES.has(activeTechnique.technique.name))
         .map(activeTechnique => activeTechnique.technique);
 
       appliedTechniques.push(...attackTechniquesTargettingCaster);
-
-      if (techniqueIsApplied(caster, Techniques.adrenaline)) {
-        castedTimeInMs = option.castTimeInMs / 2;
-      }
-
-      // need to figure out reciprocity... single target only actions? any action really... mm. it's never applied
-      // if (techniqueIsActive(caster, Techniques.reciprocity) && this.worldStore.allies.some(ally => ally.name === target.name)) appliedTechniques.push(Techniques.reciprocity);      
     }    
 
     caster.castingExecutable = {
@@ -601,11 +524,4 @@ export class Battle extends Phaser.Scene {
   //#endregion
 }
 
-const ATTACK_TECHNIQUES = new Set([
-  Techniques.adrenaline.name,
-  Techniques.buff.name,
-  Techniques.infuse.name,
-  Techniques.shadow.name,
-  Techniques.charged.name,
-  Techniques.nerf.name
-])
+

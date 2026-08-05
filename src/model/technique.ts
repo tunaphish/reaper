@@ -6,7 +6,11 @@ import { TargetType } from "./targetType";
 export type Technique = Option & {
   type: OptionType.TECHNIQUE;
   actionPointsCost: number;
+
+  imageSrc?: string;
   description: string;
+
+
   castTimeInMs: number;
 
   targetType: TargetType;
@@ -15,4 +19,5 @@ export type Technique = Option & {
   iconSrc?: string;
   conditionMet?: (battle: Battle, caster: Combatant, targets: Combatant[]) => boolean;
 
+  options: Option[];
 }

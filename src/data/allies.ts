@@ -16,9 +16,9 @@ export const Eji: Ally = {
   techniques: [Techniques.basic],
 };
 
-export const Keshi: Ally = {
+export const Jin: Ally = {
   type: OptionType.ALLY,
-  name: 'Keshi',
+  name: 'Jin',
   health: 100,
   maxHealth: 100,
   bleed: 0,
@@ -42,4 +42,4 @@ export const Phia: Ally = {
   techniques: [],
 };
 
-export const DefaultAllies: Allies = [Eji, Keshi, Phia];
+export const DefaultAllies: Allies = [Eji, Jin, Phia];

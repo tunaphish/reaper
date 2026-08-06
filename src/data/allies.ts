@@ -13,7 +13,7 @@ export const Eji: Ally = {
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .13,
 
-  techniques: [Techniques.basic],
+  techniques: [Techniques.basicEji],
 };
 
 export const Jin: Ally = {
@@ -26,7 +26,7 @@ export const Jin: Ally = {
   maxActionPoints: 1,
   actionPointsRegenRatePerSecond: .12,
 
-  techniques: [],
+  techniques: [Techniques.basicJin],
 };
 
 export const Phia: Ally = {
@@ -39,7 +39,7 @@ export const Phia: Ally = {
   maxActionPoints: 2,
   actionPointsRegenRatePerSecond: .08,
 
-  techniques: [],
+  techniques: [Techniques.basicPhia],
 };
 
 export const DefaultAllies: Allies = [Eji, Jin, Phia];

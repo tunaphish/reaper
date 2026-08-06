@@ -4,7 +4,7 @@ import { TargetType } from '../model/targetType';
 import { Technique } from '../model/technique';
 import * as Actions from './actions';
 
-export const basic: Technique = {
+export const basicEji: Technique = {
   type: OptionType.TECHNIQUE,
   name: 'Basic Techniques',
   actionPointsCost: 1,
@@ -16,6 +16,44 @@ export const basic: Technique = {
     y: 400,
   },
   description: 'Basic Eji Reaper Actions',
+  
+  targetType: TargetType.SELF,
+  soundKeyName: 'smirk',
+
+  options: [ Actions.attack, Actions.stanch, Actions.magic ],
+};
+
+export const basicJin: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Basic Techniques',
+  actionPointsCost: 1,
+  castTimeInMs: 1500,
+
+  imageSrc: '/reaper/ui/ally/Jin-NEUTRAL.png',
+  position: {
+    x: 150,
+    y: 400,
+  },
+  description: 'Basic Jin Reaper Actions',
+  
+  targetType: TargetType.SELF,
+  soundKeyName: 'smirk',
+
+  options: [ Actions.attack, Actions.stanch, Actions.magic ],
+};
+
+export const basicPhia: Technique = {
+  type: OptionType.TECHNIQUE,
+  name: 'Basic Techniques',
+  actionPointsCost: 1,
+  castTimeInMs: 1500,
+
+  imageSrc: '/reaper/ui/ally/Phia-NEUTRAL.png',
+  position: {
+    x: 150,
+    y: 400,
+  },
+  description: 'Basic Phia Reaper Actions',
   
   targetType: TargetType.SELF,
   soundKeyName: 'smirk',

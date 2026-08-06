@@ -5,17 +5,7 @@ import { Allies, Ally } from "../../model/ally";
 import { Enemy } from "../../model/enemy";
 import { Combatant } from "../../model/combatant";
 import { Executable } from "../../model/Executable";
-
-export type MenuOption = {
-  display: () => JSX.Element;
-  execute: () => void;
-}
-export type Menu =  {
-  menuOptions: MenuOption[];
-  isCursor?: boolean;
-  title?: string;
-};
-
+import { Technique } from "../../model/technique";
 
 export class BattleStore {
   playerSave: PlayerSave;
@@ -27,6 +17,7 @@ export class BattleStore {
   allies: Allies;
 
   activeAlly?: Ally;
+  activeTechnique?: Technique;
   executable?: Executable;
   targets: Combatant[] = [];
 
@@ -62,12 +53,17 @@ export class BattleStore {
     this.targets = targets;
   }
 
+  setActiveTechnique(technique?: Technique): void{
+    this.activeTechnique = technique;
+  }
+
   setExecutable(executable?: Executable): void {
     this.executable = executable;
   }
 
   resetSelections(): void {
     this.setActiveAlly(null);
+    this.setActiveTechnique(null);
     this.setExecutable(null);
     this.setTargets([]);
   }
@@ -75,6 +71,4 @@ export class BattleStore {
   pushEnemies(enemies: Enemy[]): void {
     this.enemies.push(...enemies);
   }
-
-
 }

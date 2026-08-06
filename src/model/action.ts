@@ -10,7 +10,7 @@ export type Action = Option & {
   targetType: TargetType;
 
   actionPointsCost: number;
-  castTimeInMs: number;
+  castTimeInMs?: number;
 
   castingImageSrc?: string;
 

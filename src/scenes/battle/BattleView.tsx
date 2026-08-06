@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import classNames from './battle.module.css';
-import { Battle } from './Battle';
-import { Menu } from './battleStore';
+import { Battle, BattleOption } from './Battle';
 import { observer } from 'mobx-react-lite';
 import { ResourceDisplayWrapper } from './ResourceDisplay';
 import { Enemy } from '../../model/enemy';
@@ -12,8 +11,9 @@ import { Ally } from '../../model/ally';
 import { MenuOptionsView } from '../ui/MenuOptionsView';
 import { getRandomInt } from '../../model/math';
 import { Technique } from '../../model/technique';
-import { BaseWindow, EventType, ImageWindow, WindowLayout } from '../../model/encounter';
+import { EventType, ImageWindow } from '../../model/encounter';
 import { ImageWindowContent } from '../ui/ImageWindowContent';
+import { Option, OptionType } from '../../model/option';
 
 export const BattleView = observer((props: { battle: Battle }): JSX.Element => {
   const { battle: battle } = props
@@ -145,37 +145,61 @@ export const shakeElement = (element: Element): void => {
   element.animate(keyFrames, shakeTiming);
 }
 
-const MenuView = observer((props: { battle: Battle, menu: Menu, idx: number, verticalOffset: number, horizontalOffset: number }): JSX.Element => {
-  const { battle, menu, idx, verticalOffset, horizontalOffset } = props;
+export const ActionMenuItem = (props: {option: Option, ally: Ally}): JSX.Element => {
 
-  const style: React.CSSProperties = {
-    position: "absolute",
-    top: verticalOffset + "px", 
-    left: horizontalOffset + "px",
+    return (
+        <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
+            <div>
+            <img 
+                src={getIconSrc(props.option)}
+                alt="" 
+                style={{ width: 16, height: 16, marginRight: 4, display:"inline-block" }}
+            />
+            {props.option.name}
+            </div>
+            { 'actionPointsCost' in props.option && <div style={{ marginLeft: '8px' }}>{props.option.actionPointsCost as string}</div>}
+        </span>
+    )
+}
+
+const getIconSrc = (option: { type: OptionType }): string => {
+  switch (option.type) {
+    case OptionType.FOLDER:
+      return '/reaper/ui/icons/folder.png';
+    case OptionType.ENEMY:
+      return '/reaper/ui/icons/enemy.png';
+    case OptionType.ALLY:
+      return '/reaper/ui/icons/ally.png';
+    case OptionType.ACTION:
+      return '/reaper/ui/icons/attack.png';
+    case OptionType.ITEM:
+      return '/reaper/ui/icons/item.png';
+    case OptionType.TECHNIQUE:
+      return '/reaper/ui/icons/magic.png';
+    default:
+      return '/reaper/ui/icons/magic.png'; 
   }
+}
+
+const MenuView = observer((props: { battle: Battle, technique: Technique }): JSX.Element => {
+  const { battle, technique } = props;
+
 
   return (
-    <Window style={style}>
-      <div className={classNames.windowTitleBar}>
-        <div className={classNames.menuTitleText}>{menu.title}</div>
-        <div>X</div>
-      </div>
-      <div className={classNames.menuContent} style={{ width: 'max-content' }}>
-        <MenuOptionsView 
-          items={menu.menuOptions}
-          getKey={(item) => item.display} 
-          renderLabel={(item) => item.display()}
-          onSelect={(item) => { 
-            battle.playChoiceSelectSound(); 
-            item.execute();
-          }}
-          isCursor={menu.isCursor}
-        /> 
-      </div>
-    </Window>
+    <div className={classNames.menuContent} style={{ width: 'max-content' }}>
+      <MenuOptionsView 
+        items={technique.options}
+        getKey={(item: BattleOption) => item.name} 
+        renderLabel={(item: BattleOption) => <ActionMenuItem option={item} ally={battle.battleStore.activeAlly}/>}
+        onSelect={(item: BattleOption) => { 
+          battle.playChoiceSelectSound(); 
+          battle.battleStore.setExecutable(item);
+        }}
+        isCursor={true}
+      /> 
+    </div>
   )
 });
-
 
 const AllyView = observer((props: { battle: Battle, ally: Ally, idx: number }): JSX.Element => {
   const { battle, ally, idx } = props;
@@ -215,9 +239,21 @@ const TechniqueView = observer((props: { battle: Battle, technique: Technique })
     width: 'fit-content',
   };
 
+  const onClick = () => {
+    props.battle.setTechnique(props.technique);
+  }
+
+  let ImageContent = <div>{props.technique.name}</div>;
+  if (props.battle.battleStore?.activeTechnique?.name === props.technique.name) {
+    ImageContent = <MenuView battle={props.battle} technique={props.technique}/>
+  } else if (props.technique.imageSrc) {
+    ImageContent = <ImageWindowContent imageWindow={imageWindow}/> 
+  }
+
+
   return (
-    <PanelWindow style={style} window={imageWindow}>
-      {props.technique.imageSrc ? <ImageWindowContent imageWindow={imageWindow}/> : <div>{props.technique.name}</div>}
+    <PanelWindow style={style} window={imageWindow} onClick={onClick}>
+      {ImageContent}
     </PanelWindow>
   )
 });

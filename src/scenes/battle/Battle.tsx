@@ -20,13 +20,13 @@ import { Technique } from "../../model/technique";
 import { OptionType } from '../../model/option';
 import { TargetType } from '../../model/targetType';
 
-import * as Actions from '../../data/actions';
 import { getRandomInt } from '../../model/math';
 import { Executable } from '../../model/Executable';
 
 import { enemies } from '../../data/enemies';
+import { toJS } from 'mobx';
 
-export type CombatOption = Action | Item | Technique;
+export type BattleOption = Action | Item | Technique;
 
 const TEST_ENCOUNTER_ENEMIES = [enemies[0]];
 
@@ -84,11 +84,11 @@ export class Battle extends Phaser.Scene {
 
     this.callingSceneKey = data.callingSceneKey;
     if (!data.enemies && !data.battle) {
-      this.music.play();
+      // this.music.play();
       this.battleStore.pushEnemies(TEST_ENCOUNTER_ENEMIES);
     }
     if (data.enemies) {
-      this.music.play();
+      // this.music.play();
       this.battleStore.pushEnemies(data.enemies);
     }
   }
@@ -101,9 +101,11 @@ export class Battle extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.processQueuedEvents(delta);
+
     this.checkEndBattleConditions(); 
     this.tickStats(delta);
     this.resetDeadAllyCasterMenu();
+    
     this.executeCastedOptions();
     // this.executeEnemyStrategies();
   }
@@ -117,11 +119,6 @@ export class Battle extends Phaser.Scene {
   }
 
   // #region handle events
-  addQueuedEvents(events: Event[]): void {
-    const newEvents: QueuedEvent[] = events.map(event => ({event, delayInMs: event.autoAdvanceInMs || 0}));
-    this.queuedEvents.push(...newEvents);
-  }
-
   processQueuedEvents(delta: number): void {
     const toDelay: QueuedEvent[] = [];
 
@@ -163,14 +160,6 @@ export class Battle extends Phaser.Scene {
   // #endregion
   executeEvent(event: Event, target?: Combatant, caster?: Combatant, techniques?: Technique[]): void {
     switch (event.type) {
-      case EventType.IMAGE:
-      case EventType.DECISION:
-      case EventType.INQUIRY:
-      case EventType.TEXT: {
-        this.battleStore.pushWindow(event);
-        return;
-      }
-
       case EventType.SOUND: {
         const soundEvent = event as SoundEvent;
 
@@ -227,89 +216,6 @@ export class Battle extends Phaser.Scene {
     }
   }
 
-
-  //#region battle input
-  setAlly = (ally: Ally): void => {
-    this.playChoiceSelectSound();
-
-    if (this.battleStore.executable) {
-      this.selectTarget(ally);
-      return;
-    }
-
-    // Could probably just flip this
-    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
-    if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
-      this.sound.play('stamina-depleted');
-      return;
-    }
-
-    this.sound.play('choice-select');
-    this.battleStore.setActiveAlly(ally);
-
-    this.battleStore.setActiveAlly(ally);
-  }
-  
-  selectTarget = (combatant: Combatant): void => {
-    if (!this.battleStore.executable) return;
-    if (this.battleStore.targets.some(target => combatant.name === target.name) ) {
-      this.playChoiceDisabledSound();
-      return;
-    }
-
-    switch (this.battleStore.executable.targetType) {
-      case TargetType.SELF:
-        if (combatant.name !== this.battleStore.activeAlly.name) {
-          this.playChoiceDisabledSound();
-        }
-        break;
-      case TargetType.SINGLE_TARGET:
-        this.battleStore.setTargets([combatant]);
-        this.playChoiceSelectSound();
-        break;
-      case TargetType.AOE: 
-        if (this.battleStore.enemies.some(enemy => enemy.name === combatant.name)) {
-          this.battleStore.setTargets(this.battleStore.enemies);
-        } else {
-          this.battleStore.setTargets(this.battleStore.allies);
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  selectOption(option: CombatOption): void {
-    this.sound.play('choice-select');
-    switch(option.type) {
-      case OptionType.ACTION:
-      case OptionType.TECHNIQUE:
-        const executable = option as Executable;
-        const activeTechnique = getActiveTechnique(this.battleStore.activeAlly, executable);
-        if (activeTechnique !== undefined && activeTechnique.violated) {
-          this.sound.play('restriction-violated');
-          return;
-        }
-        this.battleStore.setExecutable(executable);
-        switch (executable.targetType) {
-          case TargetType.SELF:
-            this.battleStore.setTargets([this.battleStore.activeAlly]);
-            break;
-          case TargetType.SINGLE_TARGET:
-            this.battleStore.setTargets([this.battleStore.enemies[0]]);
-            break;
-          case TargetType.AOE:
-            this.battleStore.setTargets(this.battleStore.enemies);
-            break;
-        }
-        break;
-    }
-  }
-
-  //#endregion
-  
-
-  //#region battle
   tickStats(delta: number): void {
     this.battleStore.getCombatants().forEach((combatant) => {
       if (getStatus(combatant) === Status.DEAD) return;
@@ -358,15 +264,35 @@ export class Battle extends Phaser.Scene {
 
     for (const enemy of actionableEnemies) {
       const strategy = enemy.strategies[enemy.selectedStrategyIndex];
-      const option = (strategy.option as CombatOption);
+      const option = (strategy.option as BattleOption);
 
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE ) continue;
       const action = option as Action;
       if (enemy.actionPoints < action.actionPointsCost) continue;
 
       const targets = strategy.getTargets(this, action, enemy);
-      this.executeOption(enemy, targets, option);      
+      this.castOption(enemy, targets, option);      
     }
+  }
+
+castOption(caster: Combatant, targets: Combatant[], option: BattleOption): void {
+    // Handle Action
+    if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
+
+    useApResources(caster, option.actionPointsCost);
+
+    // Handle Magic 
+    if (option.castTimeInMs) {
+      caster.castingExecutable = {
+        executable: option,
+        targets,
+        castedTimeInMs: 0,
+        appliedTechniques: [],
+        violated: false,
+      }
+      return;
+    }
+    this.executeOption(option, targets, caster);
   }
 
   resetDeadAllyCasterMenu(): void {
@@ -384,50 +310,38 @@ export class Battle extends Phaser.Scene {
       if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
       if (castedTimeInMs < option.castTimeInMs) return;
 
-      if (combatant.castingExecutable.violated){
-        combatant.castingExecutable = null;
-        if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
-        return;
-      }
-
-      for (const [idx, target] of targets.entries()) {
-        if (option.type === OptionType.TECHNIQUE) {
-            const technique = option as Technique;
-            combatant.techniques.push(technique);
-            this.sound.play(technique.soundKeyName)
-          }
-
-
-          if (option.type === OptionType.ACTION) {
-            const action = option as Action;
-            if (action.conditionMet && !action.conditionMet(this, combatant, target)) {
-              this.sound.play('restriction-violated');
-              combatant.castingExecutable = null;
-              if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
-              return;
-            } 
-
-            if (this.firstActionNotTaken) this.firstActionNotTaken = false;
-            if (action.name === "Splinter") this.splinterNotCasted = false;
-
-            const events = action.events;
- 
-            const newEvents: QueuedEvent[] = events.map(event => ({
-              event, 
-              delayInMs: event.autoAdvanceInMs || 300 + (idx*300),
-              target,
-              caster: combatant,
-              techniques: [...combatant.castingExecutable.appliedTechniques],
-            }));
-
-            this.queuedEvents.push(...newEvents);
-
-          }
-      }
- 
+      this.executeOption(option, targets, combatant);
+      
       combatant.castingExecutable = null;
-      if ('selectedStrategyIndex' in combatant) this.selectNewStrategy(combatant as Enemy);
     });
+  }
+
+  executeOption(option: Executable, targets: Combatant[], caster: Combatant): void {
+    if (option.type !== OptionType.ACTION) return;
+
+    for (const [idx, target] of targets.entries()) {
+        const action = option as Action;
+        if (action.conditionMet && !action.conditionMet(this, caster, target)) {
+          this.sound.play('restriction-violated');
+          caster.castingExecutable = null;
+          return;
+        } 
+
+        if (this.firstActionNotTaken) this.firstActionNotTaken = false;
+        if (action.name === "Splinter") this.splinterNotCasted = false;
+
+        const events = action.events;
+
+        const newEvents: QueuedEvent[] = events.map(event => ({
+          event, 
+          delayInMs: event.autoAdvanceInMs || 300 + (idx*300),
+          target,
+          caster: caster,
+          techniques: [],
+        }));
+
+        this.queuedEvents.push(...newEvents);      
+    }
   }
 
   selectNewStrategy(enemy: Enemy): void {
@@ -446,34 +360,7 @@ export class Battle extends Phaser.Scene {
     enemy.selectedStrategyIndex = viableStrategies[viableStrategies.length - 1].i
   }
 
-  executeOption(caster: Combatant, targets: Combatant[], option: CombatOption): void {
 
-
-    // Handle Action
-    if (option.type !== OptionType.ACTION && option.type !== OptionType.TECHNIQUE) return;
-    useApResources(caster, option.actionPointsCost);
-
-    const appliedTechniques: Technique[] = [];
-    const castedTimeInMs = 0;
-
-    if (option.type === OptionType.ACTION && Actions.actionIsAnAttack(option as Action)) {
-      
-      const attackTechniquesTargettingCaster: Technique[] = this.battleStore.getCombatants()
-        .reduce((prev, curr) => [...prev, ...curr.techniques], [])
-        .filter(activeTechnique => activeTechnique.target.name === caster.name)
-        .map(activeTechnique => activeTechnique.technique);
-
-      appliedTechniques.push(...attackTechniquesTargettingCaster);
-    }    
-
-    caster.castingExecutable = {
-      executable: option,
-      targets,
-      castedTimeInMs,
-      appliedTechniques,
-      violated: false,
-    }
-  }
 
   checkActionTechniqueConditionMet(caster: Combatant, targets: Combatant[], technique: Technique): void {
     if (techniqueIsViolated(caster, technique)) {
@@ -504,7 +391,98 @@ export class Battle extends Phaser.Scene {
     });
   }
 
+  //#region battle input
+  setAlly = (ally: Ally): void => {
+    this.playChoiceSelectSound();
+
+    if (this.battleStore.executable) {
+      this.selectTarget(ally);
+      return;
+    }
+
+    // Could probably just flip this
+    const CANNOT_OPEN_STATUS = [Status.DEAD, Status.EXHAUSTED];
+    if (CANNOT_OPEN_STATUS.includes(getStatus(ally)) || ally.castingExecutable) {
+      this.sound.play('stamina-depleted');
+      return;
+    }
+
+    this.sound.play('choice-select');
+    this.battleStore.setActiveAlly(ally);
+
+    this.battleStore.setActiveAlly(ally);
+  }
+
+  setTechnique = (technique: Technique): void => {
+    // if (this.battleStore.activeTechnique.name === technique.name) {
+    //   this.playChoiceDisabledSound();
+    //   return;
+    // }
+    this.playChoiceSelectSound();
+    this.battleStore.setActiveTechnique(technique);
+  }
+  
+  selectTarget = (combatant: Combatant): void => {
+    if (!this.battleStore.executable) return;
+    if (this.battleStore.targets.some(target => combatant.name === target.name) ) {
+      this.playChoiceDisabledSound();
+      return;
+    }
+    console.log(toJS(combatant))
+
+    switch (this.battleStore.executable.targetType) {
+      case TargetType.SELF:
+        if (combatant.name !== this.battleStore.activeAlly.name) {
+          this.playChoiceDisabledSound();
+        }
+        this.battleStore.setTargets([combatant]);
+        this.playChoiceSelectSound();
+        break;
+      case TargetType.SINGLE_TARGET:
+        this.battleStore.setTargets([combatant]);
+        this.playChoiceSelectSound();
+        break;
+      case TargetType.AOE: 
+        if (this.battleStore.enemies.some(enemy => enemy.name === combatant.name)) {
+          this.battleStore.setTargets(this.battleStore.enemies);
+        } else {
+          this.battleStore.setTargets(this.battleStore.allies);
+        }
+        break;
+      default:
+        break;
+    }
+    this.castOption(this.battleStore.activeAlly, this.battleStore.targets, this.battleStore.executable);
+    this.battleStore.resetSelections();
+  }
+
+  selectOption(option: BattleOption): void {
+    this.sound.play('choice-select');
+    switch(option.type) {
+      case OptionType.ACTION:
+      case OptionType.TECHNIQUE:
+        const executable = option as Executable;
+        const activeTechnique = getActiveTechnique(this.battleStore.activeAlly, executable);
+        if (activeTechnique !== undefined && activeTechnique.violated) {
+          this.sound.play('restriction-violated');
+          return;
+        }
+        this.battleStore.setExecutable(executable);
+        switch (executable.targetType) {
+          case TargetType.SELF:
+            this.battleStore.setTargets([this.battleStore.activeAlly]);
+            break;
+          case TargetType.SINGLE_TARGET:
+            this.battleStore.setTargets([this.battleStore.enemies[0]]);
+            break;
+          case TargetType.AOE:
+            this.battleStore.setTargets(this.battleStore.enemies);
+            break;
+        }
+        break;
+    }
+  }
+
   //#endregion
+  
 }
-
-

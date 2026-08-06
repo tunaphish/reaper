@@ -45,7 +45,6 @@ export const attack: Action = {
   name: 'Attack',
   description: 'Deals damage',
   targetType: TargetType.SINGLE_TARGET,
-  castTimeInMs: 150000,
 
   actionPointsCost: 1,
 
@@ -82,7 +81,7 @@ export const stanch: Action = {
   name: 'Stanch',
   description: 'Heals bleed on self',
   targetType: TargetType.SELF,
-  castTimeInMs: 300,
+
   actionPointsCost: 1,
 
   events: [

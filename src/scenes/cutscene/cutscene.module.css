@@ -44,12 +44,16 @@
   position: absolute;
   transform: translate(-50%, -50%);
   transition: opacity 0.3s ease-out;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
+  
+  background-color: #222;
+  
+  padding: 24px ;
+  border-radius: 24px;
   max-width: 80%;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 24px;
+  font-weight: 500;
   z-index: 10;
 }
+ 
+
+ 

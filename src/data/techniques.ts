@@ -11,9 +11,11 @@ export const basicEji: Technique = {
   castTimeInMs: 1500,
 
   imageSrc: '/reaper/ui/ally/Eji-NEUTRAL.png',
-  position: {
+  windowLayout: {
     x: 150,
     y: 400,
+    height: 106,
+    width: 106,
   },
   description: 'Basic Eji Reaper Actions',
   
@@ -30,9 +32,11 @@ export const basicJin: Technique = {
   castTimeInMs: 1500,
 
   imageSrc: '/reaper/ui/ally/Jin-NEUTRAL.png',
-  position: {
+  windowLayout: {
     x: 150,
     y: 400,
+    height: 106,
+    width: 106,
   },
   description: 'Basic Jin Reaper Actions',
   
@@ -49,9 +53,11 @@ export const basicPhia: Technique = {
   castTimeInMs: 1500,
 
   imageSrc: '/reaper/ui/ally/Phia-NEUTRAL.png',
-  position: {
+  windowLayout: {
     x: 150,
     y: 400,
+    height: 106,
+    width: 106,
   },
   description: 'Basic Phia Reaper Actions',
   

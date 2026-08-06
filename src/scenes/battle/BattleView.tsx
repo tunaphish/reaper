@@ -227,10 +227,7 @@ const AllyView = observer((props: { battle: Battle, ally: Ally, idx: number }): 
 const TechniqueView = observer((props: { battle: Battle, technique: Technique }): JSX.Element => {
   const imageWindow: ImageWindow = {
     type: EventType.IMAGE,
-    layout: {
-      x: props.technique.position.x,
-      y: props.technique.position.y,
-    },
+    layout: props.technique.windowLayout,
     layers: [{
       src: props.technique.imageSrc
     }],

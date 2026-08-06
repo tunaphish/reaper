@@ -1,5 +1,6 @@
 import { Battle } from "../scenes/battle/Battle";
 import { Combatant } from "./combatant";
+import { WindowLayout } from "./encounter";
 import { Option, OptionType } from "./option";
 import { TargetType } from "./targetType";
 
@@ -8,7 +9,7 @@ export type Technique = Option & {
   actionPointsCost: number;
 
   imageSrc?: string;
-  position: {x: number, y: number},
+  windowLayout: WindowLayout;
   description: string;
 
 

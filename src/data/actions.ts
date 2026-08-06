@@ -4,7 +4,7 @@ import { TargetType } from '../model/targetType';
 import { updateDamage, updateBleed, updateHealth, Combatant } from "../model/combatant";
 import { updateActionPoints } from '../model/combatant';
 import { EventType, ShatterTechniqueTarget } from '../model/encounter';
-import { EncounterScene } from '../scenes/encounter/Encounter';
+import { Battle } from '../scenes/battle/Battle';
 
 export const actionIsAnAttack = (action: Action): boolean => action.events.some(event => event.type === EventType.UPDATE_DAMAGE && event.value > 0);
 
@@ -24,8 +24,8 @@ export const healHealth = (target: Combatant, source: Combatant, potency: number
 };
 
 // consider converting to getPotency functions
-export const scaleDamageOnBleedCombatants = (target: Combatant, source: Combatant, potency: number, scene: EncounterScene): void => {
-  const damagedCombatants = scene.encounterStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
+export const scaleDamageOnBleedCombatants = (target: Combatant, source: Combatant, potency: number, scene: Battle): void => {
+  const damagedCombatants = scene.battleStore.getCombatants().filter(combatant => combatant.bleed > 0).length;
   const newPotency = damagedCombatants * potency;
   updateDamage(target, newPotency);
 };

@@ -194,16 +194,15 @@ export class World extends Phaser.Scene {
 
   openTalkEncounter(): void {
     this.choiceSelectSound.play();
-    this.fieldMusic.pause();
+    // this.fieldMusic.pause();
     this.scene.pause('World')
-    this.scene.launch('Encounter', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
+    this.scene.launch('Cutscene', { encounter: TOP_LEVEL_SPREADS[0], callingSceneKey: sceneConfig.key });
   }
 
   openBattle(fieldEnemy: FieldEnemy): void {
     this.sound.play('battle-start');
     this.fieldMusic.pause();
 
-    // Listen for when Encounter stops, clean up here
     this.scene.get('Battle').events.once('shutdown', () => {
       const idx = this.fieldEnemies.indexOf(fieldEnemy);
       if (idx !== -1) this.fieldEnemies.splice(idx, 1);

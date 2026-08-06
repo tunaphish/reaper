@@ -23,7 +23,8 @@ const MenuBar = observer(({world}: {world: World}) => {
   }
   
   const onClick = () => {
-    world.openSystemMenu()
+    // world.openSystemMenu()
+    world.openTalkEncounter();
   }
 
   return (

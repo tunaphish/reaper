@@ -393,8 +393,7 @@ castOption(caster: Combatant, targets: Combatant[], option: BattleOption): void 
 
   //#region battle input
   setAlly = (ally: Ally): void => {
-    this.playChoiceSelectSound();
-
+    // abort when selecting target for action
     if (this.battleStore.executable) {
       this.selectTarget(ally);
       return;
@@ -407,9 +406,8 @@ castOption(caster: Combatant, targets: Combatant[], option: BattleOption): void 
       return;
     }
 
-    this.sound.play('choice-select');
-    this.battleStore.setActiveAlly(ally);
-
+    this.battleStore.resetSelections();
+    this.playChoiceSelectSound();
     this.battleStore.setActiveAlly(ally);
   }
 
